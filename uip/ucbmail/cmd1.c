@@ -8,9 +8,12 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.7 $
+ *  $Revision: 1.8 $
  *
  *  $Log: cmd1.c,v $
+ *  Revision 1.8  2001/02/04 09:53:11  krueger
+ *  Type-casting
+ *
  *  Revision 1.7  1998/10/07 13:13:38  krueger
  *  Added changes from v44a8 to v44a9
  *
@@ -227,7 +230,7 @@ from(msgvec)
 {
 	register int *ip;
 
-	for (ip = msgvec; *ip != NULL; ip++) {
+	for (ip = msgvec; *ip != (int *)0; ip++) {
 		printhead(*ip);
 		sreset();
 	}
