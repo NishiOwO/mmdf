@@ -2,6 +2,7 @@
 #include "util.h"
 #include "mmdf.h"
 #include "ap_norm.h"
+#include "pathnames.h"
 
 /*            COMPILE-TIME CONFIGURATION FILE WITH SITE-DEPENDENT INFORMATION
  *
@@ -9,7 +10,7 @@
  *   the message system needs to have.
  */
 
-char *mmtailor = "/opt/mmdf/mmdftailor";
+char *mmtailor = MM_MMDFTAILOR;
 				/* location of external tailoring file  */
 
 /* ************************  PUBLIC NAMES  ****************************** */
@@ -33,24 +34,24 @@ char
  *  The following pathnames must be anchored.
  */
 
-char	*cmddfldir = "/opt/mmdf/lib.sol2";
+char	*cmddfldir = MMDFLIBDIR;
 			      /* contains MMDF commands, such as      */
 			      /* submit, deliver, and queclean        */
-char	*logdfldir = "/var/spool/mmdf/log";
+char	*logdfldir = MMDFLOGDIR;
 			      /* contains highly volatile files, such */
 			      /* as logs and check-point markers      */
-char	*phsdfldir = "/var/spool/mmdf/phase";
+char	*phsdfldir = MM_PHASEDIR;
 			      /* contains timestamp files             */
-char	*tbldfldir = "/opt/mmdf/table";
+char	*tbldfldir = MMDFTABLEDIR;
 			      /* contains sticky files, such as       */
 			      /* name tables & dialing scripts        */
-char	*tbldbm = "/opt/mmdf/table/mmdfdbm";
+char	*tbldbm = MM_TBLDBM;
 			      /* dbm() hash of name tables      */
-char	*quedfldir = "/var/spool/mmdf/lock/home";
+char	*quedfldir = MMDFPSOOLDIR;
 			      /* contains queued mail files, in       */
 			      /* subordinate directories              */
 			      /* (also see below)                     */
-char	*chndfldir = "/opt/mmdf/chans.sol2";
+char	*chndfldir = MMDFCHANDIR;
 				/* contains the channel programs        */
 				/* (ch_*) called by deliver             */
 char	*lckdfldir = "/tmp/mmdf";
@@ -242,6 +243,6 @@ char	*locmachine = "solaris";
 /******************* AUTHORIZATION TAILORING **************************/
 char	*authrequest = "mmdf@uni-kl.de";
 				/* authorisation request address        */
-char	*authfile = "/opt/mmdf/warning";
+char	*authfile = MM_AUTHFILE;
 				/* warning letter - full pathname       */
 

@@ -12,11 +12,20 @@ SUBDIR		= @SUBDIRS@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
 libdir		= @libdir@
-libexecdir	= @libdir@
+libexecdir	= @libexecdir@
+bindir		= @bindir@
+sbindir		= @sbindir@
+rcvdir		= @rcvdir@
+datadir		= @datadir@
+sharedstatedir	= @sharedstatedir@
+localstatedir	= @localstatedir@
+mmdf_prefix	= @mmdf_prefix@
+mmdflibdir	= @mmdflibdir@
 chandir		= @chandir@
 tbldir		= @tbldir@
-bindir		= @bindir@
-rcvdir		= @rcvdir@
+sysconfdir	= @sysconfdir@
+PATHNAMES	= h/pathnames.h
+
 HOST		= @HOST@
 HOST		= @host@
 HOST_CPU	= @host_cpu@
@@ -42,8 +51,6 @@ PGMPROT		= @PGMPROT@
 ## compiler and linker options
 ##
 CFLAGS          = @CFLAGS@
-CXXFLAGS        = @CXXFLAGS@
-CXXTEMPLFLAGS   = @CXXTEMPLFLAGS@
 CPPFLAGS        = -I${srcdir} @CPPFLAGS@ 
 DEFS            = @DEFS@ -DNDEBUG
 LDFLAGS         = @LDFLAGS@
@@ -51,7 +58,9 @@ STATIC_LDFLAGS  = @STATIC_LDFLAGS@
 LIBS            = @NEED_LIBS@
 MMDFLIBS	= @MMDFLIBS@
 
-all:
+all: pathnames binary
+
+binary: pathnames
 	for dir in ${SUBDIR}; do \
 		(cd $${dir}; make ${MFLAGS} ${MAKEFLAGS}); done
 
@@ -63,23 +72,72 @@ lint:
 	for dir in ${SUBDIR}; do \
 		(cd $${dir}; make ${MFLAGS} ${MAKEFLAGS} lint); done
 
-install:
+install: dirs
 	for dir in ${SUBDIR}; do \
 		(cd $${dir}; make ${MFLAGS} ${MAKEFLAGS} install); done
 
 clean:
-	rm -f make.out
+	rm -f make.out ${PATHNAMES}
 	for dir in ${SUBDIR}; do \
 		(cd $${dir}; make $@); done
 
 distclean:
-	rm -f make.out
+	rm -f make.out ${PATHNAMES}
 	for dir in ${SUBDIR}; do \
 		(cd $${dir}; make $@); done
 	rm -f config.cache config.log config.status
 	rm -f TAGS* *.gz *.tar h/config.h *~ #*#
+	(cd conf; ./cleanup )
 	rm -f Makefile.com conf/common/Makefile.com
 	rm -f Makefile
+
+########################
+#
+pathnames: ${PATHNAMES}
+
+${PATHNAMES}: Makefile
+	-@echo "creating ${PATHNAMES}"
+	-@echo "/*"  > ${PATHNAMES}
+	-@echo " * pathnames.h:  created by Makefile" >> ${PATHNAMES}
+	-@echo " */" >> ${PATHNAMES}
+	-@echo >> ${PATHNAMES}
+	-@echo "#define PREFIX      \"${prefix}\"" >> ${PATHNAMES}
+	-@echo "#define BINDIR      \"${bindir}\"" >> ${PATHNAMES}
+	-@echo "#define SBINDIR     \"${sbindir}\"" >> ${PATHNAMES}
+	-@echo "#define LIBEXECDIR  \"${libexecdir}\"" >> ${PATHNAMES}
+	-@echo "#define MMDFPSOOLDIR \"${sharedstatedir}\"" >> ${PATHNAMES}
+	-@echo "#define MMDFLOGDIR   \"${localstatedir}\"" >> ${PATHNAMES}
+	-@echo "#define MMDFPREFIX   \"${mmdf_prefix}\"" >> ${PATHNAMES}
+	-@echo "#define MMDFLIBDIR   \"${mmdflibdir}\"" >> ${PATHNAMES}
+	-@echo "#define MMDFCHANDIR  \"${chandir}\"" >> ${PATHNAMES}
+	-@echo "#define MMDFTABLEDIR \"${tbldir}\"" >> ${PATHNAMES}
+	-@echo "#define MMDFCFGDIR   \"${sysconfdir}\"" >> ${PATHNAMES}
+	-@echo >> ${PATHNAMES}
+	-@echo "#define MM_MMDFTAILOR \"${sysconfdir}/mmdftailor\"" >> ${PATHNAMES}
+	-@echo "#define MM_PHASEDIR  \"${localstatedir}/phase\"" >> ${PATHNAMES}
+	-@echo "#define MM_TBLDBM    \"${tbldir}/mmdfdbm\"" >> ${PATHNAMES}
+	-@echo "#define MM_AUTHFILE  \"${sysconfdir}/warning\"" >> ${PATHNAMES}
+	-@echo "#define MM_DIALLOG   \"${localstatedir}/dial_log\"" >> ${PATHNAMES}
+	-@echo "#define RESENDPROG   \"|${bindir}/resend \"" >> ${PATHNAMES}
+	-@echo "#define SENDPROG     \"${bindir}/send\"" >> ${PATHNAMES}
+
+########################
+#
+dirs:
+	-if test ! -x ${prefix}; then \
+		mkdir -p ${prefix}; \
+		chmod 755 ${prefix}; \
+	fi
+	-if test ! -x ${bindir}; then mkdir -p ${bindir}; fi
+	-if test ! -x ${sbindir}; then mkdir -p ${sbindir}; fi
+	-if test ! -x ${libexecdir}; then mkdir -p ${libexecdir}; fi
+	-if test ! -x ${sharedstatedir}; then mkdir -p ${sharedstatedir}; fi
+	-if test ! -x ${localstatedir}; then mkdir -p ${localstatedir}; fi
+	-if test ! -x ${mmdf_prefix}; then mkdir -p ${mmdf_prefix}; fi
+	-if test ! -x ${mmdflibdir}; then mkdir -p ${mmdflibdir}; fi
+	-if test ! -x ${chandir}; then mkdir -p ${chandir}; fi
+	-if test ! -x ${tbldir}; then mkdir -p ${tbldir}; fi
+	-if test ! -x ${sysconfdir}; then mkdir -p ${sysconfdir}; fi
 
 ########################
 #

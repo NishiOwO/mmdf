@@ -5,23 +5,21 @@ dnl Process this file with autoconf to produce a configure script.
 AC_INIT(h/ap.h)
 AC_CONFIG_HEADER(h/config.h)
 AC_PREFIX_DEFAULT('/usr')
+OUTPUT_FILES="lib/Makefile src/Makefile uip/Makefile"
+OUTPUT_FILES=$OUTPUT_FILES" conf/common/Makefile.com Makefile"
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 MMDF_MAJOR_VERSION=2
 MMDF_MINOR_VERSION=44
-MMDF_PATCH_LEVEL=58
-VERSION_DATE="April 1998"
+MMDF_PATCH_LEVEL=7
+VERSION_DATE="August 1998"
 MMDFLOGIN=mmdf
 ROOTLOGIN=root
 PGMPROT=755
 MMDFLIBS="\${top_srcdir}/lib/libmmdf.a"
-mmdf_prefix="\${prefix}/mmdf"
-exec_prefix="\${prefix}/local"
-libexecdir="\${mmdf_prefix}/lib"
-chandir="\${mmdf_prefix}/chans"
-tbldir="\${mmdf_prefix}/table"
-rcvdir="\${mmdf_prefix}/lib"
+MMDF_TARGET=no
+rcvdir="${libexecdir}"
 
 D_DEBUG=0
 D_D_LOG=0
@@ -224,6 +222,7 @@ fi
 AC_MSG_CHECKING(whether 'conf/$target' exists)
 if test -x conf/$target; then
     AC_MSG_RESULT(good)
+    MMDF_TARGET=yes
 else
     AC_MSG_RESULT(no)
     AC_MSG_WARN("directory conf/$target doesn\'t exists.")
@@ -321,65 +320,95 @@ AC_ARG_ENABLE(nameserver, \
   [  --enable-PACKAGE        configure and build PACKAGE
      --disable-PACKAGE       do not configure and build PACKAGE
  where PACKAGE can be:
-     nameserver              nameserver-code])
+     nameserver             nameserver-code]                          \
+(enabled))
 AC_ARG_ENABLE(dbm, \
-  [     dbm                  tables via dbm, sequential otherwise])
+  [     dbm                  tables via dbm, sequential otherwise]     \
+(enabled))
 AC_ARG_ENABLE(wrap, \
-  [     wrap                 tcpwrapper])
+  [     wrap                 tcpwrapper]                               \
+(enabled))
 AC_ARG_ENABLE(nis, \
-  [     nis                  nis support for tables])
+  [     nis                  nis support for tables]                  \
+(disabled))
 AC_ARG_ENABLE(nn, \
-  [     nn                   mailids and users configurable in mmdftailor])
+  [     nn                   mailids and users configurable in mmdftailor] \
+(disabled))
 AC_ARG_ENABLE(nosrcroute, \
-  [     nosrcroute           remove source-routing])
+  [     nosrcroute           remove source-routing]                    \
+(enabled))
 AC_ARG_ENABLE(8bit, \
-  [     8bit                 8bit clean])
+  [     8bit                 8bit clean]                               \
+(enabled))
 AC_ARG_ENABLE(lock_files, \
-  [     lock_files           use explicily lock-files for filelocking])
+  [     lock_files           use explicily lock-files for filelocking] \
+(disabled))
 AC_ARG_ENABLE(dial, \
-  [     dial                 dial code])
+  [     dial                 dial code]                                \
+(disabled))
 AC_ARG_ENABLE(badusers, \
-  [     badusers             badusers channel-program])
+  [     badusers             badusers channel-program]                 \
+(enabled))
 AC_ARG_ENABLE(bboards, \
-  [     bboards              bboards channel-program])
+  [     bboards              bboards channel-program]                  \
+(disabled))
 AC_ARG_ENABLE(blockaddr, \
-  [     blockaddr            blockaddr channel-program])
+  [     blockaddr            blockaddr channel-program]                \
+(disabled))
 AC_ARG_ENABLE(delay, \
-  [     delay                delay channel-program])
+  [     delay                delay channel-program]                    \
+(disabled))
 AC_ARG_ENABLE(ean, \
-  [     ean                  ean channel-program])
+  [     ean                  ean channel-program]                      \
+(disabled))
 AC_ARG_ENABLE(list, \
-  [     list                 list channel-program])
+  [     list                 list channel-program]                     \
+(enabled))
 AC_ARG_ENABLE(niftp, \
-  [     niftp                niftp channel-program])
+  [     niftp                niftp channel-program]                    \
+(disabled))
 AC_ARG_ENABLE(phone, \
-  [     phone                phone channel-program])
+  [     phone                phone channel-program]                    \
+(disabled))
 AC_ARG_ENABLE(pobox, \
-  [     pobox                pobox channel-program])
+  [     pobox                pobox channel-program]                    \
+(disabled))
 AC_ARG_ENABLE(pop, \
-  [     pop                  pop channel-program])
+  [     pop                  pop channel-program]                      \
+(enabled))
 AC_ARG_ENABLE(prog, \
-  [     prog                 prog channel-program])
+  [     prog                 prog channel-program]                     \
+(disabled))
 AC_ARG_ENABLE(smphone, \
-  [     smphone              smphone channel-program])
+  [     smphone              smphone channel-program]                  \
+(disabled))
 AC_ARG_ENABLE(smtp, \
-  [     smtp                 smtp channel-program])
+  [     smtp                 smtp channel-program]                     \
+(enabled))
 AC_ARG_ENABLE(uucp, \
-  [     uucp                 uucp channel-program])
+  [     uucp                 uucp channel-program]                     \
+(enabled))
 AC_ARG_ENABLE(msg, \
-  [     msg                  msg user agent])
+  [     msg                  msg user agent]                           \
+(enabled))
 AC_ARG_ENABLE(other, \
-  [     other                malias,mlist,rcv*, resend, sendmail, v6mail])
+  [     other                malias,mlist,rcv*, resend, sendmail, v6mail]\
+(enabled))
 AC_ARG_ENABLE(send, \
-  [     send                 send user agent])
+  [     send                 send user agent]                          \
+(enabled))
 AC_ARG_ENABLE(snd, \
-  [     snd                  snd user agent])
+  [     snd                  snd user agent]                           \
+(enabled))
 AC_ARG_ENABLE(ucbmail, \
-  [     ucbmail              ucbmail 'Mail' program])
+  [     ucbmail              ucbmail 'Mail' program]                   \
+(disabled))
 AC_ARG_ENABLE(unsupported, \
-  [     unsupported          autores, cvmbox])
+  [     unsupported          autores, cvmbox]                          \
+(disabled))
 AC_ARG_ENABLE(gcc, \
-  [     gcc                  use gcc as compiler])
+  [     gcc                  use gcc as compiler]                      \
+(enabled))
 
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -465,7 +494,9 @@ if test "$libdir" = '${exec_prefix}/lib'; then
     ac_configure_args="$ac_configure_args --libdir=${prefix}/lib"
   fi
 else
-  LDFLAGS="-L${libdir} ${LDFLAGS}"
+  if test "x$libdir" != xNONE/lib; then
+    LDFLAGS="-L${libdir} ${LDFLAGS}"
+  fi
 fi
 
 echo $PATH_GCC
@@ -492,6 +523,7 @@ dnl pass default prefix on to subdirs, if not explicitely given as an option
 if test "x$prefix" = xNONE; then
   ac_configure_args="$ac_configure_args --prefix=$ac_default_prefix"
 fi
+echo "===========>$oldincludedir"
 
 dnl we prefer using gcc for compiling C++ files, provided the user did
 dnl not overwrite it explicitely
@@ -519,6 +551,12 @@ if test "$ac_cv_enable_code_dbm" != "no"; then
                AC_CHECK_LIB(dbm, dbminit)
             fi
          fi
+      else
+	 AC_CHECK_LIB(dbm, gdbm_open)
+         if test "$ac_cv_lib_dbm_gdbm_open" = "yes"; then
+	   AC_DEFINE(HAVE_LIBGDBM)
+	   AC_MSG_WARN(*** your libdbm is linked to libgdbm!)
+         fi
       fi
       if test "$ac_cv_lib_gdbm_gdbm_open" = "yes" || 
 	   test "$ac_cv_lib_ndbm_dbm_open" = "yes" ||
@@ -529,6 +567,7 @@ if test "$ac_cv_enable_code_dbm" != "no"; then
          ac_cv_lib_dbm="no"
       fi])
 fi
+
 dnl checking for libwrap
 if test "$ac_cv_enable_code_wrap" != "no"; then
    AC_CHECK_LIB(wrap, eval_client)
@@ -596,11 +635,12 @@ AC_HEADER_TIME
 AC_STRUCT_TM
 AC_STRUCT_TIMEZONE
 
-AC_CHECK_HEADERS(lastlog.h libio.h malloc.h memory.h termio.h)
+AC_CHECK_HEADERS(arpa/nameser.h lastlog.h libio.h malloc.h memory.h)
+AC_CHECK_HEADERS(netdb.h netinet/in.h resolv.h termio.h)
 AC_CHECK_HEADER(sgtty.h,ac_cv_header_sgtty_h="yes")
 AC_CHECK_HEADERS(string.h strings.h syslog.h)
-AC_CHECK_HEADERS(sys/file.h sys/ioctl.h sys/time.h sys/termio.h sys/termios.h)
-AC_CHECK_HEADERS(sys/unistd.h)
+AC_CHECK_HEADERS(sys/file.h sys/ioctl.h sys/socket.h sys/time.h sys/termio.h)
+AC_CHECK_HEADERS(sys/termios.h sys/unistd.h)
 AC_CHECK_HEADERS(unistd.h utmp.h varargs.h)
 if test "$ac_cv_header_varargs_h" != "yes"; then
     AC_MSG_WARN(you don't have varargs.h)
@@ -670,13 +710,39 @@ else
 fi
 
 dnl check if we have struct state
+AC_MSG_CHECKING(whether sys_errlist is declared)
+AC_CACHE_VAL(ac_cv_have_SYS_ERRLIST, AC_TRY_RUN( 
+ [#include <stdio.h>
+ main() { extern int sys_errlist; exit(0); }],
+   ac_cv_have_SYS_ERRLIST=yes,
+   ac_cv_have_SYS_ERRLIST=no,
+   ac_cv_have_SYS_ERRLIST=no))
+if test "$ac_cv_have_SYS_ERRLIST" = "yes"; then
+  AC_MSG_RESULT(no)
+else
+  AC_MSG_RESULT(yes)
+  AC_DEFINE(HAVE_SYS_ERRLIST_DECL)
+fi
+
+dnl check if we have struct state
 AC_MSG_CHECKING(whether have struct __res_state)
 AC_CACHE_VAL(ac_cv_have_STATE, AC_TRY_RUN( 
- [#include <netinet/in.h>
-#include <netdb.h>
-#include <sys/socket.h>
-#include <arpa/nameser.h>
-#include <resolv.h> 
+ [
+#ifdef HAVE_NETINET_IN_H
+#  include <netinet/in.h>
+#endif
+#ifdef HAVE_NETDB_H
+#  include <netdb.h>
+#endif
+#ifdef HAVE_SYS_SOCKET_H
+#  include <sys/socket.h>
+#endif
+#ifdef HAVE_ARPA_NAMESER_H
+#  include <arpa/nameser.h>
+#endif
+#ifdef HAVE_RESOLV_H
+#  include <resolv.h> 
+#endif
  main() { struct __res_state res; exit(0); }],
    ac_cv_have_STATE=yes,
    ac_cv_have_STATE=no,
@@ -1046,6 +1112,38 @@ if test "$D_CITATION" != "0"; then
 fi
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+if test "x$prefix" = "xNONE"; then
+   prefix=$ac_default_prefix
+fi
+mmdf_prefix="\${prefix}/mmdf"
+mmdflibdir="\${mmdf_prefix}/lib"
+chandir="\${mmdf_prefix}/chans"
+tbldir="\${mmdf_prefix}/table"
+if test "x$exec_prefix" = "xNONE"; then
+   exec_prefix="\${prefix}/local"
+fi
+if test "$bindir" = "\${exec_prefix}/bin"; then
+   bindir="\${exec_prefix}/bin"
+fi
+if test "$sbindir" = "\${exec_prefix}/sbin"; then
+   sbindir="\${exec_prefix}/sbin"
+fi
+if test "$libexecdir" = "\${exec_prefix}/libexec"; then
+   libexecdir="\${exec_prefix}/lib/mh"
+fi
+if test "$datadir" = "\${prefix}/share"; then
+   datadir="\${mmdf_prefix}/table"
+fi
+if test "$sharedstatedir" = "\${prefix}/com"; then
+   sharedstatedir="\${prefix}/spool/mmdf/home"
+fi
+if test "$localstatedir" = "\${prefix}/var"; then
+   localstatedir="\${prefix}/spool/mmdf/log"
+fi
+if test "$sysconfdir" = "\${prefix}/etc"; then
+   sysconfdir="\${mmdf_prefix}"
+fi
+
 AC_SUBST(SUBDIRS)
 AC_SUBST(LIBSUBDIRS)
 AC_SUBST(SRCSUBDIRS)
@@ -1061,10 +1159,6 @@ AC_SUBST(MMDFLOGIN)
 AC_SUBST(ROOTLOGIN)
 AC_SUBST(PGMPROT)
 AC_SUBST(MMDFLIBS)
-AC_SUBST(chandir)
-AC_SUBST(tbldir)
-AC_SUBST(rcvdir)
-AC_SUBST(mmdf_prefix)
 AC_SUBST(CXXTEMPLFLAGS)
 AC_SUBST(STATIC_LDFLAGS)
 AC_SUBST(CH_TB)
@@ -1074,6 +1168,11 @@ AC_SUBST(UNAME_RELEASE)
 AC_SUBST(UNAME_SYSTEM)
 AC_SUBST(UNAME_VERSION)
 AC_SUBST(UNAME_NODE)
+AC_SUBST(mmdflibdir)
+AC_SUBST(chandir)
+AC_SUBST(tbldir)
+AC_SUBST(rcvdir)
+AC_SUBST(mmdf_prefix)
 
 echo "host  ="$host
 echo "cpu   ="$host_cpu
@@ -1081,11 +1180,35 @@ echo "vendor="$host_vendor
 echo "os    ="$host_os
 echo "target="$target
 
-AC_OUTPUT(lib/Makefile src/Makefile uip/Makefile conf/common/Makefile.com Makefile)
-cd conf
-echo running ./sitesetup $target
-./sitesetup $target
-cd ..
+
+cp confdefs.h Xconfdefs.h
+OUTPUT_FILES=$OUTPUT_FILES" "$OUTPUT_C_FILES
+AC_OUTPUT(${OUTPUT_FILES})
+if test "$MMDF_TARGET" = "yes"; then
+   cd conf
+   echo running ./sitesetup $target
+   ./sitesetup $target
+   cd ..
+else
+   echo "No target found. Cannot run ./sitesetup <target>"
+   echo "Please do it by hand."
+fi
 
 rm -f Makefile.com
 ln -s conf/common/Makefile.com Makefile.com
+
+echo "==============================================================="
+echo "Here are your pathname-settings:"
+echo "prefix        = $prefix"
+echo "exec_prefix   = $exec_prefix"
+echo "bindir        = $bindir"
+echo "sbindir       = $sbindir"
+echo "libexecdir    = $libexecdir"
+echo "datadir       = $datadir"
+echo "sharedstatedir= $sharedstatedir"
+echo "localstatedir = $localstatedir"
+echo "mmdf_prefix   = $mmdf_prefix"
+echo "mmdflibdir    = $mmdflibdir"
+echo "chandir       = $chandir"
+echo "tbldir        = $tbldir"
+echo "configdir     = $sysconfdir"

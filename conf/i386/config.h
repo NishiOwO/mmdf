@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.13 1998/06/01 09:42:39 krueger Exp $
+ * $Id: config.h,v 1.14 1998/09/18 11:16:19 krueger Exp $
  *
  * please set every configuration-switch here
  *
@@ -25,7 +25,7 @@
  *             They  will  have to compile this manually for
  *             now (or copy it to smtpd.4.2.c).
  */
-#define V4_2BSD
+/*#define V4_2BSD*/
 
 /*             Enables  code  that does Bell System V tricks
  *             (probably also useful for System III  instal-
@@ -33,7 +33,7 @@
  *             you must  also  append  -Drindex=strrchr  and
  *             -Dindex=strchr to CFLAGS.
  */
-#define SYS5
+/*#define SYS5*/
 
 /*             Enables  code  specific to System Vr3.  Note:
  *             if you have the WIN/TCP code you may need  to

@@ -49,9 +49,9 @@ char *datbuf;
 			i->tm_year, i->tm_hour, i->tm_min, i->tm_sec,
 #ifdef HAVE_TZNAME
 			tzname[i->tm_isdst]
-#else /* TZNAME */
+#else /* HAVE_TZNAME */
 			i->tm_zone
-#endif /* TZNAME */
+#endif /* HAVE_TZNAME */
 			);
 		break;
 
@@ -61,9 +61,9 @@ char *datbuf;
 			i->tm_hour, i->tm_min,
 #ifdef HAVE_TZNAME
 			tzname[i->tm_isdst]
-#else /* TZNAME */
+#else /* HAVE_TZNAME */
 			i->tm_zone
-#endif /* TZNAME */
+#endif /* HAVE_TZNAME */
 			);
 		break;
 	}

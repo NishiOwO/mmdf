@@ -184,6 +184,13 @@ header line will be added for each "header" command in the .sendrc file.
 Having this in your .sendrc will cause your message to be displayed through
 the "more" program when using the "review message" command.
 .RE
+.IP "sign_cmd, encrypt_cmd"
+.RS
+Which command to execute for signing / encrypting the email.
+Default is: 
+sign_cmd = "pgps --armor -f -t"
+encrypt_cmd = "pgpe --armor -f -t"
+.RE
 .IP "signature, nosignature"
 .RS
 .I "Snd"
@@ -303,6 +310,12 @@ same as "send".
 .br
 retypes message in its current form.  If "paging" is specified in the .sendrc,
 then the draft will be displayed via the "more" program.
+.IP "sign"
+.br
+append a pgp signature to the message.
+.IP "encrypt"
+.br
+encrypt the message.
 .IP "send"
 .br
 posts the message to the message delivery system.

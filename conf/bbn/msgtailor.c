@@ -4,6 +4,7 @@
 
 #define NOEXTERNS
 #include "./msg.h"
+#include "pathnames.h"
 
 #ifdef pdp11
 #	define NMSGS	500
@@ -12,8 +13,8 @@
 #endif pdp11
 
 char    *savmsgfn = "savebox";
-char	*resendprog = "|/usr/local/mmdf/resend ";
-char	*sndname = "/usr/local/mmdf/send"; /* Overridden by .msgrc sendprog */
+char	*resendprog = RESENDPROG;
+char	*sndname =SENDPROG; /* Overridden by .msgrc sendprog */
 
 char	*dflshell = "sh";	/* Overridden by getenv("SHELL"); */
 char	*dfleditor = "pen";    /* Overridden by getenv("EDITOR"); */

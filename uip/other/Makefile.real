@@ -242,11 +242,11 @@ l-rcvtrip:
 
 ###########################################################
 #
-#   sendmail:   A fake for the Berkeley /usr/lib/sendmail
+#   sendmail:   A fake for the Berkeley ${SBINDIR}/sendmail
 #
-inst-xsendmail:  /usr/lib/sendmail
+inst-xsendmail:  ${SBINDIR}/sendmail
 
-/usr/lib/sendmail:  xsendmail
+${SBINDIR}/sendmail:  xsendmail
 	-if test ! -f $@.orig; then cp $@ $@.orig; fi
 	cp xsendmail $@
 	-$(CHOWN) mmdf $@

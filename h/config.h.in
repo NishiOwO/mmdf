@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.29 1998/07/14 12:55:49 krueger Exp $
+ * $Id: config.h.in,v 1.30 1998/09/18 11:16:43 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -140,6 +140,21 @@
 #undef HAVE_FLOCK
 #undef HAVE_F_SETLK
 #undef HAVE_LOCK_FILES
+
+/* Define if you have the <netinet/in.h> header file.  */
+#undef HAVE_NETINET_IN_H
+
+/* Define if you have the <netdb.h> header file.  */
+#undef HAVE_NETDB_H
+
+/* Define if you have the <sys/socket.h> header file.  */
+#undef HAVE_SYS_SOCKET_H
+
+/* Define if you have the <arpa/nameser.h> header file.  */
+#undef HAVE_ARPA_NAMESER_H
+
+/* Define if you have the <resolv.h> header file.  */
+#undef HAVE_RESOLV_H
 
 /* Define if you have the <dirent.h> header file.  */
 #undef HAVE_DIRENT_H

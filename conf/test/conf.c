@@ -1,6 +1,7 @@
 #include "util.h"
 #include "mmdf.h"
 #include "ap_norm.h"
+#include "pathnames.h"
 
 /*            COMPILE-TIME CONFIGURATION FILE WITH SITE-DEPENDENT INFORMATION
  *
@@ -8,7 +9,7 @@
  *   the message system needs to have.
  */
 
-char *mmtailor = "/usr/src/newbrl/mmdf/testmmdf/mmdftailor";
+char *mmtailor = MM_MMDFTAILOR;
 				/* location of external tailoring file  */
 
 /* ************************  PUBLIC NAMES  ****************************** */
@@ -31,24 +32,24 @@ char
  *  The following pathnames must be anchored.
  */
 
-char	*cmddfldir = "/usr/src/newbrl/mmdf/testmmdf";
+char	*cmddfldir = MMDFLIBDIR;
 			      /* contains MMDF commands, such as      */
 			      /* submit, deliver, and queclean        */
-char	*logdfldir = "/usr/src/newbrl/mmdf/testmmdf/log";
+char	*logdfldir = MMDFLOGDIR;
 			      /* contains highly volatile files, such */
 			      /* as logs and check-point markers      */
-char	*phsdfldir = "/usr/src/newbrl/mmdf/testmmdf/log/phase";
+char	*phsdfldir = MM_PHASEDIR;
 			      /* contains timestamp files             */
-char	*tbldfldir = "/usr/src/newbrl/mmdf/testmmdf/table";
+char	*tbldfldir = MMDFTABLEDIR;
 			      /* contains sticky files, such as       */
 			      /* name tables & dialing scripts        */
-char	*tbldbm = "/usr/src/newbrl/mmdf/testmmdf/table/mmdfdbm";
+char	*tbldbm = MM_TBLDBM;
 			      /* dbm() hash of name tables      */
-char	*quedfldir = "/usr/src/newbrl/mmdf/testmmdf/lock/home";
+char	*quedfldir = MMDFPSOOLDIR;
 			      /* contains queued mail files, in       */
 			      /* subordinate directories              */
 			      /* (also see below)                     */
-char	*chndfldir = "/usr/src/newbrl/mmdf/testmmdf/chans";
+char	*chndfldir = MMDFCHANDIR;
 				/* contains the channel programs        */
 				/* (ch_*) called by deliver             */
 char	*lckdfldir = "/tmp";
@@ -238,6 +239,6 @@ char	*locmachine = "BRL-VGR";
 /******************* AUTHORIZATION TAILORING **************************/
 char	*authrequest = "Lamas@BRL-VGR";
 				/* authorisation request address        */
-char	*authfile = "/usr/src/newbrl/mmdf/testmmdf/warning";
+char	*authfile = MM_AUTHFILE;
 				/* warning letter - full pathname       */
 

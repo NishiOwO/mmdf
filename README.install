@@ -1,5 +1,5 @@
 Choose the site dependent settings in conf/<your-site>, or create your
-own directory, copy the files from conf/sample and adjust your pathnames.
+own directory, copy the files from conf/sample.
 
 For a default installation
 	./configure --target <your-site>
@@ -9,15 +9,54 @@ For a default installation
 
 For more information on configure, run configure --help
 
+You may adjust most of your pathnames with the following switches:
+
+MMDF programs an tables will be installed in
+	${prefix}	= /usr
+	${mmdf_prefix}	= ${prefix}/mmdf
+	${mmdflibdir}	= ${mmdf_prefix}/lib
+	${chandir}	= ${mmdf_prefix}/chans
+	${tbldir}	= ${mmdf_prefix}/table
+may be changed by: --prefix=
+
+	$exec_prefix	= ${prefix}/local
+may be changed by: --exec_prefix=
+
+	${bindir}	= ${exec_prefix}/bin
+may be changed by: --bindir=
+
+	${sbindir}	= ${exec_prefix}/sbin
+may be changed by: --sbindir=
+
+	${rcvdir}	= ${libexecdir}
+	${libexecdir}	= ${exec_prefix}/lib/mh
+may be changed by: --libexecdir=
+
+	${sharedstatedir}= ${prefix}/spool/mmdf/home
+may be changed by: --sharedstatedir=
+
+	${localstatedir} = ${prefix}/spool/mmdf/log
+may be changed by: --localstatedir=
+
+	${sysconfdir}	= ${mmdf_prefix}
+may be changed by: --sysconfdir=
+
+
 Tested on:
+==========
 
 Linux (redhat 4.2 with libc 5.4.30 or higher)
-Sun Solaris 2.5.1 with cc
-HP9000s735       HP-UX 9.xx  with cc
-HP9000 Series C  HP-UX 10.xx with cc
+Sun		 Solaris 2.5>
+Sun		 Sun OS 4
+HP9000s735       HP-UX 9.xx
+HP9000 Series C  HP-UX 10.xx
+BSDI					: thanks to Ran Atkinson
+FreeBSD 3.0				: thanks to Mike Muuss
+
+
 
 Comments and Bug list:
-
+======================
 1) run "make depend" only if you have gcc
 2) when using dbm-table and libgdbm take care: an open in writing mode
    of the database will lock this one for reading too. So MMDF is
@@ -27,7 +66,89 @@ Comments and Bug list:
 on linux:
 1) use at least libc version 5.4.30
 
-on HP:
-1) When using gcc and you get an error about '__builtin_va_start'.
-   run configure --disable-gcc
+
+List of installation pathnames:
+===============================
+
+/usr/bin/rmail
+
+${chandir}/badusers
+${chandir}/bboards
+${chandir}/blockaddr
+${chandir}/delay
+${chandir}/ean
+${chandir}/list
+${chandir}/local
+${chandir}/niftp
+${chandir}/phone
+${chandir}/pobox
+${chandir}/pop
+${chandir}/sendprog
+${chandir}/recvprog
+${chandir}/smphone
+${chandir}/smtp
+${chandir}/smtpsrvr
+${chandir}/smtpd
+${chandir}/uucp
+${mmdflibdir}/deliver
+${mmdflibdir}/ean2mmdf
+${mmdflibdir}/ni_niftp
+${mmdflibdir}/slave
+${mmdflibdir}/smslave
+${mmdflibdir}/submit
+${mmdflibdir}/amp
+${mmdflibdir}/checkup
+${mmdflibdir}/checkque
+${mmdflibdir}/dbmbuild
+${mmdflibdir}/dbmedit
+${mmdflibdir}/dbmlist
+${mmdflibdir}/nictable
+${mmdflibdir}/checkaddr
+${mmdflibdir}/mailid
+${mmdflibdir}/cleanque
+${mmdflibdir}/fixtai
+${mmdflibdir}/rem_chans
+${mmdflibdir}/setup
+${mmdflibdir}/process-uucp
+${mmdflibdir}/tablelist
+${bindir}/msg
+${bindir}/checkmail
+${bindir}/emactovi
+${bindir}/mlist
+${bindir}/newmail
+${bindir}/resend
+${bindir}/send
+${bindir}/snd
+${sbindir}/sendmail
+${mmdflibdir}/malias
+${mmdflibdir}/v6mail
+${mmdflibdir}/newssend
+${rcvdir}/rcvalert
+${rcvdir}/rcvfile
+${rcvdir}/rcvprint
+${rcvdir}/rcvtrip
+
+config: ${sysconfdir}/mmdftailor
+dir   : ${localstatedir}
+	${localstatedir}/phase
+	${tbldir}
+	${sharedstatedir}
+	/tmp/mmdf
+	
+Compiledin pathnames of conf.c, conf_dial.c, msgtailor.c are set
+in h/pathnames.h as follows:
+
+	char *mmtailor	= "${sysconfdir}/mmdftailor"
+	char *cmddfldir	= "${mmdflibdir}"
+	char *logdfldir	= "${localstatedir}"
+	char *phsdfldir	= "${localstatedir}/phase"
+	char *tbldfldir	= "${tbldir}"
+	char *tbldbm	= "${tbldir}/mmdfdbm"
+	char *quedfldir	= "${sharedstatedir}"
+	char *chndfldir	= "${chandir}"
+	char *lckdfldir	= "/tmp/mmdf"
+	char *authfile	= "${sysconfdir}/warning"
+	char *d_calllog	= "${localstatedir}/dial_log"
+	char *resendprog= "|${bindir}/resend"
+	char *sndname	= "${bindir}/send"
 

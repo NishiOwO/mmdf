@@ -1,6 +1,7 @@
 #include "util.h"
 #include "mmdf.h"
 #include "ap_norm.h"
+#include "pathnames.h"
 
 /*            COMPILE-TIME CONFIGURATION FILE WITH SITE-DEPENDENT INFORMATION
  *
@@ -8,7 +9,7 @@
  *   the message system needs to have.
  */
 
-char *mmtailor = "/usr/mmdf/mmdftailor";
+char *mmtailor = MM_MMDFTAILOR;
 				/* location of external tailoring file  */
 
 /* ************************  PUBLIC NAMES  ****************************** */
@@ -33,24 +34,24 @@ char    *mail_server = "StepSun.Uni-Kl.De",
  *  The following pathnames must be anchored.
  */
 
-char	*cmddfldir = "/usr/mmdf/";
+char	*cmddfldir = MMDFLIBDIR;
 			      /* contains MMDF commands, such as      */
 			      /* submit, deliver, and queclean        */
-char	*logdfldir = "/usr/spool/mmdf/log";
+char	*logdfldir = MMDFLOGDIR;
 			      /* contains highly volatile files, such */
 			      /* as logs and check-point markers      */
-char	*phsdfldir = "/usr/spool/mmdf/log/phase";
+char	*phsdfldir = MM_PHASEDIR;
 			      /* contains timestamp files             */
-char	*tbldfldir = "/usr/mmdf/table";
+char	*tbldfldir = MMDFTABLEDIR;
 			      /* contains sticky files, such as       */
 			      /* name tables & dialing scripts        */
-char	*tbldbm = "/usr/mmdf/table/mmdfdbm";
+char	*tbldbm = MM_TBLDBM;
 			      /* dbm() hash of name tables      */
-char	*quedfldir = "/usr/spool/mmdf/home";
+char	*quedfldir = MMDFPSOOLDIR;
 			      /* contains queued mail files, in       */
 			      /* subordinate directories              */
 			      /* (also see below)                     */
-char	*chndfldir = "/usr/mmdf/chans";
+char	*chndfldir = MMDFCHANDIR;
 				/* contains the channel programs        */
 				/* (ch_*) called by deliver             */
 char	*lckdfldir = "/tmp/mmdf";
@@ -238,6 +239,6 @@ char	*locmachine = "saturn";
 /******************* AUTHORIZATION TAILORING **************************/
 char	*authrequest = "Postmaster@mathematik.uni-kl.de";
 				/* authorisation request address        */
-char	*authfile = "/usr/mmdf/msgs/warning";
+char	*authfile = MM_AUTHFILE;
 				/* warning letter - full pathname       */
 

@@ -25,6 +25,9 @@
 #include "ns.h"
 
 extern	int	errno;
+#if !HAVE_SYS_ERRLIST_DECL
+extern  char    *sys_errlist[];
+#endif /* HAVE_SYS_ERRLIST_DECL */
 
 struct	sockaddr_in	addr;
 
@@ -88,7 +91,7 @@ char **argv;
 	
 	  mn_mmdf();           /* set up effective and group id's properly */
 	  if (getpeername (0, (struct sockaddr *)&rmtaddr, &len_rmtaddr) < 0)
-	    bomb( "getpeername failed (errno %d)",errno);
+	    bomb( "getpeername failed (errno [%d] %s)",errno, sys_errlist[errno]);
 
 	  (void) setsockopt (0, SOL_SOCKET, SO_KEEPALIVE, &on, sizeof on);
 	  hp = gethostbyaddr ( (char *)&rmtaddr.sin_addr,
@@ -101,7 +104,7 @@ char **argv;
 	  
 	  execl (Smtpserver, stricked ? "rsmtpsrvr" : "smtpsrvr",
 		 rmthost, thishost, Channel, (char *)0);
-	  bomb( "server exec error (%d)", errno);
+	  bomb( "server exec error ([%d] %s)", errno, sys_errlist[errno]);
 	}
 	/* now smtpd is running standalone */
 
@@ -129,18 +132,13 @@ char **argv;
 			sleep(5);
 	} while (skt < 0 && i-- > 0);
 	if (skt < 0) {
-		logx("can't open socket (errno %d)", errno);
+		logx("can't open socket (errno [%d] %s)", errno, sys_errlist[errno]);
 		exit(99);
 	}
 	logx("socket open on %d", skt);
 
-#if 1
-	if (bind (skt, &addr, sizeof addr) < 0)
-#else
-    if (bind (skt, (char *)&addr, sizeof addr) < 0)
-#endif
-    {
-      logx("can't bind socket (errno %d)", errno);
+	if (bind (skt, &addr, sizeof addr) < 0) {
+      logx("can't bind socket (errno [%d] %s )", errno, sys_errlist[errno]);
       exit(98);
 	}
 	listen (skt, Maxconnections+1);
@@ -165,14 +163,14 @@ char **argv;
 		 * Accept a connection.
 		 */
 		if ((tmpskt = accept(skt, &rmtaddr, &len_rmtaddr)) < 0) {
-			logx("accept error (%d)", errno);
+			logx("accept error ([%d] %s)", errno, sys_errlist[errno]);
 			sleep(1);
 			continue;
 		}
 
 		/* We have a valid open connection, start a server... */
 		if ((pid = fork()) < 0) {
-			logx("could not fork (%d)", errno);
+			logx("could not fork ([%d] %s)", errno, sys_errlist[errno]);
 			close(tmpskt);
 		} else if (pid == 0) {
 			/*
@@ -196,7 +194,7 @@ char **argv;
 				close(tmpskt);
 			execl(Smtpserver, stricked? "rsmtpsrvr" : "smtpsrvr",
 					rmt, thishost, Channel, (char *)0);
-			logx("server exec error (%d)", errno);
+			logx("server exec error ([%d] %s)", errno, sys_errlist[errno]);
 			exit(99);
 		}
 

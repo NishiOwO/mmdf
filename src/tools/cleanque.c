@@ -1,4 +1,4 @@
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.13 1998/07/14 10:40:10 mmdf Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.14 1998/09/18 11:16:48 krueger Exp $ */
 /*
  *     MULTI-CHANNEL MEMO DISTRIBUTION FACILITY  (MMDF)
  *     
@@ -37,25 +37,6 @@
 #include "ch.h"
 #include <sys/stat.h>
 #include "ml_send.h"
-
-#if HAVE_DIRENT_H  /* XXX rja, krueger */
-#  include <dirent.h>
-#  define NAMLEN(dirent) strlen((dirent)->d_name)
-#  define dirtype dirent
-#else /* HAVE_DIRENT_H */
-#  define dirtype direct
-#  define dirent direct
-#  define NAMLEN(dirent) (dirent)->d_namlen
-#  if HAVE_SYS_NDIR_H
-#    include <sys/ndir.h>
-#  endif
-#  if HAVE_SYS_DIR_H
-#    include <sys/dir.h>
-#  endif
-#  if HAVE_NDIR_H
-#    include <ndir.h>
-#  endif
-#endif /* HAVE_DIRENT_H */
 
 #if HAVE_DIRENT_H  /* XXX rja, krueger */
 #  include <dirent.h>

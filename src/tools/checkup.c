@@ -240,6 +240,11 @@ main (argc, argv)
 	que (LEVEL7, hdrfmt, "", "compiled by dbmbuild");
 	qflush (LEVEL7);
 
+#ifdef HAVE_LIBGDBM
+	getfpath (tbldbm, tbldfldir, tmpfile);
+	que (LEVEL7, subhdrfmt, "data base", tmpfile);
+	chkfile (tmpfile, 0644, 0664, mmdfuid, mmdfgid, MMDFlogin);
+#else /* HAVE_LIBGDBM */
 	getfpath (tbldbm, tbldfldir, tmpfile);
 	strcat (tmpfile, ".dir");
 	que (LEVEL7, subhdrfmt, "data directory", tmpfile);
@@ -249,6 +254,7 @@ main (argc, argv)
 	strcat (tmpfile, ".pag");
 	que (LEVEL7, subhdrfmt, "data pages", tmpfile);
 	chkfile (tmpfile, 0644, 0664, mmdfuid, mmdfgid, MMDFlogin);
+#endif /* HAVE_LIBGDBM */
 	qflush (LEVEL7);
     }
 

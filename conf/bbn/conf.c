@@ -1,6 +1,7 @@
 #include "util.h"
 #include "mmdf.h"
 #include "ap_norm.h"
+#include "pathnames.h"
 
 /*            COMPILE-TIME CONFIGURATION FILE WITH SITE-DEPENDENT INFORMATION
  *
@@ -8,7 +9,7 @@
  *   the message system needs to have.
  */
 
-char *mmtailor = "/usr/mmdf/mmdftailor";
+char *mmtailor = MM_MMDFTAILOR;
 				/* location of external tailoring file  */
 
 /* ************************  PUBLIC NAMES  ****************************** */
@@ -31,24 +32,24 @@ char
  *  The following pathnames must be anchored.
  */
 
-char	*cmddfldir = "/usr/mmdf/lib";
+char	*cmddfldir = MMDFLIBDIR;
 			      /* contains MMDF commands, such as      */
 			      /* submit, deliver, and queclean        */
-char	*logdfldir = "/usr/mmdf/log";
+char	*logdfldir = MMDFLOGDIR;
 			      /* contains highly volatile files, such */
 			      /* as logs and check-point markers      */
-char	*phsdfldir = "/usr/mmdf/phase";
+char	*phsdfldir = MM_PHASEDIR;
 			      /* contains timestamp files             */
-char	*tbldfldir = "/usr/mmdf/table";
+char	*tbldfldir = MMDFTABLEDIR;
 			      /* contains sticky files, such as       */
 			      /* name tables & dialing scripts        */
-char	*tbldbm = "/usr/mmdf/table/mmdfdbm";
+char	*tbldbm = MM_TBLDBM;
 			      /* dbm() hash of name tables      */
-char	*quedfldir = "/usr/mmdf/lock/home";
+char	*quedfldir = MMDFPSOOLDIR;
 			      /* contains queued mail files, in       */
 			      /* subordinate directories              */
 			      /* (also see below)                     */
-char	*chndfldir = "/usr/mmdf/chans";
+char	*chndfldir = MMDFCHANDIR;
 				/* contains the channel programs        */
 				/* (ch_*) called by deliver             */
 char	*lckdfldir = "/tmp";
@@ -238,6 +239,6 @@ char	*locmachine = { 0 };
 /******************* AUTHORIZATION TAILORING **************************/
 char	*authrequest = "mmdf@CSNET-DEV";
 				/* authorisation request address        */
-char	*authfile = "/usr/mmdf/warning";
+char	*authfile = MM_AUTHFILE;
 				/* warning letter - full pathname       */
 

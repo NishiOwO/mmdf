@@ -2,6 +2,7 @@
 #include "util.h"
 #include "mmdf.h"
 #include "ap_norm.h"
+#include "pathnames.h"
 
 /*            COMPILE-TIME CONFIGURATION FILE WITH SITE-DEPENDENT INFORMATION
  *
@@ -9,7 +10,7 @@
  *   the message system needs to have.
  */
 
-char *mmtailor = "/local/mmdf/mmdftailor";
+char *mmtailor = MM_MMDFTAILOR;
 				/* location of external tailoring file  */
 
 /* ************************  PUBLIC NAMES  ****************************** */
@@ -32,24 +33,24 @@ char
  *  The following pathnames must be anchored.
  */
 
-char	*cmddfldir = "/local/mmdf";
+char	*cmddfldir = MMDFLIBDIR;
 			      /* contains MMDF commands, such as      */
 			      /* submit, deliver, and queclean        */
-char	*logdfldir = "/local/mmdf/log";
+char	*logdfldir = MMDFLOGDIR;
 			      /* contains highly volatile files, such */
 			      /* as logs and check-point markers      */
-char	*phsdfldir = "/local/mmdf/phase";
+char	*phsdfldir = MM_PHASEDIR;
 			      /* contains timestamp files             */
-char	*tbldfldir = "/local/mmdf/table";
+char	*tbldfldir = MMDFTABLEDIR;
 			      /* contains sticky files, such as       */
 			      /* name tables & dialing scripts        */
-char	*tbldbm = "/local/mmdf/table/mmdfdbm";
+char	*tbldbm = MM_TBLDBM;
 			      /* dbm() hash of name tables      */
-char	*quedfldir = "/local/mmdf/lock/home";
+char	*quedfldir = MMDFPSOOLDIR;
 			      /* contains queued mail files, in       */
 			      /* subordinate directories              */
 			      /* (also see below)                     */
-char	*chndfldir = "/local/mmdf/chans";
+char	*chndfldir = MMDFCHANDIR;
 				/* contains the channel programs        */
 				/* (ch_*) called by deliver             */
 char	*lckdfldir = "/tmp";
@@ -239,6 +240,6 @@ char	*locmachine = { 0 };
 /******************* AUTHORIZATION TAILORING **************************/
 char	*authrequest = "MMDF@A.CS.OKSTATE.EDU";
 				/* authorisation request address        */
-char	*authfile = "/local/mmdf/warning";
+char	*authfile = MM_AUTHFILE;
 				/* warning letter - full pathname       */
 

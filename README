@@ -2,7 +2,7 @@
 README -- MMDFII, Patch Level 44 (alpha), June 1998
 
 	This is the current source tree of the MMDF II 2.44 alpha release.
-Patches up to patch-a5 have been applied. (last change June 15th 1998)
+Patches up to patch-a7 have been applied. (last change August 19th 1998)
 
 CHANGES:
     This release mainly consists of cleanups. But there are also some
@@ -34,156 +34,14 @@ TESTED PLATFORMS:
     + HP 9000/715      : HP-UX  9.05      (development package C compiler)
     + PC               : Linux RedHat 4.2 (gcc-2.7.2, libc > 5.4.30)
                          libc 4.6 - 5.3 do not work (not a problem of mmdf!)
+                       : RedHat 5.1, glibc 2.x
     + Sun Sparc Ultra 2: Solaris 2.5.1    ()
     + Sun Sparc 10     : Solaris 2.4      (gcc-2.6.3)
     + Sun sparc SUNW,Ultra-4: Solaris 2.6 (cc) 
     + sun4m            : SunOS  4.1.4     (cc, gcc 2.7.2)
-    
-    We would be grateful, if some of you who have access to machines of 
-    different type of operating system would also test this release.
-    
-DOCUMENTATION:
-
-	If you are already familiar with MMDF and how it works, the first
-thing you should do is look at the administrators guide in
-doc/administrators.  There is a makefile there to make an nroff or troff
-version of "Installing and Operating MMDFII".  Read it.
-
-	There are several other documents which will make the
-administrators guide more understandable.  We recommend that novice
-installers start with (in order): "MMDF II: A Technical Review",
-"Addressing in MMDF II", and (if you plan to use the authorization
-features) "Configuring MMDF Authorization", and "Authorization and
-Accounting in Store and Forward Message Handling Systems".  Look for these
-documents in doc/review, doc/addressing, doc/auth.guide, and
-doc/authorization respectively.
-
-
-MAILING LIST:
-	You should probably join the MMDFII mailing list, which is
-low-volume and polite.  Postings to the list should be sent to
-<mmdf2@a.cs.okstate.edu> while administrivia should be sent to
-<mmdf2-request@a.cs.okstate.edu>.  
-
-
-BUG REPORTS & FEEDBACK:
-	Please send bug reports to the list <mmdf2@a.cs.okstate.edu>
-or directly to the PL44 maintainer Kai Krueger <krueger@mathematik.uni-kl.de>.
-
-
-WEB SITES:
-	An MMDF User's Group web site is setup at "http://www.mmdf.org".
-Other web sites of interest include Mark Vasoll's at
-"http://www.c2-tech.com/~vasoll/mmdf" and Jerry Sweet's at
-"http://www.irvine.com/~mmdf".
-
-
-FTP SITE:
-	The MMDF Patch Level 44 software package official ftp site is
-at the University of Kaiserslauten in Germany:
-	ftp://www.mathematik.uni-kl.de/pub/Sources/mail+news/mmdf/  
-
-	Mirror sites in other locations are sought.  If you're prepared to
-run a automated mirror site on an on-going basis and have at least an E3/T3
-connection to the Internet, please send email to the MMDF mailing list.
-
-
-CREDITS:
-
-Thanks and much credit is due to Dan Long, Mark Vasoll, Doug Kingston, Phil
-Cockcroft, Steve Kille, Howard Walter, and others who put in considerable
-time and effort into past MMDF releases.
-
-
-
-NOTES:
-
-1.  Be aware that MMDFII is a complete mail system, and as such, replaces
-sendmail et. al.  As a result you no longer need the following files:
-
-    /usr/lib/sendmail.*
-    /usr/ucb/newaliases
-    /etc/aliases
-    /etc/delivermail
-    /etc/comsat
-    /usr/ucb/biff
-    /usr/ucb/mailq
-
-2. The following programs are replaced by MMDFII (you may want to save the
-original versions).  Note that these "user interface programs" in the
-"uip" directory of the distribution have not been updated recently and
-aren't portable to all systems.  
-
-    /bin/rmail
-    /bin/mail
-    /usr/lib/sendmail		MMDFII has a fake sendmail that fools
-				most applications
-
-    /usr/ucb/Mail		There are MMDFII versions that work
-    /usr/ucb/mail		with MMDFII.   Most people seem to prefer
-				to use MMDFII's own user interface (msg/send)
-				or MH (6.4 or later).
-
-3.  The modern Internet relies on MX records in the DNS, so most sites
-should make sure that NAMESERVER is defined.
-
-4.  There are several freely distributable Mail User Agent software
-packages that are MMDF-compatible.  MMDF support is generally
-a compile-time option in these packages:  
-	Elm
-	Exmh
-	IMAP-4 Toolkit from Univ. of Washington
-	MH
-	Mail User's Shell (mush)
-	Mutt
-	Pine
-
-5. There are other miscellaneous software packages that can be
-used with MMDF and might be of interest.  These include:
-	John DuBois' "MMDF Administrative Utilities" for SCO UNIX
-	PROCMAIL	- A mail sorting package
-	MajorDomo	- An automated list manager
-	TIN		- An MMDF-compatible NNTP news reader
-
-README -- MMDFII, Patch Level 44 (alpha), June 1998
-
-	This is the current source tree of the MMDF II 2.44 alpha release.
-Patches up to patch-a4 have been applied. (last change June 5th 1998)
-
-CHANGES:
-    This release mainly consists of cleanups. But there are also some
-    new features that were important at our site. 
-    - configure may now be used for setting system dependent compile 
-      time options. These have been changed to feature dependent 
-      switches. 
-    - Files which existed in multiple versions ,like e.g. src/smtp/smtpd.*.c, 
-      lib/table/tb_ns.*.c, lib/util/lk_lock.*.c, have been cleaned up.
-    - support for header lines longer than 256 characters 
-    - 8-bit clean transfer of E-mails (compile time option, default: on)
-    - removal of routing information in the envelope "mail from:" lines
-      (compile time option, default: on)
-    - use of the tcpd/identd-package, if libwrap.a and tcpd.h exist 
-      (compile time option, default: on)
-    - possibility to use gdbm, if dbm and ndbm are not available. 
-      Of course you can always use sequential tables, as before.
-    - tables can now be accessed via NIS/NIS+ (compile time option, 
-      default: off)
-    - possibility to change location of the tables mailids and users
-      in mmdftailor (compile time option, default: off)
-    - additional information, like e.g. real hostname, real ip-address,
-      in the Received: line (run time option in mmdftailor)
-    = no cleanups done on uip/ucbmail and uip/unsupported
-
-TESTED PLATFORMS:
-    The new release has already been tested on the following architectures:
-    + HP 9000/780      : HP-UX 10.20      (development package C compiler)
-    + HP 9000/715      : HP-UX  9.05      (development package C compiler)
-    + PC               : Linux RedHat 4.2 (gcc-2.7.2, libc > 5.4.30)
-                         libc 4.6 - 5.3 do not work (not a problem of mmdf!)
-    + Sun Sparc Ultra 2: Solaris 2.5.1    ()
-    + Sun Sparc 10     : Solaris 2.4      (gcc-2.6.3)
-    + Sun sparc SUNW,Ultra-4: Solaris 2.6 (cc) 
-    + sun4m            : SunOS  4.1.4     (cc, gcc 2.7.2)
+    + BSDI             :               thanks to Ran Atkinson
+    + FreeBSD 3.0      :               thanks to Mike Muuss
+    + Debian Linux     : (glibc2.0)    thanks to Ulf Rudolf
     
     We would be grateful, if some of you who have access to machines of 
     different type of operating system would also test this release.

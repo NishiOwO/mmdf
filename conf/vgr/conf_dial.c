@@ -2,6 +2,7 @@
 #include "ll_log.h"
 #include "d_proto.h"
 #include "d_structs.h"
+#include "pathnames.h"
 
 /* **********************  DIALING TAILOR INFO  **********************  */
 
@@ -41,7 +42,7 @@ struct directlines  *d_lines = thelines;
  *     ports and autodialer devices.
  */
 
-char  *d_calllog  =  "/usr/mmdf/log/dial_log";
+char  *d_calllog  =  MM_DIALLOG;
 
 /*
  *	this is the name of the programs will actually do dialing

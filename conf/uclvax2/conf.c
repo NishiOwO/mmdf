@@ -7,8 +7,9 @@
 #include "util.h"
 #include "mmdf.h"
 #include "ap_norm.h"
+#include "pathnames.h"
 
-char *mmtailor = "/etc/mmdf/mmdftailor";
+char *mmtailor = MM_MMDFTAILOR;
 				/* location of external tailoring file  */
 
 /* ************************  PUBLIC NAMES  ****************************** */
@@ -33,24 +34,24 @@ char
  */
 
 char
-	*cmddfldir = "/usr/mmdf/lib",
+	*cmddfldir = MMDFLIBDIR,
 			      /* contains MMDF commands, such as      */
 			      /* submit, deliver, and queclean        */
-	*logdfldir = "/usr/spool/mmdflogs",
+	*logdfldir = MMDFLOGDIR,
 			      /* contains highly volatile files, such */
 			      /* as logs and check-point markers      */
-	*phsdfldir = "/usr/spool/mmdflogs/phase",
+	*phsdfldir = MM_PHASEDIR,
 			      /* contains timestamp files             */
-	*tbldfldir = "/usr/mmdf/mmdftable",
+	*tbldfldir = MMDFTABLEDIR,
 			      /* contains sticky files, such as       */
 			      /* name tables & dialing scripts        */
-	*tbldbm = "/usr/spool/mmdfdbm",
+	*tbldbm = MM_TBLDBM,
 			      /* dbm() hash of name tables      */
-	*quedfldir = "/usr/spool/mmdflock/que",
+	*quedfldir = MMDFPSOOLDIR,
 			      /* contains queued mail files, in       */
 			      /* subordinate directories              */
 			      /* (also see below)                     */
-	*chndfldir = "/usr/mmdf/lib/chans",
+	*chndfldir = MMDFCHANDIR,
 				  /* contains the channel programs        */
 				  /* (ch_*) called by deliver             */
 	*lckdfldir = "/tmp/mmdf";
@@ -236,6 +237,6 @@ char	*locmachine = "Ucl-Cs";
 /******************* AUTHORIZATION TAILORING **************************/
 char  *authrequest = "authorisation@Ucl-Cs";
 				/* authorisation request address        */
-char *authfile = "/etc/mmdf/warning";
+char *authfile = MM_AUTHFILE;
 				/* warning letter - full pathname       */
 
