@@ -30,10 +30,6 @@
 #undef	BOTHEND
 #undef	VIATRACE
 
-/**************** Include File Tailoring ****************************/
-
-#include <time.h>
-
 /********************* Privileged UIDs *************************/
 
 /*
