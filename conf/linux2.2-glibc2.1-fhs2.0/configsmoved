@@ -1,0 +1,138 @@
+conf.c:char *mmtailor = MM_MMDFTAILOR;
+conf.c:char	*cmddfldir = MMDFLIBDIR;
+conf.c:char	*logdfldir = MMDFLOGDIR;
+conf.c:char	*phsdfldir = MM_PHASEDIR;
+conf.c:char	*tbldfldir = MMDFTABLEDIR;
+conf.c:char	*tbldbm = MM_TBLDBM;
+conf.c:char	*quedfldir = MMDFPSOOLDIR;
+conf.c:char	*chndfldir = MMDFCHANDIR;
+conf.c:char	*authfile = MM_AUTHFILE;
+conf_dial.c:char  *d_calllog  =  MM_DIALLOG;
+
+Use following as checkoffs (put * by each one old & new looked at):
+
+my old conf/linux & my new one:
+old Makefile.com  new Makefile.in
+old Makefile.lib
+old Makefile.src
+
+=chan.c
+=conf.h
+=conf_dial.c
+NEW config.h
+=d_lock.h
+=msgtailor.c: RESENDPROG, SENDPROG
+=s_tailor.c
+
+
+------
+
+parsing README.install first:
+
+For a default installation
+        ./configure --target <your-site>
+        make depend (only with gcc)
+        make
+        make install
+
+For more information on configure, run configure --help
+
+Usage: configure [options] [host]
+Options: [defaults in brackets after descriptions]
+Configuration:
+x  --cache-file=FILE       cache test results in FILE
+x  --help                  print this message
+x  --no-create             do not create output files
+x  --quiet, --silent       do not print `checking...' messages
+x  --version               print the version of autoconf that created configure
+
+x  --create-target         force creation of conf/<target>/* if needed
+  --mmdf-debug=2  #[0,1,2]    enable more logging information      [default: 0]
+  --mmdf-dlog     #       enable debug-option of dial packages [default: 0]
+x  --mmdf-dbglog           enable more debug-option of dial packages [default: 0]
+  --mmdf-nodomlit  #       toggle define NODOMLIT [default: 1]
+x  --mmdf-leftdots         toggle define LEFTDOTS [default: 0]
+x  --mmdf-statsort         toggle define STATSORT [default: 1]
+x  --mmdf-citation         toggle define CITATION [default: 0]: note: s/b set linecount or not set (see old rmail.c)
+
+Directory and file names:
+x  --prefix=PREFIX         install architecture-independent files in PREFIX
+                          [/usr]
+x  --exec-prefix=EPREFIX   install architecture-dependent files in EPREFIX
+                          [same as prefix]
+x  --mmdf-prefix=DIR       default home of mmdf in DIR [PREFIX/mmdf]
+X  --bindir=/usr/bin #DIR            user executables in DIR [EPREFIX/bin]
+x  --sbindir=DIR           system admin executables in DIR [EPREFIX/sbin]
+
+CNSIDER???  --libexecdir=DIR        program executables in DIR [EPREFIX/libexec]
+  --datadir=DIR           read-only architecture-independent data in DIR
+                          [PREFIX/share]
+  --sysconfdir=DIR        read-only single-machine data in DIR [PREFIX/etc]
+  --sharedstatedir=DIR    modifiable architecture-independent data in DIR
+                          [PREFIX/com]
+  --localstatedir=DIR     modifiable single-machine data in DIR [PREFIX/var]
+  --libdir=DIR            object code libraries in DIR [EPREFIX/lib]
+  --includedir=DIR        C header files in DIR [PREFIX/include]
+  --oldincludedir=DIR     C header files for non-gcc in DIR [/usr/include]
+  --infodir=DIR           info documentation in DIR [PREFIX/info]
+  --mandir=DIR            man documentation in DIR [PREFIX/man]
+  --srcdir=DIR            find the sources in DIR [configure dir or ..]
+  --varprefix=DIR         x in DIR [PREFIX/var]
+
+  --mmdf-logdir=DIR       x in DIR [VARPREFIX/mmdf/log]
+  --mmdf-phasedir=DIR     x in DIR [VARPREFIX/mmdf/log/phase]
+  --mmdf-spooldir=DIR     x in DIR [VARPREFIX/mmdf/home]
+  --mmdf-diallog=FILE     x in FILE [MMDFLOGDIR/dial_log]
+
+  --program-prefix=PREFIX prepend PREFIX to installed program names
+  --program-suffix=SUFFIX append SUFFIX to installed program names
+  --program-transform-name=PROGRAM
+                          run sed PROGRAM on installed program names
+Host type:
+  --build=BUILD           configure for building on BUILD [BUILD=HOST]
+  --host=HOST             configure for HOST [guessed]
+  --target=TARGET         configure for TARGET [TARGET=HOST]
+Features and packages:
+  --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
+  --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+  --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
+  --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
+  --x-includes=DIR        X include files are in DIR
+  --x-libraries=DIR       X library files are in DIR
+--enable and --with options recognized:
+    --enable-PACKAGE        configure and build PACKAGE
+     --disable-PACKAGE       do not configure and build PACKAGE
+ where PACKAGE can be:
+     nameserver           nameserver-code                           (enabled)
+       dbm                tables via dbm, sequential otherwise      (enabled)
+       wrap               tcpwrapper                                (enabled)
+       nis                nis support for tables                   (disabled)
+       nn                 table mailids and users will be                                                 configurable in mmdftailor               (disabled)
+       nosrcroute         remove source-routing                     (enabled)
+       8bit               8bit clean                                (enabled)
+       lock_files         use explicily lock-files for filelocking (disabled)
+       dial               dial code                                (disabled)
+       badusers           badusers channel-program                  (enabled)
+       bboards            bboards channel-program                  (disabled)
+       blockaddr          blockaddr channel-program                (disabled)
+*       delay              delay channel-program                    (disabled)
+--enable-delay
+       ean                ean channel-program                      (disabled)
+       list               list channel-program                      (enabled)
+       niftp              niftp channel-program                    (disabled)
+       phone              phone channel-program                    (disabled)
+       pobox              pobox channel-program                    (disabled)
+       pop                pop channel-program                       (enabled)
+       prog               prog channel-program                     (disabled)
+       smphone            smphone channel-program                  (disabled)
+       smtp               smtp channel-program                      (enabled)
+       uucp               uucp channel-program                      (enabled)
+       msg                msg user agent                            (enabled)
+       other              malias,mlist,rcv*,resend,sendmail,v6mail  (enabled)
+       send               send user agent                           (enabled)
+       snd                snd user agent                            (enabled)
+       ucbmail            ucbmail 'Mail' program                    (enabled)
+       unsupported        autores, cvmbox                          (disabled)
+       gcc                use gcc as compiler                       (enabled)
+       gcc                use gcc as compiler                       (enabled)
+       elf                produce elf code, (only on sco)           (enabled)

@@ -1,0 +1,178 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+
+Linux kernel 2.2 glibc 2.1 FHS 2.0 RedHat 6.0:
+
+What makes up the relevent differences for Linux systems?
+
+Usually, the kernel version, with major versions 1.0, 1.2, 2.0 and 2.2
+being non-development stable branches (0.*, 1.1, 1.3, 2.1, and 2.3
+being development only), since Kernel features, calls and behavoirs
+change slightly over time; the "C Library" aka libc, which under Linux
+has gained the recent-memory major versions 4, 5, and 6, where before
+6 it was just "libcX" where X is the 4 or 5, and 6 being the assigned
+natural next number for the new Linux library of choice, glibc 2 (yes,
+this is similar to what happened with numbering SunOS 2, 3, 4,
+5=Solaris 2 ...), and since glibc is now the main library in use, we
+dote now on glibc version numbers (originally 2.0, currently 2.1),
+since the libraries also have changing features, calls, and
+interfaces, and then the various distributions, which are little more
+than various combinations of the aforementioned plus packages and how
+they're configured and installed and put together and packaged and
+delivered -- most of which could not be explained in a short string
+but a darn near 25% of which happens to be able to be explained by the
+strange, perhaps to those unaware of them obscure, acronyms "FSSTND"
+and "FHS", the former of which actually was implemented in most
+distributions *after* I first installed the distribution I've upgraded
+over the years on one of my hosts in 1995 (which meant that one day, I
+had to go get the FSSTD and manually move everything around, which
+took a day and a half; boy was I glad I did after that, it made life
+easier).  FSSTND and FHS detail how to organize files in the Unix
+filesystem.  I don't like it, because it tells me to break apart every
+package into its ``proper'' locations, but it's a lot better than
+85,000 different ways that are always causing annoyances and broken
+time and function; now, it's only three: the original program
+distribution, FSSTND or FHS (both very similar), and the
+administrator.  Since the admin is usually someplace between the two,
+it's usually even better than that, and since most things go towards
+FHS compliance anyway when anything happens to them (speaking of the
+program, administrator, and Linux distribution), it gets even better.
+It used to be that with FSSTND, it does not try to dictate non-Linux
+file system standards, and I could have said for the last few years
+that it was redundant to say "Linux with FSSTND": all the major
+distributions had achieved that; but now, FHS 1.2 is out, and FHS is
+better in that it *can* be used on non-Linux systems.  In any case, it
+makes sense to specify that your configuration is FHS or FSSTND
+compliant with the version # since FSSTND & FHS are major well-defined
+idiosyncracies of a program's various configuration possibilities from
+a architecture independent point of view; it makes sense to bring
+awareness to it when you're reading the file and saying "Huh?  Why do
+they put *that* *THERE*?!?!!" (well, I wouldn't have put that file
+there either, but I found that it saves me a lot of pain and hassle if
+I do according to the dictates of the standard, and I'm not just
+throwing darts, either: it's rather specific and has clear benefits.)
+[As I originally wrote this paragraph and had a mind to make
+everything FSSTND compliant, I found a message by Debian in 1997
+November saying they're going to migrate from FSSTND1.2 to FHS2.0
+(which is the first I learned of it, URL http://www.pathname.com/fhs/)
+*after* Debian 2.0, meaning 2.0 ("hamm") will be FSSTND 1.2.]
+
+What does not make up the difference of a Linux system?
+
+Well, the Linux kernel runs on CPUs Alpha (Digital and clones), ARM,
+Intel and clones (AMD, Cyrix, etc.) (as on IBM PCs and PS/2s and
+clones (such as Dell, Gateway): 8086, 80286, 80386, 80486, 80586 and
+clones, Pentium I, II), 680X0 (Amiga, Atari, HP, Apple and clones),
+MIPS (SGI and clones), PowerPC (Amiga, Apple, IBM, Motortola, etc.),
+SPARC (Sun and clones), SPARC64 (ditto), with additional ports in
+progress, and including, to name the few I know, buses MCA, ISA, PCI,
+VME, including the ones used on Mac, SPARC, SGI and AXP, and then
+MKLinux (Apple Macintosh) and GNU HURD (supposedly many of its own
+platforms).  GLIBC 2.1.1 is compatible per its own README with GNU
+HURD, {i[3456]86,alpha, powerpc, sparc{,64},}-*-linux-gnu,
+arm-*-{none,linux,linuxaout}, which means to also include , and GLIBC
+has run in the past on alpha-dec-osf1, i[3456]86-*-{bsd4.3,isc{2.2,3},
+sco{3.2{,v4}},sysv{,4}, force_cpu386-none,sequent-bsd},
+i960-nindy960-none, m68k-{hp-bsd4.3,mvme13{5,6}-none,sony-newsos{3,4},
+sun-sunos4}, mips-{dec-ultrix4,sgi-irix}, sparc-sun-{solaris2,sunos4}.
+
+So, for you to say that Linux is "i386" (whatever *THAT* means) is
+horribly wrong.  I'm sorry, but please don't do that.  i386 includes,
+among other things, BSD (including NetBSD, BSDI, FreeBSD, OpenBSD,
+BSD386), Solaris, SCO Unix, SCO Xenix, System V (of various sources).
+And I almost forgot ... Microsoft DOS, Windows {3.1,for WorkGroups,
+95, 98}, NT {2,3,4,5=W'2000}.  Furthermore, compilers are getting to
+the point where things made for Linux on an Intel platform that mimick
+the current general lineage of the IBM Clone (i.e., Dell, Gateway, IBM
+or Compaq) will not run at all on an Intel 80386.  Can you run the
+same binary or even compile the same source code on NetBSD and SCO
+Unix, Solaris and SCO Xenix, Windows 95 and Linux, System V and
+FreeBSD, SunOS and MS Windows 3.1, NT and OpenBSD, just because they
+were once made to work for Intel 80386 compatibles?  Well, there are
+major half-industry-spanning efforts underway to do just that, via
+various emulation interfaces, binary compatability agreements, library
+interfaces, etc.: the stuff standards organizations, marketing teams,
+and development divisions are made of.  Some of it might even work.
+Does that mean they're the same?  NO WAY!  But, the same source code
+that works for an Intel '386 may work for all SORTS of other platforms
+OUT OF THE BOX without even a nanosecond's hesitation, including, as
+I've mentioned above, Alpha (Digital and clones), ARM, Intel and
+clones (AMD, Cyrix, etc.) (as on IBM PCs and PS/2s and clones: 8086,
+80286, 80386, 80486, 80586 and clones, Pentium I, II), 680X0 (Amiga,
+Atari, HP, Apple and clones), MIPS (SGI and clones), PowerPC (Amiga,
+Apple, IBM, Motortola, etc.), SPARC (Sun and clones), SPARC64 (ditto),
+with additional ports in progress, and including, to name the few I
+know, buses MCA, EISA, PCI, VESA, VME, SBus, AGP, DIO, I2C, including
+the ones used on Mac, SPARC, SGI, AXP, and HP, and then MKLinux (Apple
+Macintosh) and GNU HURD (supposedly many of its own platforms), so
+long as we're specifying one of those particular operating systems;
+other operating systems, we get a different four processors, and yet
+another OS, we get a different seven, and another, three, and another,
+two.  Just explaining this simple contrast in one paragraph is enough
+to make the paragraph ungainly.  Why?  Because you are so wrong, and
+there are so many effects to what you did that it overflows the error
+message!
+
+Go by what counts: the items whose version numbers you're interested
+in.  Interfaces are 50% of that.  The version of the interfaces are
+the other 40%, along with the way the distributor put them together,
+about 10%.  The GNU naming scheme gets it 1/4th right, and 3/4ths
+wrong: we care not its processor (although the compiler and package
+manager may, so they're not entirely wrong in keeping it a
+configuration item someplace, their wildcarding system hides that for
+those of us who don't care, but they did leave out chipsets); we care
+not who built it (although the pair of who built it and the processor
+are often clues, they often are not); we do care what kernel version
+it is (mostly told by the OS & version GNU talks about, I'll count
+that for 17%), and we do care what library we're using (which GNU left
+out but can be inferred by the timing of the other three sometimes;
+I'll count this for 8%).
+
+Do we care the difference between a RedHat and a Debian, a Slackware
+and a Yggdrasil?  Hint: They're usually similar, although more slight
+than, the differences between two otherwise equivalent installations
+of the same age of an unmodified stock system and a system that's not
+stock any more due to heavy administration and use.  I.e., those are
+administrative issues, things that are meant to be contained within
+files (not whole directories!)
+
+So, in conclusion, and spread this message far and wide, do *NOT* use
+"i386", or for that matter, *ANY CPU TYPE*, or for that matter, a
+whole computer manufacturer, as a configuration item, subdirectory, or
+what have you, in *any source code again* unless it's something rather
+intrinsic to the CPU like a low-level compiler, assembler, program
+written in assembler such as parts of a kernel or well-tuned
+proprietary system, or the binary of any program.  Is that what MMDF
+is?  Well-tuned, perhaps, but nothing to create a whole configuration
+directory for a CPU type for; if anything, a single #define will do in
+even the most amazingly hand-tuned assembly coding, where the source
+code *may* have its own subdirectory in this special case, but
+certainly not the configuration area!
+
+Care I get into the difference between SPARC and SPARC, Alpha and
+Alpha, Intel and Intel?  Hint: 32 bit vs. 64 bit.  We all remember the
+transitions from 6(?) bits to 8 bits, from 12(?) bits to 16 ... from
+(octect orders) 2134(?) to 87654321 and back again ...  Please.  Let's
+not get carried away with something so trivial as who's name is
+attached to it, unless you're counting your stocks.
+
+Now, what librarysubsubminorpatchlevelreleaseprealphanumberpoint-
+numbernumberprebetapatchnumberbranchgroupenhancedbywhoversionbywhich-
+epositorydatebranchpostdistributionpredistributepackageversion an
+interface has is a different matter ...  (even that, hopefully only
+serious during heavy development activity).
+
+Brad Allen <Ulmo@Q.Net>
+
+-----BEGIN PGP SIGNATURE-----
+Version: 2.6.3ia
+Charset: noconv
+Comment: Processed by Mailcrypt 3.4, an Emacs/PGP interface
+
+iQEVAwUBN5Kw3ZxWhFYc6x9VAQHBFgf9E66p6g8OVEsPXdXhvRD867+oBcwSYgH6
+BoXbd04A9DxISZ2dArqqK3VdDVrNMKI0SnQBEsjB2a2eWTxRbxX4hzL3JaayCNh4
+M3vedyuILOjgJ0UVza0//ZGlblrxgBGPlm51yfSMmJ9seeFA3KGCd4Yjo0DZV0LS
+OtjrbxJXklPA91yAhGn5kBAlBaRRrMaPHBGJ3dN6hQldme7GImo24YnlpHRXonRV
+Fzr2mRnX9JI20W7KXPKtGtjVoW9jvu9XfChsY2wpSW7HK8heAEwaU9ITVP6eIsAM
+BwjiOJbzWcPyX4n7dfJAuhRofrMmZlhqBMK87XVAUOLkSrZOSQQZ3Q==
+=UBjM
+-----END PGP SIGNATURE-----
