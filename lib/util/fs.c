@@ -1,7 +1,10 @@
 /*
- * $Id: fs.c,v 1.1 1999/08/24 14:10:03 krueger Exp $
+ * $Id: fs.c,v 1.2 1999/08/24 14:28:02 krueger Exp $
  *
  * $Log: fs.c,v $
+ * Revision 1.2  1999/08/24 14:28:02  krueger
+ * Bug fixes
+ *
  * Revision 1.1  1999/08/24 14:10:03  krueger
  * Added fs.c for checking disk-space
  *
@@ -43,6 +46,8 @@
 #  endif /* F_FAVAIL */
 #endif /* HAVE_STATFS */
 
+int min_spool_free = 0;
+int min_inode_free = 0;
 
 #ifdef __MAIN__
 int main(
@@ -74,6 +79,9 @@ char *spool_directory;
 {
   int rc=1;
 
+#ifdef HAVE_STATFS
+  struct STATVFS statbuf;
+
   if(spool_directory==NULL) {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "check_disc_space(%d,(null))",
@@ -82,9 +90,6 @@ char *spool_directory;
     return 0;
   }
   
-#ifdef HAVE_STATFS
-  struct STATVFS statbuf;
-
   memset(&statbuf, 0, sizeof(statbuf));
   if( (STATVFS(spool_directory, &statbuf) != 0) ||
       ( statbuf.F_BAVAIL  < (msg_size + min_spool_free) / statbuf.F_FRSIZE) ||
