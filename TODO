@@ -1,3 +1,6 @@
+Mon Aug 16 21:39:40 CEST 1999 Kai Krueger <krueger@mathematik.uni-kl.de>
+      * needs an good check for argument types of res_mkquery()
+
 Mon, 19 Jul 1999 21:38:33 EDT Ulmo
 	rmail.c datecvt
     /* What this routine needs is a table of time zones for sources,

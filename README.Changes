@@ -33,7 +33,6 @@ Mon Aug 16 20:07:18 CEST 1999 Kai Krueger <krueger@mathematik.uni-kl.de>
      + changed install directory of v6mail from <somewhere>/mmdf/lib
        to <bindir>
      + pathname changes of uip/ucbmail/v7.local.h
-     + 
 
    - moved old Makefiles conf/*/Makefile.src, conf/*/Makefile.lib and 
      conf/*/Makefile.uip to attic
@@ -61,6 +60,8 @@ Mon Aug 16 20:07:18 CEST 1999 Kai Krueger <krueger@mathematik.uni-kl.de>
      replace if-commands by case-command for an easier implementation of
      new table types.(currently supported: DBM/SEQ, NS, NIS)
    - use tzset() if exists, envirenment variable TZ if not.
+   - Added check for enough free discspace to the local-channel
+     program when delivering to the mailbox.
 
 Changes from 2.44b2 to 2.44b3
       * Small bug in ap_lex.c hip@a.cs.okstate.edu
