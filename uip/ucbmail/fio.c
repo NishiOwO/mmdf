@@ -8,14 +8,14 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.4 $
+ *  $Revision: 1.5 $
  *
  *  $Log: fio.c,v $
- *  Revision 1.4  1985/11/20 14:34:38  galvin
- *  Added some debugging code -- ifdef'ed with DEBUG and dependent on
- *  debug -- and code to parse the MMDF message delimiters.  This code
- *  should still support the old style Mail format but since I cannot
- *  test this I don't know.
+ *  Revision 1.5  1985/12/18 13:22:33  galvin
+ *  Add another argument to send to indicate whether or not this
+ *  message should be delimited by MMDF message delimiters.
+ *
+ *  Change all but "temp" file opens/closes to use MMDF locking routines.
  *
  * Revision 1.6  86/01/13  13:03:48  galvin
  * Change format of debug output and delete one.

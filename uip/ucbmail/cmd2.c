@@ -8,11 +8,14 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  *
  *  $Log: cmd2.c,v $
- *  Revision 1.2  1985/12/18 03:10:35  galvin
- *  Added comment header for revision history.
+ *  Revision 1.3  1985/12/18 13:21:13  galvin
+ *  Add another argument to send to indicate whether or not this
+ *  message should be delimited by MMDF message delimiters.
+ *
+ *  Change all but "temp" file opens/closes to use MMDF locking routines.
  *
  * Revision 1.4  86/01/07  13:41:18  galvin
  * Change swrite to include MMDF delimiters in messages and to

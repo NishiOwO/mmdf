@@ -8,11 +8,14 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  *
  *  $Log: quit.c,v $
- *  Revision 1.2  1985/12/18 03:18:48  galvin
- *  Added comment header for revision history.
+ *  Revision 1.3  1985/12/18 13:25:49  galvin
+ *  Add another argument to send to indicate whether or not this
+ *  message should be delimited by MMDF message delimiters.
+ *
+ *  Change all but "temp" file opens/closes to use MMDF locking routines.
  *
  * Revision 1.3  85/12/18  13:25:49  galvin
  * Add another argument to send to indicate whether or not this
