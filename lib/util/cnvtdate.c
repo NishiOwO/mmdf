@@ -47,13 +47,24 @@ char *datbuf;
 		sprintf(datbuf, "%s, %d %s %02d %02d:%02d:%02d %s",
 			day[i->tm_wday], i->tm_mday, month[i->tm_mon],
 			i->tm_year, i->tm_hour, i->tm_min, i->tm_sec,
-			tzname[i->tm_isdst]);
+#ifdef HAVE_TZNAME
+			tzname[i->tm_isdst]
+#else /* TZNAME */
+			i->tm_zone
+#endif /* TZNAME */
+			);
 		break;
 
 	case TIMSHRT:		/* w/out day of week			*/
 		sprintf(datbuf, "%d %s %02d %02d:%02d %s",
 			i->tm_mday, month[i->tm_mon], i->tm_year,
-			i->tm_hour, i->tm_min, tzname[i->tm_isdst]);
+			i->tm_hour, i->tm_min,
+#ifdef HAVE_TZNAME
+			tzname[i->tm_isdst]
+#else /* TZNAME */
+			i->tm_zone
+#endif /* TZNAME */
+			);
 		break;
 	}
 	return(datbuf);
