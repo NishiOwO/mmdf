@@ -1,3 +1,1772 @@
+2001-01-21  Kai Krueger  <krueger@eowyn>
+
+	* src/deliver/deliver.c, src/smtp/qu2sm_send.c:
+	retturn message to sender if ret-dot-ret of DATA command gets an 550 error message, otherwise send messgae to supportaddr as usual
+
+	* h/mmdf.h, lib/mmdf/rp_valstr.c: Added new error code RP_DATA
+
+2001-01-19  MMDF - Mail Transport Agent  <mmdf@eowyn>
+
+	* local-config.sh: *** empty log message ***
+
+	* lib/util/rbl_match.c: Changed include order for solaris 2.5
+
+	* src/prog/pr_errmsg.c, lib/table/tb_regexp.c: use C-style comments
+
+	* conf/sparc-sun-solaris2.5.1/config.h:
+	Fixed multiple define of NODOMLIT and STATSORT, can be enabled with configure
+
+	* src/smtp/smtpsrvr.c:
+	initialisation problem with generic C-compiler on Solaris 2.5
+
+2001-01-09  Kai Krueger  <krueger@eowyn>
+
+	* src/niftp/pn_wtmail.c: changed strcnpy() into ()
+
+	* src/deliver/deliver.c: Changed daemon() into daemonize()
+
+	* man/man5/mmdf_ldap.5, man/man5/mmdf_rbl.5, man/man5/mmdf_regexp.5, man/man5/mmdftailor.5.in:
+	 Modified Files:
+	 	mmdftailor.5.in
+	 Added Files:
+	 	mmdf_ldap.5 mmdf_rbl.5 mmdf_regexp.5
+	  - Added man-pages for table type rbl, regular expression and ldap.
+	  - modified mmdftailor.5 accordingly
+
+	* autoconf/acconfig.h, configure.in, h/config.h.in, lib/mmdf/mm_tai.c, lib/table/Makefile.real, lib/table/tb_ldap.c, configure:
+	 Modified Files:
+	 	configure configure.in autoconf/acconfig.h h/config.h.in
+	 	lib/mmdf/mm_tai.c lib/table/Makefile.real
+	 Added Files:
+	 	lib/table/tb_ldap.c
+	 - some minor changes to the help output
+	 - Added table support for ldap ( currently only tested for aliases)
+
+	* lib/table/table_test.c:
+	some additional ouput for testing table access
+
+	* uip/other/Makefile.real: attributes output for use with rpm
+
+2000-11-08  Kai Krueger  <krueger@eowyn>
+
+	* configure.in, src/bboards/Makefile.real, src/bboards/getbbent.c, src/bboards/lock.c, src/bboards/strings.h, src/deliver/deliver.c, src/pop/getbbent.c, src/pop/lock.c, src/pop/strings.h, configure:
+	Modified to compile on Linux Slackware 4.0: Sept 00, Christine Jamison
+
+2000-10-19  Kai Krueger  <krueger@eowyn>
+
+	* src/local/lo_wtmail.c: *** empty log message ***
+
+2000-10-10  Kai Krueger  <krueger@eowyn>
+
+	* lib/mmdf/mm_tai.c:  fixed snprintf(var, size, fmt, var, ...)
+
+	* uip/other/sendmail.c: fixed snprintf(var, size, fmt, var, ...)
+
+2000-10-09  Kai Krueger  <krueger@eowyn>
+
+	* lib/mmdf/Makefile.real, lib/mmdf/msg_test.c:
+	Added small testprog for msg-file
+
+2000-10-08  Kai Krueger  <krueger@eowyn>
+
+	* rpm/local-configure.sh, rpm/mmdf.init, rpm/mmdfII-44dev.spec, rpm/mmdftailor, rpm/setlogs:
+	Added files for building MMDF  as RedHat 6.x rpm
+
+2000-10-07  Kai Krueger  <krueger@eowyn>
+
+	* uip/msg/msg5.c: fixed never ending loop when mailbox don't exists
+
+	* uip/other/Makefile.real:
+	Setting MMDF via variable, sendmail installed last
+
+2000-08-17  Kai Krueger  <krueger@eowyn>
+
+	* src/submit/adr_submit.c: *** empty log message ***
+
+2000-08-15  Kai Krueger  <krueger@eowyn>
+
+	* h/config.h.in, configure, src/prog/pr_errmsg.c, src/submit/submit.c:
+	*** empty log message ***
+
+2000-08-08  Kai Krueger  <krueger@eowyn>
+
+	* h/config.h.bot, h/config.h.in, h/funcs.h, h/ll_log.h, h/util.h, lib/addr/adrparse.c, lib/addr/ap_1adr.c, lib/addr/ap_lex.c, lib/addr/ap_normali.c, lib/addr/ap_p2s.c, lib/addr/ap_s2p.c, lib/addr/ap_s2tree.c, lib/addr/ap_t2parts.c, lib/addr/ap_t2s.c, lib/addr/ap_util.c, lib/addr/fullparse.c, lib/addr/ghost.c, lib/addr/norm.c, lib/addr/parse.c, lib/addr/td.c, lib/mmdf/err_abrt.c, lib/mmdf/ml_send.c, lib/mmdf/mm_rdmail.c, lib/mmdf/phs_note.c, lib/util/creatdir.c, lib/util/gcread.c, lib/util/ll_log.c:
+	1. Cleanups warnings of gcc -Wall --pedantic
+
+	* lib/table/tb_test.c: Bug fix
+
+	* h/tb_check.h, lib/table/Makefile.real, lib/table/tb_check.c, lib/table/tb_nis.c, lib/table/tb_ns.c, lib/table/tb_regexp.c, lib/table/tb_test.c, lib/util/rbl_match.c, src/tools/checkup.c:
+	Added Function used by checkup (table chaeck) and implemented suplemental flags for regexp-tables
+
+2000-07-06  Kai Krueger  <krueger@eowyn>
+
+	* Version: *** empty log message ***
+
+	* lib/addr/parse.c: some minor compiler fixes
+
+	* h/util.h: check if config.h is allready included
+
+2000-04-17  Kai Krueger  <krueger@eowyn>
+
+	* lib/mmdf/qu_io.c, src/deliver/ch_io.c:
+	Fixed missing definitions while compiling in 'development-mode' (define RUNALON)
+
+	* src/submit/mgt_submit.c:
+	fixed printing of protocol SMTP/ESMTP within logfile
+
+	* src/mailman/Makefile.real, src/mailman/ch_mailman.c, src/mailman/gen, src/mailman/mm_wtmail.c, src/mailman/qu2mm_send.c:
+	Added first version of a channel program for the mailman-list-processor
+
+2000-04-05  Kai Krueger  <krueger@eowyn>
+
+	* uip/other/mlist.c: *** empty log message ***
+
+2000-04-04  Kai Krueger  <krueger@eowyn>
+
+	* src/pobox/qu2po_send.c, src/pop/Makefile.real, src/pop/getbbent.c, src/pop/lock.c, src/pop/qu2po_send.c, src/prog/ch_prog.c, src/submit/adr_submit.c, src/submit/submit.c, src/tools/checkup.c, src/tools/mailid.c, src/tools/setup.c, src/uucp/rmail.c, uip/msg/msg1.c, uip/msg/msg2.c, uip/other/mlist.c, uip/other/newmail.c, uip/other/rcvalert.c, uip/other/rcvfile.c, uip/other/rcvtrip.c, uip/other/resend.c, uip/other/sendmail.c, uip/other/v6mail.c, uip/send/s_get.c, uip/snd/s_get.c, uip/snd/s_input.c, uip/ucbmail/getname.c, config.guess, configure.in, h/config.h.in, h/util.h, lib/dial/d_utils.c, lib/mmdf/ml_send.c, lib/util/fs.c, lib/util/getllog.c, src/deliver/deliver.c:
+	Merged patch for netBSD (better check for timezone, declaration of sprintf(), getpwnam(), some minor bug fixes
+
+	* lib/dial/d_utils.c, lib/mmdf/ml_send.c, lib/util/getllog.c, src/pop/lock.c, src/pop/qu2po_send.c, src/submit/submit.c, src/tools/checkup.c, src/tools/mailid.c, src/tools/setup.c, src/uucp/rmail.c, src/pobox/qu2po_send.c, src/pop/Makefile.real, src/pop/getbbent.c, src/deliver/deliver.c, uip/snd/s_get.c, uip/ucbmail/getname.c, uip/send/s_get.c, uip/other/mlist.c, uip/other/newmail.c, uip/other/rcvalert.c, uip/other/rcvfile.c, uip/other/rcvtrip.c, uip/other/resend.c, uip/other/sendmail.c, uip/other/v6mail.c, uip/msg/msg1.c, uip/msg/msg2.c:
+	Added define for standard-C-function declaration
+
+	* uip/snd/s_input.c: Fixed signal-type
+
+	* src/prog/ch_prog.c: changed abort to exit()
+
+	* src/submit/adr_submit.c: fixed type conversion
+
+	* lib/util/fs.c: Added include of sys/param.h
+
+	* h/util.h, autoconf/aclocal.m4, h/config.h.bot, h/config.h.in, autoconf/acconfig.h, configure.in, configure:
+	changes for netBSD: better check for long limezone, declaration of sprintf(), ...
+
+2000-03-23  Kai Krueger  <krueger@eowyn>
+
+	* config.guess: Added guess for netbsd
+
+2000-03-22  Kai Krueger  <krueger@eowyn>
+
+	* lib/util/cnvtdate.c: Added some comments about variable timezone
+
+2000-02-21  Kai Krueger  <krueger@eowyn>
+
+	* README, README.Changes, Version: patched final cut 2.44
+
+	* Version, README, README.Changes: final cut of release 2.44
+
+2000-01-18  Kai Krueger  <krueger@eowyn>
+
+	* lib/util/rbl_match.c, src/smtp/smtpsrvr.c: Finished work on rbl
+
+	* h/ch.h, lib/mmdf/mm_tai.c, lib/util/rbl_match.c, src/smtp/smtpsrvr.c:
+	 * h/ch.h lib/mmdf/mm_tai.c lib/util/rbl_match.c
+	 * src/smtp/smtpsrvr.c
+		- Added flags 'reject' for an table
+		- Replaced define HAVE_RBLSUPPORT by HAVE_RBL used in configure
+		- Added first test of RBL to smtpsrvr
+		- continued work on RBL
+
+2000-01-13  Kai Krueger  <krueger@eowyn>
+
+	* lib/mmdf/mm_tai.c: fixed table type 'nis'
+
+2000-01-12  Kai Krueger  <krueger@eowyn>
+
+	* src/local/qu2lo_send.c: local delivery do not work
+
+	* h/config.h.in, README, Version: *** empty log message ***
+
+	* autoconf/acconfig.h, h/config.h.in, configure.in, lib/util/cnvtdate.c, configure, autoconf/aclocal.m4:
+	Fixed timezone-variable on SunOS 4.1.x
+
+2000-01-11  Kai Krueger  <krueger@eowyn>
+
+	* h/util.h: *** empty log message ***
+
+2000-01-10  Kai Krueger  <krueger@eowyn>
+
+	* h/ch.h, h/mmdf.h, h/smtp.h, h/util.h:
+	Added check for allready included
+
+2000-01-09  Kai Krueger  <krueger@eowyn>
+
+	* src/smtp/smtpsrvr.c:
+	Fixed empty sender-field when compiled without esmtp
+
+2000-01-08  Kai Krueger  <krueger@eowyn>
+
+	* lib/table/ch_tbdbm.c: Fixed badly placed ')'
+
+2000-01-06  Kai Krueger  <krueger@eowyn>
+
+	* src/submit/mgt_submit.c: *** empty log message ***
+
+2000-01-05  Kai Krueger  <krueger@eowyn>
+
+	* h/config.h.bot: *** empty log message ***
+
+	* h/config.h.bot: fixed HAVE_SGTTY_TIOCSETN on hpux9.0x
+
+	* uip/ucbmail/strings.c: Fixed variable index/ind
+
+	* configure, configure.in: Added switch --with--mmdfprefix
+
+	* src/smtp/smtpsrvr.c:
+	cleanup esmtp support fo 'mail from' command rfc 1869 complient
+
+	* src/submit/mgt_submit.c: Added via-protocol for logging
+
+2000-01-03  Kai Krueger  <krueger@eowyn>
+
+	* src/tools/checkup.c, lib/mmdf/mm_tai.c:
+	Add backward-compatability of type= to flags=
+
+1999-12-22  Kai Krueger  <krueger@eowyn>
+
+	* man/Makefile.in: *** empty log message ***
+
+1999-12-16  Kai Krueger  <krueger@eowyn>
+
+	* h/ap.h, lib/addr/ap_util.c: Fixed multiple free of same pointer
+
+	* man/man5/mmdftailor.5.in: Update for EMSTP
+
+	* h/ap.h, lib/addr/ap_util.c: Fixed multiple free of same pointer
+
+	* conf/4.3vax/msgtailor.c: Fixed bad define
+
+1999-10-31  Kai Krueger  <krueger@eowyn>
+
+	* src/badusers/qu2lo_send.c, src/local/ch_local.c, src/local/qu2lo_send.c, src/tools/checkup.c, src/tools/setup.c, uip/msg/msg1.c, uip/other/v6mail.c, uip/ucbmail/Makefile.real:
+	Seeting effectiv group to mmdfgroup while writing to the mailbox-directory
+
+	* lib/mmdf/mm_tai.c, man/man5/mmdftailor.5.in:
+	Added tailoring-switch for mmdfgroup
+
+	* man/Makefile.in: Added switch for mmdflogin, mmdfgroup and rootlogin
+
+	* conf/m68k-hp-hpux8.00/conf.c, conf/okstate/conf.c, conf/sample/conf.c, conf/sparc-sun-solaris2.4/conf.c, conf/sparc-sun-solaris2.5.1/conf.c, conf/test/conf.c, conf/uclvax2/conf.c, conf/vgr/conf.c, conf/vu44/conf.c, conf/4.3vax/conf.c, conf/bbn/conf.c, conf/csnet-relay/conf.c, conf/hppa1.0/conf.c, conf/i386-unknown-freebsd3.0/conf.c, conf/i386/conf.c, conf/linux2.2-glibc2.1-fhs2.0/conf.c:
+	Initial value of mmdflogin and mmdfgroup set via configure
+
+	* autoconf/acconfig.h, conf/common/Makefile.com.in, h/config.h.in, configure, configure.in, Makefile.in:
+	Added switch for mmdflogin, mmdfgroup and rootlogin
+
+1999-10-28  Kai Krueger  <krueger@eowyn>
+
+	* lib/util/cnvtdate.c: fixed timezone bug
+
+	* man/Makefile.in: fixed missing mandir in Makefile
+
+	* uip/ucbmail/cmd2.c, uip/ucbmail/fio.c, uip/ucbmail/lock.c:
+	*** empty log message ***
+
+	* lib/util/cnvtdate.c: fixed timezone bug
+
+1999-10-24  Kai Krueger  <krueger@eowyn>
+
+	* src/tools/Makefile.real: Added missing libraries for fixtai
+
+	* lib/util/rbl_match.c: New format for rbl-type
+
+	* lib/table/tb_test.c: Added table type 'test' as sample
+
+	* lib/table/tb_regexp.c:
+	 Added Files:
+	 	lib/table/tb_regexp.c
+		* Added new table type 'regexp' for key as regular
+		  expressions. This table is read sequencialy and each line is
+		  matched as regular expression with the search key.
+
+	* lib/table/tb_nis.c: Moved table type 'nis' into new format
+
+	* lib/table/tb_ns.c: Moved table type 'ns' into new format
+
+	* lib/table/Makefile.real, lib/table/table_test.c:
+	Added test-programm for check new table-access functions
+
+	* lib/table/ch_tbdbm.c, lib/table/dm_table.c, man/man3/tables.3, src/tools/checkup.c, src/tools/dbmbuild.c, src/tools/fixtai.c, src/tools/tablelist.c, configure.in, h/ch.h, h/config.h.in, lib/mmdf/mm_tai.c, README.devel, Version, configure:
+	 Modified Files:
+	 	Version configure configure.in h/ch.h h/config.h.in
+	 	lib/mmdf/mm_tai.c lib/table/ch_tbdbm.c lib/table/dm_table.c
+	 	src/tools/checkup.c src/tools/dbmbuild.c src/tools/fixtai.c
+	 	src/tools/tablelist.c
+	 Added Files:
+	 	README.devel man/man3/tables.3
+		* major rewrite of the table-acces functions.
+		* both sequencial and dbm access can now coexist
+		* Added fetch() and tailoring() functions for tabletype
+		  specific access.
+		* Now easer to implement new table formats
+		* Changes needed by other programs
+		* tailoring variable 'flags' no longer for tabletype used
+		* new tailoring variable 'type' to define the tabletype
+
+1999-10-23  Kai Krueger  <krueger@eowyn>
+
+	* uip/ucbmail/cmd2.c, uip/ucbmail/fio.c, uip/ucbmail/lock.c:
+	some minor fixes
+
+1999-10-12  Kai Krueger  <krueger@eowyn>
+
+	* man/Makefile.in: *** empty log message ***
+
+1999-10-11  Kai Krueger  <krueger@eowyn>
+
+	* conf/4.3vax/msgtailor.c: *** empty log message ***
+
+	* README, README.Changes, README.install, Version: Updated README's
+
+1999-10-09  Kai Krueger  <krueger@eowyn>
+
+	* lib/util/cnvtdate.c: fixed missing DST-recognition
+
+1999-10-07  Kai Krueger  <krueger@eowyn>
+
+	* src/shellfiles/setlogs.gen:
+	Added generic setlogs that only needs to know where to find MMDF's getvar program
+
+	* h/cmd.h, lib/mmdf/mm_tai.c, src/tools/Makefile.real, src/tools/getvar.c:
+	Added program to read variables from mmdftailor-file
+
+	* man/Makefile.in: Fixed installationpath for use with rpm
+
+1999-09-10  Kai Krueger  <krueger@eowyn>
+
+	* src/tools/dbmbuild.c, src/smtp/sm_wtmail.c, uip/other/Makefile.real, man/Makefile.in:
+	*** empty log message ***
+
+1999-09-08  Kai Krueger  <krueger@eowyn>
+
+	* src/smtp/sm_wtmail.c: *** empty log message ***
+
+	* lib/dial/d_connect.c, lib/dial/d_dial2.c, lib/dial/d_script2.c, src/smphone/ph2mm_send.c:
+	Some compiling-fixes
+
+	* src/smtp/smtpsrvr.c: *** empty log message ***
+
+1999-09-08  MMDF - Mail Transport Agent  <mmdf@eowyn>
+
+	* lib/table/ch_tbdbm.c: *** empty log message ***
+
+1999-09-08  Kai Krueger  <krueger@eowyn>
+
+	* README.Changes: *** empty log message ***
+
+	* lib/addr/ap_normali.c, lib/table/ch_tbdbm.c, lib/table/dm_table.c, src/smtp/smtpsrvr.c:
+	Added defines around the wildcard-code
+
+	* uip/other/Makefile.real, uip/ucbmail/Makefile.real:
+	Some changes from version 2.44
+
+	* man/man5/mmdf_auth.5: *** empty log message ***
+
+	* lib/util/quota.c, lib/util/Makefile.real:
+	Added file for quota-support
+
+	* configure.in, h/config.h.bot, h/config.h.in, configure:
+	Added switch for development-code
+
+1999-09-06  Kai Krueger  <krueger@eowyn>
+
+	* src/smtp/smtpsrvr.c: *** empty log message ***
+
+	* src/smtp/smtpsrvr.c: Changed for __STDC__
+
+	* src/smtp/smtpsrvr.c: Bugfix SIZE
+
+	* src/deliver/deliver.c: *** empty log message ***
+
+1999-09-03  Kai Krueger  <krueger@eowyn>
+
+	* man/Makefile.in: *** empty log message ***
+
+	* src/smtp/smtpsrvr.c:
+	 	* src/smtp/smtpsrvr.c: removed some debugging output.
+
+	* src/smtp/sm_wtmail.c:
+		* src/smtp/sm_wtmail.c:
+		  - fixed bugs when reading 'human text' send by server.
+	            (sm_irdrply() still needs to be rewriten)
+	          - added evaluation of EHLO's answer
+		  - Added Esmtp-SIZE
+
+	* lib/mmdf/mm_tai.c: Fixed missing defines for esmtp
+
+1999-09-02  Kai Krueger  <krueger@eowyn>
+
+	* src/smtp/smtpsrvr.c: Added missing extern char *quedfldir
+
+	* src/smtp/sm_wtmail.c: Added esmtp size support
+
+	* src/smtp/smtpsrvr.c:
+	Added support of ESMTP-size and recognition of ESMTP BODY,DSN
+
+	* lib/mmdf/mm_tai.c:
+	Added 3 parameter for esmtp: accept8bitmime, msgsizelimit, dsn
+
+	* man/Makefile.in: bugfix path to install-prog
+
+	* man/Makefile.in: *** empty log message ***
+
+1999-08-29  Kai Krueger  <krueger@eowyn>
+
+	* uip/ucbmail/Makefile.real, uip/ucbmail/def.h, uip/ucbmail/sigretro.c:
+	*** empty log message ***
+
+	* configure, configure.in, h/config.h.in: Added check for sigsys()
+
+	* conf/common/Makefile.com.in: Path for print/printf
+
+	* autoconf/aclocal.m4: pathnames
+
+1999-08-27  Kai Krueger  <krueger@eowyn>
+
+	* configure.in, h/config.h.in, configure: Fixed autoheader-bug creation
+
+	* configure.in, h/config.h.in, configure:
+	Added check for quota functions and header files
+
+1999-08-26  Kai Krueger  <krueger@eowyn>
+
+	* README.Changes, TODO: Updates
+
+	* configure: *** empty log message ***
+
+	* man/Makefile.in: Bug fixes
+
+	* src/uucp/rmail.c: Fixed bug of dublicate header-lines
+
+	* man/man8/sendmail.8:
+	Added comment for sendmail -bs and tcpwrapper-use
+
+1999-08-25  Kai Krueger  <krueger@eowyn>
+
+	* h/mmdf.h, lib/mmdf/rp_valstr.c, lib/util/fs.c, src/deliver/deliver.c, src/local/lo_wtmail.c:
+	Added check for free disc space to local-channel and appropriated returnvalue
+
+1999-08-24  Kai Krueger  <krueger@eowyn>
+
+	* lib/util/fs.c: Bug fixes
+
+	* README.Changes: *** empty log message ***
+
+	* man/Makefile.in: Fixed make install
+
+	* src/uucp/rmail.c: activated ungetline()
+
+	* configure.in, h/config.h.in, configure, autoconf/acconfig.h:
+	Added checks for statfs/statvfs
+
+	* src/uucp/rmail.c: activated ungetline()
+
+	* lib/util/Makefile.real, lib/util/fs.c:
+	Added fs.c for checking disk-space
+
+1999-08-18  Kai Krueger  <krueger@eowyn>
+
+	* src/tools/Makefile.real, src/tools/dbmbuild.c: fixes for hpux-9
+
+	* configure: *** empty log message ***
+
+	* lib/util/snprintf.c, configure, configure.in:
+	Added check and fake for strncpy() and strncat()
+
+1999-08-17  Kai Krueger  <krueger@eowyn>
+
+	* configure.in, h/config.h.in, configure:
+	Added check and error-handling for snprintf() and strncpy()
+
+	* lib/table/ch_tbdbm.c: Added missing break
+
+	* README.Changes: Updated README.Changes
+
+1999-08-16  Kai Krueger  <krueger@eowyn>
+
+	* conf/linux2.2-glibc2.1-fhs2.0/config.h: Removed define HAVE_LIBGDBM
+
+	* conf/linux2.2-glibc2.1-fhs2.0/README, conf/linux2.2-glibc2.1-fhs2.0/chan.c, conf/linux2.2-glibc2.1-fhs2.0/conf.c, conf/linux2.2-glibc2.1-fhs2.0/conf.h, conf/linux2.2-glibc2.1-fhs2.0/conf_dial.c, conf/linux2.2-glibc2.1-fhs2.0/config.h, conf/linux2.2-glibc2.1-fhs2.0/configsmoved, conf/linux2.2-glibc2.1-fhs2.0/d_lock.h, conf/linux2.2-glibc2.1-fhs2.0/msgtailor.c, conf/linux2.2-glibc2.1-fhs2.0/s_tailor.c, conf/linux2.2-glibc2.1-fhs2.0/s_tailor.h:
+	Added site-depend tree made by Brad Allen <Ulmo@Q.Net>
+
+	* uip/snd/s_input.c, uip/snd/s_main.c, src/tools/checkque.c, src/tools/checkup.c, src/tools/cleanque.c, src/tools/dbmbuild.c, src/tools/dbmedit.c, src/tools/nictable.c, src/tools/process-uucp.c, src/tools/setup.c, src/tools/tablelist.c, src/uucp/ch_uucp.c, src/uucp/rmail.c, src/uucp/uu_wtmail.c, uip/msg/msg.h, uip/msg/msg0.c, uip/msg/msg1.c, uip/msg/msg2.c, uip/msg/msg4.c, uip/msg/msg5.c, uip/other/checkmail.c, uip/other/malias.c, uip/other/mlist.c, uip/other/msgstrip.c, uip/other/newmail.c, uip/other/newssend.c, uip/other/rcvalert.c, uip/other/rcvfile.c, uip/other/rcvtrip.c, uip/other/resend.c, uip/other/sendmail.c, uip/other/v6mail.c, uip/send/s.h, uip/send/s_arginit.c, uip/send/s_do.c, uip/send/s_get.c, uip/send/s_input.c, uip/send/s_main.c, uip/snd/alias.c, uip/snd/s.h, uip/snd/s_arginit.c, uip/snd/s_do.c, uip/snd/s_get.c, src/local/qu2lo_send.c, src/niftp/ch_niftp.c, src/niftp/ni_mail.c, src/niftp/ni_niftp.c, src/niftp/pn_wtmail.c, src/niftp/qn_rdmail.c, src/phone/ch_phone.c, src/phone/ph_slave.c, src/phone/ph_wtmail.c, src/pobox/ch_pobox.c, src/pobox/po_wtmail.c, src/pobox/qu2po_send.c, src/pop/ch_pop.c, src/pop/dropsbr.c, src/pop/getbbent.c, src/pop/po_wtmail.c, src/prog/ch_prog.c, src/prog/pr2mm_send.c, src/prog/pr_errmsg.c, src/prog/pr_wtmail.c, src/smphone/ch_phone.c, src/smphone/ph2mm_send.c, src/smphone/ph_ioslave.c, src/smphone/ph_iouser.c, src/smphone/ph_slave.c, src/smphone/ph_wtmail.c, src/smtp/ch_smtp.c, src/smtp/qu2sm_send.c, src/smtp/sm_wtmail.c, src/smtp/smtpd.c, src/smtp/smtpsrvr.c, src/submit/adr_submit.c, src/submit/auth_submit.c, src/submit/mgt_submit.c, src/submit/mq_wtmail.c, src/submit/submit.c, lib/mmdf/alias.c, lib/mmdf/amp_hdr.c, lib/mmdf/err_abrt.c, lib/mmdf/getmailid.c, lib/mmdf/hd_format.c, lib/mmdf/ml_send.c, lib/mmdf/mm_io.c, lib/mmdf/mm_wtmail.c, lib/mmdf/mq_rdmail.c, lib/mmdf/phs_note.c, lib/mmdf/qu_io.c, lib/mmdf/rtn_proc.c, lib/table/dm_table.c, lib/table/tb_ns.c, lib/util/creatdir.c, lib/util/gwdir.2.9.c, lib/util/gwdir.c, lib/util/lk_lock.c, lib/util/ll_err.c, lib/util/ll_log.c, src/badusers/ch_local.c, src/badusers/lo_wtmail.c, src/badusers/qu2lo_send.c, src/bboards/bb_wtmail.c, src/bboards/ch_bboards.c, src/bboards/dropsbr.c, src/bboards/getbbent.c, src/blockaddr/ch_blockaddr.c, src/blockaddr/qu2ba_send.c, src/delay/ch_delay.c, src/delay/qu2ds_send.c, src/deliver/ch_io.c, src/deliver/deliver.c, src/ean/ch_ean.c, src/list/ch_list.c, src/list/qu2ls_send.c, src/local/ch_local.c, src/local/lo_wtmail.c, lib/addr/adrparse.c, lib/addr/ap_dmflip.c, lib/addr/ap_normali.c, lib/addr/ap_p2s.c, lib/dial/d_clog.c, lib/dial/d_connect.c, lib/dial/d_pstty.c, lib/dial/d_script2.c:
+	Replaced sprintf() by snprintf() and strcpy() by strncpy() nearly when ever possilble
+
+	* sh-configure: Added Brad Allen's sh-configure
+
+	* conf/common/Makefile.com.in, src/blockaddr/Makefile.real, src/delay/Makefile.real, src/deliver/Makefile.real, src/ean/Makefile.real, src/list/Makefile.real, src/local/Makefile.real, src/niftp/Makefile.real, src/phone/Makefile.real, src/pobox/Makefile.real, src/pop/Makefile.real, src/prog/Makefile.real, src/smphone/Makefile.real, src/smtp/Makefile.real, src/submit/Makefile.real, src/tools/Makefile.real, src/uucp/Makefile.real, uip/msg/Makefile.real, uip/other/Makefile.real, uip/send/Makefile.real, uip/snd/Makefile.real, uip/ucbmail/Makefile.real, uip/unsupported/Makefile.real, src/badusers/Makefile.real, src/bboards/Makefile.real:
+	Added creating of file-list when running 'make install'
+
+	* src/smtp/sm_wtmail.c, src/smtp/smtpsrvr.c:
+	some further work on emstp support
+
+	* src/submit/mq_wtmail.c: fixed strncpy() of msg-id
+
+	* uip/snd/s_main.c, uip/msg/msg5.c, uip/other/checkmail.c, uip/other/malias.c, uip/other/mlist.c, uip/other/msgstrip.c, uip/other/newmail.c, uip/other/newssend.c, uip/other/rcvalert.c, uip/other/rcvfile.c, uip/other/rcvtrip.c, uip/other/resend.c, uip/other/sendmail.c, uip/other/v6mail.c, uip/send/s.h, uip/send/s_arginit.c, uip/send/s_do.c, uip/send/s_get.c, uip/send/s_input.c, uip/send/s_main.c, uip/snd/alias.c, uip/snd/s.h, uip/snd/s_arginit.c, uip/snd/s_do.c, uip/snd/s_get.c, uip/snd/s_input.c, src/submit/mq_wtmail.c, src/submit/submit.c, src/tools/checkque.c, src/tools/checkup.c, src/tools/cleanque.c, src/tools/dbmbuild.c, src/tools/dbmedit.c, src/tools/nictable.c, src/tools/process-uucp.c, src/tools/setup.c, src/tools/tablelist.c, src/uucp/ch_uucp.c, src/uucp/rmail.c, src/uucp/uu_wtmail.c, uip/msg/msg.h, uip/msg/msg0.c, uip/msg/msg1.c, uip/msg/msg2.c, uip/msg/msg4.c, src/prog/ch_prog.c, src/prog/pr2mm_send.c, src/prog/pr_errmsg.c, src/prog/pr_wtmail.c, src/smphone/ch_phone.c, src/smphone/ph2mm_send.c, src/smphone/ph_ioslave.c, src/smphone/ph_iouser.c, src/smphone/ph_slave.c, src/smphone/ph_wtmail.c, src/smtp/ch_smtp.c, src/smtp/qu2sm_send.c, src/smtp/sm_wtmail.c, src/smtp/smtpd.c, src/smtp/smtpsrvr.c, src/submit/adr_submit.c, src/submit/auth_submit.c, src/submit/mgt_submit.c, src/delay/ch_delay.c, src/delay/qu2ds_send.c, src/deliver/ch_io.c, src/deliver/deliver.c, src/ean/ch_ean.c, src/list/ch_list.c, src/list/qu2ls_send.c, src/local/ch_local.c, src/local/lo_wtmail.c, src/local/qu2lo_send.c, src/niftp/ch_niftp.c, src/niftp/ni_mail.c, src/niftp/ni_niftp.c, src/niftp/pn_wtmail.c, src/niftp/qn_rdmail.c, src/phone/ch_phone.c, src/phone/ph_slave.c, src/phone/ph_wtmail.c, src/pobox/ch_pobox.c, src/pobox/po_wtmail.c, src/pobox/qu2po_send.c, src/pop/ch_pop.c, src/pop/dropsbr.c, src/pop/getbbent.c, src/pop/po_wtmail.c, lib/mmdf/err_abrt.c, lib/mmdf/getmailid.c, lib/mmdf/hd_format.c, lib/mmdf/ml_send.c, lib/mmdf/mm_io.c, lib/mmdf/mm_wtmail.c, lib/mmdf/mq_rdmail.c, lib/mmdf/phs_note.c, lib/mmdf/qu_io.c, lib/mmdf/rtn_proc.c, lib/table/dm_table.c, lib/table/tb_ns.c, lib/util/creatdir.c, lib/util/gwdir.2.9.c, lib/util/gwdir.c, lib/util/lk_lock.c, lib/util/ll_err.c, lib/util/ll_log.c, src/badusers/ch_local.c, src/badusers/lo_wtmail.c, src/badusers/qu2lo_send.c, src/bboards/bb_wtmail.c, src/bboards/ch_bboards.c, src/bboards/dropsbr.c, src/bboards/getbbent.c, src/blockaddr/ch_blockaddr.c, src/blockaddr/qu2ba_send.c, lib/addr/adrparse.c, lib/addr/ap_dmflip.c, lib/addr/ap_normali.c, lib/addr/ap_p2s.c, lib/dial/d_clog.c, lib/dial/d_connect.c, lib/dial/d_pstty.c, lib/dial/d_script2.c, lib/mmdf/alias.c, lib/mmdf/amp_hdr.c:
+	Replaced sprintf() by snprintf() and strcpy() by strncpy() nearly when ever possilble
+
+	* man/Makefile.in: fixed for-loop and distclean-tag
+
+	* man/man5/mmdf_auth.5: some minor update of mmdf_auth.5
+
+	* man/Makefile.in: fixed for-loop and distclean-tag
+
+	* lib/util/nexec.c:
+	removed environnement parameter TZ when having tzset()
+
+	* h/ch.h, lib/table/ch_tbdbm.c:
+	Replaced if-commands with case-command for easer extention of table-types
+
+	* autoconf/autoconf.m4f, autoconf/acgeneral.m4, autoconf/aclocal.m4, configure:
+	Set queing directory to /var/spoll/mmdf/home
+
+	* src/submit/mq_wtmail.c: fixed strncpy of msg-id
+
+1999-08-13  Kai Krueger  <krueger@eowyn>
+
+	* autoconf/acconfig.h, h/config.h.in, configure.in, configure:
+	Added configure-switch for esmtp
+
+	* Makefile.in, README, h/config.h.bot, lib/util/cnvtdate.c:
+	some minor changes due to merge of pathces from v2.44
+
+1999-08-12  Kai Krueger  <krueger@eowyn>
+
+	* uip/ucbmail/Makefile.real, uip/ucbmail/def.h, uip/ucbmail/fio.c, uip/ucbmail/lock.c, uip/unsupported/Makefile.real, uip/Makefile.in, uip/msg/msg.h, uip/msg/msg0.c, uip/msg/msg2.c, uip/other/Makefile.real, uip/other/emactovi.c, uip/other/mlist.c, uip/other/newssend.c, uip/other/sendmail.c, uip/other/v6mail.c, uip/send/s.h, uip/send/s_arginit.c, uip/send/s_externs.h, uip/send/s_get.c, uip/send/s_input.c, uip/send/s_main.c, uip/send/s_post.c, uip/snd/s_get.c, uip/snd/s_input.c, src/tools/checkque.c, src/tools/checkup.c, src/tools/dbmbuild.c, src/tools/dbmedit.c, src/tools/nictable.c, src/uucp/Makefile.real, src/uucp/qu2uu_send.c, src/uucp/rmail.c, src/prog/Makefile.real, src/prog/pr_errmsg.c, src/prog/pr_wtmail.c, src/prog/qu2pr_send.c, src/smphone/Makefile.real, src/smphone/ph_wtmail.c, src/smphone/qu2ph_send.c, src/smtp/Makefile.real, src/smtp/smtpd.c, src/smtp/smtpsrvr.c, src/submit/Makefile.real, src/submit/adr_submit.c, src/submit/auth_submit.c, src/submit/lnk_submit.c, src/submit/mgt_submit.c, src/submit/mq_wtmail.c, src/submit/submit.c, src/tools/Makefile.real, src/niftp/Makefile.real, src/niftp/pn_wtmail.c, src/phone/Makefile.real, src/phone/ph_wtmail.c, src/phone/qu2ph_send.c, src/pobox/Makefile.real, src/pobox/qu2po_send.c, src/pop/Makefile.real, src/Makefile.in, src/badusers/Makefile.real, src/bboards/Makefile.real, src/blockaddr/Makefile.real, src/blockaddr/qu2ba_send.c, src/delay/Makefile.real, src/deliver/Makefile.real, src/deliver/ch_io.c, src/deliver/deliver.c, src/ean/Makefile.real, src/list/Makefile.real, src/local/Makefile.real, src/local/lo_wtmail.c, lib/mmdf/ml_send.c, lib/mmdf/mmdf_init.c, lib/mmdf/qu_io.c, lib/mmdf/rtn_proc.c, lib/table/tb_ns.c, lib/util/Makefile.real, lib/util/cnvtdate.c, lib/util/getfpath.c, lib/util/getllog.bsd.c, lib/util/getllog.c, lib/util/getllog.v7.c, lib/util/getutmp.c, lib/util/lk_lock.c, lib/util/ll_log.c, lib/util/snprintf.c, lib/util/tty_io.c, man/Makefile.in, man/man5/mmdftailor.5.in, lib/addr/ap_p2s.c, lib/addr/ap_t2s.c, lib/addr/ap_util.c, lib/addr/parse.c, lib/mmdf/cache.c, lib/mmdf/interrupt.c, h/util.h, lib/Makefile.in, lib/addr/ap_1adr.c, lib/addr/ap_dmflip.c, lib/addr/ap_normali.c, conf/test/d_lock.h, conf/uclvax2/conf.c, conf/uclvax2/conf_dial.c, conf/uclvax2/config.h, conf/uclvax2/d_lock.h, conf/vgr/conf.c, conf/vgr/conf_dial.c, conf/vgr/config.h, conf/vgr/d_lock.h, conf/vu44/conf.c, conf/vu44/conf_dial.c, conf/vu44/config.h, conf/vu44/d_lock.h, doc/administrators/building, h/cnvtdate.h, h/config.h.bot, h/config.h.in, conf/okstate/conf_dial.c, conf/okstate/config.h, conf/okstate/d_lock.h, conf/sample/conf.c, conf/sample/conf_dial.c, conf/sample/config.h, conf/sample/d_lock.h, conf/sparc-sun-solaris2.4/conf.c, conf/sparc-sun-solaris2.4/conf_dial.c, conf/sparc-sun-solaris2.4/config.h, conf/sparc-sun-solaris2.4/d_lock.h, conf/sparc-sun-solaris2.5.1/conf.c, conf/sparc-sun-solaris2.5.1/conf_dial.c, conf/sparc-sun-solaris2.5.1/config.h, conf/sparc-sun-solaris2.5.1/d_lock.h, conf/test/conf.c, conf/test/conf_dial.c, conf/test/config.h, conf/okstate/conf.c, conf/hppa1.0/conf_dial.c, conf/hppa1.0/config.h, conf/hppa1.0/d_lock.h, conf/i386-unknown-freebsd3.0/conf.c, conf/i386-unknown-freebsd3.0/conf_dial.c, conf/i386-unknown-freebsd3.0/config.h, conf/i386-unknown-freebsd3.0/d_lock.h, conf/i386/conf.c, conf/i386/conf_dial.c, conf/i386/config.h, conf/i386/d_lock.h, conf/m68k-hp-hpux8.00/conf.c, conf/m68k-hp-hpux8.00/conf_dial.c, conf/m68k-hp-hpux8.00/config.h, conf/m68k-hp-hpux8.00/d_lock.h, autoconf/acconfig.h, conf/4.3vax/conf.c, conf/4.3vax/conf_dial.c, conf/4.3vax/config.h, conf/4.3vax/d_lock.h, conf/4.3vax/msgtailor.c, conf/bbn/conf.c, conf/bbn/conf_dial.c, conf/bbn/config.h, conf/bbn/d_lock.h, conf/common/Makefile.com.in, conf/csnet-relay/conf.c, conf/csnet-relay/conf_dial.c, conf/csnet-relay/config.h, conf/csnet-relay/d_lock.h, conf/hppa1.0/conf.c, README.install, TODO, Version, configure.in, Changes, Makefile.in, README:
+	Added patch 2.44b3 and 2.44b4
+
+1999-08-11  Kai Krueger  <krueger@eowyn>
+
+	* lib/util/snprintf.c: fixed buggy snprintf fake
+
+1999-08-10  Kai Krueger  <krueger@eowyn>
+
+	* autoconf/acconfig.h, h/config.h.in, configure.in, configure:
+	Changes to compile on hp again
+
+1999-08-09  Kai Krueger  <krueger@eowyn>
+
+	* src/submit/lnk_submit.c, src/submit/mgt_submit.c:
+	Changed lnk_getaddr()
+
+	* configure.in, configure: Added MYDEFS
+
+	* man/Makefile.in: Fixed sed-command
+
+	* h/util.h: fixed libio.h
+
+	* conf/common/Makefile.com.in: Added MYDEFS
+
+	* configure.in, h/config.h.in, configure: Added check for libtermcap
+
+	* man/man5/mmdftailor.5.in, man/Makefile.in, conf/common/Makefile.com.in:
+	Fixed variable change in configure
+
+1999-08-06  Kai Krueger  <krueger@eowyn>
+
+	* h/config.h.bot: Added definition of strdup if needed
+
+	* src/smphone/Makefile.real, src/smtp/Makefile.real, src/submit/Makefile.real, src/tools/Makefile.real, src/uucp/Makefile.real, conf/m68k-hp-hpux8.00/conf.c, conf/m68k-hp-hpux8.00/conf_dial.c, conf/m68k-hp-hpux8.00/d_lock.h, conf/okstate/conf.c, conf/okstate/conf_dial.c, conf/okstate/d_lock.h, conf/sample/conf.c, conf/sample/conf_dial.c, conf/sample/d_lock.h, conf/sparc-sun-solaris2.4/conf.c, conf/sparc-sun-solaris2.4/conf_dial.c, conf/sparc-sun-solaris2.4/d_lock.h, conf/sparc-sun-solaris2.5.1/conf.c, conf/sparc-sun-solaris2.5.1/conf_dial.c, conf/sparc-sun-solaris2.5.1/d_lock.h, conf/test/conf.c, conf/test/conf_dial.c, conf/test/d_lock.h, conf/uclvax2/conf.c, conf/uclvax2/conf_dial.c, conf/uclvax2/d_lock.h, conf/vgr/conf.c, conf/vgr/conf_dial.c, conf/vgr/d_lock.h, conf/vu44/conf.c, conf/vu44/conf_dial.c, conf/vu44/d_lock.h, src/badusers/Makefile.real, src/bboards/Makefile.real, src/blockaddr/Makefile.real, src/delay/Makefile.real, src/deliver/Makefile.real, src/ean/Makefile.real, src/list/Makefile.real, src/local/Makefile.real, src/niftp/Makefile.real, src/phone/Makefile.real, src/pobox/Makefile.real, src/pop/Makefile.real, src/prog/Makefile.real, uip/other/Makefile.real, uip/ucbmail/Makefile.real, uip/unsupported/Makefile.real, conf/4.3vax/conf.c, conf/4.3vax/conf_dial.c, conf/4.3vax/d_lock.h, conf/4.3vax/msgtailor.c, conf/bbn/conf.c, conf/bbn/conf_dial.c, conf/bbn/d_lock.h, conf/bbn/msgtailor.c, conf/csnet-relay/conf.c, conf/csnet-relay/conf_dial.c, conf/csnet-relay/d_lock.h, conf/hppa1.0/conf.c, conf/hppa1.0/conf_dial.c, conf/hppa1.0/d_lock.h, conf/i386-unknown-freebsd3.0/conf.c, conf/i386-unknown-freebsd3.0/conf_dial.c, conf/i386-unknown-freebsd3.0/d_lock.h, conf/i386/conf.c, conf/i386/conf_dial.c, conf/i386/d_lock.h:
+	Fixed variable changes of configure
+
+	* configure.in, configure: *** empty log message ***
+
+	* configure, configure.in: Fixes for hpux
+
+	* man/Makefile.in: *** empty log message ***
+
+	* configure, configure.in, h/config.h.in:
+	Added check for: snprintf(), strncat() strncpy() tzset().
+
+	* h/util.h: Changed define LINUX into __STDC__
+
+	* lib/mmdf/ml_send.c: fixed some compiler warnings
+
+	* autoconf/aclocal.m4: *** empty log message ***
+
+1999-08-05  Kai Krueger  <krueger@eowyn>
+
+	* uip/other/Makefile.real:
+	Fixed missing check for existenz of sbindir/sendmail
+
+	* src/submit/lnk_submit.c, src/uucp/rmail.c: Fixed missing __STDC__
+
+	* lib/util/snprintf.c: snprintf compiling on hpux-9
+
+	* lib/util/Makefile.real: *** empty log message ***
+
+	* lib/mmdf/mmdf_init.c:
+	Added tzset() in mmdf_init() for setting to local timezone
+
+	* conf/common/Makefile.com.in: Fixed variable changed in configure
+
+	* configure, configure.in:
+	removed some sed-substition due to size limit on HPUX
+
+	* lib/util/Makefile.real: Added snprintf() fake
+
+	* lib/util/snprintf.c: Added snprintf fake
+
+1999-08-04  Kai Krueger  <krueger@eowyn>
+
+	* README.install, Version: *** empty log message ***
+
+	* autoconf/acgeneral.m4, autoconf/aclocal.m4, autoconf/autoconf.m4f, configure.in, Makefile.in, configure:
+	 	Makefile.in configure configure.in
+		- Changes by Brad Allen <Ulmo@Q.Net>
+		- Update for FHS
+		- cleanup of variable
+		* configure.in:
+		  - Added check for mkstem()
+		  - fixed dbm recognition on redhat 6.0
+		  - fixed FHS-pathnames (Added switch for fhs)
+		  - Added check for ucbmail only if xstr exists
+	 	* autoconf/acgeneral.m4,
+	 	  autoconf/aclocal.m4,autoconf/autoconf.m4f:
+		  - Changes FHS AC_SET_FHS_PATHNAME/AC_SET_OLD_PATHNAME
+		  - Added AC_C_SUBST for substitution of C-files
+		  - cleanup of variable
+
+	* TODO:
+	 	TODO
+	        * Changes by Brad Allen <Ulmo@Q.Net>
+
+	* h/config.h.in: Added MKSTEMP
+
+	* man/Makefile.in, man/man5/mmdftailor.5.in:
+	Changes due to changes in configure.in
+
+	* man/man3/address.3: *** empty log message ***
+
+	* uip/snd/s_get.c, uip/snd/s_input.c, uip/ucbmail/def.h, uip/ucbmail/fio.c, uip/ucbmail/lock.c, uip/Makefile.in, uip/msg/msg.h, uip/msg/msg0.c, uip/msg/msg2.c, uip/other/Makefile.real, uip/other/emactovi.c, uip/other/mlist.c, uip/other/sendmail.c, uip/other/v6mail.c, uip/send/s.h, uip/send/s_arginit.c, uip/send/s_externs.h, uip/send/s_get.c, uip/send/s_input.c, uip/send/s_main.c, uip/send/s_post.c:
+	 	Makefile.in msg/msg.h msg/msg0.c msg/msg2.c
+	 	other/Makefile.real other/emactovi.c other/mlist.c
+	 	other/sendmail.c other/v6mail.c send/s.h send/s_arginit.c
+	 	send/s_externs.h send/s_get.c send/s_input.c send/s_main.c
+	 	send/s_post.c snd/s_get.c snd/s_input.c snd/version.number
+	 	ucbmail/def.h ucbmail/fio.c ucbmail/lock.c ucbmail/strings
+		* Changes by Brad Allen <Ulmo@Q.Net>
+		* Bug fixes (Various)
+		* Debugging Code (Scattered hunting)
+		* Local Modifications (Must determine what this is)
+		* Architecture Modifications (Linux/GLIBC/FHS)
+		* General Modifications (Enhancements)
+		* Stupid Modifications (Bug creation)
+
+	* src/submit/mgt_submit.c, src/submit/mq_wtmail.c, src/submit/submit.c, src/tools/checkup.c, src/uucp/Makefile.real, src/uucp/qu2uu_send.c, src/uucp/rmail.c, src/Makefile.in, src/blockaddr/qu2ba_send.c, src/pobox/qu2po_send.c, src/prog/pr_errmsg.c, src/prog/pr_wtmail.c, src/smtp/smtpd.c, src/smtp/smtpsrvr.c, src/submit/adr_submit.c:
+	 	Makefile.in blockaddr/qu2ba_send.c pobox/qu2po_send.c
+	 	prog/pr_errmsg.c prog/pr_wtmail.c smtp/smtpd.c smtp/smtpsrvr.c
+	 	submit/adr_submit.c submit/mgt_submit.c submit/mq_wtmail.c
+	 	submit/submit.c tools/checkup.c tools/nictable.c
+	 	uucp/Makefile.real uucp/qu2uu_send.c uucp/rmail.c
+		* Changes by Brad Allen <Ulmo@Q.Net>
+		* Bug fixes (Various)
+		* Debugging Code (Scattered hunting)
+		* Local Modifications (Must determine what this is)
+		* Architecture Modifications (Linux/GLIBC/FHS)
+		* General Modifications (Enhancements)
+		* Stupid Modifications (Bug creation)
+
+	* lib/addr/ap_1adr.c, lib/addr/parse.c, lib/mmdf/ml_send.c, lib/mmdf/mm_tai.c, lib/mmdf/qu_io.c, lib/mmdf/rtn_proc.c, lib/table/tb_ns.c, lib/util/cnvtdate.c, lib/util/ll_log.c, lib/Makefile.in:
+	 	Makefile.in addr/ap_1adr.c addr/ap_lxtable.c addr/parse.c
+	 	mmdf/ml_send.c mmdf/mm_tai.c mmdf/qu_io.c mmdf/rtn_proc.c
+	 	table/tb_ns.c util/cnvtdate.c util/ll_log.c
+		* Changes by Brad Allen <Ulmo@Q.Net>
+		* Bug fixes (Various)
+		* Debugging Code (Scattered hunting)
+		* Local Modifications (Must determine what this is)
+		* Architecture Modifications (Linux/GLIBC/FHS)
+		* General Modifications (Enhancements)
+		* Stupid Modifications (Bug creation)
+
+1999-07-19  Kai Krueger  <krueger@eowyn>
+
+	* h/config.h.in, lib/table/tb_ns.c, autoconf/acconfig.h, configure.in, configure:
+	Fixed T_UNSPEC / getshort() problem, now checking for function
+
+	* src/tools/nictable.c: Fixed const initialization of file-pointer
+
+1999-05-17  Kai Krueger  <krueger@eowyn>
+
+	* Changes: *** empty log message ***
+
+	* src/submit/lnk_submit.c, src/submit/mgt_submit.c:
+	bug fix lnk_getaddr()
+
+1999-05-12  Kai Krueger  <krueger@eowyn>
+
+	* h/cnvtdate.h, lib/mmdf/interrupt.c, lib/util/lk_lock.c, src/deliver/ch_io.c, src/local/lo_wtmail.c:
+	remove some complier warnings using Solaris 2.5.1 and the SUN Pro 4.2 C compiler
+
+	* README, Version: *** empty log message ***
+
+	* TODO: Update TODO-wishes
+
+	* conf/common/Makefile.com.in, configure.in, configure:
+	Added check for ccopt=-pipe, -b/m elf on sco
+
+	* Makefile.in: Changes of distclean tag
+
+	* src/smtp/smtpsrvr.c:
+		* src/smtp/smtpsrvr.c: John Romine <jromine@yoyodyne.ics.uci.edu>
+		  There's a boundary-condition bug in smtpsrvr.c.  If
+		  you send an SMTP body with a line of 601 characters
+		  where character 601 is a ".", the DATA command is
+		  terminated prematurely.
+		  Here's an (ugly) fix.
+
+	* lib/util/getllog.bsd.c, lib/util/getllog.c, lib/util/getllog.v7.c, lib/util/getutmp.c, lib/util/tty_io.c, src/tools/checkque.c:
+	Added include <utmpx.h>
+
+	* lib/util/getfpath.c, lib/util/ll_log.c, src/deliver/deliver.c, src/niftp/pn_wtmail.c, src/phone/ph_wtmail.c, src/phone/qu2ph_send.c, src/pobox/qu2po_send.c, src/prog/qu2pr_send.c, src/smphone/ph_wtmail.c, src/smphone/qu2ph_send.c, src/submit/auth_submit.c, src/submit/lnk_submit.c, src/submit/mgt_submit.c, src/submit/submit.c, src/tools/checkque.c, src/tools/dbmedit.c, uip/other/newssend.c, uip/send/s_get.c, uip/snd/s_input.c, lib/addr/ap_dmflip.c, lib/addr/ap_normali.c, lib/addr/ap_p2s.c, lib/addr/ap_t2s.c, lib/addr/ap_util.c, lib/mmdf/cache.c, lib/mmdf/ml_send.c, lib/mmdf/mmdf_init.c, lib/table/tb_ns.c:
+	Removed declaration of strdup()
+
+1999-04-14  Kai Krueger  <krueger@eowyn>
+
+	* h/config.h.bot, autoconf/autoconf.m4f: *** empty log message ***
+
+1999-04-11  Kai Krueger  <krueger@eowyn>
+
+	* autoconf/acconfig.h, configure.in, h/config.h.bot, h/config.h.in, h/config.h.top, configure:
+	Tag: v2-44a1
+	 	configure.in configure
+		- Added check for utmpx.h
+		- Added check for dbmcachedump() and setpgid()
+		- improved check for struct __res_state res
+		- Changed setting of tbldir="\${sysconfdir}/table"
+	 	autoconf/acconfig.h
+		- added missing defines for building config.h.in with autoheader
+	 	h/config.h.in
+		- config.h.in can now be build by autoheader
+	Added Files:
+	 	h/config.h.top h/config.h.bot
+
+	* uip/snd/s_input.c: changes of rene de zwart <renez@csenet.nl>
+
+	* src/tools/dbmbuild.c, src/tools/dbmedit.c:
+	Changes DBMCACHE into HAVE_DBMCACHEDUMP and set by configure
+
+	* conf/4.3vax/config.h, conf/bbn/config.h, conf/csnet-relay/config.h, conf/hppa1.0/config.h, conf/i386-unknown-freebsd3.0/config.h, conf/i386/config.h, conf/m68k-hp-hpux8.00/config.h, conf/okstate/config.h, conf/sample/config.h, conf/sparc-sun-solaris2.4/config.h, conf/sparc-sun-solaris2.5.1/config.h, conf/test/config.h, conf/uclvax2/config.h, conf/vgr/config.h, conf/vu44/config.h, doc/administrators/building:
+	Cleanup of define that are no set by configure
+
+	* src/prog/pr_wtmail.c:
+	changes of rene de zwart <renez@csenet.nl>, sstr2arg was corrupting confstr variable
+
+	* lib/util/getutmp.c: changes of rene de zwart <renez@csenet.nl>
+
+1999-02-24  Kai Krueger  <krueger@eowyn>
+
+	* lib/util/cnvtdate.c: Added numeric timezone
+
+1999-01-18  Kai Krueger  <krueger@eowyn>
+
+	* lib/addr/ap_lex.c:
+	 	* ap_lex.c : Brad Huffman <hip@a.cs.okstate.edu>
+	          Small bug in ap_lex.c, I think that should be a continue
+	         statement instead of a break to handle nested comments properly.
+
+	* lib/addr/ap_lex.c:
+	 	* ap_lex.c : Brad Huffman <hip@a.cs.okstate.edu>
+		  Small bug in ap_lex.c, I think that should be a continue
+		 statement instead of a break to handle nested comments properly.
+
+1998-12-18  Kai Krueger  <krueger@eowyn>
+
+	* README, Version, configure.in, configure: *** empty log message ***
+
+1998-12-17  Kai Krueger  <krueger@eowyn>
+
+	* lib/table/Makefile.real, lib/util/Makefile.real: fixed ar-path
+
+	* lib/util/rbl_match.c: Added rbl-support, first attempt
+
+	* lib/table/Makefile.real, lib/util/Makefile.real: fixed ar-path
+
+1998-12-16  Kai Krueger  <krueger@eowyn>
+
+	* man/Makefile.in: *** empty log message ***
+
+	* man/man8/tablelist.8, man/man8/submit.8, man/man8/slave.8, man/man8/smphone.8, man/man8/setup.8, man/man8/nictable.8, man/man8/phone.8, man/man8/sendmail.8, man/man8/deliver.8, man/man8/checkup.8, man/man8/dbmbuild.8, man/man5/tables.5, man/man5/script.5, man/man5/forward.5, man/man5/mmdf_auth.5, man/man5/files.5, man/Makefile.in:
+	Updated man-pages
+
+1998-12-15  Kai Krueger  <krueger@eowyn>
+
+	* src/smtp/qu2sm_send.c: better return-code checking at DATA field
+
+1998-12-10  Kai Krueger  <krueger@eowyn>
+
+	* src/submit/mgt_submit.c, src/tools/cleanque.c, uip/other/sendmail.c, lib/util/cnvtdate.c, man/man5/mmdftailor.5.in:
+	Fixed of v44b2
+
+	* lib/mmdf/hd_format.c, src/tools/cleanque.c: *** empty log message ***
+
+	* src/submit/mgt_submit.c, uip/other/sendmail.c:
+	 	src/submit/mgt_submit.c uip/other/sendmail.c
+		- Added via-trace for messages queue by /usr/lib/sendmail
+		- Added some missing option to /usr/lib/sendmail
+
+	* man/man5/mmdftailor.5.in: *** empty log message ***
+
+	* lib/util/cnvtdate.c:
+	Changed pretty-printing of date from 2 to 4 digits
+
+1998-11-27  Kai Krueger  <krueger@eowyn>
+
+	* README: *** empty log message ***
+
+	* uip/send/s_input.c, uip/other/mlist.c, src/uucp/rmail.c, src/tools/dbmedit.c, src/prog/pr_errmsg.c:
+	changed gets into fgets for openBSD, by Dennis Davis <D.H.Davis@bath.ac.uk
+
+	* README, Version: *** empty log message ***
+
+	* lib/mmdf/rtn_proc.c: cleanque time caculation
+
+	* uip/send/s_input.c, uip/other/mlist.c, src/uucp/rmail.c, src/tools/dbmedit.c, src/prog/pr_errmsg.c:
+	changed gets into fgets for openBSD, by Dennis Davis <D.H.Davis@bath.ac.uk
+
+	* man/man8/sendmail.8, man/man5/mmdftailor.5.in, man/man5/mmdf_auth.5, man/Makefile.in, configure.in, configure:
+	added some man-pages
+
+	* src/smtp/sm_wtmail.c: smtp: change return-code evaluation
+
+	* uip/other/checkmail.c: Getopt() paramter fixed
+
+	* man/Makefile.in, man/man5/mmdf_auth.5, man/man5/mmdftailor.5.in, man/man8/sendmail.8, configure.in, configure, Version, README:
+	Added man-pages
+
+	* src/smtp/sm_wtmail.c: smtp: return-code evaluation
+
+	* lib/mmdf/hd_format.c: Bug fix local-channel
+
+1998-11-16  Kai Krueger  <krueger@eowyn>
+
+	* lib/mmdf/hd_format.c: fixed missing header for local-delivery
+
+	* uip/other/Makefile.real, README: *** empty log message ***
+
+1998-10-19  Kai Krueger  <krueger@eowyn>
+
+	* uip/other/Makefile.real: Installation of sendmail- 3
+
+	* uip/other/Makefile.real: Installation of sendmail
+
+	* conf/common/Makefile.com.in: Installation bug
+
+1998-10-16  Kai Krueger  <krueger@eowyn>
+
+	* h/defs.h: *** empty log message ***
+
+1998-10-11  Kai Krueger  <krueger@eowyn>
+
+	* conf/common/Makefile.com.in, configure.in, configure, README.install, TODO, README.Changes, README, Makefile.in:
+	Changes of v44a9
+
+	* configure.in, configure, README.install, TODO, README.Changes, README, Makefile.in:
+	 	Makefile.in README README.Changes README.install TODO
+	 	configure configure.in
+		* Updated README files
+
+1998-10-10  Kai Krueger  <krueger@eowyn>
+
+	* uip/ucbmail/Makefile.real, uip/other/Makefile.real, conf/cleanup, autoconf/acgeneral.m4, autoconf/aclocal.m4, configure.in, Makefile.in:
+	 	Makefile.in configure.in autoconf/acgeneral.m4
+	 	autoconf/aclocal.m4 conf/cleanup uip/other/Makefile.real
+	 	uip/ucbmail/Makefile.real
+		Imported changes from v44a9
+
+	* Version: *** empty log message ***
+
+	* Version: Added version-file
+
+	* uip/ucbmail/Makefile.real, uip/other/Makefile.real, conf/cleanup, autoconf/aclocal.m4, autoconf/acgeneral.m4, configure.in, Makefile.in:
+	 	Makefile.in configure.in autoconf/acgeneral.m4
+	 	autoconf/aclocal.m4 conf/cleanup uip/other/Makefile.real
+	 	uip/ucbmail/Makefile.real
+		* Visual cleanups
+	        * fixed installation of uip/other/sendmail
+		* fixed compilation of uip/ucbmail/Mail
+
+1998-10-07  Kai Krueger  <krueger@eowyn>
+
+	* src/shellfiles/check.pl: *** empty log message ***
+
+	* uip/ucbmail/tty.c, uip/ucbmail/v7.local.c, uip/ucbmail/quit.c, uip/ucbmail/send.c, uip/ucbmail/popen.c, uip/ucbmail/lock.c, uip/ucbmail/main.c, uip/ucbmail/local.h, uip/ucbmail/lex.c, uip/ucbmail/fmt.c, uip/ucbmail/fio.c, uip/ucbmail/def.h, uip/ucbmail/edit.c, uip/ucbmail/collect.c, uip/ucbmail/cmd1.c, uip/ucbmail/aux.c, uip/ucbmail/Makefile.real, uip/other/Makefile.real, src/smtp/qu2sm_send.c, h/defs.h, h/config.h.in, README.install, conf/common/Makefile.com.in, Makefile.in:
+	Added changes from v44a8 to v44a9
+
+	* configure.in, autoconf/autoconf.m4, autoconf/autoheader.m4, autoconf/acspecific.m4, autoconf/acoldnames.m4, autoconf/autoheader.m4f, autoconf/Makefile, autoconf/acconfig.h, autoconf/install-sh:
+	*** empty log message ***
+
+1998-10-06  Kai Krueger  <krueger@eowyn>
+
+	* README.install, README: Updated READMEs
+
+	* h/config.h.in, conf/common/Makefile.com.in, configure, configure.in, Makefile.in:
+	  Tag: v2-44a1
+	 	Makefile.in configure.in configure conf/common/Makefile.com.in
+	 	h/config.h.in
+		Added new options
+		Added signal-handling for ucbmail
+
+	* autoconf/aclocal.m4: Added aclocal.m4
+
+	* autoconf/acgeneral.m4: merged changes from v44a9
+
+	* autoconf/autoconf.m4f, autoconf/acgeneral.m4:
+	 	acgeneral.m4 autoconf.m4f
+		Added new options: --varprefix=
+	  --mmdf-debug=[0,1,2]    enable more logging information
+	  --mmdf-dlog             enable debug-option of dial packages
+	  --mmdf-dbglog           enable debug-option of dial packages
+	  --mmdf-nodomlit         toggle define NODOMLIT
+	  --mmdf-leftdots         toggle define LEFTDOTS
+	  --mmdf-statsort         toggle define STATSORT
+	  --mmdf-citation         toggle define CITATION
+	  --mmdf-prefix=DIR       default home of mmdf in DIR [PREFIX/mmdf]
+	       Fixed directory substitution
+
+	* autoconf/autoconf.m4f, autoconf/acgeneral.m4:
+	Added acgeneral.m4 and autoconf.m4f to head-branch
+
+	* autoconf/Makefile: Added Makefile for autoconf
+
+	* autoconf/Makefile: only changes for autoconf
+
+	* uip/other/Makefile.real: fixed /usr/lib/sendmail path
+
+	* uip/ucbmail/tty.c, uip/ucbmail/v7.local.c, uip/ucbmail/send.c, uip/ucbmail/quit.c, uip/ucbmail/main.c, uip/ucbmail/popen.c, uip/ucbmail/lock.c, uip/ucbmail/local.h, uip/ucbmail/fmt.c, uip/ucbmail/lex.c, uip/ucbmail/fio.c, uip/ucbmail/edit.c, uip/ucbmail/def.h, uip/ucbmail/collect.c, uip/ucbmail/cmd1.c:
+	first cleanup, is now compiling and running under linux
+
+1998-09-29  Kai Krueger  <krueger@eowyn>
+
+	* uip/ucbmail/fio.c, uip/ucbmail/edit.c, uip/ucbmail/aux.c, uip/ucbmail/Makefile.real, h/config.h.in, Makefile.in:
+	Makefile.in
+
+	* conf/common/Makefile.com.in, configure, configure.in: Modified Files:
+	  Tag: v2-44a1
+	 	configure.in configure conf/common/Makefile.com.in
+		Added creation of conf/<target>
+		Added path of xstr
+
+	* autoconf/autoconf.m4f:  Added Files:
+	  Tag: v2-44a1
+	 	Makefile acgeneral.m4 acoldnames.m4 acspecific.m4 autoconf.m4
+	 	autoconf.m4f
+		Added additional options to acgeneral.m4 for MMDF
+
+	* autoconf/autoconf.m4f: New file.
+
+	* autoconf/autoconf.m4:  Added Files:
+	  Tag: v2-44a1
+	 	Makefile acgeneral.m4 acoldnames.m4 acspecific.m4 autoconf.m4
+	 	autoconf.m4f
+		Added additional options to acgeneral.m4 for MMDF
+
+	* autoconf/autoconf.m4: New file.
+
+	* autoconf/acspecific.m4:  Added Files:
+	  Tag: v2-44a1
+	 	Makefile acgeneral.m4 acoldnames.m4 acspecific.m4 autoconf.m4
+	 	autoconf.m4f
+		Added additional options to acgeneral.m4 for MMDF
+
+	* autoconf/acspecific.m4: New file.
+
+	* autoconf/acoldnames.m4:  Added Files:
+	 	Makefile acgeneral.m4 acoldnames.m4 acspecific.m4 autoconf.m4
+	 	autoconf.m4f
+		Added additional options to acgeneral.m4 for MMDF
+
+	* autoconf/acgeneral.m4:  Added Files:
+	  Tag: v2-44a1
+	 	Makefile acgeneral.m4 acoldnames.m4 acspecific.m4 autoconf.m4
+	 	autoconf.m4f
+		Added additional options to acgeneral.m4 for MMDF
+
+	* autoconf/acgeneral.m4: New file.
+
+	* autoconf/Makefile:  Added Files:
+	  Tag: v2-44a1
+	 	Makefile acgeneral.m4 acoldnames.m4 acspecific.m4 autoconf.m4
+	 	autoconf.m4f
+		Added additional options to acgeneral.m4 for MMDF
+
+	* autoconf/Makefile: New file.
+
+1998-09-18  Kai Krueger  <krueger@eowyn>
+
+	* README: *** empty log message ***
+
+	* uip/msg/msg5.c, uip/msg/msg4.c, uip/msg/msg3.c, uip/msg/msg2.c, uip/msg/msg1.c, uip/msg/msg.h, lib/mmdf/rtn_proc.c, lib/mmdf/mq_rdmail.c:
+	Modified Files:
+	        lib/mmdf/mq_rdmail.c
+	        lib/mmdf/rtn_proc.c
+	        uip/msg/msg.h uip/msg/msg1.c uip/msg/msg2.c uip/msg/msg3.c
+	        uip/msg/msg4.c uip/msg/msg5.c
+	        * patch by Mike Muuss
+
+	* lib/mmdf/mmdf_init.c: removed free (logptr->file)
+
+	* README: Support for BSDI, FreeBSD, Redhat 5.1 / Debian glibc 2
+
+	* uip/msg/msg5.c, uip/msg/msg3.c, uip/msg/msg4.c, uip/msg/msg2.c, uip/msg/msg.h, uip/msg/msg1.c, lib/mmdf/rtn_proc.c, lib/mmdf/mq_rdmail.c:
+	Modified Files:
+		lib/mmdf/mq_rdmail.c
+		lib/mmdf/rtn_proc.c
+		uip/msg/msg.h uip/msg/msg1.c uip/msg/msg2.c uip/msg/msg3.c
+		uip/msg/msg4.c uip/msg/msg5.c
+		* patch by Mike Muuss
+
+	* lib/util/mydbm.c, lib/mmdf/mmdf_init.c: 	lib/mmdf/mmdf_init.c
+		* removed free (logptr->file)
+
+		lib/util/mydbm.c
+		* fixed mynextkey(key) (core dump)
+
+	* uip/other/Makefile.real, src/tools/cleanque.c, src/smtp/smtpd.c, src/tools/checkup.c, man/man1/snd.1, lib/util/cnvtdate.c, lib/util/ll_err.c, h/config.h.in, conf/vu44/msgtailor.c, conf/vu44/conf.c, conf/vu44/conf_dial.c, conf/vgr/msgtailor.c, conf/vgr/conf.c, conf/vgr/conf_dial.c, conf/uclvax2/msgtailor.c, conf/uclvax2/conf_dial.c, conf/uclvax2/conf.c, conf/test/msgtailor.c, conf/test/conf.c, conf/test/conf_dial.c, conf/sparc-sun-solaris2.5.1/msgtailor.c, conf/sparc-sun-solaris2.5.1/conf.c, conf/sparc-sun-solaris2.5.1/conf_dial.c, conf/sparc-sun-solaris2.4/conf_dial.c, conf/sparc-sun-solaris2.4/msgtailor.c, conf/sparc-sun-solaris2.4/conf.c, conf/sample/msgtailor.c, conf/sample/conf.c, conf/sample/conf_dial.c, conf/okstate/msgtailor.c, conf/okstate/conf_dial.c, conf/okstate/conf.c, conf/m68k-hp-hpux8.00/conf_dial.c, conf/m68k-hp-hpux8.00/msgtailor.c, conf/m68k-hp-hpux8.00/conf.c, conf/i386-unknown-freebsd3.0/conf_dial.c, conf/i386-unknown-freebsd3.0/msgtailor.c, conf/i386-unknown-freebsd3.0/conf.c, conf/i386/msgtailor.c, conf/i386/conf_dial.c, conf/i386/config.h, conf/i386/conf.c, conf/hppa1.0/conf_dial.c, conf/hppa1.0/msgtailor.c, conf/hppa1.0/conf.c, conf/csnet-relay/conf_dial.c, conf/csnet-relay/msgtailor.c, conf/common/Makefile.com.in, conf/csnet-relay/conf.c, conf/bbn/msgtailor.c, conf/bbn/conf.c, conf/bbn/conf_dial.c, conf/4.3vax/msgtailor.c, conf/4.3vax/conf.c, conf/4.3vax/conf_dial.c, conf/cleanup, configure.in, configure, README, README.install, Makefile.in:
+		Applied patches version 44 patch a5-a7
+
+1998-08-25  Kai Krueger  <krueger@eowyn>
+
+	* lib/util/mydbm.c:  	lib/util/mydbm.c
+		bug-fix dbmlist
+
+1998-08-19  Kai Krueger  <krueger@eowyn>
+
+	* src/tools/checkup.c: added gdbm-support to checkup
+
+	* conf/sparc-sun-solaris2.4/msgtailor.c, conf/sparc-sun-solaris2.5.1/msgtailor.c, conf/sample/msgtailor.c:
+	*** empty log message ***
+
+	* conf/i386/config.h, conf/common/Makefile.com.in, README, README.install:
+	  Tag: v2-44a1
+	 	README README.install conf/common/Makefile.com.in
+	 	conf/i386/config.h
+
+	* uip/other/Makefile.real, h/config.h.in, conf/cleanup, configure.in, configure, Makefile.in, conf/vu44/msgtailor.c, conf/vu44/conf_dial.c, conf/vu44/conf.c, conf/vgr/conf_dial.c, conf/vgr/msgtailor.c, conf/vgr/conf.c, conf/uclvax2/conf_dial.c, conf/uclvax2/msgtailor.c, conf/uclvax2/conf.c, conf/test/msgtailor.c, conf/test/conf.c, conf/test/conf_dial.c, conf/sparc-sun-solaris2.5.1/msgtailor.c, conf/sparc-sun-solaris2.5.1/conf_dial.c, conf/sparc-sun-solaris2.4/msgtailor.c, conf/sparc-sun-solaris2.5.1/conf.c, conf/sparc-sun-solaris2.4/conf_dial.c, conf/sparc-sun-solaris2.4/conf.c, conf/sample/msgtailor.c, conf/sample/conf.c, conf/sample/conf_dial.c, conf/okstate/msgtailor.c, conf/okstate/conf.c, conf/okstate/conf_dial.c, conf/m68k-hp-hpux8.00/msgtailor.c, conf/m68k-hp-hpux8.00/conf_dial.c, conf/i386/msgtailor.c, conf/m68k-hp-hpux8.00/conf.c, conf/i386/conf_dial.c, conf/i386/conf.c, conf/i386-unknown-freebsd3.0/msgtailor.c, conf/i386-unknown-freebsd3.0/conf_dial.c, conf/i386-unknown-freebsd3.0/conf.c, conf/hppa1.0/conf_dial.c, conf/hppa1.0/msgtailor.c, conf/hppa1.0/conf.c, conf/csnet-relay/conf_dial.c, conf/csnet-relay/msgtailor.c, conf/csnet-relay/conf.c, conf/bbn/conf_dial.c, conf/bbn/msgtailor.c, conf/bbn/conf.c, conf/4.3vax/conf_dial.c, conf/4.3vax/msgtailor.c, conf/4.3vax/conf.c:
+	 Modified Files:
+	  Tag: v2-44a1
+	 	conf/4.3vax/conf.c conf/4.3vax/conf_dial.c
+	 	conf/4.3vax/msgtailor.c conf/bbn/conf.c conf/bbn/conf_dial.c
+	 	conf/bbn/msgtailor.c conf/csnet-relay/conf.c
+	 	conf/csnet-relay/conf_dial.c conf/csnet-relay/msgtailor.c
+	 	conf/hppa1.0/conf.c conf/hppa1.0/conf_dial.c
+	 	conf/hppa1.0/msgtailor.c conf/i386-unknown-freebsd3.0/conf.c
+	 	conf/i386-unknown-freebsd3.0/conf_dial.c
+	 	conf/i386-unknown-freebsd3.0/msgtailor.c conf/i386/conf.c
+	 	conf/i386/conf_dial.c conf/i386/msgtailor.c
+	 	conf/m68k-hp-hpux8.00/conf.c conf/m68k-hp-hpux8.00/conf_dial.c
+	 	conf/m68k-hp-hpux8.00/msgtailor.c conf/okstate/conf.c
+	 	conf/okstate/conf_dial.c conf/okstate/msgtailor.c
+	 	conf/sample/conf.c conf/sample/conf_dial.c
+	 	conf/sample/msgtailor.c conf/sparc-sun-solaris2.4/conf.c
+	 	conf/sparc-sun-solaris2.4/conf_dial.c
+	 	conf/sparc-sun-solaris2.4/msgtailor.c
+	 	conf/sparc-sun-solaris2.5.1/conf.c
+	 	conf/sparc-sun-solaris2.5.1/conf_dial.c
+	 	conf/sparc-sun-solaris2.5.1/msgtailor.c conf/test/conf.c
+	 	conf/test/conf_dial.c conf/test/msgtailor.c
+	 	conf/uclvax2/conf.c conf/uclvax2/conf_dial.c
+	 	conf/uclvax2/msgtailor.c conf/vgr/conf.c conf/vgr/conf_dial.c
+	 	conf/vgr/msgtailor.c conf/vu44/conf.c conf/vu44/conf_dial.c
+	 	conf/vu44/msgtailor.c Makefile.in configure configure.in
+	 	conf/cleanup h/config.h.in uip/other/Makefile.real
+		- Added default-value to help of configure
+		- fixed cheking of libdbm linked to libgdbm
+		- fixed include and lib-dir
+		- Added check for HAVE_SYS_ERRLIST_DECL
+		- enhanced pathnamesettings (including default path settings
+		in conf.c, conf_dial.c and msgtailor.c => creating of
+		h/pathnames.h by makefile
+
+	* src/smtp/smtpd.c:   Tag: v2-44a1
+	 	src/smtp/smtpd.c
+		fixed type conversion
+
+	* man/man1/snd.1:   Tag: v2-44a1
+	 	man/man1/snd.1
+		Added small description of 'sign' end 'encrypt'
+
+1998-07-21  Kai Krueger  <krueger@eowyn>
+
+	* configure: *** empty log message ***
+
+	* conf/common/Makefile.com.in, configure.in, configure, Makefile.in:
+	 Modified Files:
+	 	Makefile.in configure configure.in conf/common/Makefile.com.in
+		most of patch #2 made by Mike Muss
+
+	* conf/common/Makefile.com.in, configure.in, configure, Makefile.in:
+	 Modified Files:
+	  Tag: v2-44a1
+	 	Makefile.in configure configure.in conf/common/Makefile.com.in
+		most of patch #2 made by Mike Muss
+
+1998-07-16  Kai Krueger  <krueger@eowyn>
+
+	* lib/mmdf/rtn_proc.c: *** empty log message ***
+
+1998-07-15  Kai Krueger  <krueger@eowyn>
+
+	* README: *** empty log message ***
+
+1998-07-14  Kai Krueger  <krueger@eowyn>
+
+	* src/tools/cleanque.c: devsrc/src/tools/cleanque.c
+
+	* conf/common/Makefile.com.in: *** empty log message ***
+
+	* h/config.h.in: Added HAVE_SYS_ERRLIST_DECL
+
+1998-07-14  MMDF - Mail Transport Agent  <mmdf@eowyn>
+
+	* src/tools/cleanque.c: *** empty log message ***
+
+1998-07-14  Kai Krueger  <krueger@eowyn>
+
+	* lib/mmdf/alias.c, src/prog/pr2mm_send.c, src/smtp/sm_wtmail.c, src/submit/submit.c, src/tools/checkup.c, uip/snd/alias.c, uip/snd/s.h, uip/snd/s_externs.h, uip/snd/s_get.c, uip/snd/s_input.c:
+	 	uip/snd/s_input.c uip/snd/s_get.c uip/snd/s_externs.h
+	 	uip/snd/s.h uip/snd/alias.c src/tools/checkup.c
+	 	src/submit/submit.c src/smtp/sm_wtmail.c src/prog/pr2mm_send.c
+	 	lib/mmdf/alias.c
+	        changes for freebsd3.0 made by  Mike Muuss <mike@@arl.mil>
+	        1)  diffs.src:  A context diff patch file to be applied to the sources.
+	        This contains everything I needed to do in order to get it to compile,
+	        plus my extensions to the SND program from 1994 to support "sign" and
+	        "encrypt" type operations, either with PGP or another outboard program.
+	        It's just a few lines, hopefully it won't get lost from the master
+	        sources again.
+
+	* lib/mmdf/alias.c, lib/util/ll_err.c, src/prog/pr2mm_send.c, src/smtp/sm_wtmail.c, src/submit/submit.c, src/tools/checkup.c, uip/snd/alias.c, uip/snd/s.h, uip/snd/s_externs.h, uip/snd/s_get.c, uip/snd/s_input.c:
+	 	uip/snd/s_input.c uip/snd/s_get.c uip/snd/s_externs.h
+	 	uip/snd/s.h uip/snd/alias.c src/tools/checkup.c
+	 	src/submit/submit.c src/smtp/sm_wtmail.c src/prog/pr2mm_send.c
+	 	lib/util/ll_err.c lib/mmdf/alias.c
+		changes for freebsd3.0 made by  Mike Muuss <mike@arl.mil>
+		1)  diffs.src:  A context diff patch file to be applied to the sources.
+		This contains everything I needed to do in order to get it to compile,
+		plus my extensions to the SND program from 1994 to support "sign" and
+		"encrypt" type operations, either with PGP or another outboard program.
+		It's just a few lines, hopefully it won't get lost from the master
+		sources again.
+
+1998-07-13  Kai Krueger  <krueger@eowyn>
+
+	* conf/i386-unknown-freebsd3.0/s_tailor.h, conf/i386-unknown-freebsd3.0/s_tailor.c, conf/i386-unknown-freebsd3.0/d_lock.h, conf/i386-unknown-freebsd3.0/msgtailor.c, conf/i386-unknown-freebsd3.0/config.h, conf/i386-unknown-freebsd3.0/conf_dial.c, conf/i386-unknown-freebsd3.0/conf.h, conf/i386-unknown-freebsd3.0/conf.c, conf/i386-unknown-freebsd3.0/chan.c:
+	 	chan.c conf.c conf.h conf_dial.c config.h d_lock.h msgtailor.c
+	 	s_tailor.c s_tailor.h
+		thanks to Mike Muuss <mike@arl.mil>
+		3)  freebsd.shar: A SHAR shell archive of the
+		conf/i386-unknown-freebsd3.0/ directory. This mostly tracks your
+		configuration.  The one important change is that the
+		definition of NMSGS in msgtailor.c in the non-pdp11 case needs
+		to be increased to something large, like 5000.  This should be
+		done for all the provided configurations.
+
+	* conf/i386-unknown-freebsd3.0/s_tailor.h: New file.
+
+	* conf/i386-unknown-freebsd3.0/s_tailor.c:
+	 	chan.c conf.c conf.h conf_dial.c config.h d_lock.h msgtailor.c
+	 	s_tailor.c s_tailor.h
+		thanks to Mike Muuss <mike@arl.mil>
+		3)  freebsd.shar: A SHAR shell archive of the
+		conf/i386-unknown-freebsd3.0/ directory. This mostly tracks your
+		configuration.  The one important change is that the
+		definition of NMSGS in msgtailor.c in the non-pdp11 case needs
+		to be increased to something large, like 5000.  This should be
+		done for all the provided configurations.
+
+	* conf/i386-unknown-freebsd3.0/s_tailor.c: New file.
+
+	* conf/i386-unknown-freebsd3.0/msgtailor.c:
+	 	chan.c conf.c conf.h conf_dial.c config.h d_lock.h msgtailor.c
+	 	s_tailor.c s_tailor.h
+		thanks to Mike Muuss <mike@arl.mil>
+		3)  freebsd.shar: A SHAR shell archive of the
+		conf/i386-unknown-freebsd3.0/ directory. This mostly tracks your
+		configuration.  The one important change is that the
+		definition of NMSGS in msgtailor.c in the non-pdp11 case needs
+		to be increased to something large, like 5000.  This should be
+		done for all the provided configurations.
+
+	* conf/i386-unknown-freebsd3.0/msgtailor.c: New file.
+
+	* conf/i386-unknown-freebsd3.0/d_lock.h:
+	 	chan.c conf.c conf.h conf_dial.c config.h d_lock.h msgtailor.c
+	 	s_tailor.c s_tailor.h
+		thanks to Mike Muuss <mike@arl.mil>
+		3)  freebsd.shar: A SHAR shell archive of the
+		conf/i386-unknown-freebsd3.0/ directory. This mostly tracks your
+		configuration.  The one important change is that the
+		definition of NMSGS in msgtailor.c in the non-pdp11 case needs
+		to be increased to something large, like 5000.  This should be
+		done for all the provided configurations.
+
+	* conf/i386-unknown-freebsd3.0/d_lock.h: New file.
+
+	* conf/i386-unknown-freebsd3.0/config.h, conf/i386-unknown-freebsd3.0/conf_dial.c:
+	 	chan.c conf.c conf.h conf_dial.c config.h d_lock.h msgtailor.c
+	 	s_tailor.c s_tailor.h
+		thanks to Mike Muuss <mike@arl.mil>
+		3)  freebsd.shar: A SHAR shell archive of the
+		conf/i386-unknown-freebsd3.0/ directory. This mostly tracks your
+		configuration.  The one important change is that the
+		definition of NMSGS in msgtailor.c in the non-pdp11 case needs
+		to be increased to something large, like 5000.  This should be
+		done for all the provided configurations.
+
+	* conf/i386-unknown-freebsd3.0/config.h: New file.
+
+	* conf/i386-unknown-freebsd3.0/conf.h:
+	 	chan.c conf.c conf.h conf_dial.c config.h d_lock.h msgtailor.c
+	 	s_tailor.c s_tailor.h
+		thanks to Mike Muuss <mike@arl.mil>
+		3)  freebsd.shar: A SHAR shell archive of the
+		conf/i386-unknown-freebsd3.0/ directory. This mostly tracks your
+		configuration.  The one important change is that the
+		definition of NMSGS in msgtailor.c in the non-pdp11 case needs
+		to be increased to something large, like 5000.  This should be
+		done for all the provided configurations.
+
+	* conf/i386-unknown-freebsd3.0/conf_dial.c: New file.
+
+	* conf/i386-unknown-freebsd3.0/conf.c:
+	 	chan.c conf.c conf.h conf_dial.c config.h d_lock.h msgtailor.c
+	 	s_tailor.c s_tailor.h
+		thanks to Mike Muuss <mike@arl.mil>
+		3)  freebsd.shar: A SHAR shell archive of the
+		conf/i386-unknown-freebsd3.0/ directory. This mostly tracks your
+		configuration.  The one important change is that the
+		definition of NMSGS in msgtailor.c in the non-pdp11 case needs
+		to be increased to something large, like 5000.  This should be
+		done for all the provided configurations.
+
+	* conf/i386-unknown-freebsd3.0/conf.h: New file.
+
+	* conf/i386-unknown-freebsd3.0/chan.c:
+	 	chan.c conf.c conf.h conf_dial.c config.h d_lock.h msgtailor.c
+	 	s_tailor.c s_tailor.h
+		thanks to Mike Muuss <mike@arl.mil>
+		3)  freebsd.shar: A SHAR shell archive of the
+		conf/i386-unknown-freebsd3.0/ directory. This mostly tracks your
+		configuration.  The one important change is that the
+		definition of NMSGS in msgtailor.c in the non-pdp11 case needs
+		to be increased to something large, like 5000.  This should be
+		done for all the provided configurations.
+
+	* conf/i386-unknown-freebsd3.0/conf.c, conf/i386-unknown-freebsd3.0/chan.c:
+	New file.
+
+	* h/mmdf.h, src/submit/adr_submit.c, src/submit/submit.c, lib/mmdf/rp_valstr.c:
+	 	lib/mmdf/rp_valstr.c src/submit/submit.c
+	 	src/submit/adr_submit.c h/mmdf.h
+		Added new error-codes for checking sender-address at time when
+		submit is started
+		1)	RP_BADR: unable to send to that address (unable to
+		  find a channel to send to) e.g. xxx@com only matches to
+		  badhost-channel. If no 'badhost'-channel configured, RP_BADR
+		  is returned.
+
+		2)	if wanted, check of incoming-channel and possible
+		  outgoing-channel for sender-address is made. If the
+		  channel don;t match RP_BCHN is returned.
+
+	* src/smtp/smtpsrvr.c: 	src/smtp/smtpsrvr.c
+		Added basics for ESMTP-support, but ESMTP functionality must
+		still be implemented. It's just a preparartion for it!
+
+	* uip/other/checkmail.c: fixed option-list
+
+1998-06-22  Kai Krueger  <krueger@eowyn>
+
+	* lib/mmdf/qu_io.c, src/smtp/qu2sm_send.c, src/smtp/sm_wtmail.c, src/smtp/smtpsrvr.c, lib/addr/ap_lex.c, lib/addr/ap_p2s.c:
+	*** empty log message ***
+
+1998-06-22  MMDF - Mail Transport Agent  <mmdf@eowyn>
+
+	* src/smtp/smtpsrvr.c, lib/mmdf/qu_io.c, src/smtp/qu2sm_send.c, src/smtp/sm_wtmail.c, lib/addr/ap_lex.c, lib/addr/ap_p2s.c:
+	Modified Files:
+	 Tag: v2-44a1
+		lib/addr/ap_lex.c: 8bit clean
+	        lib/addr/ap_p2s.c: logging
+	        lib/mmdf/qu_io.c src/smtp/qu2sm_send.c: sourcerouting
+	        src/smtp/sm_wtmail.c: error-codes
+	        src/smtp/smtpsrvr.c: brackets of addresses with ip-address instead of domain.
+
+1998-06-17  Kai Krueger  <krueger@eowyn>
+
+	* lib/util/ll_err.c, src/smtp/sm_wtmail.c, src/submit/submit.c, src/tools/checkup.c:
+	Added define around sys_errlist[]
+
+	* src/submit/submit.c, src/smtp/smtpd.c, lib/mmdf/mm_tai.c, lib/util/ll_err.c, h/mmdf.h, h/ch.h, VERSION:
+	part one of base implemention of ESMTP
+
+	* src/tools/cleanque.c: *** empty log message ***
+
+	* uip/unsupported/cvmbox.c, uip/unsupported/autores.c, uip/ucbmail/optim.c, uip/ucbmail/names.c, uip/ucbmail/def.h, uip/ucbmail/fio.c, uip/ucbmail/dateparse.c, uip/ucbmail/aux.c, uip/snd/s_input.c, uip/snd/s_main.c, uip/snd/s_get.c, uip/snd/s_drfile.c, uip/snd/s_externs.h, uip/snd/s_arginit.c, uip/send/s_main.c, uip/send/s_get.c, uip/send/s_input.c, uip/send/s_drfile.c, uip/send/s_externs.h, uip/send/s_arginit.c, uip/other/resend.c, uip/other/v6mail.c, uip/other/rcvtrip.c, uip/other/mlist.c, uip/other/rcvfile.c, uip/other/malias.c, uip/other/emactovi.c, uip/msg/msg6.c, uip/msg/msg5.c, uip/msg/msg.h, uip/msg/msg4.c, src/uucp/uu_wtmail.c, src/uucp/rmail.c, src/uucp/qu2uu_send.c, src/tools/nictable.c, src/tools/process-uucp.c, src/tools/checkup.c, src/tools/checkaddr.c, src/tools/checkque.c, src/submit/mgt_submit.c, src/submit/auth_submit.c, src/smtp/smtpsrvr.c, src/submit/adr_submit.c, src/smtp/sm_wtmail.c, src/smtp/qu2sm_send.c, src/prog/pr2mm_send.c, src/smphone/ph2mm_send.c, src/pop/po_wtmail.c, src/pop/dropsbr.c, src/niftp/pn_wtmail.c, src/niftp/qn_rdmail.c, src/niftp/hdr_proc.c, src/local/qu2lo_send.c, src/list/qu2ls_send.c, src/local/lo_wtmail.c, src/ean/qu2en_send.c, src/ean/ch_ean.c, src/deliver/deliver.c, src/delay/qu2ds_send.c, src/bboards/getbbent.c, src/blockaddr/qu2ba_send.c, src/bboards/dropsbr.c, src/bboards/bb_wtmail.c, src/badusers/qu2lo_send.c, src/badusers/lo_wtmail.c, lib/util/lk_lock.c, lib/util/gwdir.2.9.c, lib/util/gwdir.c, lib/util/arg2str.c, lib/table/tb_io.c, lib/table/tb_ns.c, lib/table/dm_table.c, lib/table/ch_tbdbm.c, lib/mmdf/qu_io.c, lib/mmdf/qu_rdmail.c, lib/mmdf/ml_send.c, lib/mmdf/mq_rdmail.c, lib/dial/d_script2.c, lib/dial/d_parse.c, lib/addr/ghost.c, h/util.h, h/config.h.in, configure.in, README:
+	Modified Files:
+		README configure.in h/config.h.in h/util.h lib/addr/ghost.c
+		lib/dial/d_parse.c lib/dial/d_script2.c lib/mmdf/ml_send.c
+		lib/mmdf/mq_rdmail.c lib/mmdf/qu_io.c lib/mmdf/qu_rdmail.c
+		lib/table/ch_tbdbm.c lib/table/dm_table.c lib/table/tb_io.c
+		lib/table/tb_ns.c lib/util/arg2str.c lib/util/gwdir.2.9.c
+		lib/util/gwdir.c lib/util/lk_lock.c src/badusers/lo_wtmail.c
+		src/badusers/qu2lo_send.c src/bboards/bb_wtmail.c
+		src/bboards/dropsbr.c src/bboards/getbbent.c
+		src/blockaddr/qu2ba_send.c src/delay/qu2ds_send.c
+		src/deliver/deliver.c src/ean/ch_ean.c src/ean/qu2en_send.c
+		src/list/qu2ls_send.c src/local/lo_wtmail.c
+		src/local/qu2lo_send.c src/niftp/hdr_proc.c
+		src/niftp/pn_wtmail.c src/niftp/qn_rdmail.c src/pop/dropsbr.c
+		src/pop/po_wtmail.c src/prog/pr2mm_send.c
+		src/smphone/ph2mm_send.c src/smtp/qu2sm_send.c
+		src/smtp/sm_wtmail.c src/smtp/smtpsrvr.c
+		src/submit/adr_submit.c src/submit/auth_submit.c
+		src/submit/mgt_submit.c src/tools/checkaddr.c
+		src/tools/checkque.c src/tools/checkup.c src/tools/nictable.c
+		src/tools/process-uucp.c src/uucp/qu2uu_send.c
+		src/uucp/rmail.c src/uucp/uu_wtmail.c uip/msg/msg.h
+		uip/msg/msg4.c uip/msg/msg5.c uip/msg/msg6.c
+		uip/other/emactovi.c uip/other/malias.c uip/other/mlist.c
+		uip/other/rcvfile.c uip/other/rcvtrip.c uip/other/resend.c
+		uip/other/v6mail.c uip/send/s_arginit.c uip/send/s_drfile.c
+		uip/send/s_externs.h uip/send/s_get.c uip/send/s_input.c
+		uip/send/s_main.c uip/snd/s_arginit.c uip/snd/s_drfile.c
+		uip/snd/s_externs.h uip/snd/s_get.c uip/snd/s_input.c
+		uip/snd/s_main.c uip/ucbmail/aux.c uip/ucbmail/dateparse.c
+		uip/ucbmail/def.h uip/ucbmail/fio.c uip/ucbmail/names.c
+		uip/ucbmail/optim.c uip/unsupported/autores.c
+		uip/unsupported/cvmbox.c
+
+		 * 	Added changes from Ran Atkinson,
+		 * 	renamed index/rindex to strchr/strrchr
+		 * 	Added <unistd.h>
+		 * 	Added <string.h>
+		 *      first step of an ESMTP-base-code (still need to
+			implement the options, and feature)
+
+1998-06-16  MMDF - Mail Transport Agent  <mmdf@eowyn>
+
+	* src/prog/pr2mm_send.c: *** empty log message ***
+
+1998-06-16  Kai Krueger  <krueger@eowyn>
+
+	* uip/unsupported/cvmbox.c, uip/unsupported/autores.c, uip/ucbmail/optim.c, uip/ucbmail/names.c, uip/ucbmail/def.h, uip/ucbmail/fio.c, uip/ucbmail/dateparse.c, uip/ucbmail/aux.c, uip/snd/s_main.c, uip/snd/s_input.c, uip/snd/s_externs.h, uip/snd/s_get.c, uip/snd/s_drfile.c, uip/snd/s_arginit.c, uip/send/s_input.c, uip/send/s_main.c, uip/send/s_get.c, uip/send/s_externs.h, uip/send/s_drfile.c, uip/send/s_arginit.c, uip/other/v6mail.c, uip/other/resend.c, uip/other/rcvtrip.c, uip/other/rcvfile.c, uip/other/mlist.c, uip/other/emactovi.c, uip/other/malias.c, uip/msg/msg6.c, uip/msg/msg5.c, uip/msg/msg4.c, uip/msg/msg.h, src/uucp/uu_wtmail.c, src/uucp/rmail.c, src/uucp/qu2uu_send.c, src/tools/process-uucp.c, src/tools/nictable.c, src/tools/checkup.c, src/tools/checkque.c, src/tools/checkaddr.c, src/submit/mgt_submit.c, src/submit/auth_submit.c, src/submit/adr_submit.c, src/smtp/smtpsrvr.c, src/smtp/sm_wtmail.c, src/smtp/qu2sm_send.c, src/smphone/ph2mm_send.c, src/pop/po_wtmail.c, src/prog/pr2mm_send.c, src/pop/dropsbr.c, src/niftp/qn_rdmail.c, src/niftp/pn_wtmail.c, src/niftp/hdr_proc.c, src/local/qu2lo_send.c, src/local/lo_wtmail.c, src/ean/qu2en_send.c, src/list/qu2ls_send.c, src/ean/ch_ean.c, src/deliver/deliver.c, src/delay/qu2ds_send.c, src/blockaddr/qu2ba_send.c, src/bboards/dropsbr.c, src/bboards/getbbent.c, src/bboards/bb_wtmail.c, src/badusers/qu2lo_send.c, src/badusers/lo_wtmail.c, lib/util/lk_lock.c, lib/util/gwdir.c, lib/util/gwdir.2.9.c, lib/util/arg2str.c, lib/table/tb_ns.c, lib/table/tb_io.c, lib/table/dm_table.c, lib/table/ch_tbdbm.c, lib/mmdf/qu_rdmail.c, lib/mmdf/qu_io.c, lib/mmdf/mq_rdmail.c, lib/mmdf/ml_send.c, lib/dial/d_script2.c, lib/dial/d_parse.c, lib/addr/ghost.c, h/util.h, h/config.h.in, configure.in, configure, README:
+	Tue Jun 16 16:02:07 MET DST 1998 Kai Krueger <krueger@mathematik.uni-kl.de>
+
+	Modified Files:
+	 Tag: v2-44a1
+		README configure configure.in h/config.h.in h/util.h
+		lib/addr/ghost.c lib/dial/d_parse.c lib/dial/d_script2.c
+		lib/mmdf/ml_send.c lib/mmdf/mq_rdmail.c lib/mmdf/qu_io.c
+		lib/mmdf/qu_rdmail.c lib/table/ch_tbdbm.c lib/table/dm_table.c
+		lib/table/tb_io.c lib/table/tb_ns.c lib/util/arg2str.c
+		lib/util/gwdir.2.9.c lib/util/gwdir.c lib/util/lk_lock.c
+		src/badusers/lo_wtmail.c src/badusers/qu2lo_send.c
+		src/bboards/bb_wtmail.c src/bboards/dropsbr.c
+		src/bboards/getbbent.c src/blockaddr/qu2ba_send.c
+		src/delay/qu2ds_send.c src/deliver/deliver.c src/ean/ch_ean.c
+		src/ean/qu2en_send.c src/list/qu2ls_send.c
+		src/local/lo_wtmail.c src/local/qu2lo_send.c
+		src/niftp/hdr_proc.c src/niftp/pn_wtmail.c
+		src/niftp/qn_rdmail.c src/pop/dropsbr.c src/pop/po_wtmail.c
+		src/prog/pr2mm_send.c src/smphone/ph2mm_send.c
+		src/smtp/qu2sm_send.c src/smtp/sm_wtmail.c src/smtp/smtpsrvr.c
+		src/submit/adr_submit.c src/submit/auth_submit.c
+		src/submit/mgt_submit.c src/tools/checkaddr.c
+		src/tools/checkque.c src/tools/checkup.c src/tools/nictable.c
+		src/tools/process-uucp.c src/uucp/qu2uu_send.c
+		src/uucp/rmail.c src/uucp/uu_wtmail.c uip/msg/msg.h
+		uip/msg/msg4.c uip/msg/msg5.c uip/msg/msg6.c
+		uip/other/emactovi.c uip/other/malias.c uip/other/mlist.c
+		uip/other/rcvfile.c uip/other/rcvtrip.c uip/other/resend.c
+		uip/other/v6mail.c uip/send/s_arginit.c uip/send/s_drfile.c
+		uip/send/s_externs.h uip/send/s_get.c uip/send/s_input.c
+		uip/send/s_main.c uip/snd/s_arginit.c uip/snd/s_drfile.c
+		uip/snd/s_externs.h uip/snd/s_get.c uip/snd/s_input.c
+		uip/snd/s_main.c uip/ucbmail/aux.c uip/ucbmail/dateparse.c
+		uip/ucbmail/def.h uip/ucbmail/fio.c uip/ucbmail/names.c
+		uip/ucbmail/optim.c uip/unsupported/autores.c
+		uip/unsupported/cvmbox.c
+		Added changes from Ran Atkinson,
+		renamed index/rindex to strchr/strrchr
+		Added <unistd.h>
+		Added <string.h>
+
+	* src/prog/pr2mm_send.c: fix of Ran Atkinson
+
+	* src/local/lo_wtmail.c, lib/util/arg2str.c: *** empty log message ***
+
+1998-06-15  Kai Krueger  <krueger@eowyn>
+
+	* lib/mmdf/phs_note.c: *** empty log message ***
+
+	* uip/other/checkmail.c, src/tools/checkque.c, src/tools/cleanque.c, src/deliver/deliver.c, lib/util/gwdir.c, lib/addr/ap_normali.c, h/config.h.in, lib/mmdf/phs_note.c:
+	changes from Ran Atkinson for BSDI
+
+	* README: suggestions from Ran Atkinson <rja@@corp.home.net>
+
+	* README.43, README: suggestions from Ran Atkinson <rja@corp.home.net>
+
+	* VERSION, README, README.43:
+	suggestions from Ran Atkinson <corp.home.net>
+
+1998-06-10  Kai Krueger  <krueger@eowyn>
+
+	* src/smtp/smtpsrvr.c: *** empty log message ***
+
+	* configure, configure.in: fixed configure-dbminit check
+
+	* src/smtp/smtpsrvr.c: *** empty log message ***
+
+1998-06-10  MMDF - Mail Transport Agent  <mmdf@eowyn>
+
+	* src/smtp/smtpsrvr.c:
+	changed tb_k2val to tb_wk2val for 'wildcard-fetch'
+
+1998-06-09  Kai Krueger  <krueger@eowyn>
+
+	* lib/util/cnvtdate.c: fixed tzname/tm_zone for sunos 4.xx
+
+	* lib/util/cnvtdate.c: fixed tzname/tm_zone for SunOS 4.xx
+
+	* configure, configure.in: fixed dbm-problem
+
+	* configure, configure.in: fixed path-problem
+
+1998-06-09  MMDF - Mail Transport Agent  <mmdf@eowyn>
+
+	* src/smtp/smtpsrvr.c, lib/mmdf/qu_io.c, lib/util/lk_lock.c:
+	fixes from v2.44a3
+
+1998-06-08  Kai Krueger  <krueger@eowyn>
+
+	* lib/mmdf/qu_io.c, lib/util/lk_lock.c: *** empty log message ***
+
+1998-06-05  MMDF - Mail Transport Agent  <mmdf@eowyn>
+
+	* lib/util/lk_lock.c: fixed missing DEBUG, switch(fp) => if(fp==...)
+
+1998-06-05  Kai Krueger  <krueger@eowyn>
+
+	* src/smtp/smtpsrvr.c: fixed 8bit-clean define
+
+1998-06-03  Kai Krueger  <krueger@eowyn>
+
+	* lib/addr/ap_normali.c, lib/table/ch_tbdbm.c, lib/table/dm_table.c:
+	Added tb_wk2val for 'wildvard' search
+
+	* lib/mmdf/mq_rdmail.c: *** empty log message ***
+
+1998-06-02  Kai Krueger  <krueger@eowyn>
+
+	* README.Changes, README.install, conf/sample/d_lock.h, conf/sample/s_tailor.h, conf/sample/config.h, conf/sample/conf.h, conf/sample/msgtailor.c, conf/sample/s_tailor.c, conf/sample/conf_dial.c, conf/sample/conf.c, conf/sample/chan.c, README.43, README:
+	*** empty log message ***
+
+1998-06-01  Kai Krueger  <krueger@eowyn>
+
+	* src/submit/submit.c, uip/other/sendmail.c, src/smtp/smtpd.c, src/prog/pr_errmsg.c, src/prog/pr2mm_send.c:
+	added setreuid, ...
+
+	* conf/sites/sample.config, conf/sites/default.config, h/config.h.in, configure.in, configure:
+	*** empty log message ***
+
+	* conf/vu44/config.h, conf/vgr/config.h, conf/test/config.h, conf/uclvax2/config.h, conf/sparc-sun-solaris2.4/config.h, conf/okstate/config.h, conf/i386/config.h, conf/hppa1.0/config.h, conf/csnet-relay/config.h, conf/bbn/config.h, conf/4.3vax/config.h:
+	removed old defines
+
+1998-05-31  Kai Krueger  <krueger@eowyn>
+
+	* src/tools/cleanque.c: Old cleanque
+
+	* lib/mmdf/qu_io.c, lib/addr/ap_1adr.c, lib/addr/ap_lex.c, h/ap.h:
+	Fixed Adress-parsing bug
+
+1998-05-27  Kai Krueger  <krueger@eowyn>
+
+	* README.install: *** empty log message ***
+
+1998-05-27  MMDF - Mail Transport Agent  <mmdf@eowyn>
+
+	* src/tools/checkup.c: Fixed csts char
+
+1998-05-26  MMDF - Mail Transport Agent  <mmdf@eowyn>
+
+	* src/tools/checkque.c: *** empty log message ***
+
+1998-05-26  Kai Krueger  <krueger@eowyn>
+
+	* h/config.h.in, configure.in, configure: Added check for bcopy
+
+	* configure, src/smtp/smtpd.c: *** empty log message ***
+
+1998-05-26  MMDF - Mail Transport Agent  <mmdf@eowyn>
+
+	* h/config.h.in, src/tools/process-uucp.c, uip/msg/msg5.c, uip/other/emactovi.c, conf/sparc-sun-solaris2.4/config.h, configure.in:
+	fixes for solaris 2.4
+
+1998-05-26  Kai Krueger  <krueger@eowyn>
+
+	* h/config.h.in, configure, configure.in, lib/util/Makefile.real, lib/util/getllog.c:
+	Autodection of getllog
+
+1998-05-25  Kai Krueger  <krueger@eowyn>
+
+	* h/phs.h, h/funcs.h, h/ap.h, configure, configure.in, conf/common/Makefile.com.in, lib/mmdf/alias.c, lib/mmdf/ml_send.c, lib/mmdf/mm_io.c, lib/mmdf/mm_rdmail.c, lib/mmdf/mm_wtmail.c, lib/mmdf/phs_note.c, lib/mmdf/qu_io.c, lib/mmdf/rtn_proc.c, src/bboards/bb_wtmail.c, src/blockaddr/qu2ba_send.c, src/ean/ean2mmdf.c, src/list/qu2ls_send.c, src/niftp/qn2mm_send.c, src/niftp/rtn_proc.c, uip/ucbmail/send.c, uip/ucbmail/lex.c, uip/snd/s_main.c, uip/snd/s_post.c, uip/snd/s_do.c, uip/send/s_main.c, uip/send/s_post.c, uip/send/s_do.c, uip/other/v6mail.c, uip/other/resend.c, uip/other/sendmail.c, uip/other/rcvfile.c, uip/other/mlist.c, uip/other/newssend.c, src/uucp/rmail.c, src/tools/cleanque.c, src/submit/submit.c, src/tools/checkaddr.c, src/submit/auth_submit.c, src/submit/adr_submit.c, src/smtp/smtpsrvr.c, src/smphone/mm2ph_send.c, src/smphone/ph2mm_send.c, src/prog/pr_errmsg.c, src/smphone/ch_phone.c, src/prog/pr2mm_send.c, src/pop/po_wtmail.c, src/phone/ch_phone.c, src/phone/mm2ph_send.c, src/phone/ph2mm_send.c, h/ml_send.h, h/mm_io.h, lib/dial/Makefile.real:
+	*** empty log message ***
+
+1998-05-25  MMDF - Mail Transport Agent  <mmdf@eowyn>
+
+	* uip/send/s_get.c, uip/snd/alias.c, uip/snd/s_get.c, src/tools/fixtai.c, src/tools/process-uucp.c, src/tools/rem_chans.c, src/uucp/qu2uu_send.c, src/uucp/rmail.c, uip/msg/msg.h, uip/msg/msg3.c, lib/util/strdup.c, lib/util/tai_file.c, src/deliver/deliver.c, src/niftp/rtn_proc.c, src/smphone/ph2mm_send.c, src/smtp/smtpsrvr.c, src/submit/submit.c, lib/mmdf/alias.c, lib/mmdf/cache.c, lib/mmdf/err_abrt.c, lib/mmdf/mm_tai.c, lib/mmdf/mmdf_fdinit.c, lib/table/tb_ns.c, lib/util/lk_lock.c, lib/util/ll_log.c, lib/util/multcat.c, h/config.h.in, h/funcs.h, lib/addr/ap_dmflip.c, lib/addr/ap_util.c:
+	fixed functions-definition problems
+
+1998-05-25  Kai Krueger  <krueger@eowyn>
+
+	* uip/snd/alias.c: *** empty log message ***
+
+	* configure, configure.in, h/config.h.in: added check for union wait
+
+	* uip/msg/msg2.c, uip/msg/msg4.c, uip/msg/msg5.c, uip/msg/msg3.c, uip/msg/msg1.c, uip/msg/msg.h, uip/msg/msg0.c:
+	Changed defines M_* into MSG_* due to collision
+
+	* h/config.h.in, configure.in, configure: removed sys/fcntl.h
+
+	* h/config.h.in, configure.in, configure: added sys/fcntl.h
+
+	* h/ch.h, lib/util/strindex.c, lib/util/tai_packages.c, lib/util/ll_log.c, lib/util/lexequ.c, lib/util/ll_err.c, lib/util/cstr2arg.c, lib/util/cmdbsrch.c, lib/mmdf/post_tai.c, lib/mmdf/uip_tai.c, lib/mmdf/mmdf_init.c, lib/mmdf/mm_tai.c, lib/mmdf/ch_llinit.c, lib/mmdf/err_abrt.c, lib/mmdf/cache.c, lib/mmdf/amp_hdr.c, lib/mmdf/alias.c, lib/mmdf/aliasfetch.c, lib/addr/ap_util.c, lib/addr/ap_s2p.c, lib/addr/ap_s2tree.c, lib/addr/ap_normali.c, lib/addr/ap_1adr.c, lib/addr/ap_lex.c, lib/addr/adrparse.c:
+	fixed compiler warnings
+
+	* src/pop/strings.h, src/pop/po_wtmail.c, src/pop/lock.c, src/bboards/strings.h, src/bboards/lock.c, src/bboards/bb_wtmail.c:
+	changed old defines
+
+	* h/adr_queue.h: Queue-dependent -cleanque
+
+	* h/util.h, h/d_proto.h: fixed SYS5
+
+	* h/ap.h: moved source-routing to smtp
+
+	* src/submit/lnk_submit.c, src/submit/mgt_submit.c, src/submit/mq_wtmail.c:
+	include envelope information into received-lines
+
+	* lib/addr/ap_p2s.c, src/smtp/smtpsrvr.c: moved source-routing to smtp
+
+	* lib/mmdf/rtn_proc.c, src/tools/cleanque.c, lib/mmdf/mq_rdmail.c:
+	Queue-dependent -cleanque
+
+	* src/prog/pr2mm_send.c: *** empty log message ***
+
+	* src/local/lo_wtmail.c, src/badusers/lo_wtmail.c:
+	added check for killpg
+
+	* h/funcs.h, h/config.h.in: diverse defines
+
+	* lib/util/lk_lock.c: Added defines lk-policy
+
+	* lib/mmdf/mmdf_fdinit.c: Added HAVE_GETDTABLESIZE
+
+	* conf/common/Makefile.com.in, configure, configure.in:
+	*** empty log message ***
+
+	* conf/i386/Makefile.src, conf/i386/Makefile.com, conf/i386/Makefile.lib:
+	removed old Makefiles
+
+	* conf/vgr/config.h, conf/vu44/config.h, conf/uclvax2/config.h, conf/test/config.h, conf/sparc-sun-solaris2.4/config.h, conf/okstate/config.h, conf/i386/config.h, conf/hppa1.0/config.h, conf/bbn/config.h, conf/csnet-relay/config.h, conf/4.3vax/config.h:
+	removed unnessasary defines
+
+	* lib/util/lk_lock.4.2.c, lib/util/lk_lock.5.2.c, src/tools/setup.c, src/tools/checkup.c:
+	merged lk_lock.*.c into one file with defines arround
+
+	* lib/util/Makefile.real, lib/util/mydbm.c, lib/table/ch_tbdbm.c, src/tools/dbmbuild.c, src/tools/dbmedit.c, src/tools/dbmlist.c:
+	Added support for libgdbm
+
+	* src/badusers/qu2lo_send.c, src/local/qu2lo_send.c:
+	Added check for initgroups()
+
+	* uip/msg/msg5.c, uip/snd/s_input.c: cleanup defines V4_2BSD
+
+	* uip/msg/Makefile.real, uip/other/Makefile.real, uip/send/Makefile.real, uip/snd/Makefile.real, uip/ucbmail/Makefile.real, uip/unsupported/Makefile.real:
+	Fixed Makefiles in uip/*
+
+1998-05-18  Kai Krueger  <krueger@eowyn>
+
+	* src/local/lo_wtmail.c: remove x-envelope-size
+
+1998-05-14  Kai Krueger  <krueger@eowyn>
+
+	* configure.in, configure, src/smtp/smtpd.c: *** empty log message ***
+
+1998-05-14  MMDF - Mail Transport Agent  <mmdf@eowyn>
+
+	* src/submit/mgt_submit.c: initialisation of mgt_helo, mgt_fromhost
+
+1998-05-14  Kai Krueger  <krueger@eowyn>
+
+	* src/tools/dbmbuild.c: fixed data-size of dbm.(part-1)
+
+	* src/smtp/smtpd.c: *** empty log message ***
+
+	* src/local/lo_wtmail.c: Added envelope-information to message in mbox
+
+	* conf/common/Makefile.com.in, conf/cleanup, configure, configure.in:
+	Added find make depend
+
+	* uip/snd/Makefile.real, src/uucp/Makefile.real, src/tools/Makefile.real, uip/send/Makefile.real, src/submit/Makefile.real, src/local/Makefile.real, src/smtp/Makefile.real, src/list/Makefile.real, src/deliver/Makefile.real, src/blockaddr/Makefile.real, src/badusers/Makefile.real:
+	Modified Files:
+		src/badusers/Makefile.real src/blockaddr/Makefile.real
+		src/deliver/Makefile.real src/list/Makefile.real
+		src/local/Makefile.real src/smtp/Makefile.real
+		src/submit/Makefile.real src/tools/Makefile.real
+		uip/send/Makefile.real src/uucp/Makefile.real
+		uip/snd/Makefile.real
+	Cleanup for make depend. Only local dependencies per default.
+
+	* src/badusers/lo_wtmail.c, src/deliver/deliver.c, src/prog/pr2mm_send.c, src/prog/pr_errmsg.c, uip/msg/msg5.c, uip/msg/msg4.c, uip/msg/msg1.c, uip/msg/msg0.c, lib/util/nexec.c, lib/util/tty_io.c, lib/util/creatdir.c, lib/util/arg2str.c, lib/mmdf/mmdf_fdinit.c, lib/table/tb_ns.c, lib/dial/d_pstty.c, lib/dial/d_port.c, lib/dial/d_lock.c, lib/dial/d_dglobals.c, lib/dial/d_connect.c:
+	Modified Files:
+		lib/dial/d_connect.c lib/dial/d_dglobals.c lib/dial/d_lock.c
+		lib/dial/d_port.c lib/dial/d_pstty.c lib/mmdf/mmdf_fdinit.c
+		lib/table/tb_ns.c lib/util/arg2str.c lib/util/creatdir.c
+		lib/util/nexec.c lib/util/tty_io.c uip/msg/msg0.c
+		uip/msg/msg1.c uip/msg/msg4.c uip/msg/msg5.c
+		src/prog/pr_errmsg.c src/prog/pr2mm_send.c
+		src/deliver/deliver.c src/badusers/lo_wtmail.c
+	Cleanup of defines: V4_2BSD, SYS5, SYS5r3,...
+
+	* Makefile.in: Added creattion of TAGS
+
+1998-05-11  Kai Krueger  <krueger@eowyn>
+
+	* configure, configure.in, Configure: *** empty log message ***
+
+	* uip/snd/version.c, uip/send/version.c: remove version.c
+
+	* uip/snd/Makefile.real, uip/send/Makefile.real:
+	added creation of version.c
+
+	* uip/msg/version.c, uip/msg/Makefile.real: remove version.c
+
+	* uip/msg/Makefile.real: Added creation of version.c
+
+	* uip/msg/msg3.c: added HAVE_SYS_WAIT_H
+
+	* uip/msg/msg3.c: fixed _NFILE with correct define
+
+	* README.install, src/smtp/smtpd.c, src/smtp/tcp.c:
+	*** empty log message ***
+
+	* man/man8/smtpd.8: update of man-page
+
+	* lib/table/tb_io.c: added support for '\\' on RHS of tables
+
+	* Makefile.in: added libexecdir
+
+1998-05-08  MMDF - Mail Transport Agent  <mmdf@eowyn>
+
+	* src/smtp/Makefile.real: *** empty log message ***
+
+1998-05-08  Kai Krueger  <krueger@eowyn>
+
+	* Configure: *** empty log message ***
+
+	* src/submit/mgt_submit.c: updated received-lines
+
+	* src/tools/checkup.c: fixed string-constant bug
+
+	* h/config.h.in: new defines over conifugre
+
+	* lib/mmdf/mm_tai.c, h/ch.h: channel-dependent fail/warn-time
+
+	* conf/i386/config.h: migration of some defines
+
+	* conf/common/Makefile.com.in: changed libdir into libexecdir
+
+	* configure.in, configure:
+	search path for libs, changed libdir into libexecdir
+
+	* src/smtp/smtpd.c, src/smtp/Makefile.real:
+	deleted {SYSTEM}, child-capturing in smtpd.c
+
+1998-05-07  Kai Krueger  <krueger@eowyn>
+
+	* src/smtp/smtpsrvr.c: getaddr without tcp-wrapper
+
+1998-05-07  MMDF - Mail Transport Agent  <mmdf@eowyn>
+
+	* src/smtp/smtpd.c: cleanup of smtpd.*.c
+
+1998-05-06  Kai Krueger  <krueger@eowyn>
+
+	* configure.in, configure: support for Configure
+
+	* Configure: Interactiv-script for user defines
+
+1998-04-21  Kai Krueger  <krueger@eowyn>
+
+	* doc/FAQ: Added FAQ with Error-Messages
+
+1998-04-17  Kai Krueger  <krueger@eowyn>
+
+	* configure.in, configure: no c++ in configure
+
+1998-04-06  Kai Krueger  <krueger@eowyn>
+
+	* lib/util/lk_lock.c, lib/table/tb_ns.c:
+	fixed extern/LOCFUN definitions
+
+1998-04-03  MMDF - Mail Transport Agent  <mmdf@eowyn>
+
+	* lib/dial/d_script.c, conf/sparc-sun-solaris2.5.1/config.h, h/d_proto.h, lib/dial/d_dglobals.c:
+	fixes for sparc-sol 2.5.1
+
+1998-04-03  Kai Krueger  <krueger@eowyn>
+
+	* lib/dial/d_connect.c, uip/msg/msg4.c, h/config.h.in, conf/hppa1.0/config.h, configure, configure.in:
+	fixes for HPPA2.0, hpux 10.20
+
+1998-04-03  MMDF - Mail Transport Agent  <mmdf@eowyn>
+
+	* uip/other/sendmail.c, uip/other/v6mail.c, uip/send/s_externs.h, uip/snd/s_externs.h, uip/snd/s_input.c, uip/snd/s_main.c, uip/msg/msg.h, uip/msg/msg1.c, uip/msg/msg4.c, uip/other/checkmail.c, uip/other/newssend.c, uip/other/rcvtrip.c, uip/other/resend.c, lib/mmdf/mq_rdmail.c:
+	fixes for sun-sparc sol2.5.1 with gcc
+
+	* conf/sites/sun.config: Config sun.rhrk
+
+1998-04-02  MMDF - Mail Transport Agent  <mmdf@eowyn>
+
+	* conf/sparc-sun-solaris2.5.1/conf.c, conf/sparc-sun-solaris2.5.1/conf.h, conf/sparc-sun-solaris2.5.1/conf_dial.c, conf/sparc-sun-solaris2.5.1/config.h, conf/sparc-sun-solaris2.5.1/d_lock.h, conf/sparc-sun-solaris2.5.1/msgtailor.c, conf/sparc-sun-solaris2.5.1/s_tailor.c, conf/sparc-sun-solaris2.5.1/s_tailor.h, attic/conf/sparc-sun-solaris2.5.1/Makefile.com, attic/conf/sparc-sun-solaris2.5.1/Makefile.lib, attic/conf/sparc-sun-solaris2.5.1/Makefile.src, conf/sparc-sun-solaris2.5.1/chan.c:
+	added sparc-sun-solaris2.5.1 config-tree
+
+	* conf/common/Makefile.com.in, configure, configure.in, install.sh, lib/mmdf/mm_tai.c:
+	some fixes
+
+1998-03-25  Kai Krueger  <krueger@eowyn>
+
+	* conf/vu44/conf.c, conf/vgr/conf.c, conf/uclvax2/conf.c, conf/test/conf.c, conf/okstate/conf.c, conf/sparc-sun-solaris2.4/conf.c, conf/hppa1.0/conf.c, conf/csnet-relay/conf.c, conf/bbn/conf.c, conf/4.3vax/conf.c:
+	Added mgt_addipaddr,mgt_addipname to conf.c
+
+	* configure, configure.in: Changes of configure for sparc-sol2.5.1
+
+1998-03-19  Kai Krueger  <krueger@eowyn>
+
+	* lib/addr/Makefile.real, lib/mmdf/.cvsignore, src/.cvsignore, uip/.cvsignore, conf/common/Makefile.com.in, conf/i386/Makefile.com, conf/i386/conf.c, conf/i386/conf_dial.c, conf/i386/config.h, conf/sites/galadriel.config, conf/sites/sample.config, h/.cvsignore, h/config.h.in, lib/.cvsignore, .cvsignore, conf/common/.cvsignore, configure, configure.in:
+	Added .cvsignore, small changes to configure
+
+	* h/config.h.in, lib/mmdf/amp_hdr.c, lib/mmdf/mmdf_init.c, lib/table/ch_tbdbm.c, src/deliver/ch_io.c, src/smtp/smtpsrvr.c, uip/msg/msg.h, conf/common/Makefile.com.in, configure.in:
+	Added changes for sun-sparc Sol2.4 (news.uni-kl.de), part1
+
+	* conf/sparc-sun-solaris2.4/chan.c, conf/sparc-sun-solaris2.4/conf.c, conf/sparc-sun-solaris2.4/conf.h, conf/sparc-sun-solaris2.4/conf_dial.c, conf/sparc-sun-solaris2.4/config.h, conf/sparc-sun-solaris2.4/d_lock.h, conf/sparc-sun-solaris2.4/msgtailor.c, conf/sparc-sun-solaris2.4/s_tailor.c, conf/sparc-sun-solaris2.4/s_tailor.h, attic/conf/sparc-sun-solaris2.4/Makefile.com, attic/conf/sparc-sun-solaris2.4/Makefile.lib, attic/conf/sparc-sun-solaris2.4/Makefile.src:
+	Added config sun-sparc Sol2.4 (news.uni-kl.de)
+
+1998-03-17  Kai Krueger  <krueger@eowyn>
+
+	* h/ch.h, lib/addr/ap_util.c:
+	Added channel dependent warn/fail-times, part 1
+
+	* lib/addr/fullparse.c, lib/addr/parse.c, lib/mmdf/mm_tai.c, src/smtp/sm_wtmail.c, src/smtp/smtpsrvr.c, conf/i386/config.h, h/ap.h, lib/addr/ap_1adr.c, lib/addr/ap_p2s.c:
+	Added changes to disable source-route for sender in smtpsrvr
+
+1998-01-11  Kai Krueger  <krueger@eowyn>
+
+	* conf/i386/config.h, conf/common/Makefile.com.in, conf/hppa1.0/config.h, conf/sitesetup, h/config.h.in, lib/util/getllog.c, lib/util/multcpy.c, Makefile.in, configure.in:
+	small fixes
+
+	* conf/m68k-hp-hpux8.00/s_tailor.h, attic/conf/m68k-hp-hpux8.00/Makefile.com, attic/conf/m68k-hp-hpux8.00/Makefile.lib, attic/conf/m68k-hp-hpux8.00/Makefile.src, conf/m68k-hp-hpux8.00/chan.c, conf/m68k-hp-hpux8.00/conf.c, conf/m68k-hp-hpux8.00/conf.h, conf/m68k-hp-hpux8.00/conf_dial.c, conf/m68k-hp-hpux8.00/config.h, conf/m68k-hp-hpux8.00/d_lock.h, conf/m68k-hp-hpux8.00/msgtailor.c, conf/m68k-hp-hpux8.00/s_tailor.c:
+	Add configtre for m68k-hp-hpux8.00
+
 Thu Jan  1 13:48:19 1998  Kai Krueger  <krueger@galadriel>
 
 	* src/bboards/lock.c,src/pop/lock.c,src/prog/pr2mm_send.c, 
