@@ -12,6 +12,7 @@ install:	inst-sendprog inst-recvprog
 lint:		l-sendprog l-recvprog
 
 sendprog:	xsendprog
+	-@echo
 xsendprog:	ch_prog.o qu2pr_send.o pr_wtmail.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ ch_prog.o qu2pr_send.o pr_wtmail.o $(MMDFLIBS) $(SYSLIBS)
 
@@ -28,6 +29,7 @@ $(CHANDIR)/sendprog:	xsendprog
 	-@echo "sendprog installed normally"; echo ""
 
 recvprog:	xrecvprog
+	-@echo
 xrecvprog:	pr2mm_send.o pr_errmsg.o
 	$(CC) $(LDFLAGS) -o $@ pr2mm_send.o pr_errmsg.o $(MMDFLIBS) $(SYSLIBS)
 

@@ -32,6 +32,7 @@ $(LIBDIR)/$(MMPREF)amp  :  xamp
 	-@echo "amp installed normally"; echo ""
 
 amp:	xamp
+	-@echo
 xamp:	amp.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ amp.o $(MMDFLIBS) $(SYSLIBS)
 
@@ -52,6 +53,7 @@ $(LIBDIR)/$(MMPREF)checkup  :   xcheckup
 	-@echo "checkup installed normally"; echo ""
 
 checkup:	xcheckup
+	-@echo
 xcheckup:	checkup.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ checkup.o $(MMDFLIBS) $(SYSLIBS)
 
@@ -72,6 +74,7 @@ $(LIBDIR)/$(MMPREF)checkque:	xcheckque
 	-@echo "checkque installed normally"; echo ""
 
 checkque:	xcheckque
+	-@echo
 xcheckque:	checkque.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ checkque.o $(MMDFLIBS) $(SYSLIBS)
 
@@ -92,6 +95,7 @@ $(LIBDIR)/$(MMPREF)dbmbuild  :   xdbmbuild
 	-@echo "dbmbuild installed normally"; echo ""
 
 dbmbuild:	xdbmbuild
+	-@echo
 xdbmbuild:	dbmbuild.o $(MMDFLIBS)
 	    $(CC) $(LDFLAGS) -o $@ dbmbuild.o $(MMDFLIBS) $(SYSLIBS)
 
@@ -112,6 +116,7 @@ $(LIBDIR)/$(MMPREF)dbmedit  :   xdbmedit
 	-@echo "dbmedit installed normally"; echo ""
 
 dbmedit:	xdbmedit
+	-@echo
 xdbmedit:	dbmedit.o $(MMDFLIBS)
 	    $(CC) $(LDFLAGS) -o $@ dbmedit.o $(MMDFLIBS) $(SYSLIBS)
 
@@ -132,6 +137,7 @@ $(LIBDIR)/$(MMPREF)dbmlist:	xdbmlist
 	-@echo "dbmlist installed normally"; echo ""
 
 dbmlist:	xdbmlist
+	-@echo
 xdbmlist:	dbmlist.o $(MMDFLIBS)
 	    $(CC) $(LDFLAGS) -o $@ dbmlist.o $(MMDFLIBS) $(SYSLIBS)
 
@@ -152,6 +158,7 @@ $(LIBDIR)/$(MMPREF)nictable  :   xnictable
 	-@echo "nictable installed normally"; echo ""
 
 nictable:	xnictable
+	-@echo
 xnictable:	nictable.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ nictable.o $(MMDFLIBS) $(SYSLIBS)
 
@@ -172,6 +179,7 @@ $(LIBDIR)/$(MMPREF)checkaddr  :   xcheckaddr
 	-@echo "checkaddr installed normally"; echo ""
 
 checkaddr:	xcheckaddr
+	-@echo
 xcheckaddr:	checkaddr.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ checkaddr.o $(MMDFLIBS) $(SYSLIBS)
 
@@ -192,6 +200,7 @@ $(LIBDIR)/$(MMPREF)mailid  :   xmailid
 	-@echo "mailid installed normally"; echo ""
 
 mailid:	xmailid
+	-@echo
 xmailid:	mailid.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ mailid.o $(MMDFLIBS) $(SYSLIBS)
 
@@ -213,6 +222,7 @@ $(LIBDIR)/$(MMPREF)cleanque  :   xcleanque
 	-@echo "cleanque installed normally"; echo ""
 
 cleanque:	xcleanque
+	-@echo
 xcleanque:	cleanque.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ cleanque.o $(MMDFLIBS) $(SYSLIBS)
 
@@ -234,6 +244,7 @@ $(LIBDIR)/$(MMPREF)fixtai  :   xfixtai
 	    -@echo "fixtai installed normally"; echo ""
 
 fixtai:   xfixtai
+	-@echo
 xfixtai:  fixtai.o $(MMDFLIBS)
 	    $(CC) $(LDFLAGS) -o $@ fixtai.o $(MMDFLIBS) 
 
@@ -255,6 +266,7 @@ $(LIBDIR)/$(MMPREF)rem_chans  :   xrem_chans
 	    -@echo "rem_chans installed normally"; echo ""
 
 rem_chans:   xrem_chans
+	-@echo
 xrem_chans:  rem_chans.o $(MMDFLIBS)
 	    $(CC) $(LDFLAGS) -o $@ rem_chans.o $(MMDFLIBS)
 
@@ -275,6 +287,7 @@ $(LIBDIR)/$(MMPREF)setup  :   xsetup
 	-@echo "setup installed normally"; echo ""
 
 setup:	xsetup
+	-@echo
 xsetup:	setup.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ setup.o $(MMDFLIBS) $(SYSLIBS)
 
@@ -297,6 +310,7 @@ $(LIBDIR)/$(MMPREF)process-uucp  :   xprocess-uucp
 	    -@echo "process-uucp installed normally"; echo ""
 
 process-uucp:   xprocess-uucp
+	-@echo
 xprocess-uucp:  process-uucp.o
 	    $(CC) $(LDFLAGS) -o $@ process-uucp.o
 
@@ -317,6 +331,7 @@ $(LIBDIR)/$(MMPREF)tablelist  :   xtablelist
 	-@echo "tablelist installed normally"; echo ""
 
 tablelist:	 xtablelist
+	-@echo
 xtablelist:	 tablelist.o $(MMDFLIBS)
 	    $(CC) $(LDFLAGS) -o $@ tablelist.o $(MMDFLIBS) $(SYSLIBS)
 

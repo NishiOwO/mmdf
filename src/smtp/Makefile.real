@@ -25,6 +25,7 @@ $(CHANDIR)/smtp:	xsmtp
 # and tcp.5.2.c was very wrong. -- DSH
 
 smtp: xsmtp
+	-@echo
 xsmtp:	ch_smtp.o qu2sm_send.o sm_wtmail.o tcp.${SYSTEM}.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ \
 		ch_smtp.o qu2sm_send.o sm_wtmail.o tcp.${SYSTEM}.o \
@@ -46,6 +47,7 @@ $(CHANDIR)/smtpsrvr:  xsmtpsrvr
 
 
 smtpsrvr : xsmtpsrvr
+	-@echo
 xsmtpsrvr: smtpsrvr.o $(MMDFLIBS) 
 	$(CC) $(LDFLAGS) -o $@ \
 		smtpsrvr.o $(MMDFLIBS) $(SYSLIBS)
@@ -65,6 +67,7 @@ $(CHANDIR)/smtpd:  xsmtpd
 	-@echo "smtp daemon installed normally"; echo " "
 		
 smtpd: xsmtpd
+	-@echo
 xsmtpd: smtpd.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ \
 		smtpd.o $(MMDFLIBS) $(SYSLIBS)

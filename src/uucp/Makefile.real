@@ -22,6 +22,7 @@ $(CHANDIR)/$(MMPREF)uucp:	xuucp
 	-@echo "uucp installed normally"; echo ""
 
 uucp:	xuucp
+	-@echo
 xuucp:	$(OBJECTS) $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(MMDFLIBS) $(SYSLIBS)
 
@@ -48,6 +49,7 @@ inst-rmail: /bin/rmail
 # 	: -@echo "rmail installed normally"; echo ""
 
 rmail:	xrmail
+	-@echo
 xrmail:	rmail.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ rmail.o $(MMDFLIBS) $(SYSLIBS)
 

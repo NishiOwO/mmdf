@@ -34,6 +34,7 @@ $(LIBDIR)/$(MMPREF)ean2mmdf:      xean2mmdf
 	-@echo "ean2mmdf installed normally"; echo ""
 
 ean2mmdf:  xean2mmdf
+	-@echo
 xean2mmdf: ean2mmdf.o $(MMDFLIBS)
 	    $(CC) $(LDFLAGS) -o $@ ean2mmdf.o $(MMDFLIBS) \
 			$(HOSTLIBS) $(SYSLIBS)
@@ -47,6 +48,7 @@ $(CHANDIR)/$(MMPREF)ean:      xean
 	-@echo "ean installed normally"; echo ""
 
 ean:  xean
+	-@echo
 xean: $(OBJECTS) $(MMDFLIBS) $(EANLIBS)
 	    $(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(EANLIBS) \
 		$(MMDFLIBS) $(HOSTLIBS) $(SYSLIBS)

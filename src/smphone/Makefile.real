@@ -30,6 +30,7 @@ $(CHANDIR)/smphone  :   xsmphone
 	-@echo "SMTP over PhoneNet outbound channel installed normally"; echo ""
 
 smphone:  xsmphone
+	-@echo
 xsmphone: $(POBJECTS) $(MMDFLIBS)
 	    $(CC) $(LDFLAGS) -o $@ $(POBJECTS) $(MMDFLIBS) $(SYSLIBS)
 
@@ -42,6 +43,7 @@ $(LIBDIR)/smslave  :   xsmslave
 	-@echo "SMTP over PhoneNet slave installed normally"; echo ""
 
 smslave:  xsmslave
+	-@echo
 xsmslave: $(SOBJECTS) $(MMDFLIBS)
 	    $(CC) $(LDFLAGS) -o $@ $(SOBJECTS) $(MMDFLIBS) $(SYSLIBS)
 

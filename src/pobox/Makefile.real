@@ -21,6 +21,7 @@ $(CHANDIR)/pobox  :   xpobox
 	-@echo "pobox channel installed normally"; echo ""
 
 pobox:	xpobox
+	-@echo
 xpobox:	$(OBJECTS) $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(MMDFLIBS) $(SYSLIBS)
 
