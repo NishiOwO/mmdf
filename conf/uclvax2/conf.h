@@ -11,8 +11,8 @@
 				 * must be at least USERSIZE.           */
 #define MSGNSIZE   14           /* max length of a message file name  */
 #define FILNSIZE   64           /* max length of full file name       */
-#define ADDRSIZE  256           /* max length of an address           */
-#define LINESIZE  256           /* max length of a line/record        */
+#define ADDRSIZE 1024           /* max length of an address           */
+#define LINESIZE 1024           /* max length of a line/record        */
 
 #define NUMCHANS   20           /* max number of channels */
 #define NUMTABLES  30           /* max number of tables */
