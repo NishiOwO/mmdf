@@ -65,7 +65,7 @@ ${DESTDIR}/${BINDIR}/fmt: xfmt
 	echo "${DESTDIR}/${BINDIR}/fmt" >> ${filelist}
 
 version.o:	version.c
-	$(CC) -c -R version.c
+	$(CC) -c -R ${CFLAGS} version.c
 
 #$S:
 #	sccs get $@;

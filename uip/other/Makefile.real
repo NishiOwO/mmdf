@@ -266,25 +266,24 @@ ${SBINDIR}/sendmail:  xsendmail
 	chmod 04$(PGMPROT) $@
 	if test -f ${install_prefix}/usr/lib/sendmail; then \
 		cp ${install_prefix}/usr/lib/sendmail \
-			${install_prefix}/usr/lib/sendmail.orig; \
-	fi
+			${install_prefix}/usr/lib/sendmail.orig; fi
 	rm -f ${install_prefix}/usr/lib/sendmail
 	ln -s ${sbindir}/sendmail ${install_prefix}/usr/lib/sendmail
 	echo "${install_prefix}/usr/lib/sendmail" >> ${filelist}
 	echo "${SBINDIR}/sendmail" >> ${filelist}
-	@#-if test ! -f ${sbindir}/sendmail.orig; then \
-	@#	mv ${sbindir}/sendmail \
-	@#		 ${sbindir}/sendmail.orig;\
-	@#else \
-	@#	mv ${sbindir}/sendmail \
-	@#		 ${sbindir}/sendmail.orig$$;\
-	@#fi
-	@###-if test ! -f ${sbindir}/sendmail; then \
-	@###     -@echo "***** Please install sendmail by hand in /usr/lib. e.g."
-	@###     -@echo "ln -s ${sbindir}/sendmail /usr/sbin/sendmail"
-	@###else
-	@###     ln -s ${sbindir}/sendmail ${sbindir}/sendmail
-	@###fi
+	#-if test ! -f ${sbindir}/sendmail.orig; then \
+	#	mv ${sbindir}/sendmail \
+	#		 ${sbindir}/sendmail.orig;\
+	#else \
+	#	mv ${sbindir}/sendmail \
+	#		 ${sbindir}/sendmail.orig$$;\
+	#fi
+	###-if test ! -f ${sbindir}/sendmail; then \
+	###     -@echo "***** Please install sendmail by hand in /usr/lib. e.g."
+	###     -@echo "ln -s ${sbindir}/sendmail /usr/sbin/sendmail"
+	###else
+	###     ln -s ${sbindir}/sendmail ${sbindir}/sendmail
+	###fi
 
 xsendmail :   sendmail.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ sendmail.o $(MMDFLIBS) $(SYSLIBS)
