@@ -283,7 +283,10 @@ LOCFUN
 {
     int     result;
     char *valstr;
-
+#ifdef RUNALON
+    char replyline[12];
+#endif
+    
 #ifdef notdef
     ll_log(logptr, LLOGBTR, "ch_rrec()");
 #endif

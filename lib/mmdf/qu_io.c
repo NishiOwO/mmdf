@@ -106,6 +106,9 @@ int qu_init (argc, argv)              /* get ready to process Deliver mail  */
 int       argc;                     /* NOTE: other modules have no args   */
 char   *argv[];
 {
+#ifdef RUNALON
+  char *qu_sender;
+#endif
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "qu_init");
 #endif
