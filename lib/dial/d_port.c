@@ -135,7 +135,7 @@ char   *packet;
 	    c = toascii (c);      /* make sure high bit is off          */
 	    switch (c)
 	    {
-		case NULL:        /* nulls are simply skipped           */
+            case 0/*NULL*/:        /* nulls are simply skipped           */
 		case '\r':        /* carriage returns are skipped       */
 		case '\177':      /* DELs  are simply skipped           */
 		    continue;

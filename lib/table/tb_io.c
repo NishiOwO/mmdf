@@ -201,21 +201,21 @@ tb_seek (table, thepos)           /* reset table position               */
 register Table *table;
 long thepos;
 {
-    switch ((int)table)
-    {
-	case 0:
-	case NOTOK:
+  switch ((int)table) {
+      case 0:
+      case NOTOK:
 	    return (NOTOK);       /* can't open what isn't specified    */
-    }
-    switch ((int)(table -> tb_fp))
-    {                             /* not opened yet                     */
-        case 0/*NULL*/:
-	case EOF:
+  }
+
+  /* not opened yet                     */
+  switch ((int)(table -> tb_fp)) { 
+      case 0/*NULL*/:
+      case EOF:
 	    return (NOTOK);
-    }
-    fseek (table -> tb_fp, thepos, 0);
+  }
+  fseek (table -> tb_fp, thepos, 0);
 /*HACK*/ table -> tb_pos = thepos;
-    return ((ferror (table -> tb_fp)) ? NOTOK : OK);
+  return ((ferror (table -> tb_fp)) ? NOTOK : OK);
 }
 /* *****************  READ THE NAME TABLE  ************************** */
 

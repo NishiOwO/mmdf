@@ -527,7 +527,7 @@ char	*lockfile;		/* --Ignored-- */
 #endif
 	switch ((int)fp) {
 	case EOF:
-	case NULL:
+        case 0 /*NULL*/:
 		return(OK);
 	}
 
