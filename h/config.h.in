@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.16 1998/04/03 18:04:17 krueger Exp $
+ * $Id: config.h.in,v 1.17 1998/05/08 09:57:59 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -222,7 +222,7 @@
  *             kind if you want the space and the very minor
  *             performance increase.
  */
-#define DEBUG 2
+#undef DEBUG
 
 /*             The  same  caution  applies  for D_LOG as for
  *             DEBUG.  This variable controls logging in the
@@ -230,7 +230,7 @@
  *             if you don't use the dial package  (no  phone
  *             or pobox channels) you may safely omit D_LOG.
  */
-#define D_LOG
+#undef D_LOG
 
 /*             This controls more debug logging for the dial
  *             package.  Again, if you have the space and if
@@ -238,7 +238,7 @@
  *             it  to  allow  extensive  tracing if problems
  *             arise later.
  */
-#define D_DBGLOG
+#undef D_DBGLOG
 
 /*            This makes the channel programs operate inde-
  *             pendently  from deliver.  It hasn't been used
@@ -246,7 +246,7 @@
  *             understand   its   effect.    Do  NOT  define
  *             RUNALONE! (it is used for debugging)
  */
-/* #undef RUNALON */
+#undef RUNALON
 
 /*             Enables code that is specific for 4.2  BSD  .
  *             All  4.2 BSD sites must define this variable.
@@ -256,12 +256,12 @@
  *             They  will  have to compile this manually for
  *             now (or copy it to smtpd.4.2.c).
  */
-/* #define V4_2BSD */
+#undef V4_2BSD
 
 /*             Enables code specific for 4.3BSD.  Right  now
  *             this is limited to the NAMESERVER support.
  */
-/* #undef V4_3BSD */
+#undef V4_3BSD
 
 /*             Prevents the dial package (PhoneNet protocol)
  *             from  being  compiled.   This  saves  a  fair
@@ -278,14 +278,14 @@
  *             you must  also  append  -Drindex=strrchr  and
  *             -Dindex=strchr to CFLAGS.
  */
-/* #define SYS5 */
+#undef SYS5
 
 /*             Enables  code  specific to System Vr3.  Note:
  *             if you have the WIN/TCP code you may need  to
  *             add  -I/usr/netinclude to CFLAGS and -lnet to
  *             NETLIBS.
  */
-/* #undef SYS5r3 */
+#undef SYS5r3
 
 /*             Define this variable  if  you  don't  have  a
  *             dup2() system call or subroutine.
@@ -314,7 +314,7 @@
  *             als  properly, use of this option is strongly
  *             advised.
  */
-#define NODOMLIT
+#undef NODOMLIT
 
 /*             Enables intpretation of dots as delimiters on
  *             the  LHS  of an @ in addresses.  For example,
@@ -322,7 +322,7 @@
  *             ing  is  preferred here, only enable LEFTDOTS
  *             if you have historical need to. 
  */
-/* #undef LEFTDOTS */
+#undef LEFTDOTS
 
 /*             Define this translation if  your  C  compiler
  *             doesn't understand voids (e.g. V7).
@@ -345,13 +345,13 @@
  *             defined, rmail will return the entire message
  *             and niftp will return the first 500 lines.
  */
-/* #undef CITATION=n */
+#undef CITATION
 
 /*             Define  DBMCACHE  if  your  version of dbm(3)
  *             builds databases in core and then dumps  them
  *             to disk with dbmcachedump().
  */
-/* #undef DBMCACHE */
+#undef DBMCACHE
 
 /*             Define  STATSORT  if you want deliver to sort
  *             the mail queue based on a stat(2) of the mes-
@@ -365,7 +365,7 @@
  *             Tailor the CONFIGDEFS  line  to  your  site's
  *             requirements and system type. 
  */
-#define STATSORT
+#undef STATSORT
 
 /**********************************************************************/
 /*             Enable site depend code
@@ -376,11 +376,12 @@
  *             could finish readring the pipe when submit exits. This is
  *             needed on RISC-machines like HP9000s700 an newer.
  */
-/* #undef SUBMIT_TOO_FAST */
+#undef SUBMIT_TOO_FAST
 
 /*             Enable 8bit-clean mode when getting messages over smtp.
  */
-#define EIGHT_BIT_CLEAN
+#undef EIGHT_BIT_CLEAN
+#undef HAVE_8BIT
 
 /* Define if you have the wrap library (-lwrap).  */
 /*             Enable tcp_wrapper implementation in smtpsrvr. With the 
