@@ -362,31 +362,51 @@ RP_Buf *rp;
 	return;
     }
 
-    switch( sm_rp.sm_rval ) {
-    case 354:
-	break;          /* Go ahead and send mail */
+	switch( (int)(sm_rp.sm_rval/100) ) {
+        case 3:
+          switch(sm_rp.sm_rval) {
+              case 354:
+                break;          /* Go ahead and send mail */
+          }
+          break;
+          
+        case 4:
+          switch(sm_rp.sm_rval) {
+              case 421:
+              case 451:
+              default:
+                rp->rp_val = RP_AGN;
+                if (sm_rp.sm_rgot)
+                  strncpy (rp->rp_line, sm_rp.sm_rstr, sm_rp.sm_rlen);
+                else
+                  strcpy (rp->rp_line, "Unknown Problem");
+          }
+          return;
+          
+        case 5:
+          switch(sm_rp.sm_rval) {
+              case 500:
+              case 501:
+              case 503:
+              case 554:
+              default:
+                rp->rp_val = RP_NDEL;
+                if (sm_rp.sm_rgot)
+                  strncpy (rp->rp_line, sm_rp.sm_rstr, sm_rp.sm_rlen);
+                else
+                  strcpy (rp->rp_line, "Unknown Problem");
+                break;          /* We're off and running! */
+          }
+          return;
 
-    case 500:
-    case 501:
-    case 503:
-    case 554:
-	rp->rp_val = RP_NDEL;
-	if (sm_rp.sm_rgot)
-		strncpy (rp->rp_line, sm_rp.sm_rstr, sm_rp.sm_rlen);
-	else
-		strcpy (rp->rp_line, "Unknown Problem");
-	return;
-
-    case 421:
-    case 451:
-    default:
-	rp->rp_val = RP_AGN;
-	if (sm_rp.sm_rgot)
-		strncpy (rp->rp_line, sm_rp.sm_rstr, sm_rp.sm_rlen);
-	else
-		strcpy (rp->rp_line, "Unknown Problem");
-	return;
-    }
+	    default:
+          rp->rp_val = RP_AGN;
+          if (sm_rp.sm_rgot)
+            strncpy (rp->rp_line, sm_rp.sm_rstr, sm_rp.sm_rlen);
+          else
+            strcpy (rp->rp_line, "Unknown Problem");
+          return;
+	}
 
     printx ("sending...:");
     fflush (stdout);
@@ -455,30 +475,45 @@ RP_Buf *rp;
 
     time (&start_time);
 
-    switch( sm_rp.sm_rval ) {
-    case 250:
-    case 251:
-	blt ((char *)&rp_gdtxt, (char *)rp, sizeof rp_gdtxt);
-	return;
+	switch( (int)(sm_rp.sm_rval/100) ) {
+        case 2:
+          switch(sm_rp.sm_rval) {
+              case 250:
+              case 251:
+              default:
+                blt ((char *)&rp_gdtxt, (char *)rp, sizeof rp_gdtxt);
+                break;
+          }
+          return;
 
-    case 552:
-    case 554:
-	rp->rp_val = RP_NDEL;
-	if (sm_rp.sm_rgot)
-		strncpy (rp->rp_line, sm_rp.sm_rstr, sm_rp.sm_rlen);
-	else
-		strcpy (rp->rp_line, "Unknown Problem");
-	return;
-
-    case 421:
-    case 451:
-    case 452:
-    default:
-	rp->rp_val = RP_AGN;
-	if (sm_rp.sm_rgot)
-		strncpy (rp->rp_line, sm_rp.sm_rstr, sm_rp.sm_rlen);
-	else
-		strcpy (rp->rp_line, "Unknown Problem");
-	return;
+        case 5:
+          switch(sm_rp.sm_rval) {
+              case 552:
+              case 554:
+              default:
+                rp->rp_val = RP_NDEL;
+                if (sm_rp.sm_rgot)
+                  strncpy (rp->rp_line, sm_rp.sm_rstr, sm_rp.sm_rlen);
+                else
+                  strcpy (rp->rp_line, "Unknown Problem");
+                break;
+          }
+          return;
+          
+        case 4:
+        default:
+          switch(sm_rp.sm_rval) {
+              case 421:
+              case 451:
+              case 452:
+              default:
+                rp->rp_val = RP_AGN;
+                if (sm_rp.sm_rgot)
+                  strncpy (rp->rp_line, sm_rp.sm_rstr, sm_rp.sm_rlen);
+                else
+                  strcpy (rp->rp_line, "Unknown Problem");
+                break;
+          }
+          return;
     }
 }
