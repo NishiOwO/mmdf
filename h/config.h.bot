@@ -56,6 +56,9 @@ char *strchr (), *strrchr ();
 #    define TIOCSETN
 #  endif
 */
+#  ifndef HAVE_SGTTY_TIOCSETN
+#    define TIOCSETN TCSETAW
+#  endif
 #endif HAVE_SGTTY_H
 
 #ifndef HAVE_MALLOC_H
