@@ -1,4 +1,4 @@
-static char Id[] = "$Id: smtpsrvr.c,v 1.29 1999/09/08 14:42:44 krueger Exp $";
+static char Id[] = "$Id: smtpsrvr.c,v 1.30 2000/01/05 10:21:09 krueger Exp $";
 /*
  *                      S M T P S R V R . C
  *
@@ -628,6 +628,134 @@ int cmdnr;
  *
  *      handle the MAIL command  ("MAIL from:<user@host>")
  */
+#define MCMDSIZE  0
+#define MCMDBODY  1
+#define MCMDRET   2
+#define MCMDENVID 3
+
+struct comarr2           /* format of the command table */
+{
+	char *cmdname;          /* ascii name */
+	int (*cmdfunc)();       /* command procedure to call */
+    int cmdnr;
+    void *valueptr;
+};
+
+#ifdef HAVE_ESMTP
+
+int mfsize(argc, argv, sizeptr)
+int argc;
+char **argv;
+long *sizeptr;
+{
+  static char    replybuf[256];
+  
+  if(argc<2) {
+    netreply("555 missing SIZE parameter\r\n");
+    return NOTOK;
+  }
+  sscanf(argv[1], "%d", sizeptr);
+  
+  if(*sizeptr<=0) {
+    snprintf(replybuf, sizeof(replybuf),
+             "555 malformed SIZE clause %s\r\n", argv[1]);
+    netreply(replybuf);
+    return NOTOK;
+  }
+  ll_log( logptr, LLOGFTR, "mail from: size=%d", sizeptr);
+  if (message_size_limit > 0 && *sizeptr > message_size_limit) {
+    snprintf(replybuf, sizeof(replybuf),
+             "552 Message size exceeds maximum permitted\r\n");
+    netreply(replybuf);
+    return NOTOK;
+  }
+  return OK;
+}
+
+#ifdef HAVE_ESMTP_8BITMIME
+int mfbody(argc, argv, valueptr)
+int argc;
+char **argv;
+void *valueptr;
+{
+  static char    replybuf[256];
+
+  if (!accept_8bitmime) return OK;
+  
+  if(argc<2) {
+    netreply("555 missing BODY parameter\r\n");
+    return NOTOK;
+  }
+  if( lexequ(argv[1], "8BITMIME")) {
+  } else {
+    if( lexequ(argv[1], "7BIT")) {
+    } else {
+      snprintf(replybuf, sizeof(replybuf),
+               "555 unknown BODY type %s\r\n", argv[1]);
+      netreply(replybuf);
+      sender = NULL;
+      return NOTOK;
+    }
+  }
+  ll_log( logptr, LLOGFTR, "mail from: body=%s", argv[1]);
+
+  netreply("BODY\n");
+  return OK;
+}
+#endif /* HAVE_ESMTP_8BITMIME */
+
+#ifdef HAVE_ESMTP_DSN
+int mfret(argc, argv, valueptr)
+int argc;
+char **argv;
+void *valueptr;
+{
+  static char    replybuf[256];
+
+  if (!dsn) return OK;
+  
+  if(argc<2) {
+    netreply("555 missing RET parameter\r\n");
+    return NOTOK;
+  }
+  if( lexequ(argv[1], "HDRS")) {
+    /*dsn_ret_hdrs = 1;*/
+  } else {
+    if( lexequ(argv[1], "FULL")) {
+      /*dsn_ret_full = 1;*/
+    } else {
+      snprintf(replybuf, sizeof(replybuf),
+               "555 unknown RET type %s\r\n", argv[1]);
+      netreply(replybuf);
+      return NOTOK;
+    }
+  }
+  ll_log( logptr, LLOGFTR, "mail from: ret=%s", argv[1]);
+
+  netreply("DSN RET\n");
+  return OK;
+}
+
+int mfenvid(argc, argv, dsn_envid)
+int argc;
+char **argv;
+char *dsn_envid;
+{
+  static char    replybuf[256];
+
+  if (!dsn) return OK;
+  if(argc<2) {
+    netreply("555 missing ENVID parameter\r\n");
+    return NOTOK;
+  }
+  strncpy(dsn_envid, argv[1], 32);
+  ll_log( logptr, LLOGFTR, "mail from: envid=%s", dsn_envid);
+  return OK;
+}
+#endif /* HAVE_ESMTP_DSN */
+#endif /* HAVE_ESMTP */
+
+
 #ifdef HAVE_NOSRCROUTE
 extern int ap_outtype;
 #endif
@@ -649,12 +777,26 @@ int cmdnr;
 	int	len, infolen=0, infoboo=0;
 	AP_ptr  domain, route, mbox, themap, ap_sender;
     char           *argv[25];
-    int            Agc,i;
+    char           *subargv[5];
+    int            Agc, SubAgc, i;
 #ifdef HAVE_ESMTP
+	register struct comarr2 *comp;
     long           size=-1;
 #  ifdef HAVE_ESMTP_DSN
     char           dsn_envid[32];
 #  endif /* HAVE_ESMTP_DSN */
+    struct comarr2           /* format of the command table */
+      mailfromcommands[] = {
+        {"size",  mfsize,  MCMDSIZE,  (void *)(&size)},      /* 0 */
+#ifdef HAVE_ESMTP_8BITMIME
+        {"body",  mfbody,  MCMDBODY,  NULL},                 /* 1 */
+#endif /* HAVE_ESMTP_8BITMIME */
+#ifdef HAVE_ESMTP_DSN
+        {"ret",   mfret,   MCMDRET,   NULL},                  /* 2 */
+        {"envid", mfenvid, MCMDENVID, (void *)(&dsn_envid) }, /* 3 */
+#endif /* HAVE_ESMTP_DSN */
+        {NULL, NULL, -1, NULL     }
+      };
 #endif /* HAVE_ESMTP */
  
 	if (arg == 0 || *arg == 0) {
@@ -684,116 +826,58 @@ int cmdnr;
       netreply("451 internal error\r\n");
       return;
     }
-    for(i=0; i<Agc; i++) {
+
 #ifdef HAVE_ESMTP
-      if(equal(argv[i], "size", 4)){
-        value = get_value(argv[i]);
-        if(value==NULL) {
-          netreply("555 missing SIZE parameter\r\n");
-          sender = NULL;
-          return;
-        }
-        sscanf(value, "%d", &size);
-        if(size<=0) {
-          snprintf(replybuf, sizeof(replybuf),
-                   "555 malformed SIZE clause %s\r\n", value);
-          netreply(replybuf);
-          sender = NULL;
-          return;
-        }
-        ll_log( logptr, LLOGFTR, "mail from: size=%d", size);
-        if (message_size_limit > 0 && size > message_size_limit) {
-          snprintf(replybuf, sizeof(replybuf),
-                   "552 Message size exceeds maximum permitted\r\n");
-          netreply(replybuf);
-          sender = NULL;
-          return;
-        }
-      } else
-#endif /* HAVE_ESMTP */
-#ifdef HAVE_ESMTP_8BITMIME
-        if (accept_8bitmime && equal(argv[i], "BODY", 4)) {
-          value = get_value(argv[i]);
-          if(value==NULL) {
-            netreply("555 missing BODY parameter\r\n");
+    i=0;
+    for(i=0; i<Agc; i++) {
+      SubAgc = sstr2arg(argv[i], 5, subargv, "=");
+      if(SubAgc==NOTOK) {
+        netreply("451 internal error\r\n");
+        return;
+      }
+      comp = mailfromcommands;
+      while( comp->cmdname != NULL)   /* while there are names */
+      {
+        if (equal(subargv[0], comp->cmdname, strlen(comp->cmdname))) /* a winner */
+        {
+          if( (*comp->cmdfunc)(SubAgc, subargv, comp->valueptr) == NOTOK) {
+             /* call comm proc */
             sender = NULL;
             return;
           }
-          if( lexequ(value, "8BITMIME")) {
-          } else {
-            if( lexequ(value, "7BIT")) {
-            } else {
-              snprintf(replybuf, sizeof(replybuf),
-                       "555 unknown BODY type %s\r\n", value);
-              netreply(replybuf);
-              sender = NULL;
-              return;
-            }
-          }
-          ll_log( logptr, LLOGFTR, "mail from: body=%s", value);
-      } else
-#endif /* HAVE_ESMTP_8BITMIME */
-#ifdef HAVE_ESMTP_DSN
-        if (dsn && equal(argv[i], "RET", 3)) {
-          value = get_value(argv[i]);
-          if(value==NULL) {
-            netreply("555 missing RET parameter\r\n");
-            sender = NULL;
-            return;
-          }
-          if( lexequ(value, "HDRS")) {
-            /*dsn_ret_hdrs = 1;*/
-          } else {
-            if( lexequ(value, "FULL")) {
-              /*dsn_ret_full = 1;*/
-            } else {
-              snprintf(replybuf, sizeof(replybuf),
-                       "555 unknown RET type %s\r\n", value);
-              netreply(replybuf);
-              sender = NULL;
-              return;
-            }
-          }
-          ll_log( logptr, LLOGFTR, "mail from: ret=%s", value);
-        } else
-          if (dsn && equal(argv[i], "ENVID", 5)) {
-            value = get_value(argv[i]);
-            if(value==NULL) {
-              netreply("555 missing ENVID parameter\r\n");
-              sender = NULL;
-              return;
-            }
-            strncpy(dsn_envid, value, sizeof(dsn_envid));
-            ll_log( logptr, LLOGFTR, "mail from: envid=%s", dsn_envid);
-          } else
-#endif /* HAVE_ESMTP_DSN */
-          { 
-            if(i==0) {
-              sender = argv[0];
-              sender = addrfix( sender );
-            } else {
-              if(Agc>0) {
-                if(sender==NULL) netreply("501 No sender named\r\n");
-                else {
-                  sender = NULL;
-                  snprintf(replybuf, sizeof(replybuf),
-                           "555 Unknown MAIL TO: option %s\r\n", argv[i]);
-                  netreply(replybuf);
-                           /* "501 bad parameter\r\n"*/
-                }
-                
-                return;
+          break;
+        }
+        comp++;             /* bump to next candidate */
+      }
+      if(comp->cmdname == NULL) { /* command not found */
+        if(i==0) { 
+          sender = argv[0];
+          sender = addrfix( sender );
+        } else {
+          if(Agc>0) {
+            if(sender==NULL) netreply("501 No sender named\r\n");
+            else {
+              if(strlen(argv[i])>0) {
+                sender = NULL;
+                snprintf(replybuf, sizeof(replybuf),
+                         "555 Unknown MAIL TO: option %s\r\n", argv[i]);
+                netreply(replybuf);
+                /* "501 bad parameter\r\n"*/
               }
             }
+            return;
           }
+        }
+      } /* end if command not found */
       if( (i==0) && (sender==NULL) ) {
         netreply("501 No sender named\r\n");
         return;
       }
     }
-
+#endif /* HAVE_ESMTP */
+    
     if (!size_checked &&
-        rp_gval(check_disc_space(0, quedfldir))!=RP_BOK) {
+        rp_gval(check_disc_space(5000, quedfldir))!=RP_BOK) {
       snprintf(replybuf, sizeof(replybuf),
                "452 space shortage, please try later\r\n");
       netreply(replybuf);
@@ -807,6 +891,7 @@ int cmdnr;
         snprintf(replybuf, sizeof(replybuf),
                  "452 space shortage, please try later\r\n");
         netreply(replybuf);
+        sender = NULL;
         return;
       }
       size_checked = TRUE;    /* No need to check again below */
