@@ -65,7 +65,7 @@ LLIBS		= ${top_srcdir}/lib/llib-lmmdf.ln
 CH_TB		= @CH_TB@
 
 #  Specify tai_???.o and lk_lock???.o
-LOCALUTIL = tai_file.o lk_lock.o
+LOCALUTIL = tai_file.o
 
 
 default:	real-default
