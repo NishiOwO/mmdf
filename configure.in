@@ -429,9 +429,9 @@ fi
 AC_PATH_PROG(CHOWN, chown)
 AC_CHECK_PROG(LORDER, lorder, lorder)
 if test "$ac_cv_prog_LORDER" != ""; then
-    LIBFIX="libfix"
+    LIBFIX="./libfix"
 else
-    LIBFIX="libfix.linux"
+    LIBFIX="./libfix.linux"
 fi
 AC_PROG_RANLIB
 
