@@ -37,16 +37,16 @@ extern int	ap_grplev;
 AP_ptr
 	ap_alloc ()               /* create node, return pointer to it    */
 {
-    AP_ptr ap;
+  AP_ptr ap;
 
-    /* NOSTRICT */
-    ap = (AP_ptr) malloc (sizeof (struct ap_node));
-    if (ap == (AP_ptr) 0)
+  /* NOSTRICT */
+  ap = (AP_ptr) malloc (sizeof (struct ap_node));
+  if (ap == (AP_ptr) 0)
 	return ((AP_ptr) 0);
-    memset(ap, 0, sizeof (struct ap_node));
+  memset(ap, 0, sizeof (struct ap_node));
     
-    ap_ninit (ap);
-    return (ap);
+  ap_ninit (ap);
+  return (ap);
 }
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -435,6 +435,7 @@ int     (*gfunc) ();
 				(struct ap_prevstruct *) NULL)
 	return (NOTOK);
 
+    memset(tfil, 0, sizeof (struct ap_prevstruct));
     tfil -> ap_opeek = ap_peek;   /* save regular parse state info      */
     tfil -> ap_ogroup = ap_grplev;
     tfil -> ap_opersn = ap_perlev;
