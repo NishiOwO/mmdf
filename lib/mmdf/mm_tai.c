@@ -84,7 +84,9 @@ extern int
 	    lnk_listsize,
 	    mid_enable,
 	    mailsleep,
-	    sentprotect;
+	    sentprotect,
+        mbox_quota;  /* MailBox quota limit (in bytes) */
+
 
 #ifdef HAVE_ESMTP
 long
@@ -193,6 +195,7 @@ extern char
 #  define MDSN          55
 #endif
 #define MMGROUP         56
+#define MMAXMBSZ        57
 #define MMNOOP         100
   
 /**/
@@ -240,6 +243,7 @@ Cmd cmdtab[] =
     {"mlogin",      MMLOGIN,    1},
     {"mmailid",     MMMAILIDS,  1},
     {"mmaxhops",    MMAXHOPS,   1},
+    {"mmaxmbsz",    MMAXMBSZ,   1},
     {"mmaxsort",    MMMAXSORT,  1},
     {"mmbxname",    MMMBXNAME,  1},
     {"mmbxpref",    MMMBXPREF,  1},
@@ -462,7 +466,23 @@ int mm_tai (argc, argv)     /* process mmdf tailor info     */
 	    lnk_listsize = atoi(argv[1]);
     	    break;
 
-	case UUname:
+        case MMAXMBSZ:
+          sscanf(argv[1], "%d", &mbox_quota);
+          switch(argv[1][strlen(argv[1])-1]) {
+              case 'k':
+              case 'K': mbox_quota*=1000;  break;
+                
+              case 'm':
+              case 'M': mbox_quota*=1000000;  break;
+                
+              case 'g':
+              case 'G': mbox_quota*=1000000000;  break;
+              default:
+                break;
+          }
+          break;
+          
+        case UUname:
 	    Uuname = argv[1];
 	    break;
 

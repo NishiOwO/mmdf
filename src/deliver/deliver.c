@@ -1632,6 +1632,13 @@ adr_rrply (therply, chan, themsg, theadr) /* tell channel of address   */
 	    retval = RP_NDEL;
 	    break;
 
+	case RP_QUOT:            /* mbox quota exeeded, return to sender */
+	    adr_more = TRUE;
+	    printx ("quota execceded, ");
+        strcpy(therply->rp_line, "mailbox quota execceded");
+	    retval = RP_NDEL;
+	    break;
+
 	case RP_NDEL:             /* Permanent failure                  */
 	    retval = RP_NDEL;     /* have to give up on the message     */
 	    break;

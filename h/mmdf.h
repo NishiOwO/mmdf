@@ -171,6 +171,8 @@ typedef enum { PRK_UNKNOWN, PRK_SMTP, PRK_ESMTP } smtp_protocol;
 #define RP_DATA (RP_BNO | RP_CUSR | '\002')
                   /* error at end of DATA section       */
                   /* rejected due to virus-check        */
+#define RP_QUOT (RP_BNO | RP_CUSR | '\003')
+				  /* mailbox-quota                      */
 #define RP_BADR (RP_BNO | RP_CMAI | '\001')
 				  /* bad address                        */
 #define RP_BCHN (RP_BNO | RP_CMAI | '\002')

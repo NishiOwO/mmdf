@@ -176,6 +176,7 @@ qu2lo_each ()               /* send copy of text per address      */
 		case RP_LOCK:
 		case RP_USER:         /* typicial valid responses */
 		case RP_BHST:
+		case RP_QUOT:
 		case RP_NOOP:
 		case RP_NO:
 		case RP_MOK:

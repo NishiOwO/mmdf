@@ -154,6 +154,9 @@ char   *
 	case RP_DATA:
 	    return ("DATA");
 
+    case RP_QUOT:
+	    return ("QUOT");
+
 	default:                  /* print illegal octal value          */
 	    noval[15] = rp_gbbit (val) + '0';
 	    noval[16] = rp_gcbit (val) + '0';

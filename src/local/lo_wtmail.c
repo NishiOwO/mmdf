@@ -70,6 +70,7 @@ LOCVAR char mbx_wasclear;	/* this message the first in mbox?	*/
 
 LOCFUN lo_dofile(), qu2lo_txtcpy(), lo_pwait(), mbx_create(), mbx_close(),
 	mbx_chkdelim(), hdr_line(), hdr_parse(), lookup(), setupenv();
+LOCFUN int check_mboxquota();
 
 /*	Structure used in lookup routines */
 
@@ -246,6 +247,11 @@ char	*mboxname;
         return (retval);
     }
 
+    if(retval=check_mboxquota(mboxname)) {
+		printx (", failed\r\n");
+		return (retval);
+    }
+
 	if (rp_gval(retval = mbx_open (mboxname)) == RP_LOCK) {
 		printx (", locked out\r\n");
 		return (RP_LOCK);
@@ -253,6 +259,7 @@ char	*mboxname;
 		printx (", failed\r\n");
 		return (retval);
 	}
+    
     /* patch of <jromine@yoyodyne.ics.uci.edu> */
     /* from the list: 04 Dec 1997 17:41:55 -0800 */
     if (lo_sender && *lo_sender) {
@@ -1212,4 +1219,60 @@ onpipe(int i)
 {
 	signal(SIGPIPE, onpipe);
 	sigpipe = TRUE;
+}
+
+LOCFUN int check_mboxquota(mboxname)
+char *mboxname;
+{
+  struct stat	mbxstat;
+  char buf[LINESIZE];
+  Table *tblptr = tb_nm2struct("mboxquota");
+  long sizelimit;
+  
+  /* no Mailbox-Quota table defined and mbox_quota<0,  so return OK */
+  if(tblptr==NULL && mbox_quota<0) return RP_BOK;
+
+  /* some quota limits are set, now check it */
+  if(stat(mboxname, &mbxstat)<0) return RP_BOK;
+
+  /* if quota-table is defined, check if we find user there */
+  if(tblptr!=NULL && tb_k2val(tblptr, TRUE, lo_adr, buf)!=NOTOK) {
+    sscanf(buf, "%d", &sizelimit);
+    if(sizelimit<=0) return RP_BOK;
+    switch(buf[strlen(buf)-1]) {
+        case 'k':
+        case 'K': sizelimit*=1000;  break;
+
+        case 'm':
+        case 'M': sizelimit*=1000000;  break;
+
+        case 'g':
+        case 'G': sizelimit*=1000000000;  break;
+
+        default:
+          break;
+    }
+    ll_log (logptr, LLOGFST, "quota limit exceeded for '%s' val: %ld<%ld =%d",
+           lo_adr, st_gsize(&mbxstat), sizelimit,
+           st_gsize(&mbxstat)<sizelimit);
+    printx("quota size for '%s' is %ld<%ld =%d\n",
+           lo_adr, st_gsize(&mbxstat), sizelimit,
+           st_gsize(&mbxstat)<sizelimit);
+    if(st_gsize(&mbxstat)>sizelimit) return RP_QUOT;
+  } else {
+    /* user not found, so check against system-wide limit */
+    if(mbox_quota>=0) {
+      ll_log (logptr, LLOGFST,
+              "quota limit exceeded for '%s' sval: %ld<%ld =%d",
+              lo_adr, st_gsize(&mbxstat), mbox_quota,
+              st_gsize(&mbxstat)<mbox_quota);
+      printx("quota size for '%s' is %ld<%ld =%d\n",
+             lo_adr, st_gsize(&mbxstat), mbox_quota,
+             st_gsize(&mbxstat)<mbox_quota);
+      if(st_gsize(&mbxstat)>mbox_quota) return RP_QUOT;
+    }
+  }
+  
+  
+  return RP_BOK;
 }

@@ -243,3 +243,8 @@ char	*authrequest = "Postmaster@vu44.UUCP";
 char	*authfile = AUTHFILE;
 				/* warning letter - full pathname       */
 
+
+/******************* LOCAL CHANNEL TAILORING  *************************/
+/* default quota limit for a user mailbox (in bytes) */
+long mbox_quota = -1;
+
