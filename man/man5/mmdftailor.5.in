@@ -567,7 +567,7 @@ number of reconnections to each destination.
 .RE
 .I esmtp
 .RS
-Enable ESMTP transfer.
+Enable ESMTP transfer (if compiled in). (see ESMTP support).
 .br
 (\fBNote:\fR ESMTP support is not yet included in versions up to 2.44)
 .RE
@@ -1084,6 +1084,23 @@ UUXSTR  ``uux - -r -gA''
 
 .SH Dialpackage tailoring (if compiled in.)
 .sp
+
+.SH ESMTP support (if compiled in.)
+.B ACCEPT8BITMIME
+.I < 0 | 1 >
+.RS
+.RE
+
+.B DSN
+.I < 0 | 1 >
+.RS
+.RE
+
+.B MSGSIZELIMIT
+.I <int>
+.RS
+Restrict size of incoming message to <int> bytes.
+.RE
 
 .SH FILES
 @MMTAILOR@
