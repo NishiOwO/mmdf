@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.18 1998/05/25 08:26:37 krueger Exp $
+ * $Id: config.h.in,v 1.19 1998/05/25 09:16:09 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -142,6 +142,7 @@
 
 /* Define if you have the <fcntl.h> header file.  */
 #undef HAVE_FCNTL_H
+#undef HAVE_SYS_FCNTL_H
 
 /* Define if you have the <lastlog.h> header file.  */
 #undef HAVE_LASTLOG_H
