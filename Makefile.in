@@ -1,0 +1,102 @@
+#	MMDF Root Makefile
+#
+#
+MMDF_MAJOR_VERSION  = @MMDF_MAJOR_VERSION@
+MMDF_MINOR_VERSION  = @MMDF_MINOR_VERSION@
+
+SHELL           = /bin/sh
+
+BUILD_SUBDIRS	= @CONFIG_SUBDIRS@
+SUBDIR		= @SUBDIRS@
+
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+libdir		= @libdir@
+chandir		= @chandir@
+tbldir		= @tbldir@
+bindir		= @bindir@
+rcvdir		= @rcvdir@
+HOST		= @HOST@
+HOST		= @host@
+HOST_CPU	= @host_cpu@
+HOST_VENDOR	= @host_vendor@
+HOST_OS		= @host_os@
+HOST_ALIAS	= @host_alias@
+SYSTEM		= @SYSTEM@
+SYSTEM		= @system@
+
+## 
+## various programs
+##
+CC              = @CC@
+CXX             = @CXX@
+INSTALL         = ./install-sh -c
+INSTALL_PROGRAM = ${INSTALL}
+CHOWN		= @CHOWN@
+MMDFLOGIN	= @MMDFLOGIN@
+ROOTLOGIN	= @ROOTLOGIN@
+PGMPROT		= @PGMPROT@
+
+##
+## compiler and linker options
+##
+CFLAGS          = @CFLAGS@ -pipe 
+CXXFLAGS        = @CXXFLAGS@ -pipe 
+CXXTEMPLFLAGS   = @CXXTEMPLFLAGS@
+CPPFLAGS        = -I${srcdir} @CPPFLAGS@ 
+DEFS            = @DEFS@ -DNDEBUG
+LDFLAGS         = @LDFLAGS@
+STATIC_LDFLAGS  = @STATIC_LDFLAGS@
+LIBS            = @NEED_LIBS@
+MMDFLIBS	= @MMDFLIBS@
+
+all:
+	for dir in ${SUBDIR}; do \
+		(cd $${dir}; make ${MFLAGS} -${MAKEFLAGS}); done
+
+depend:
+	for dir in ${SUBDIR}; do \
+		(cd $${dir}; make ${MFLAGS} -${MAKEFLAGS} depend); done
+
+lint:
+	for dir in ${SUBDIR}; do \
+		(cd $${dir}; make ${MFLAGS} -${MAKEFLAGS} lint); done
+
+install:
+	for dir in ${SUBDIR}; do \
+		(cd $${dir}; make ${MFLAGS} -${MAKEFLAGS} install); done
+
+clean:
+	rm -f make.out
+	for dir in ${SUBDIR}; do \
+		(cd $${dir}; make $@); done
+
+distclean:
+	rm -f make.out
+	for dir in ${SUBDIR}; do \
+		(cd $${dir}; make $@); done
+	rm -f config.cache config.log config.status
+	rm -f TAGS* *.gz *.tar config.h *~ #*#
+	rm -f Makefile
+
+########################
+#
+${srcdir}/configure:    configure.in
+	cd ${srcdir} && autoconf
+
+# autoheader might not change config.h.in, so touch a stamp file.
+${srcdir}/config.h.in:  stamp-h.in
+${srcdir}/stamp-h.in:   configure.in conf-site.h
+	cd ${srcdir} && autoheader
+	echo timestamp > ${srcdir}/stamp-h.in
+
+config.h:       stamp-h
+stamp-h:        config.h.in config.status
+	./config.status
+
+Makefile:       Makefile.in config.status
+	./config.status
+
+config.status: configure
+	./config.status --recheck
+

@@ -1,0 +1,480 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(h/ap.h)
+AC_CONFIG_HEADER(h/config.h)
+AC_PREFIX_DEFAULT('/usr')
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl  AC_GET_BOOL(<Variable>, <Text>, <default> [,<d=allways define>])
+AC_DEFUN(AC_GET_BOOL,
+[
+  /bin/echo Enable $2 (y/n) "("$3") ? : \c"
+  read ans
+  if test "$ans" = ""; then
+    ans=$3
+  fi
+  if test "$ans" = "y"; then
+    ac_def_$3="yes"
+    AC_DEFINE_UNQUOTED($1, 1)
+  else
+    ac_def_$3="no"
+    if test "$4" = "d" then
+      AC_DEFINE_UNQUOTED($3, 0)
+    fi
+  fi
+])
+AC_PROVIDE(AC_GET_BOOL)
+
+dnl
+dnl AC_GET_STRING(<Variable>, <Text>, <default>)
+AC_DEFUN(AC_GET_STRING,
+[
+  /bin/echo $2 ("$3") : \c"
+  read ans
+  if test "$ans" = ""; then
+    ans=$3
+  fi
+  AC_DEFINE_UNQUOTED($1, "$ans")
+  ac_string_$1=$ans
+])
+AC_PROVIDE(AC_GET_STRING)
+
+dnl  AC_CHECK_FILE(<Variable>, <file>)
+AC_DEFUN(AC_CHECK_FILE,
+[
+  /bin/echo -n Checking for $2...
+
+  if test -e "$2"; then
+    echo " yes"
+    AC_DEFINE_UNQUOTED(HAVE_$1, 1)
+  else
+    echo " no"
+    AC_DEFINE_UNQUOTED(HAVE_$1, 0)
+  fi
+])
+AC_PROVIDE(AC_CHECK_FILE)
+
+dnl  AC_ENABLE_DEFAULT(<Variable>, <deafult: yes/no>, <subdirs>)
+dnl AC_CACHE_VAL()
+AC_DEFUN(AC_ENABLE_DEFAULT,
+[
+  AC_MSG_CHECKING(whether compiling $1)
+  if test "$enable_$1" != "yes" && test "$enable_$1" != "no"; then
+      enable_$1="$2"
+  fi
+  if test "$enable_$1" != yes; then
+    AC_MSG_RESULT(no)
+  else
+    AC_MSG_RESULT(yes)
+    $3="$$3 $1"
+  fi
+])
+AC_PROVIDE(AC_ENABLE_DEFAULT)
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl Version business -- should be the same as in Singular subdir 
+dnl
+MMDF_MAJOR_VERSION=2
+MMDF_MINOR_VERSION=43
+VERSION_DATE="December 1997"
+MMDFLOGIN=mmdf
+ROOTLOGIN=root
+PGMPROT=755
+MMDFLIBS="\${top_srcdir}/lib/libmmdf.a"
+mmdf_prefix="\${prefix}/mmdf"
+libdir="\${mmdf_prefix}/lib"
+chandir="\${mmdf_prefix}/chans"
+tbldir="\${mmdf_prefix}/table"
+rcvdir="\${exec_prefix}/lib/mh"
+
+AC_CANONICAL_HOST
+AC_PROG_CC
+AC_PROG_CPP
+AC_PROG_CXX
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl
+dnl CHECK --without arguments
+dnl
+AC_ARG_ENABLE(nameserver, \
+  [  --enable-PACKAGE        configure and build PACKAGE
+     --disable-PACKAGE       do not configure and build PACKAGE
+ where PACKAGE can be:
+     nameserver              nameserver-code])
+AC_ARG_ENABLE(dbm, \
+  [     dbm                  tables via dbm, sequential otherwise])
+AC_ARG_ENABLE(dial, \
+  [     dial                 dial code])
+AC_ARG_ENABLE(badusers, \
+  [     badusers             badusers channel-program])
+AC_ARG_ENABLE(bboards, \
+  [     bboards              bboards channel-program])
+AC_ARG_ENABLE(blockaddr, \
+  [     blockaddr            blockaddr channel-program])
+AC_ARG_ENABLE(delay, \
+  [     delay                delay channel-program])
+AC_ARG_ENABLE(ean, \
+  [     ean                  ean channel-program])
+AC_ARG_ENABLE(list, \
+  [     list                 list channel-program])
+AC_ARG_ENABLE(niftp, \
+  [     niftp                niftp channel-program])
+AC_ARG_ENABLE(phone, \
+  [     phone                phone channel-program])
+AC_ARG_ENABLE(pobox, \
+  [     pobox                pobox channel-program])
+AC_ARG_ENABLE(pop, \
+  [     pop                  pop channel-program])
+AC_ARG_ENABLE(prog, \
+  [     prog                 prog channel-program])
+AC_ARG_ENABLE(smphone, \
+  [     smphone              smphone channel-program])
+AC_ARG_ENABLE(smtp, \
+  [     smtp                 smtp channel-program])
+AC_ARG_ENABLE(uucp, \
+  [     uucp                 uucp channel-program])
+AC_ARG_ENABLE(msg, \
+  [     msg                  msg user agent])
+AC_ARG_ENABLE(other, \
+  [     other                malias,mlist,rcv*, resend, sendmail, v6mail])
+AC_ARG_ENABLE(send, \
+  [     send                 send user agent])
+AC_ARG_ENABLE(snd, \
+  [     snd                  snd user agent])
+AC_ARG_ENABLE(ucbmail, \
+  [     ucbmail              ucbmail 'Mail' program])
+AC_ARG_ENABLE(unsupported, \
+  [     unsupported          autores, cvmbox])
+
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+AC_AIX
+dnl AC_DYNIX_SEQ	AC_FUNC_GETMNTENT
+dnl AC_IRIX_SUN	AC_FUNC_GETMNTENT, AC_CHECK_LIB(sun, getpwnam)
+AC_ISC_POSIX
+AC_MINIX	
+dnl AC_SCO_INTL	AC_FUNC_STRFTIME
+dnl AC_XENIX_DIR	AC_HEADER_DIRENT
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl those are needed to check for libs and headers, later on
+dnl Checks for programs.
+dnl
+AC_PROG_AWK
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+AC_PROG_RANLIB
+AC_CHECK_PROG(ASSIGN, assign, assign)
+if test "$ac_cv_prog_ASSIGN" != ""; then
+    AC_DEFINE(HAVE_ASSIGN)
+fi
+AC_CHECK_FILE(SECURETTY, /etc/securetty)
+AC_PATH_PROG(CHOWN, chown)
+AC_PATH_PROG(AR, ar)
+
+dnl and add to -I to CPPFLAGS and and -Lto LDFLAGS, just to be sure
+if test "$libdir" = '${exec_prefix}/lib'; then
+  if test "x$exec_prefix" = xNONE; then
+    if test "x$prefix" = xNONE; then
+      LDFLAGS="-L${ac_default_prefix}/lib ${LDFLAGS}"
+      ac_configure_args="$ac_configure_args --libdir=${ac_default_prefix}/lib"
+    else
+      LDFLAGS="-L${prefix}/lib ${LDFLAGS}"
+      ac_configure_args="$ac_configure_args --libdir=${prefix}/lib"
+    fi
+  else
+    LDFLAGS="-L${exec_prefix}/lib ${LDFLAGS}"
+    ac_configure_args="$ac_configure_args --libdir=${exec_prefix}/lib"
+  fi
+else
+  LDFLAGS="-L${libdir} ${LDFLAGS}"
+fi
+
+if test "$includedir" = '${prefix}/include'; then
+  if test "x$prefix" = xNONE; then
+    CPPFLAGS="-I${ac_default_prefix}/include ${CPPFLAGS}"
+    ac_configure_args="$ac_configure_args --includedir=${ac_default_prefix}/include"
+  else
+    CPPFLAGS="-I${prefix}/include ${CPPFLAGS}"
+    ac_configure_args="$ac_configure_args --includedir=${prefix}/include"
+  fi
+else
+  CPPFLAGS="-I${includedir} ${CPPFLAGS}"
+fi
+
+dnl pass default prefix on to subdirs, if not explicitely given as an option
+if test "x$prefix" = xNONE; then
+  ac_configure_args="$ac_configure_args --prefix=$ac_default_prefix"
+fi
+
+AC_MSG_CHECKING(whether _AIX is defined)
+AC_CACHE_VAL(ac_cv_is_aix,
+AC_EGREP_CPP(yes,
+[#ifdef _AIX
+    yes
+#endif
+], ac_cv_is_aix=yes, ac_cv_is_aix=no, 1))
+if test "$ac_cv_is_aix" = yes; then
+  AC_MSG_RESULT(yes)
+else
+  AC_MSG_RESULT(no)
+fi
+
+dnl we prefer using gcc for compiling C++ files, provided the user did
+dnl not overwrite it explicitely
+if test ${GXX} = yes && test "${ac_cxx_set}" = no; then
+  CXX=gcc
+fi  
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl check for various libraries and headers
+dnl
+dnl Checks for libraries.
+dnl AC_CHECK_LIB(BSD, atof)
+dnl AC_CHECK_LIB(bsd, atof)
+if test "$enable_dbm" != "no"; then
+   AC_CHECK_LIB(gdbm, gdbm_open)
+   if test "$ac_cv_lib_gdbm_gdbm_open" = "no"; then
+      AC_CHECK_LIB(ndbm, dbm_open)
+      dnl AC_CHECK_LIB(dbm, atof)
+   fi
+fi
+
+AC_CHECK_LIB(wrap, eval_client)
+dnl AC_CHECK_LIB(socket, atof)
+dnl AC_CHECK_LIB(inet, atof)
+dnl AC_CHECK_LIB(nsl, atof)
+dnl AC_CHECK_LIB(X11, atof)
+dnl AC_CHECK_LIB(seq, atof)
+dnl AC_CHECK_LIB(ndir, atof)
+dnl AC_CHECK_LIB(, atof)
+dnl AC_CHECK_LIB(, atof)
+dnl AC_CHECK_LIB(, atof)
+
+dnl Checks for header files.
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+AC_HEADER_SYS_WAIT
+AC_HEADER_TIME
+AC_STRUCT_TM
+AC_STRUCT_TIMEZONE
+
+AC_CHECK_HEADERS(fcntl.h sgtty.h sys/file.h sys/ioctl.h sys/time.h syslog.h)
+AC_CHECK_HEADERS(memory.h termio.h libio.h)
+
+AC_CHECK_FUNCS(strchr memcpy dup2 fcntl index res_mkquery getdtablesize)
+AC_CHECK_FUNCS(ftime getcwd gethostname gettimeofday getwd mkdir socket strdup)
+AC_CHECK_FUNCS(flock)
+
+AC_FUNC_UTIME_NULL
+AC_FUNC_VFORK
+AC_FUNC_WAIT3
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_TYPE_OFF_T
+AC_TYPE_SIGNAL
+AC_DECL_SYS_SIGLIST
+AC_STRUCT_TM
+AC_STRUCT_TIMEZONE
+
+dnl Checks for library functions.
+AC_PROG_GCC_TRADITIONAL
+AC_C_CONST
+
+AC_MSG_CHECKING(whether using nameservercode)
+if test "$enable_nameserver" != no; then
+  if test $ac_cv_func_res_mkquery = yes; then
+    AC_MSG_RESULT(yes)
+    AC_DEFINE(HAVE_NAMESERVER)
+  else
+    AC_CHECK_LIB(resolv, res_mkquery)
+    AC_MSG_RESULT(no)
+  fi
+else
+    AC_MSG_WARN(no)
+fi
+
+if test "$ac_cv_lib_gdbm_gdbm_open" = "yes" || \
+	test "$ac_cv_lib_ndbm" = "yes" || \
+	test "$ac_cv_lib_dbm" = "yes"; then
+   CH_TB="ch_tbdbm"
+else
+   CH_TB="ch_tbseq"
+fi
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl sprintf returns number of printed chars
+AC_MSG_CHECKING(whether vsprintf returns number of printed chars)
+AC_CACHE_VAL(ac_cv_returns_n_of_chars, AC_TRY_RUN( 
+ [#include <stdio.h> 
+ main() { char *str=(char*)malloc(20); if (((int) sprintf(str,"123456789")) == 9) exit(0); else exit(1); }],
+   ac_cv_returns_n_of_chars=yes,
+   ac_cv_returns_n_of_chars=no,
+   ac_cv_returns_n_of_chars=no))
+if test "$ac_cv_returns_n_of_chars" = yes; then
+  AC_MSG_RESULT(yes)
+else
+  AC_MSG_RESULT(no)
+  AC_DEFINE(BSD_SPRINTF)
+fi
+
+dnl check if we have SIGSYS
+AC_MSG_CHECKING(whether have SIGSYS)
+AC_CACHE_VAL(ac_cv_have_SIGSYS, AC_TRY_RUN( 
+ [#include <signal.h> 
+ main() { if(SIGSYS>0) exit(0); else exit(1);}],
+   ac_cv_have_SIGSYS=yes,
+   ac_cv_have_SIGSYS=no,
+   ac_cv_have_SIGSYS=no))
+if test "$ac_cv_have_SIGSYS" = yes; then
+  AC_MSG_RESULT(yes)
+  AC_DEFINE(HAVE_DEF_SIGSYS)
+else
+  AC_MSG_RESULT(no)
+fi
+
+dnl check if we have struct state
+AC_MSG_CHECKING(whether have struct state)
+AC_CACHE_VAL(ac_cv_have_STATE, AC_TRY_RUN( 
+ [#include <resolv.h> 
+ main() { struct state res; exit(0); }],
+   ac_cv_have_STATE=yes,
+   ac_cv_have_STATE=no,
+   ac_cv_have_STATE=no))
+if test "$ac_cv_have_STATE" = yes; then
+  AC_MSG_RESULT(yes)
+else
+  AC_MSG_RESULT(no)
+  AC_DEFINE(HAVE_RES_STATE)
+fi
+
+dnl check if we have _NFILE
+AC_MSG_CHECKING(whether have _NFILE)
+AC_CACHE_VAL(ac_cv_have_STATE, AC_TRY_RUN( 
+ [#include <stdio.h>
+ main() { #ifdef _NFILE
+exit(0);
+#else
+exit(1);
+#endif
+ }],
+   ac_cv_have_NFILE=yes,
+   ac_cv_have_NFILE=no,
+   ac_cv_have_NFILE=no))
+if test "$ac_cv_have_NFILE" = yes; then
+  AC_MSG_RESULT(yes)
+  AC_DEFINE(HAVE_NFILE)
+else
+  AC_MSG_RESULT(no)
+fi
+
+dnl check arguments of mkdir()
+if test "$ac_cv_func_mkdir" = "yes"; then
+  AC_MSG_CHECKING(what argument mkdir() takes a second argument)
+  AC_CACHE_VAL(ac_cv_have_MKDIR_LNX, AC_TRY_RUN( 
+   [ #include <sys/stat.h>
+     main() { 
+	mkdir("dummy", 777);
+	exit(0);
+   }],
+     ac_cv_have_MKDIR_LNX=yes,
+     ac_cv_have_MKDIR_LNX=no,
+     ac_cv_have_MKDIR_LNX=no))
+  if test "$ac_cv_have_MKDIR_LNX" = yes; then
+    AC_MSG_RESULT(yes)
+    AC_DEFINE(MKDIR_HAVE_SECOND_ARG)
+  else
+    AC_MSG_RESULT(no)
+  fi
+  rmdir dummy
+fi
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+if test -d lib; then
+  SUBDIRS="$SUBDIRS lib"
+fi
+if test -d src; then
+  SUBDIRS="$SUBDIRS src"
+fi
+if test -d uip; then
+  SUBDIRS="$SUBDIRS uip"
+fi
+LIBSUBDIRS="addr mmdf table util"
+AC_ENABLE_DEFAULT(dial, no, LIBSUBDIRS)
+
+SRCSUBDIRS="deliver local submit tools"
+AC_ENABLE_DEFAULT(badusers, yes, SRCSUBDIRS)
+AC_ENABLE_DEFAULT(bboards,  no,  SRCSUBDIRS)
+AC_ENABLE_DEFAULT(blockaddr,yes,SRCSUBDIRS)
+AC_ENABLE_DEFAULT(delay,    yes, SRCSUBDIRS)
+AC_ENABLE_DEFAULT(ean,      no,  SRCSUBDIRS)
+AC_ENABLE_DEFAULT(list,     yes, SRCSUBDIRS)
+AC_ENABLE_DEFAULT(niftp,    no,  SRCSUBDIRS)
+AC_ENABLE_DEFAULT(phone,    no,  SRCSUBDIRS)
+AC_ENABLE_DEFAULT(pobox,    yes, SRCSUBDIRS)
+AC_ENABLE_DEFAULT(pop,      no,  SRCSUBDIRS)
+AC_ENABLE_DEFAULT(prog,     yes, SRCSUBDIRS)
+AC_ENABLE_DEFAULT(smphone,  no,  SRCSUBDIRS)
+AC_ENABLE_DEFAULT(smtp,     yes, SRCSUBDIRS)
+AC_ENABLE_DEFAULT(uucp,     yes, SRCSUBDIRS)
+
+if test "$enable_phone" = "yes" && test "$enable_dial" = "no"; then
+    AC_MSG_WARN(need lib/dial for phone-channel...enabled)
+    enable_dial="yes"
+    LIBSUBDIRS=$LIBSUBDIRS" dial"
+fi
+if test "$enable_smphone" = "yes" && test "$enable_dial" = "no"; then
+    AC_MSG_WARN(need lib/dial for smphone-channel...enabled)
+    enable_dial="yes"
+    LIBSUBDIRS=$LIBSUBDIRS" dial"
+fi
+if test "$enable_dial" = "yes"; then
+  AC_DEFINE(HAVE_DIAL)
+fi
+
+dnl AC_ENABLE_DEFAULT(bboards,  yes,  SRCSUBDIRS)
+dnl AC_ENABLE_DEFAULT(ean,      yes,  SRCSUBDIRS) xean2mmdf ok, xean (src/ean missing)
+dnl AC_ENABLE_DEFAULT(niftp,    yes,  SRCSUBDIRS) _NFILE
+dnl AC_ENABLE_DEFAULT(phone,    yes,  SRCSUBDIRS) ok
+dnl AC_ENABLE_DEFAULT(pop,      yes,  SRCSUBDIRS)
+dnl AC_ENABLE_DEFAULT(smphone,  yes,  SRCSUBDIRS) ok
+
+UIPSUBDIRS=""
+AC_ENABLE_DEFAULT(msg,         yes, UIPSUBDIRS)
+AC_ENABLE_DEFAULT(other,       yes, UIPSUBDIRS)
+AC_ENABLE_DEFAULT(send,        yes, UIPSUBDIRS)
+AC_ENABLE_DEFAULT(snd,         yes, UIPSUBDIRS)
+AC_ENABLE_DEFAULT(ucbmail,     no,  UIPSUBDIRS)
+AC_ENABLE_DEFAULT(unsupported, no,  UIPSUBDIRS)
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+CFLAGS="$CFLAGS -I\${top_srcdir}/h"
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+AC_SUBST(SUBDIRS)
+AC_SUBST(LIBSUBDIRS)
+AC_SUBST(SRCSUBDIRS)
+AC_SUBST(UIPSUBDIRS)
+
+AC_SUBST(MMDF_MAJOR_VERSION)
+AC_SUBST(MMDF_MINOR_VERSION)
+AC_SUBST(MMDFLOGIN)
+AC_SUBST(ROOTLOGIN)
+AC_SUBST(PGMPROT)
+AC_SUBST(MMDFLIBS)
+AC_SUBST(chandir)
+AC_SUBST(tbldir)
+AC_SUBST(rcvdir)
+AC_SUBST(mmdf_prefix)
+AC_SUBST(CXXTEMPLFLAGS)
+AC_SUBST(STATIC_LDFLAGS)
+AC_SUBST(CH_TB)
+
+AC_OUTPUT(Makefile)
+dnl AC_OUTPUT(lib/Makefile src/Makefile uip/Makefile conf/common/Makefile.com \
+dnl Makefile)
+dnl rm -f Makefile.com
+dnl ln -s conf/common/Makefile.com Makefile.com
