@@ -22,6 +22,9 @@
 #include "ch.h"
 #include "dm.h"
 #include "chdbm.h"
+#ifdef HAVE_LIBGDBM
+#  include <gdbm.h>
+#endif
 
 extern Table **tb_list;  /* order tables searched         */
 extern Domain **dm_list; /* ordr domain tables searched  */
@@ -34,13 +37,15 @@ extern char *tbldbm;
 extern char *lckdfldir;
 extern char *mmtailor;
 
+#ifndef HAVE_LIBGDBM
 typedef struct
 {
     char *dptr;
     int dsize;
 } datum;
+#endif
 
-extern datum fetch ();
+extern datum myfetch ();
 
 typedef struct dbmentry
 {
@@ -281,8 +286,21 @@ int new;
 
     if (new)                /* start with fresh files */
     {
-	if (Verbose || Debug)
+      if (Verbose || Debug)
 	    fprintf (stderr, "Temporary database:  %s$\n", dbfile);
+#ifdef HAVE_LIBGDBM
+	(void) sprintf (tmpfile, "%s$", dbfile);
+	if(Debug)
+	    fprintf (stderr, "creating '%s'\n", tmpfile);
+
+	if (close (creat (tmpfile, 0644)) < 0)
+	{                       /* create and/or zero the file */
+	    fprintf (stderr, "could not creat '%s':  ", tmpfile);
+	    perror ("");
+	    cleanup (-1);
+	}
+	chmod (tmpfile, 0644);  /* in case umask screwed us */
+#else /* HAVE_LIBGDBM */
 	(void) sprintf (tmpfile, "%s$.pag", dbfile);
 	if(Debug)
 	    fprintf (stderr, "creating '%s'\n", tmpfile);
@@ -306,6 +324,7 @@ int new;
 	    cleanup (-1);
 	}
 	chmod (tmpfile, 0644);  /* in case umask screwed us */
+#endif /* HAVE_LIBGDBM */
 	(void) sprintf (tmpfile, "%s$", dbfile);
 	return (dbfinit (tmpfile));
     }
@@ -330,6 +349,21 @@ int new;
 	if (Verbose || Debug)
 	    fprintf(stderr, "Moving to database:  %s\n", dbfile);
 
+#ifdef HAVE_LIBGDBM
+	(void) sprintf (fromfile, "%s$", dbfile);
+	(void) sprintf (tofile, "%s", dbfile);
+	if (Debug)
+	    fprintf (stderr, "moving '%s'\n", fromfile);
+
+	(void) unlink (tofile);
+
+	if ((link (fromfile, tofile ) < 0) || (unlink (fromfile) < 0))
+	{                       /* create and/or zero the file */
+	    fprintf (stderr, "could not link to '%s':  ", tofile);
+	    perror ("");
+	    cleanup (-1);
+	}
+#else /* HAVE_LIBGDBM */
 	(void) sprintf (fromfile, "%s$.pag", dbfile);
 	(void) sprintf (tofile, "%s.pag", dbfile);
 	if (Debug)
@@ -357,7 +391,8 @@ int new;
 	    perror ("");
 	    cleanup (-1);
 	}
-
+#endif /* HAVE_LIBGDBM */
+    
 	return (TRUE);
     }
 
@@ -373,9 +408,13 @@ int new;
 dbfinit(filename)
 char *filename;
 {
-	if(dbminit(filename) < 0)
+	if(mydbminit(filename, "rw") < 0)
 	{
 	    fprintf (stderr, "could not initialize data base '%s'", filename);
+#ifdef HAVE_LIBGDBM
+        fprintf(stderr, ": [%d] %s\n", gdbm_errno,
+                        gdbm_strerror(gdbm_errno));
+#endif /* HAVE_LIBGDBM */
 	    perror("");
 	    return (0);
 	}
@@ -389,7 +428,7 @@ char *filename;
 
 dbfclose()
 {
-    return (1);
+    return (dbmclose());
 }
 
 /*
@@ -495,7 +534,7 @@ char tbname[];
     long i;
 
     p = newentry;
-    old = fetch (key);
+    old = myfetch (key);
     if (old.dptr != NULL) {
 	if (Debug) {
 	    fprintf (stderr, "\tFound old entry\n\t");
@@ -521,7 +560,7 @@ char tbname[];
 	fprintf (stderr, "\tNew datum\n\t");
 	prdatum (old);
     }
-    if (store (key, old) < 0) {          /* put the datum back */
+    if (mystore (key, old) < 0) {          /* put the datum back */
 	fprintf (stderr, "dbmbuild, install:  store failed; key='%s', value=",
 								key.dptr);
 	prdatum (old);

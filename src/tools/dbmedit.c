@@ -1,6 +1,9 @@
 #include "util.h"
 #include "mmdf.h"
 #include "chdbm.h"
+#ifdef HAVE_LIBGDBM
+#  include <gdbm.h>
+#endif
 
 /*
  * Edit the mmdf dbm database - Phil Cockcroft UCL
@@ -15,12 +18,14 @@ extern char *dupfpath();
 extern char *multcat();
 extern char *gets();
 
+#ifndef HAVE_LIBGDBM
 typedef struct  {
 	char    *dptr;
 	int     dsize;
 } datum;
+#endif HAVE_LIBGDBM
 
-extern  datum   fetch();
+extern  datum   myfetch();
 datum   dcons();
 
 char    ibuf[LINESIZE];
@@ -205,7 +210,7 @@ add()
 		fprintf(stderr, "Usage: add key table value\n");
 		return(9);
 	}
-	d = fetch(dcons(argv[1]));
+	d = myfetch(dcons(argv[1]));
 	if(d.dptr == 0){
 		if (verbose)
 			printf("Creating new key: \"%s\" table: \"%s\" value: \"%s\"\n",
@@ -242,7 +247,7 @@ del()
 		return(9);
 	}
 
-	d = fetch(dcons(argv[1]));
+	d = myfetch(dcons(argv[1]));
 	if (d.dptr == 0) {
 		fprintf(stderr, "Key \"%s\" not found in database\n", argv[1]);
 		return(99);
@@ -310,7 +315,7 @@ change()
 	}
 
 	newvalpos = (argc == 4) ? 3 : 4;
-	d = fetch(dcons(argv[1]));
+	d = myfetch(dcons(argv[1]));
 	if(d.dptr == 0) {
 		if (verbose)
 			fprintf(stderr, "key \"%s\" not found in database\n",
@@ -354,7 +359,7 @@ print()
 		return(9);
 	}
 
-	d = fetch(dcons(argv[1]));
+	d = myfetch(dcons(argv[1]));
 	if(d.dptr == 0){
 		fprintf(stderr, "key \"%s\" not found in database\n", argv[1]);
 		return(99);
@@ -393,12 +398,12 @@ dscons()
 	}
 	d = dcons(tbuf);
 
-	if ((lckfd = lk_open(dblock, 0, (char *)0, (char *)0, 10)) < 0) {
+ if ((lckfd = lk_open(dblock, 0, (char *)0, (char *)0, 10)) < 0) {
 		perror (dblock);
 		printf("Database %s is locked.  Try again later.\n", tbldbm);
 		return(1);
 	}
-	if (store(dcons(argv[1]), d) < 0) {
+	if (mystore(dcons(argv[1]), d) < 0) {
 		fprintf(stderr, "dbmedit: cannot store new value for '%s'\n", argv[1]);
 	}
 
@@ -417,9 +422,13 @@ dscons()
 dbfinit(filename)
 char *filename;
 {
-	if(dbminit(filename) < 0) {
+	if(mydbminit(filename, "rw") < 0) {
 	    fprintf (stderr, "could not initialize data base '%s'", filename);
-	    perror("");
+#ifdef HAVE_LIBGDBM
+        fprintf(stderr, ": [%d] %s\n", gdbm_errno,
+                        gdbm_strerror(gdbm_errno));
+#endif /* HAVE_LIBGDBM */
+        perror("");
 	    exit(99);
 	}
 	return (0);

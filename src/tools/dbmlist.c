@@ -1,5 +1,8 @@
 #include "util.h"
 #include "mmdf.h"
+#ifdef HAVE_LIBGDBM
+#  include <gdbm.h>
+#endif
 
 /*
  *      Print contents of MMDF address database
@@ -13,15 +16,17 @@ extern char *blt();
 extern char *tbldfldir;
 extern char *tbldbm;
 
+#ifndef HAVE_LIBGDBM
 typedef struct
 {
     char *dptr;
     int dsize;
 } datum;
+#endif
 
-extern datum fetch (),
-	     firstkey (),
-	     nextkey ();
+extern datum myfetch (),
+	     myfirstkey (),
+	     mynextkey ();
 
 datum key,
 	value;
@@ -53,18 +58,22 @@ char **argv;
     }
     getfpath ((path == 0) ? tbldbm : path, tbldfldir, dbfile);
 
-    if(dbminit(dbfile) < 0)
+    if(mydbminit(dbfile, "r") < 0)
     {
+#ifdef HAVE_LIBGDBM
+        fprintf(stderr, "[%d] %s\n", gdbm_errno,
+                        gdbm_strerror(gdbm_errno));
+#endif /* HAVE_LIBGDBM */
 	    perror("tblprint, fileinit");
 	    exit (-1);
     }
 
-    for (key = firstkey (); key.dptr != NULL; key = nextkey (key))
+    for (key = myfirstkey (); key.dptr != NULL; key = mynextkey (key))
     {
 	blt (key.dptr, tmp, key.dsize);
 	tmp[key.dsize] = '\0';
 	printf ("%-15s:  ", tmp);      /* key string */
-	value = fetch (key);
+	value = myfetch (key);
 	prdatum (value);
     }
     exit (0);

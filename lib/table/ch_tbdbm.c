@@ -48,6 +48,9 @@
 #include "ch.h"                   /* has table state strcture def       */
 #include "dm.h"
 #include "chdbm.h"
+#ifdef HAVE_LIBGDBM
+#  include <gdbm.h>
+#endif
 
 extern LLog *logptr;
 extern char *tbldfldir;
@@ -57,9 +60,11 @@ extern char *ch_dflnam;
 
 extern char *strcpy();
 
+#ifndef HAVE_LIBGDBM
 typedef struct {char *dptr; int dsize;} datum;
+#endif
 
-extern datum fetch();
+extern datum myfetch();
 
 /* *******************  FIND HOST NAME IN ANY TABLE  ****************** */
 
@@ -245,16 +250,21 @@ DBMValues dbm;                      /* put the entry here           */
 
     if (!dbmopen)
     {
-	extern int dbminit();
+	extern int mydbminit();
 	char filename[128];
 
 #ifdef DEBUG
 	ll_log (logptr, LLOGBTR, "tb_fetch: dbminit");
 #endif
 	getfpath (tbldbm, tbldfldir, filename);
-	if (dbminit (filename) < 0)
-	    err_abrt (LLOGTMP, "Error opening database '%s'", filename);
-
+	if (mydbminit (filename, "r") < 0) {
+#ifdef HAVE_LIBGDBM
+      ll_log (logptr, LLOGBTR, "tb_fetch: gdbm_open failed: [%d] %s",
+              gdbm_errno, gdbm_strerror(gdbm_errno));
+#endif
+      err_abrt (LLOGTMP, "Error opening database '%s'", filename);
+    }
+    
 	dbmopen = TRUE;
     }
 
@@ -266,7 +276,7 @@ DBMValues dbm;                      /* put the entry here           */
     for (p = name; *p; p++)
 	*p = uptolow (*p);
 
-    value = fetch (key);
+    value = myfetch (key);
     if (value.dptr == NULL)
     {
 #ifdef DEBUG
