@@ -624,14 +624,17 @@ AC_CHECK_FUNCS(gettimeofday getwd)
 AC_CHECK_FUNCS(index initgroups killpg memcpy)
 AC_CHECK_FUNCS(mkdir mkstemp res_mkquery)
 AC_CHECK_FUNCS(setpgrp setpgid setreuid sigchild sigset sigsetmask)
-AC_CHECK_FUNCS(socket strchr strdup strncat truncate tzset)
-AC_CHECK_FUNC(strncpy,,[
-dnl AC_MSG_WARN(your system does not strncpy())
-AC_MSG_ERROR(your system does not strncpy()
-      MMDF will not compile.
-      Please send a report to the current maintainer.)
+AC_CHECK_FUNCS(socket strchr strdup truncate tzset)
+AC_CHECK_FUNC(strncat,AC_DEFINE_UNQUOTED(HAVE_STRNCAT,1),[
+AC_MSG_WARN(Your system does not have strncat())
+AC_MSG_WARN(the implement strncat() replacement uses the unsecure strcat()!)
 ])
-AC_CHECK_FUNC(snprintf,,[AC_CHECK_FUNC(vsnprintf,,[
+AC_CHECK_FUNC(strncpy,AC_DEFINE_UNQUOTED(HAVE_STRNCPY,1),[
+AC_MSG_WARN(Your system does not have strncpy())
+AC_MSG_WARN(the implement strncpy() replacement uses the unsecure strcpy()!)
+])
+AC_CHECK_FUNC(snprintf,AC_DEFINE_UNQUOTED(HAVE_SNPRINTF,1),[
+AC_CHECK_FUNC(vsnprintf,AC_DEFINE_UNQUOTED(HAVE_VSNPRINTF,1),[
 AC_MSG_WARN(Your system does not have snprint() nor vsnprintf())
 AC_MSG_WARN(the implement snprintf() replacement uses the unsecure sprintf()!)
 ])])

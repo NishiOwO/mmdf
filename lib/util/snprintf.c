@@ -51,3 +51,23 @@ snprintf
 }
 #  endif/* HAVE_VARARGS_H */
 #endif /* HAVE_SNPRINTF */
+
+#ifndef HAVE_STRNCPY
+char * strncpy(dest, src, n)
+char *dest;
+char *src;
+size_t n;
+{
+  return(strcpy(dest,src));
+}
+#endif /* HAVE_STRNCPY */
+
+#ifndef HAVE_STRNCAT
+char * strncat(dest, src, n)
+char *dest;
+char *src;
+size_t n;
+{
+  return(strcat(dest,src));
+}
+#endif /* HAVE_STRNCAT */
