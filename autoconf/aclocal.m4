@@ -1,5 +1,5 @@
 dnl
-dnl $Id: aclocal.m4,v 1.6 1999/08/29 12:27:23 krueger Exp $
+dnl $Id: aclocal.m4,v 1.7 2000/01/12 14:29:37 krueger Exp $
 dnl
 dnl
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -348,4 +348,20 @@ dnl  AC_SUBST($2)
 AC_PROVIDE(AC_C_SUBST)
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+AC_DEFUN(AC_VAR_TIMEZONE,
+[AC_CACHE_CHECK([whether have long timezone],
+  ac_cv_var_timezone,
+[AC_TRY_RUN([
+#include <sys/types.h>
+#include <time.h>
+main()
+{ struct tm im; long i = im.tm_gmtoff; exit(0);}],
+  ac_cv_var_timezone=no, ac_cv_var_timezone=yes, ac_cv_var_timezone=no)])
+if test $ac_cv_var_timezone = yes; then
+  AC_DEFINE(HAVE_VAR_TIMEZONE)
+fi
+])
+AC_PROVIDE(AC_VAR_TIMEZONE)
+
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
