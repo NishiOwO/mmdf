@@ -39,7 +39,7 @@ $(BINDIR)/checkmail:  xcheckmail
 	cp xcheckmail $@
 	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod 04$(PGMPROT) $@
-	echo "$(BINDIR)/checkmail" >> ${filelist}
+	echo "%attr(4$(PGMPROT),$(MMDFLOGIN),$(MMDFGROUP)) $(BINDIR)/checkmail" >> ${filelist}
 
 xcheckmail :   checkmail.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ checkmail.o $(MMDFLIBS) $(SYSLIBS)
@@ -57,7 +57,7 @@ $(BINDIR)/emactovi:  xemactovi
 	cp xemactovi $@
 	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod 0$(PGMPROT) $@
-	echo "$(BINDIR)/emactovi" >> ${filelist}
+	echo "%attr(0$(PGMPROT),$(MMDFLOGIN),$(MMDFGROUP)) $(BINDIR)/emactovi" >> ${filelist}
 
 xemactovi :   emactovi.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ emactovi.o $(MMDFLIBS) $(SYSLIBS)
@@ -74,7 +74,7 @@ inst-xmalias: $(MCMDDIR)/$(PREF)malias
 $(MCMDDIR)/$(PREF)malias: xmalias
 	cp xmalias $@
 	-chmod $(PGMPROT) $@
-	echo "$(MCMDDIR)/$(PREF)malias" >> ${filelist}
+	echo "%attr(0$(PGMPROT),$(MMDFLOGIN),$(MMDFGROUP)) $(MCMDDIR)/$(PREF)malias" >> ${filelist}
 
 xmalias:	malias.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ malias.o $(MMDFLIBS) $(SYSLIBS) $(DBM)
@@ -92,7 +92,7 @@ $(BINDIR)/$(PREF)mlist: xmlist
 	cp xmlist $@
 	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod 04$(PGMPROT) $@
-	echo "$(BINDIR)/$(PREF)mlist" >> ${filelist}
+	echo "%attr(4$(PGMPROT),$(MMDFLOGIN),$(MMDFGROUP)) $(BINDIR)/$(PREF)mlist" >> ${filelist}
 
 xmlist:	mlist.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ mlist.o $(MMDFLIBS) $(SYSLIBS) $(DBM)
@@ -110,7 +110,7 @@ $(BINDIR)/$(PREF)newmail: xnewmail
 	cp xnewmail $@
 	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod 0$(PGMPROT) $@
-	echo "$(BINDIR)/$(PREF)newmail" >> ${filelist}
+	echo "%attr(0$(PGMPROT),$(MMDFLOGIN),$(MMDFGROUP)) $(BINDIR)/$(PREF)newmail" >> ${filelist}
 
 xnewmail:	newmail.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ newmail.o $(MMDFLIBS) $(SYSLIBS) $(DBM)
@@ -129,7 +129,7 @@ $(BINDIR)/$(PREF)v6mail:  xv6mail
 	cp xv6mail $@
 	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod $(PGMPROT) $@
-	echo "$(BINDIR)/$(PREF)v6mail" >> ${filelist}
+	echo "%attr(0$(PGMPROT),$(MMDFLOGIN),$(MMDFGROUP)) $(BINDIR)/$(PREF)v6mail" >> ${filelist}
 
 xv6mail:	v6mail.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ v6mail.o $(MMDFLIBS) $(SYSLIBS)
@@ -148,7 +148,7 @@ $(RCVDIR)/$(PREF)rcvalert:  xrcvalert
 	cp xrcvalert $@
 	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod $(PGMPROT) $@
-	echo "$(RCVDIR)/$(PREF)rcvalert" >> ${filelist}
+	echo "%attr(0$(PGMPROT),$(MMDFLOGIN),$(MMDFGROUP)) $(RCVDIR)/$(PREF)rcvalert" >> ${filelist}
 
 xrcvalert:	rcvalert.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ rcvalert.o $(MMDFLIBS) $(SYSLIBS)
@@ -167,7 +167,7 @@ $(RCVDIR)/$(PREF)rcvfile: xrcvfile
 	cp xrcvfile $@
 	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod $(PGMPROT) $@
-	echo "$(RCVDIR)/$(PREF)rcvfile" >> ${filelist}
+	echo "%attr(0$(PGMPROT),$(MMDFLOGIN),$(MMDFGROUP)) $(RCVDIR)/$(PREF)rcvfile" >> ${filelist}
 
 xrcvfile:	rcvfile.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ rcvfile.o $(MMDFLIBS) $(SYSLIBS)
@@ -186,7 +186,7 @@ $(BINDIR)/$(PREF)resend: xresend
 	cp xresend $@
 	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod $(PGMPROT) $@
-	echo "$(BINDIR)/$(PREF)resend" >> ${filelist}
+	echo "%attr(0$(PGMPROT),$(MMDFLOGIN),$(MMDFGROUP)) $(BINDIR)/$(PREF)resend" >> ${filelist}
 
 xresend:	resend.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ resend.o $(MMDFLIBS) $(SYSLIBS)
@@ -206,7 +206,7 @@ $(MCMDDIR)/$(PREF)newssend: xnewssend
 	cp xnewssend $@
 	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod 04$(PGMPROT) $@
-	echo "$(MCMDDIR)/$(PREF)newssend" >> ${filelist}
+	echo "%attr(4$(PGMPROT),$(MMDFLOGIN),$(MMDFGROUP)) $(MCMDDIR)/$(PREF)newssend" >> ${filelist}
 
 xnewssend:	newssend.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ newssend.o $(MMDFLIBS) $(SYSLIBS)
@@ -225,7 +225,7 @@ $(RCVDIR)/$(PREF)rcvprint: xrcvprint
 	cp xrcvprint $@
 	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod $(PGMPROT) $@
-	echo "$(RCVDIR)/$(PREF)rcvprint" >> ${filelist}
+	echo "%attr(0$(PGMPROT),$(MMDFLOGIN),$(MMDFGROUP)) $(RCVDIR)/$(PREF)rcvprint" >> ${filelist}
 
 xrcvprint:	rcvprint.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ rcvprint.o $(MMDFLIBS) $(SYSLIBS)
@@ -244,7 +244,7 @@ $(RCVDIR)/$(PREF)rcvtrip: xrcvtrip
 	cp xrcvtrip $@
 	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod $(PGMPROT) $@
-	echo "$(RCVDIR)/$(PREF)rcvtrip" >> ${filelist}
+	echo "%attr(0$(PGMPROT),$(MMDFLOGIN),$(MMDFGROUP)) $(RCVDIR)/$(PREF)rcvtrip" >> ${filelist}
 
 xrcvtrip:	rcvtrip.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ rcvtrip.o $(MMDFLIBS) $(SYSLIBS)
@@ -269,8 +269,8 @@ ${SBINDIR}/sendmail:  xsendmail
 			${install_prefix}/usr/lib/sendmail.orig; fi
 	rm -f ${install_prefix}/usr/lib/sendmail
 	ln -s ${sbindir}/sendmail ${install_prefix}/usr/lib/sendmail
-	echo "${install_prefix}/usr/lib/sendmail" >> ${filelist}
-	echo "${SBINDIR}/sendmail" >> ${filelist}
+	echo "%attr(-,$(MMDFLOGIN),$(MMDFGROUP)) ${install_prefix}/usr/lib/sendmail" >> ${filelist}
+	echo "%attr(4$(PGMPROT),$(MMDFLOGIN),$(MMDFGROUP)) ${SBINDIR}/sendmail" >> ${filelist}
 	#-if test ! -f ${sbindir}/sendmail.orig; then \
 	#	mv ${sbindir}/sendmail \
 	#		 ${sbindir}/sendmail.orig;\
