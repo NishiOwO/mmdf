@@ -8,12 +8,14 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.4 $
+ *  $Revision: 1.5 $
  *
  *  $Log: cmd1.c,v $
- *  Revision 1.4  1985/12/18 13:19:14  galvin
- *  Add another argument to send to indicate whether or not this
- *  message should be delimited by MMDF message delimiters.
+ *  Revision 1.5  1986/01/07 13:42:35  galvin
+ *  Change printhead to use the new parse return value.  Be
+ *  lazy and if parse couldn't figure out the date, then use
+ *  the contents of the "Date" header field as is.  It probably
+ *  should be parsed into something nice, but ... .
  *
  * Revision 1.6  86/01/14  14:09:45  galvin
  * Let's not be lazy and use MMDF's smtpdate and makedate to parse the
