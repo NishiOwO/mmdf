@@ -848,6 +848,23 @@ dnl  AC_TRY_RUN(
   fi
 fi
 
+dnl check if we have struct state
+AC_MSG_CHECKING(whether have union wait)
+AC_CACHE_VAL(ac_cv_have_STATE, AC_TRY_RUN( 
+ [#include <sys/wait.h>
+ main() { 
+	union wait pstatus;
+	exit(0); }],
+   ac_cv_have_UNION_WAIT=yes,
+   ac_cv_have_UNION_WAIT=no,
+   ac_cv_have_UNION_WAIT=no))
+if test "$ac_cv_have_UNION_WAIT" = "yes"; then
+  AC_MSG_RESULT(yes)
+  AC_DEFINE(HAVE_UNION_WAIT)
+else
+  AC_MSG_RESULT(no)
+fi
+
 echo
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
