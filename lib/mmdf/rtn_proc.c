@@ -137,12 +137,22 @@ rtn_warn (themsg, retadr)         /* notify of delay in delivery        */
     return (ml_end (OK));
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+warn_footer()
+{}
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 rtn_warn_init (themsg, retadr)         /* notify of delay in delivery        */
     Msg *themsg;
     char *retadr;
 {
     char   subject[32];
-    snprintf (subject, sizeof(subject), "%s  (%s)", rtn_yetsnd, themsg -> mg_mname);
+    snprintf (subject, sizeof(subject), "%s  (%s)", rtn_yetsnd,
+              themsg -> mg_mname);
     if (rtn_mlinit (subject, retadr) != OK)
 	return (NOTOK);           /* set up for returning               */
 
@@ -152,10 +162,14 @@ rtn_warn_init (themsg, retadr)         /* notify of delay in delivery        */
 }
 
 
-rtn_warn_per_adr (themsg, theadr, curfailtime) /* notify of delay in delivery */
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *  notify of delay/fail in delivery
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+rtn_warn_per_adr (themsg, theadr, curfailtime,failed)
     Msg *themsg;
     struct adr_struct *theadr;
     int curfailtime;
+    int failed;
 {
   char    linebuf[LINESIZE],
 	    theaddr[LINESIZE];
@@ -168,16 +182,17 @@ rtn_warn_per_adr (themsg, theadr, curfailtime) /* notify of delay in delivery */
 	rtn_pnam (theadr, theaddr);
     snprintf (linebuf, sizeof(linebuf), "\t%s\n", theaddr);
     ml_txt (linebuf);
-    msghour = (int) ((curtime - themsg -> mg_time) / 3600);
-    days = ((curfailtime - msghour) + 23) / 24;
-    days = curfailtime - msghour;
-    snprintf (linebuf, sizeof(linebuf), "\t\ttrying for %d more days.\n", days < 0 ? 0 : days);
+    if(failed) {
+      snprintf (linebuf, sizeof(linebuf), "\t\tdelivery failed, returning\n");
+    } else {
+      msghour = (int) ((curtime - themsg -> mg_time) / 3600);
+      days = ((curfailtime - msghour) + 23) / 24;
+      days = curfailtime - msghour;
+      snprintf (linebuf, sizeof(linebuf), "\t\ttrying for %d more days.\n",
+                days < 0 ? 0 : days);
+    }
     ml_txt (linebuf);
-#if 0
-    rtn_cite (themsg -> mg_mname); /* include message citation           */
-#endif
-    
-/*     return (ml_end (OK)); */
+    return OK;
 }
 /**/
 
@@ -192,23 +207,26 @@ rtn_time (themsg, retadr)         /* notify of delay in delivery        */
 Msg *themsg;                      /* just cite the text                 */
 char *retadr;
 {
-    char   subject[32];
+  char   subject[32];
 #ifdef DEBUG
-    ll_log (logptr, LLOGPTR, "rtn_time (%s)", themsg -> mg_mname);
+  ll_log (logptr, LLOGPTR, "rtn_time (%s)", themsg -> mg_mname);
 #endif
 
-    snprintf (subject, sizeof(subject), "%s  (%s)", rtn_nosnd, themsg -> mg_mname);
-    if (rtn_mlinit (subject, retadr) != OK)
+  snprintf (subject, sizeof(subject), "%s  (%s)", rtn_nosnd,
+            themsg -> mg_mname);
+  if (rtn_mlinit (subject, retadr) != OK)
 	return (NOTOK);           /* set up for returning               */
 
-    rtn_intro (DOFAIL, themsg);   /* do a failure introduction          */
+  rtn_intro (DOFAIL, themsg);   /* do a failure introduction          */
 
-    if (msg_cite (themsg -> mg_stat)) /* return some part of the message    */
+  /* return some part of the message    */
+  if (msg_cite (themsg -> mg_stat)) {
 	rtn_cite (themsg -> mg_mname);
-    else
+  } else {
 	rtn_all (themsg -> mg_mname);
+  }
 
-    return (ml_end (OK));
+  return (ml_end (OK));
 }
 /**/
 
@@ -232,83 +250,82 @@ LOCFUN
 
 }
 
-LOCFUN
-    rtn_intro (dowarn, themsg)    /* print failure intro                */
-    int dowarn;                   /* warning or full failure            */
-    Msg *themsg;
+LOCFUN rtn_intro (dowarn, themsg)    /* print failure intro                */
+int dowarn;                   /* warning or full failure            */
+Msg *themsg;
 {
-    int days;
-    int msghour;
-    char    linebuf[LINESIZE];
+  int days;
+  int msghour;
+  char    linebuf[LINESIZE];
 
-    rtn_heading(dowarn, themsg);
+  rtn_heading(dowarn, themsg);
 
 #if 1
-    msghour = (int) ((curtime - themsg -> mg_time) / 3600);
-                                  /* number of hours already in queue   */
-    days = (msghour + 23) / 24;
+  msghour = (int) ((curtime - themsg -> mg_time) / 3600);
+  /* number of hours already in queue   */
+  days = (msghour + 23) / 24;
                                   /* round up to nearest whole day      */
 #endif
 
-    if (dowarn)
-    {
-      ml_txt ("  Attempts to deliver the message will continue\n");
-      days = ((failtime - msghour) + 23) / 24;
-      snprintf (linebuf, sizeof(linebuf), "for %d more days.",
-                days < 0 ? 0 : days);
-      ml_txt (linebuf);             /* send apologetic nonsense  */
-      ml_txt ("  No further action is required by you.\n\n");
-      ml_txt ("    Delivery attempts are still pending for the following address(es):\n\n");
-    }
-    else
-      ml_txt ("\n\n    It failed to be received by the following address(es):\n\n");
+  if (dowarn) {
+    ml_txt ("  Attempts to deliver the message will continue\n");
+    days = ((failtime - msghour) + 23) / 24;
+    snprintf (linebuf, sizeof(linebuf), "for %d more days.",
+              days < 0 ? 0 : days);
+    ml_txt (linebuf);             /* send apologetic nonsense  */
+    ml_txt ("  No further action is required by you.\n\n");
+    ml_txt ("    Delivery attempts are still pending for the following address(es):\n\n");
+  } else
+    ml_txt ("\n\n    It failed to be received by the following address(es):\n\n");
 
-    rtn_list (FALSE);      /* list who hasn't got it yet         */
+  rtn_list (FALSE);      /* list who hasn't got it yet         */
 
 #ifdef NVRCOMPIL
-	Due to popular outrage, I am removing the second list, which
+  /*
+    Due to popular outrage, I am removing the second list, which
 	shows successful transmissions, after having shown unsuccessful
 	(or not-yet-successfull) ones.  In the case of large address
 	lists, this can be obnoxiously long.  The text is being retained
 	for reference.  (dhc)
+  */
+  ml_txt ("\n    A copy HAS been sent to the following addressee(s):\n\n");
 
-    ml_txt ("\n    A copy HAS been sent to the following addressee(s):\n\n");
-
-    rtn_list (TRUE);      /* list who DID get it                */
+  rtn_list (TRUE);      /* list who DID get it                */
 #endif
 
-    ml_txt ("\n    Problems usually are due to service interruptions at the receiving\n");
-    ml_txt ("machine.  Less often, they are caused by the communication system.\n");
+  ml_txt ("\n    Problems usually are due to service interruptions at the ");
+  ml_txt ("receiving\n");
+  ml_txt ("machine.  Less often, they are caused by the communication ");
+  ml_txt ("system.\n");
 }
-/**/
 
-LOCFUN
-	rtn_mlinit (subject, retadr)
+/**/
+LOCFUN rtn_mlinit (subject, retadr)
 char    *subject;
 char    *retadr;
 {
-    extern char *sitesignature;
-    char fromline[LINESIZE];
+  extern char *sitesignature;
+  char fromline[LINESIZE];
 
 #ifdef DEBUG
-    ll_log (logptr, LLOGBTR, "rtn_mlinit (%s)", subject);
+  ll_log (logptr, LLOGBTR, "rtn_mlinit (%s)", subject);
 #endif
 
-    if (!isstr (retadr))     /* no return address                  */
-    {
+  /* no return address                  */
+  if (!isstr (retadr)) {
 	printx ("no return address, ");
 	ll_log (logptr, LLOGTMP, "no return address");
 	return (NOTOK);
-    }
-    snprintf (fromline, sizeof(fromline), "%s %s <%s@%s>",
-		locfullname, sitesignature, mmdflogin, locfullname);
+  }
+  snprintf (fromline, sizeof(fromline), "%s %s <%s@%s>",
+            locfullname, sitesignature, mmdflogin, locfullname);
 				  /* From field ignores uid             */
-    if (ml_1adr (NO, YES, fromline, subject, retadr) != OK)
-    {                             /* no return, make Sender field       */
+  /* no return, make Sender field       */
+  if (ml_1adr (NO, YES, fromline, subject, retadr) != OK) {
 	ll_err (logptr, LLOGTMP, "ml_1adr");
 	return (NOTOK);
-    }
-    return (OK);
+  }
+  return (OK);
 }
 /**/
 
@@ -369,26 +386,25 @@ register char *buffer;
 }
 
 
-LOCFUN
-	rtn_all (mname)
-    char mname[];
+LOCFUN rtn_all (mname)
+char mname[];
 {
-    FILE *msg_tfp;
-    char file[FILNSIZE];
+  FILE *msg_tfp;
+  char file[FILNSIZE];
 
 #ifdef DEBUG
-    ll_log (logptr, LLOGBTR, "rtn_all ()");
+  ll_log (logptr, LLOGBTR, "rtn_all ()");
 #endif
 
+  ml_txt ("\n    Your message follows:\n\n");
 
-    ml_txt ("\n    Your message follows:\n\n");
-
-    snprintf (file, sizeof(file), "%s%s", mquedir, mname);
-    msg_tfp = fopen (file, "r");
-
-    ml_file (msg_tfp);
-
-    fclose (msg_tfp);
+  snprintf (file, sizeof(file), "%s%s", mquedir, mname);
+  msg_tfp = fopen (file, "r");
+  if(msg_tfp==NULL)  return;
+  
+  ml_file (msg_tfp);
+    
+  fclose (msg_tfp);
 }
 /**/
 
