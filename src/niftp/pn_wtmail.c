@@ -59,7 +59,6 @@ LOCVAR char    *vararray[] = {
 };
 
 
-extern char *index ();
 extern char *blt ();
 extern char *ap_p2s();
 
@@ -310,7 +309,7 @@ int len;
 
     if (inheader)
     {
-	back = index (buffer, '\n');
+	back = strchr (buffer, '\n');
 	if (back == (char *) 0)
 	{
 	    strcat (partialbuf, buffer);
@@ -325,7 +324,7 @@ int len;
 	*back = csav;
 
 
-	while ((front = index (back, '\n')) != (char *) 0)
+	while ((front = strchr (back, '\n')) != (char *) 0)
 	{
 	    front++;
 	    csav = *front;
@@ -413,7 +412,7 @@ int  len;
 				/* Now get name of line                 */
 				/* just output continuations at once    */
 	if (!isspace (buffer [0]) &&
-		(cp = index (buffer, ':')) != (char *) 0)
+		(cp = strchr (buffer, ':')) != (char *) 0)
 	{
 	    namlen = cp - buffer;
 	    blt (buffer, name, namlen);
@@ -624,7 +623,11 @@ ll_log (logptr, LLOGFTR, "In the child");
 	signal (SIGINT, SIG_IGN);
 	signal (SIGQUIT, SIG_IGN);
 
+#ifdef HAVE_NFILE
 	for (i = _NFILE - 1; i > 0; i--)
+#else /* HAVE_NFILE */
+    for (i = getdtablesize()-1; i > 0; i--)
+#endif /* HAVE_NFILE */
 		close (i);
 	open("/dev/null", 2);
 	open("/dev/null", 1);

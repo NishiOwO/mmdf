@@ -196,7 +196,7 @@ char **argv;
 		switch (ch) {
 		case 'c':	/*  channel flag  */
 			chflag++;
-			while ((p = index(optarg, ',')) != (char *)NULL) {
+			while ((p = strchr(optarg, ',')) != (char *)NULL) {
 				*p = '\0';
 				add_chan(optarg);
 				optarg = ++p;

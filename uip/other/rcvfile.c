@@ -34,7 +34,6 @@ extern int sentprotect;
 extern char *locname;
 
 extern char *compress();
-extern char *rindex();
 
 long    filesize;
 int	makedirs = 0;
@@ -226,7 +225,7 @@ char *path;
     register char *ptr;
 
     strcpy (dirname, path);
-    if (ptr = rindex(dirname+1, '/'))
+    if (ptr = strrchr(dirname+1, '/'))
 	*ptr = '\0';
     else
 	dirname[0] = '\0';

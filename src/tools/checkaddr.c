@@ -8,7 +8,6 @@
 #include "mmdf.h"
 #include "mm_io.h"
 
-extern	char *rindex();
 extern  char *supportaddr;
 
 main (argc, argv)
@@ -43,7 +42,7 @@ char	**argv;
 			verify( argv[i] );
 	} else {
 		while (fgets (linebuf, LINESIZE, stdin)) {
-			if (cp = rindex(linebuf, '\n'))
+			if (cp = strrchr(linebuf, '\n'))
 				*cp-- = 0;
 			verify( linebuf );
 		}

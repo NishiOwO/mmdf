@@ -185,9 +185,9 @@ arpafix(name, from)
 	if (debug) {
 		fprintf(stderr, "arpafix(%s, %s)\n", name, from);
 	}
-	cp = rindex(name, '@');
+	cp = strrchr(name, '@');
 	if (cp == NOSTR)
-		cp = rindex(name, '%');
+		cp = strrchr(name, '%');
 	if (cp == NOSTR) {
 		fprintf(stderr, "Somethings amiss -- no @ or % in arpafix\n");
 		return(name);
@@ -206,9 +206,9 @@ arpafix(name, from)
 		return(name);
 	}
 	strcpy(newname, name);
-	cp = rindex(newname, '@');
+	cp = strrchr(newname, '@');
 	if (cp == NOSTR)
-		cp = rindex(newname, '%');
+		cp = strrchr(newname, '%');
 	*cp = 0;
 	fake[0] = arpamach;
 	fake[1] = ':';
@@ -575,7 +575,6 @@ optimex(net, name)
 {
 	register char *cp, *rp;
 	register int m;
-	char *rindex();
 
 	strcpy(name, net);
 	cp = name;
@@ -587,7 +586,7 @@ optimex(net, name)
 	}
 	for (cp = name; *cp; cp++) {
 		m = *cp;
-		rp = rindex(cp+1, m);
+		rp = strrchr(cp+1, m);
 		if (rp != NOSTR)
 			strcpy(cp, rp);
 	}

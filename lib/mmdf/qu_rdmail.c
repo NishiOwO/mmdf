@@ -36,10 +36,8 @@
 /*                                                                      */
 /*  Nov, 80 Dave Crocker    convert to V7                               */
 
+#include "util.h"
 #include "adr_queue.h"
-
-extern char *strdup();
-extern char *strncpy();
 
 extern LLog   *logptr;
 LOCVAR char *qu_host,             /* to store 1st adr of msg            */

@@ -133,12 +133,11 @@ input ()
 	if( strlen( subject ) > slen )
 	{
 		char newsubj[S_BSIZE], *p, *pnt;
-		char *index();
 		int plc;
 
 		newsubj[0] = '\0';
 		pnt = subjptr;
-		while( (p = index(pnt,'\n')) != 0 )
+		while( (p = strchr(pnt,'\n')) != 0 )
 		{
 			*p++ = '\0';
 			plc = strlen(newsubj);
@@ -272,7 +271,7 @@ edit:
 	aborted = FALSE;
 	if (fgets (bigbuf, BBSIZE, stdin) == NULL)
 	    goto byebye;
-    	if (cp = index(bigbuf, '\n'))
+    	if (cp = strchr(bigbuf, '\n'))
     	    *cp = '\0';
 
 /*	"Set" option	*/

@@ -48,9 +48,6 @@ extern Chan *chanptr;
 extern long qu_msglen;
 extern char *supportaddr;
 
-extern char *index();
-extern char *rindex();
-extern char *strdup();
 extern char *multcat();
 extern char *blt();
 
@@ -227,11 +224,11 @@ LOCFUN
 
 	    default:            /* actually have an address */
 		/* Build notification string for sender */
-		if ((colonp = index(adr, ':')) == (char *) 0) {
+		if ((colonp = strchr(adr, ':')) == (char *) 0) {
 
 		    /* username[@host] */
 		    adrp = adr;
-		    if ((atp = rindex (adrp, '@')) != (char *) 0)
+		    if ((atp = strrchr (adrp, '@')) != (char *) 0)
 		        *atp = '\0';   /* strip hostname */         
 		    if ((tb_k2val(chanptr->ch_table, 1, adrp, info) != OK) ||
 		        (strlen(info) == 0))    
@@ -253,12 +250,12 @@ LOCFUN
 		} else {
 
 		    /* @channel[,route[,route]]:username[@host] */
-		    if ((commap=index(adr, ',')) == (char *) 0) {
+		    if ((commap=strchr(adr, ',')) == (char *) 0) {
 
 			adrp=colonp+1;
 
 			/* username[@host] */
-			if (((atp = rindex (adrp, '@')) == (char *) 0) ||
+			if (((atp = strrchr (adrp, '@')) == (char *) 0) ||
     		        (tb_k2val(chanptr->ch_table, 1, atp+1, info) != OK) ||
     		        (strlen(info) == 0))
     			    notifylist[++notify] = multcat(adrp, 
@@ -271,11 +268,11 @@ LOCFUN
 			adrp = commap+1;
 
     		        /* @route[,@route]:username[@host] */
-			if (((atp = rindex (colonp+1, '@')) == (char *) 0) ||
+			if (((atp = strrchr (colonp+1, '@')) == (char *) 0) ||
     		        (tb_k2val(chanptr->ch_table, 1, atp+1, info) != OK) ||
     		        (strlen(info) == 0)) {
 			    *colonp = '\0';
-			    atp = rindex(adrp,'@'); /* start of last route */
+			    atp = strrchr(adrp,'@'); /* start of last route */
 			    notifylist[++notify] = multcat(colonp+1, 
 			        "\t<== This is probably not a good address.\n\t\t\t(Write \"Postmaster", 
                                 atp, "\" for advice.)\n", (char *) 0);

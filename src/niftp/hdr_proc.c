@@ -48,7 +48,6 @@ extern struct ll_struct *logptr;
 
 extern Chan *curchan;
 
-extern char *index ();
 extern char *compress ();
 extern char *ap_p2s();
 extern char *multcat();
@@ -151,7 +150,7 @@ char    *viahost;               /* Host message receoved from           */
 				/* Real field so check it               */
 		if (lexequ (name, "Via"))
 		{
-		    if ((p = index (contents, ';')) == 0)
+		    if ((p = strchr (contents, ';')) == 0)
 		    {
 			ll_log (logptr, LLOGTMP, "Illegal via: field '%s'",
 				contents);
@@ -164,10 +163,10 @@ char    *viahost;               /* Host message receoved from           */
 		     * correct )
 		     * ( delete RFC822 comments from via field )
 		     */
-		    while ((p = index (contents, '(')) != NULL)
+		    while ((p = strchr (contents, '(')) != NULL)
 		    {
 			char    *q;
-			if ((q = index(p, ')')) == NULL)
+			if ((q = strchr(p, ')')) == NULL)
 			{
 			     ll_log(logptr, LLOGTMP,
 				"Illegal comment in via: field '%s'", contents);

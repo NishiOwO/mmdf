@@ -12,9 +12,8 @@
  *	Mods:   Timothy Wood AMC-LSSA: Made Plexus 3.2 changes.
  */
 
+#include "util.h"
 #include	<stdio.h>
-extern char *sprintf();
-extern char *strcat(), *strcpy();
 
 char mail_delim[] = "\1\1\1\1\n";
 

@@ -203,7 +203,6 @@ char    *sender;                /* place to stuff name of message sender*/
 }
 /*
 */
-extern char *rindex ();
 
 qn_radr (host, adr)             /* extract next address from file       */
 				/* might get confused by very badly     */
@@ -277,7 +276,7 @@ char    *adr;
     ll_log (logptr, LLOGBTR, "Full address is '%s'", strptr);
 #endif
     strcpy (adr, strptr);
-    cp = rindex (adr, '@');
+    cp = strrchr (adr, '@');
     if (cp == (char *) 0)
 	host [0] = '\0';
     else

@@ -1771,9 +1771,7 @@ char    *host;
 int     why;
 time_t  ttl;
 {
-	char    *index();       /* don't cache delay hosts */
-
-	if(index(host, '&') != NULL)
+	if(strchr(host, '&') != NULL)
 		return;
 	if (!isstr(host))
 		return;                 /* Don't timeout local host */

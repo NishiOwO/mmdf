@@ -20,9 +20,6 @@ extern LLog     *logptr;
 extern int      errno;
 extern int      ap_outtype;
 
-extern char *strcpy ();
-extern char *index();
-extern char *rindex();
 extern char *ap_p2s();
 
 LOCVAR char en_info[LINESIZE];
@@ -104,7 +101,7 @@ qu2en_send ()                       /* overall mngmt for batch of msgs    */
 
 		ll_log (logptr, LLOGFST, "Message from '%s'", sender);
 
-		if ((mydomain = rindex (sender, '.')) == (char *) 0)
+		if ((mydomain = strrchr (sender, '.')) == (char *) 0)
 		{
 			ll_log (logptr, LLOGTMP, "Sender with no dots '%s'");
 			return (RP_NO);

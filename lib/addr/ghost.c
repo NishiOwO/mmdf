@@ -9,8 +9,6 @@
 extern struct ll_struct *logptr;
 extern char *ch_dflnam;
 extern char *blt();
-extern char *index();
-extern char *rindex();
 extern char *locname;
 extern char *supportaddr;
 extern char *sitesignature;

@@ -40,8 +40,6 @@
 #include "ph.h"
 
 extern char *getline();
-extern char *index();
-extern char *rindex();
 
 char *sender = 0;			/* address of mail sender */
 
@@ -287,7 +285,7 @@ mail()
 	    strcpy (info, "mv");  /* shouldn't ever get here */
 
 	/* Scan FROM: parts of arg */
-	sender = index (arg, ':') + 1;
+	sender = strchr (arg, ':') + 1;
 	sender = addrfix( sender );
 
 	/* Supply necessary flags, "tiCHANNEL" will be supplied by winit */
@@ -341,7 +339,7 @@ rcpt()
 		netreply("501 No recipient named.");
 		return;
 	}
-	p = index( arg, ':' ) + 1;
+	p = strchr( arg, ':' ) + 1;
 	p = addrfix( p );
 
 	if( rp_isbad( mm_wadr( (char *)0, p ))) {
@@ -382,9 +380,9 @@ char *addrp;
 {
 	register char	*cp;
 
-	if( cp = index( addrp, '<' )) {
+	if( cp = strchr( addrp, '<' )) {
 		addrp = ++cp;
-		if( cp = rindex( addrp, '>' ))
+		if( cp = strrchr( addrp, '>' ))
 			*cp = 0;
 	}
 	compress (addrp, addrp);

@@ -40,8 +40,6 @@ struct ll_struct *alogptr = &authlog;
 
 char *user_string = "username";
 
-extern char *index();
-extern char *rindex();
 extern long atol();
 extern char *dupfpath();
 extern char *strdup();
@@ -96,8 +94,9 @@ char *route_out;
 LOCVAR
 char *cn_in, *cn_out;           /* storage for channel names            */
 				/* needed for bad auth logging          */
+int domsg=1;
 
-
+#define printx if(domsg>1) printf
 /**/
 				/* Authorization initialisation policy  */
 				/* Store data on sender                 */
@@ -110,7 +109,7 @@ int trust;                      /* can we trust this? (NRMFROM)         */
 #ifdef DEBUG
      ll_log (logptr, LLOGBTR, "auth_init (%s)", sender);
 #endif
-
+     printx("==>auth_init (%s)\n", sender);
      auth_sender.a_type = AUTH_BAD;
      auth_do = FALSE;
 			      /* SEK this is needed so that WARN/LOG  */
@@ -134,7 +133,7 @@ int trust;                      /* can we trust this? (NRMFROM)         */
 
      if ( auth_sender.a_addr && auth_sender.a_addr[0] != '@')
      {
-	if ((p = index (auth_sender.a_addr, '@')) != (char *) 0)
+	if ((p = strchr (auth_sender.a_addr, '@')) != (char *) 0)
 	   if (lexequ (p + 1, adr_fulldmn))
 		*p = '\0';
      }
@@ -156,6 +155,7 @@ char *adr;               /* address being authorized             */
 		*q;
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "auth_uinit (%s)", adr);
+    printx("==>auth_uinit (%s)\n", adr);
 #endif
     auth_msg [0] = '\0';
     route_out = (char *) 0;
@@ -174,10 +174,10 @@ char *adr;               /* address being authorized             */
 			/* e.g.  ~foo@44c.ucl-cs.ac.uk -> foo   */
     if (adr[0] != '@')
     {
-	p = index (adr, '@');
+	p = strchr (adr, '@');
 	if (p != (char *) 0)
 	{
-	    q = index (p + 1, '.');
+	    q = strchr (p + 1, '.');
 	    if (lexequ (p+1, adr_fulldmn) ||
 		    ((q != 0) && lexequ (q+1, adr_fulldmn)))
 	    {
@@ -208,6 +208,7 @@ auth_uend ()
 {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "auth_uend (), %d", authtable);
+    printx("==>auth_uend (), %d\n", authtable);
 #endif
     free (auth_rcvr.a_addr);
     if (authtable != (Table *) NOTOK)
@@ -250,6 +251,8 @@ Chan *chan_out;                 /* outgoing channel                     */
 
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "auth_user (hin='%s', hout='%s', cin='%s', cout='%s'",
+		h_in, h_out, chan_in -> ch_show, chan_out -> ch_show);
+    printx("auth_user (hin='%s', hout='%s', cin='%s', cout='%s'\n",
 		h_in, h_out, chan_in -> ch_show, chan_out -> ch_show);
 #endif
     ch_in_auth = chan_in -> ch_auth & CH_IN_AUTH;
@@ -472,6 +475,8 @@ Chan *chan_out;                 /* outgoing channel                     */
 #ifdef DEBUG
     ll_log (logptr, LLOGFTR, "Checking auth:  need in =%o out =%o",
 		ch_in_auth, ch_out_auth);
+    printx("==>Checking auth:  need in =%o out =%o\n",
+		ch_in_auth, ch_out_auth);
 #endif
 
     if (in_hostanduser || out_hostanduser)
@@ -650,6 +655,7 @@ douser:
 			/* SEK shouldn't get here - I hope              */
 #ifdef DEBUG
     ll_log (logptr, LLOGTMP,  "Auth_user - did the impossible");
+    printx("==>Auth_user - did the impossible\n");
 #endif
     return (FALSE);
 }
@@ -739,6 +745,7 @@ auth_end ()
 {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "auth_end()");
+    printx("==>auth_end()\n");
 #endif
     if (auth_do)
 	auth_log ("END size='%ld', sender='%s'", tx_msize, auth_sender.a_addr);
@@ -824,6 +831,7 @@ struct auth_struct *auth;       /* where to put the data                    */
 		argc;
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "auth_fetch (%s)", auth -> a_addr);
+    printx("==>auth_fetch (%s)\n", auth -> a_addr);
 #endif
 				/* implictly auth table exists             */
     if (tb_k2val (authtable, TRUE, auth -> a_addr, buf)!=OK)
@@ -834,6 +842,7 @@ struct auth_struct *auth;       /* where to put the data                    */
 
 #ifdef DEBUG
     ll_log (logptr, LLOGFTR, "user '%s' has auth '%s'", auth -> a_addr, buf);
+    printx("==>user '%s' has auth '%s'\n", auth -> a_addr, buf);
 #endif
 				/* authorization ha form of type  */
 				/* followed by a list of channels */
@@ -841,6 +850,8 @@ struct auth_struct *auth;       /* where to put the data                    */
 		== NOTOK)
     {
 	ll_log (logptr, LLOGTMP, "User '%s' has more that %d chans",
+			auth -> a_addr, AUTH_NCHANS);
+	printx("==>User '%s' has more that %d chans\n",
 			auth -> a_addr, AUTH_NCHANS);
 	auth -> a_type = AUTH_BAD;
 	return;
@@ -880,6 +891,8 @@ struct auth_struct *auth;       /* where to put the data                    */
 #ifdef  DEBUG
     ll_log (logptr, LLOGFTR, "%d channels in total type = %d",
 		auth ->  a_nchans, auth -> a_type);
+    printx("==>%d channels in total type = %d\n",
+		auth ->  a_nchans, auth -> a_type);
 #endif
 }
 
@@ -903,6 +916,10 @@ char *format,
 	sprintf (fbuf, "%%s: %s", format);
 	ll_log (&authlog, LLOGFST, fbuf, mq_munique, a1, a2, a3, a4, a5,
 		a6, a7, a8, a9);
+    printx("==>");
+    printx(fbuf, mq_munique, a1, a2, a3, a4, a5,
+		a6, a7, a8, a9);
+    printx("\n");
 }
 
 /**/
@@ -930,6 +947,7 @@ char *adr;
 
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "get_route (%s)", adr);
+    printx("==>get_route (%s)\n", adr);
 #endif
 
     ap = ap_s2tree (adr);
@@ -940,9 +958,9 @@ char *adr;
    ll_log (logptr, LLOGFTR, "local part = '%s'", local -> ap_obvalue);
 #endif
 				/* jiggle the local part                */
-    if ((p = rindex (local -> ap_obvalue, '!')) == (char *) 0)
+    if ((p = strrchr (local -> ap_obvalue, '!')) == (char *) 0)
     {
-	if ((p = index (local -> ap_obvalue, '%')) != (char *) 0)
+	if ((p = strchr (local -> ap_obvalue, '%')) != (char *) 0)
 	{
 	     q = multcat (p, user_string, (char *)0);
 	     free (local -> ap_obvalue);
@@ -958,7 +976,7 @@ char *adr;
     else
     {
 				/* p points to last "!"                 */
-	q = index (p, '%');
+	q = strchr (p, '%');
 	p++;
 	*p = '\0';
 	if (q != (char *) 0)
@@ -972,6 +990,7 @@ char *adr;
 
 #ifdef DEBUG
    ll_log (logptr, LLOGFTR, "Munged local part = '%s'", local -> ap_obvalue);
+   printx("==>Munged local part = '%s'\n", local -> ap_obvalue);
 #endif
 
     p = ap_p2s ((AP_ptr) 0, (AP_ptr) 0, local, domain, route);
@@ -981,6 +1000,7 @@ char *adr;
 
 #ifdef DEBUG
     ll_log (logptr,LLOGFTR, "Auth ROUTE is '%s'",(p==(char*)MAYBE)?"MAYBE":p);
+    printx("==>Auth ROUTE is '%s'\n",(p==(char*)MAYBE)?"MAYBE":p);
 #endif
     return (p);
 }

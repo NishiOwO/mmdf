@@ -15,6 +15,13 @@
 #include <sys/stat.h>
 #include "ml_send.h"
 #include "mm_io.h"
+#ifdef HAVE_UNISTD_H
+#  include <unistd.h>
+#else /* HAVE_UNISTD_H */
+#  ifdef HAVE_SYS_UNISTD_H
+#    include <sys/unistd.h>
+#  endif /* HAVE_SYS_UNISTD_H */
+#endif /* HAVE_UNISTD_H */
 
 /*  */
 
@@ -70,8 +77,6 @@ extern LLog *logptr;
 
 FILE *lk_fopen();
 
-long    lseek ();
-char   *index (), *rindex ();
 #ifdef BSD_SPRINTF
 extern char *sprintf ();
 #else
@@ -205,7 +210,7 @@ char   *host,
     ll_log (logptr, LLOGBTR, "bb_wtadr(host=%s,adr=%s)", host, adr);
 #endif
 
-    if ((cp = index (adr, '@')) != NULL)
+    if ((cp = strchr (adr, '@')) != NULL)
 	*cp = NULL;
     make_lower (adr, adr);
     if ((curbb = getbbnam (adr)) == NULL)
@@ -561,7 +566,7 @@ short   result;
 	    (void) lseek (err_fd, 0L, 0);
 	    if ((i = read (err_fd, buffer, sizeof buffer)) > 0) {
 		buffer[i] = NULL;
-		if (cp = index (buffer, '\n'))
+		if (cp = strchr (buffer, '\n'))
 		    *cp = NULL;
 		ll_log (logptr, LLOGFAT, "info: %s", buffer);
 	    }

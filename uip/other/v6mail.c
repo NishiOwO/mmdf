@@ -33,8 +33,6 @@ char   *username;
 char   *mbxname;                  /* full pathname to mailbox           */
 char    *binbox;
 char    ttyobuf[BUFSIZ];          /* for buffering ttyoutput            */
-char	*index();
-char    *strdup();
 char    *sbmtargs = (char *) 0;
 char    *subject = (char *) 0;
 char    *replyto = (char *) 0;
@@ -546,7 +544,7 @@ int     fancy;          /* make address fancy? */
 	    if (fgets (sigtxt, sizeof sigtxt, sigfp) != NULL) {
 		char *cp;
 
-		if (cp = index(sigtxt, '\n'))
+		if (cp = strchr(sigtxt, '\n'))
 		    *cp = '\0';
 	    	if (sigtxt[0])
 		    gotsig = TRUE;

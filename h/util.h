@@ -15,11 +15,10 @@
 			 * of times. -- DSH
 			 */
 #include <errno.h>
+#include <string.h>
 
 /* declarations that should have been in the system files */
 
-extern char *strcat ();
-extern char *strcpy ();
 #if !defined(BSD_SPRINTF) || defined(ULTRIX)
 extern int sprintf ();
 #else

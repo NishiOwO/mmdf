@@ -39,9 +39,6 @@
 extern Domain **dm_list;
 extern Domain *dm_s2dom();
 extern struct ll_struct   *logptr;
-extern char *strcpy ();
-extern char *index();
-extern char *rindex();
 
 /*
  * when mangling addresses, should we try the reverse before or after
@@ -116,7 +113,7 @@ Dmn_route *dmnroute;              /* where to put routing information   */
        *.bitnet */
 
     p = subdmn;
-    while ((p = index (p, '.')) != (char *)0)
+    while ((p = strchr (p, '.')) != (char *)0)
     {
 	char tdmnbuf[LINESIZE];
 
@@ -220,12 +217,12 @@ Domain *
      *  and backwards options.
      */
     sdptr = value;
-    while ((sdptr = index (sdptr, '.')) != (char *) 0)
+    while ((sdptr = strchr (sdptr, '.')) != (char *) 0)
     {
 	char tbuf[LINESIZE];
 
 #ifdef  BOTHEND
-	revsdptr = index (revsdptr, '.') + 1;
+	revsdptr = strchr (revsdptr, '.') + 1;
 	if ((dmnptr = dm_s2dom (revsdptr, official, tbuf)) != (Domain *) NOTOK)
 	{
 	    if(dmnptr == (Domain *)MAYBE)

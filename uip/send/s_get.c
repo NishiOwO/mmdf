@@ -45,8 +45,6 @@
 extern char *getmailid();
 extern char *strdup();
 extern struct passwd *getpwuid();
-extern char *mktemp();
-extern char *index();
 extern char *getenv();
 
 extern char *dfleditor;
@@ -113,11 +111,11 @@ getuinfo() {
 	/* Build a name for this user */
 #ifdef PWNAME
 	if (pw->pw_gecos != NULL && *pw->pw_gecos != '\0') {
-		if (p = index(pw->pw_gecos, ','))
+		if (p = strchr(pw->pw_gecos, ','))
 			*p = '\0';
-		if (p = index(pw->pw_gecos, '<'))
+		if (p = strchr(pw->pw_gecos, '<'))
 			*p = '\0';
-		if (p = index(pw->pw_gecos, '&')) {
+		if (p = strchr(pw->pw_gecos, '&')) {
 			/* Deal with Berkeley folly */
 			*p = 0;
 			sprintf(from, "%s%c%s%s <%s@%s>", pw->pw_gecos,
@@ -156,7 +154,7 @@ getuinfo() {
 
 		/* Process info a line at a time */
 		while (fgets(linebuf, sizeof(linebuf), fp) != NULL) {
-			if (cp = index(linebuf, '\n'))
+			if (cp = strchr(linebuf, '\n'))
 				*cp = 0;
 			if (sstr2arg(linebuf, NARGS, av, " \t") < 0)
 				continue;
@@ -784,7 +782,7 @@ register char *sp;
 			strcat(tptr,quote);
 			sp = savptr;
 			strcat(tptr,sp);
-			if (ptr = rindex(tptr, ' '))
+			if (ptr = strrchr(tptr, ' '))
 				*ptr = '\0';
 			strcat(tptr,quote);
 			strcpy(sp,tptr);

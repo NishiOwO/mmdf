@@ -62,6 +62,14 @@
 #include "msg.h"
 /*  msg_cite() is defined in adr_queue.h  */
 #include "adr_queue.h"
+#ifdef HAVE_UNISTD_H
+#  include <unistd.h>
+#else /* HAVE_UNISTD_H */
+#  ifdef HAVE_SYS_UNISTD_H
+#    include <sys/unistd.h>
+#  endif /* HAVE_SYS_UNISTD_H */
+#endif /* HAVE_UNISTD_H */
+
 #define OLD_WARN
 
 #ifndef EWOULDBLOCK
@@ -73,7 +81,6 @@
 #endif
 
 extern	LLog	*logptr;
-extern	long	lseek();
 extern	time_t	time();
 extern	char	*supportaddr;
 extern	char	*aquedir;

@@ -106,11 +106,7 @@
 extern Llog    *logptr;
 extern int     ap_outtype;
 
-extern char    *index ();
-extern char    *strcpy ();
-extern char    *strncpy ();
 extern char    *fgets ();
-extern char    *strcat ();
 extern char    *compress ();
 extern char    *ap_p2s ();
 extern char    *ap_s2p ();
@@ -756,7 +752,7 @@ char *find_sig()
 		fclose(fp);
 		return NILC;
 	}
-	if( (p = index(buf, '\n')) != NILC)
+	if( (p = strchr(buf, '\n')) != NILC)
 		*p = '\0';
 	fclose(fp);
 	return buf;

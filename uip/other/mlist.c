@@ -38,10 +38,6 @@ extern char *supportaddr;
 extern char *cmddfldir;
 
 extern char *compress();
-extern char *rindex();
-extern char *index();
-extern char *mktemp();
-extern char *strdup();
 extern char *getmailid();
 extern char *dupfpath();
 
@@ -240,7 +236,7 @@ char *list;
     else if (!ismanager)
     {
 	p = buf;
-	while ((q  = index (buf, ',')) != (char *) 0)
+	while ((q  = strchr (buf, ',')) != (char *) 0)
 	{
 	    *q++ = '\0';
 	    if (lexequ (p, username))
@@ -274,11 +270,11 @@ char *list;
 	return;
     }
 
-    q = index (&buf[i], '/');
-    p = index (q, '@');
+    q = strchr (&buf[i], '/');
+    p = strchr (q, '@');
     if (p == (char *) 0)
     {
-	if ((p = index (q, ',')) != (char *) 0)
+	if ((p = strchr (q, ',')) != (char *) 0)
 	    *p = '\0';
 	strcpy (filename, q);
     }
@@ -286,7 +282,7 @@ char *list;
     {
 	*p++ = '\0';
 	strcpy (filename, q);
-	if ((q = index (p, ',')) != (char *) 0)
+	if ((q = strchr (p, ',')) != (char *) 0)
 	    *q = '\0';
 	if (ch_h2chan (p, 1) != OK)
 	{
@@ -610,7 +606,7 @@ char *user;
 
 			    /* first make temp file in same dir */
     strcpy (fpath, filename);
-    cp = rindex (fpath, '/');
+    cp = strrchr (fpath, '/');
     if (cp++ == 0)
 	fpath [0] = '\0';
     else

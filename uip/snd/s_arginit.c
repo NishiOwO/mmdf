@@ -51,7 +51,7 @@ char   *argv[];
 	    	case 'a':
 	    	    if (++curarg >= argc)
 	    		break;
-	    	    if (cp = index(argv[curarg], ':'))
+	    	    if (cp = strchr(argv[curarg], ':'))
 	    		*cp++ = '\0';
 		    addheader(argv[curarg], cp);
 		    break;

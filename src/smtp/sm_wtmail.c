@@ -51,8 +51,6 @@
 extern LLog     *logptr;
 extern Chan     *chanptr;
 extern char     *blt();
-extern char     *strdup();
-extern char     *strncpy ();
 
 LOCFUN sm_rrec();
 
@@ -318,7 +316,7 @@ char    *cmd;
 int     time;                   /* Max time for sending and getting reply */
 {
     short     retval;
-    extern char *sys_errlist[];
+/*    extern char *sys_errlist[];*/
     extern int errno;
 
     ll_log (logptr, LLOGPTR, "sm_cmd (%s)", cmd);

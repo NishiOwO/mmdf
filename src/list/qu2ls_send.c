@@ -47,8 +47,6 @@ extern Chan *chanptr;
 extern long qu_msglen;
 extern char *supportaddr;
 
-extern char *rindex();
-extern char *strdup();
 extern char *multcat();
 extern char *blt();
 
@@ -208,7 +206,7 @@ LOCFUN
 
 	    default:            /* actually have an address */
 		/* Strip host reference if there */
-		if (p = rindex (adr, '@'))
+		if (p = strrchr (adr, '@'))
 		    *p = '\0';
 
 		if (nadrs++ == 0)
@@ -358,7 +356,7 @@ char *adr;
 
     free (key);
     key = strdup (adr);
-    if ((cp = rindex (key, '-')) && lexequ (cp, "-outbound")) {
+    if ((cp = strrchr (key, '-')) && lexequ (cp, "-outbound")) {
 	*cp = 0;
 	cp = key;
 	key = multcat (key, "-request", (char *)0);

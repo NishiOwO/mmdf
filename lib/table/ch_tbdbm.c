@@ -58,8 +58,6 @@ extern char *tbldbm;
 extern Chan **ch_tbsrch;
 extern char *ch_dflnam;
 
-extern char *strcpy();
-
 #ifndef HAVE_LIBGDBM
 typedef struct {char *dptr; int dsize;} datum;
 #endif

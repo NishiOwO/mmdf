@@ -59,8 +59,6 @@ extern char *sm_curname;
 extern long qu_msglen;
 extern long sm_hostid();
 extern struct sm_rstruct sm_rp;
-extern char *strdup();
-extern char *strncpy();
 extern char *ap_p2s();
 extern char *blt();
 extern time_t time();

@@ -18,8 +18,6 @@
 dropen (seektype)
     int seektype;
 {
-    extern long lseek ();
-
     if (drffd <= 0)
     {
 	if ((drffd = open (drffile, 2)) < 0)

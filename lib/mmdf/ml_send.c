@@ -82,7 +82,6 @@
 extern struct ll_struct   *logptr;
 extern char *strdup ();
 extern char *locfullname;
-extern char *index ();
 
 int ml_state = ML_FRESH;
 
@@ -240,7 +239,7 @@ char    cmpnt[],
 	    	char *cp;
 
 		sigtxt[sigsiz - 1] = '\0';
-	    	if (cp = index(sigtxt, '\n'))
+	    	if (cp = strchr(sigtxt, '\n'))
 	    	    *cp = '\0';
 	    	if (sigtxt[0])
 		    gotsig = TRUE;

@@ -241,7 +241,7 @@ retry: ;
 
     if (count != NCOLON) {
 #ifdef	MMDFONLY
-	if (q = index (p, NEWLINE))
+	if (q = strchr (p, NEWLINE))
 	    *q = NULL;
 	ll_log (logptr, LLOGTMP, "bad entry in %s: %s", BBData, p);
 #endif /* MMDFONLY */
@@ -361,8 +361,8 @@ static int  BBread () {
     if (BBflags & SB_FAST)
 	return;
 
-    p = index (bb -> bb_request, '@');
-    r = index (bb -> bb_addr, '@');
+    p = strchr (bb -> bb_request, '@');
+    r = strchr (bb -> bb_addr, '@');
     BBRequest[0] = NULL;
 
     if (*bb -> bb_request == '-')
@@ -398,11 +398,11 @@ static int  BBread () {
 	bb -> bb_file = BBFile;
     }
 
-    if ((cp = rindex (bb -> bb_file, '/')) == NULL || *++cp == NULL)
+    if ((cp = strrchr (bb -> bb_file, '/')) == NULL || *++cp == NULL)
 	(void) strcpy (prf, ""), cp = bb -> bb_file;
     else
 	(void) sprintf (prf, "%.*s", cp - bb -> bb_file, bb -> bb_file);
-    if ((dp = index (cp, '.')) == NULL)
+    if ((dp = strchr (cp, '.')) == NULL)
 	dp = cp + strlen (cp);
 
     (void) sprintf (BBArchive, "%s%s/%s", prf, ARCHIVE, cp);
@@ -419,7 +419,7 @@ static int  BBread () {
 	bb -> bb_maxima = (unsigned) i;
     if (!feof (info) && fgets (line, sizeof line, info)) {
 	(void) strcpy (BBDate, line);
-	if (cp = index (BBDate, NEWLINE))
+	if (cp = strchr (BBDate, NEWLINE))
 	    *cp = NULL;
 	bb -> bb_date = BBDate;
     }
@@ -609,11 +609,11 @@ register int     (*action) ();
 		    break;
 
 		case NULL: 
-		    if ((cp = rindex (bb -> bb_file, '/')) == NULL || *++cp == NULL)
+		    if ((cp = strrchr (bb -> bb_file, '/')) == NULL || *++cp == NULL)
 			(void) strcpy (prf, ""), cp = bb -> bb_file;
 		    else
 			(void) sprintf (prf, "%.*s", cp - bb -> bb_file, bb -> bb_file);
-		    if ((dp = index (cp, '.')) == NULL)
+		    if ((dp = strchr (cp, '.')) == NULL)
 			dp = cp + strlen (cp);
 		    (void) sprintf (file, "%s.%.*s%s", prf, dp - cp, cp, DSTFILE);
 		    hp = file;
@@ -628,7 +628,7 @@ register int     (*action) ();
 	    if ((fp = fopen (hp, "r")) == NULL)
 		return bblose ("unable to read file %s", hp);
 	    while (fgets (buffer, sizeof buffer, fp)) {
-		if (np = index (buffer, '\n'))
+		if (np = strchr (buffer, '\n'))
 		    *np = NULL;
 		if (result = getbbitem (bb, buffer, action)) {
 		    (void) fclose (fp);
@@ -640,7 +640,7 @@ register int     (*action) ();
 	    return OK;
 
 	default: 
-	    if (hp = rindex (item, '@')) {
+	    if (hp = strrchr (item, '@')) {
 		*hp++ = NULL;
 		(void) strcpy (mbox, item);
 		(void) strcpy (host, hp);

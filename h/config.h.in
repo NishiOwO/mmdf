@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.27 1998/06/15 20:26:37 krueger Exp $
+ * $Id: config.h.in,v 1.28 1998/06/17 09:45:23 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -119,6 +119,9 @@
 /* Define if you have the setpgrp function.  */
 #undef HAVE_SETPGRP
 
+/* Define if you have the setpgid function.  */
+#undef HAVE_SETPGID
+
 /* Define if you have the setreuid function.  */
 #undef HAVE_SETREUID
 
@@ -192,8 +195,17 @@
 /* Define if you have the <sys/ioctl.h> header file.  */
 #undef HAVE_SYS_IOCTL_H
 
+/* Define if you have the <sys/unistd.h> header file.  */
+#undef HAVE_SYS_UNISTD_H
+
+/* Define if you have the <unistd.h> header file.  */
+#undef HAVE_UNISTD_H
+
 /* Define if ioctl(1, TIOCSBRK, 0) works */
 #undef HAVE_IOCTL_TIOCSBRK
+
+/* Define if you have the <string.h> header file.  */
+#undef HAVE_STRING_H
 
 /* Define if you have the <strings.h> header file.  */
 #undef HAVE_STRINGS_H

@@ -1,4 +1,4 @@
-#
+# include  "util.h"
 # include  <ctype.h>
 # include  <stdio.h>
 # include  "d_proto.h"
@@ -6,8 +6,6 @@
 
 extern int d_nfields;
 extern char *d_fields[];
-extern char *strcpy();
-extern char *strncpy();
 
 /*
  *     D_LINPARSE

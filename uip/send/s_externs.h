@@ -40,8 +40,6 @@ extern RETSIGTYPE (*orig) ();
 
 extern int errno;
 extern char *compress ();
-extern char *index();
-extern char *rindex();
 
 /* mmdf globals */
 

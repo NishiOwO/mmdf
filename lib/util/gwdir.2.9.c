@@ -131,9 +131,6 @@ LOCFUN wd_ckroot ()               /* check root dir for filesys name    */
 
 LOCFUN wd_cat ()
 {
-    extern char *strcpy (),
-		*strcat ();
-
     if (wkd_name[0] == 0)
 	strcpy (wkd_name, wd_entry.dir.kd_name);
     else

@@ -28,13 +28,14 @@
  *		Added #ifdef NODUP2 - ECB
  */
 
+#include "config.h"
 #include <stdio.h>
-#ifdef HAVE_SYS_WAIT_H
-#include <sys/wait.h>
-#endif /* HAVE_SYS_WAIT_H */
 #ifdef HAVE_SYS_FILE_H
-#include <sys/file.h>
+#  include <sys/file.h>
 #endif /* HAVE_SYS_FILE_H */
+#ifdef HAVE_SYS_WAIT_H
+#  include <sys/wait.h>
+#endif /* HAVE_SYS_WAIT_H */
 #include <signal.h>
 #include "util.h"
 #include "mmdf.h"
@@ -116,7 +117,7 @@ char *signame (sig)
 {
     static char buff[24];
 #ifdef SYS_SIGLIST_DECLARED
-    extern char *sys_siglist[];
+    /*extern char *sys_siglist[];*/
     /* I know that the following code does not work on SysVr3 since
      * libc.a doesn't have a "sys_siglist".  Possibly this only works
      * on 4.[23]BSD? -- David Herron <david@ms.uky.edu>
@@ -170,14 +171,12 @@ main (argc, argv)
       int rc, stopped;
       int do_msg = 0;
 #ifdef HAVE_UNION_WAIT
-#ifdef SYS5
       union wait status;
-#  else /* SYS5 */
-      int status;
-#    undef WIFSTOPPED
-#  endif /* SYS5 */
 #else /* HAVE_UNION_WAIT */
     	int status;
+#  ifdef WIFSTOPPED
+#    undef WIFSTOPPED
+#  endif
 #endif /* HAVE_UNION_WAIT */
 
 	close (pp[1]);

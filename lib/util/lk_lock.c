@@ -244,7 +244,6 @@ int	maxtime;		/* maybe break lock after it is this old */
     register fd;
     register char *p;
     char tempname[100];
-    extern char *rindex ();
 
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "lk_creat (%s,0%o,%s,%s)", file, mode,
@@ -259,7 +258,7 @@ retry:
     if (errno != ENOENT)
 	return (NOTOK);
     /* file didn't exist */
-    if (p = rindex (file, '/')) {
+    if (p = strrchr (file, '/')) {
 	*p = '\0';
 	(void) strcpy (tempname, file);
 	*p = '/';

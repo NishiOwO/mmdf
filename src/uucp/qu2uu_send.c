@@ -29,8 +29,6 @@
  *
  */
 
-extern	char	*rindex();
-extern  char    *strdup();
 extern  char    *ap_p2s();
 extern  char    *multcat();
 extern	char	*blt();
@@ -339,7 +337,7 @@ char *adr;
 	 * Can we assume that this is a legal 733 address ?
 	 * look for the first site
 	 */
-	site = rindex(adr, '@');
+	site = strrchr(adr, '@');
 	if (site)
 	{	*site++ = '\0';
 		/*
@@ -368,13 +366,12 @@ ScanUucpFrom(new, adr)
 register char *new;
 register char *adr;
 {	register char *site;
-	char	*rindex();
 
 	/*
 	 * This presumes that the address we are scanning is somewhat
 	 * legal - but the @ has been replaced by a %
 	 */
-	site = rindex(adr, '%');
+	site = strrchr(adr, '%');
 	if (site == (char *)0)
 	{	(void) strcpy(new, adr);
 		return;

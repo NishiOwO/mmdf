@@ -205,10 +205,12 @@ extern char	*keywds[];
 #define DOLF		0
 #define NOLF		1
 
+#include "config.h"
+#include <string.h>
+
 extern char *compress ();
-extern char *strdup ();
 /* extern char *malloc(); */
-extern char *index(), *strend(), *rindex();
+extern char *strend();
 
 extern prmsg(), delmsg(), undelmsg(), prhdr(), movmsg();
 extern RETSIGTYPE onnopipe(), onstop(), onint();

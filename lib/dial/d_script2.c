@@ -1,4 +1,4 @@
-#
+# include  "util.h"
 # include  <stdio.h>
 # include  "d_proto.h"
 # include  "d_returns.h"
@@ -6,8 +6,6 @@
 
 # define	MAXFILES	15
 
-extern char *strcpy ();
-extern char *strdup ();
 extern unsigned d_scline;
 extern char d_scfile[];
 extern int d_nfields;

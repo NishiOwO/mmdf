@@ -52,8 +52,6 @@
 
 extern LLog *logptr;
 extern long hd_init();
-extern char *strdup();
-extern char *index();
 extern char *mquedir;
 extern int ap_outtype;          /* 733 or 822 */
 extern FILE *hd_fmtfp;          /* handle on hd_format massaged header */
@@ -150,7 +148,7 @@ char   *argv[];
 	return (RP_NO);
     }
 
-    if( argv[3] && index(argv[3], 'w') )
+    if( argv[3] && strchr(argv[3], 'w') )
 	domsg = TRUE;
 #endif /* RUNALON */
     return (RP_OK);
@@ -418,8 +416,6 @@ int      *len;                      /* where to stuff address length      */
 void qu_rsinit (theseek)             /* initialize stream (text) position  */
 long theseek;
 {
-    extern long lseek ();
-
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "qu_rsinit (%ld)", theseek);
 #endif

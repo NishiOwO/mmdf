@@ -12,9 +12,6 @@ extern char     *locdomain;
 char   *logdir;
 char   *username;
 
-extern	char *strdup();
-extern  char *index();
-
 char    noret;                    /* no return address                  */
 char    watchit;                  /* user wants to watch delivery       */
 int	hadto;
@@ -93,7 +90,7 @@ get_aliasfile ()
 
 		/* Process info a line at a time until we find the alias file */
 		while( fgets(linebuf, sizeof(linebuf), fp ) != NULL )  {
-			if (cp = index(linebuf, '\n'))
+			if (cp = strchr(linebuf, '\n'))
 				*cp = 0;
 			if (sstr2arg(linebuf, NARGS, av, " \t") < 0)
 				continue;

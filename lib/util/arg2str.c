@@ -1,4 +1,5 @@
 #include "util.h"
+#include "conf.h"
 
 /* convert an array of strings to one or more lines of 'arguments'.
  *
@@ -55,7 +56,7 @@ arg2vstr (linelen, maxlen, buf, argv) /* convert the list to a string           
 	     len;       /* length of current argument           */
     unsigned gotdelim;       /* a delimiter char is in arg           */
     unsigned gotpair;        /* key/value pair                       */
-    char tmpstr[256];	/* LINESIZE = 256, string under construction  */
+    char tmpstr[LINESIZE+1];	/* LINESIZE = 256, string under construction  */
     register char *src,
 		  *dest;
 

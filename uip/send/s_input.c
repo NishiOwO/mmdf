@@ -156,7 +156,7 @@ input ()
 	aborted = FALSE;
 	if (fgets (bigbuf, BBSIZE, stdin) == NULL)
 	    goto byebye;
-	if (cp = index(bigbuf, '\n'))
+	if (cp = strchr(bigbuf, '\n'))
 	    *cp = '\0';
 
 	if( strncmp( "set", bigbuf, 3) == 0){

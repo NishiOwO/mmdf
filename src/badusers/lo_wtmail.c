@@ -22,6 +22,14 @@
 #endif  /* HAVE_SGTTY_H */
 #include "adr_queue.h"
 #include "hdr.h"
+#ifdef HAVE_UNISTD_H
+#  include <unistd.h>
+#else /* HAVE_UNISTD_H */
+#  ifdef HAVE_SYS_UNISTD_H
+#    include <sys/unistd.h>
+#  endif /* HAVE_SYS_UNISTD_H */
+#endif /* HAVE_UNISTD_H */
+
 
 extern Chan   *chanptr;
 extern LLog   *logptr;
@@ -33,8 +41,6 @@ extern int    flgtrest;
 extern int    numfds;
 extern long   qu_msglen;
 extern jmp_buf  timerest;
-
-extern char     *strcpy();
 
 extern char *mldflfil;                /* name of local mailbox file           */
 extern char *mldfldir;                /* name of local mailbox directory      */
@@ -55,8 +61,6 @@ extern char ba_size[];
 extern char *ba_parm;         /* parameter portion of address */
 extern struct passwd *ba_pw;  /* passwd struct for recipient  */
 
-extern  long  lseek();
-extern        char    *strdup();
 extern        char    *expand();
 
 int   sigpipe;                /* has pipe gone bad? */
@@ -1147,9 +1151,13 @@ LOCFUN setupenv()
               ll_log (logptr, LLOGGEN, "TIOCNOTTY not available");
       }
 #endif /* TIOCNOTTY */
-#ifdef HAVE_SETPGRP
-      setpgrp (0, getpid());
-#endif /* HAVE_SETPGRP */
+#ifdef HAVE_SETPGID
+	setpgid (0, getpid());
+#else    
+#  ifdef HAVE_SETPGRP
+    setpgrp();
+#  endif /* HAVE_SETPGRP */
+#endif /* HAVE_SETPGID */
       sprintf (homestr, "HOME=%s", ba_pw->pw_dir);
       sprintf (shellstr, "SHELL=%s",
                       isstr(ba_pw->pw_shell) ? ba_pw->pw_shell : "/bin/sh");

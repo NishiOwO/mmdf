@@ -15,6 +15,13 @@
 #include <sys/stat.h>
 #include "ml_send.h"
 #include "mm_io.h"
+#ifdef HAVE_UNISTD_H
+#  include <unistd.h>
+#else /* HAVE_UNISTD_H */
+#  ifdef HAVE_SYS_UNISTD_H
+#    include <sys/unistd.h>
+#  endif /* HAVE_SYS_UNISTD_H */
+#endif /* HAVE_UNISTD_H */
 
 /*  */
 
@@ -70,8 +77,6 @@ extern LLog *logptr;
 
 FILE *lk_fopen();
 
-long    lseek ();
-char   *index (), *rindex ();
 #ifdef BSD_SPRINTF
 char *sprintf ();
 #else

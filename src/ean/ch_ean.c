@@ -10,7 +10,7 @@
  */
 
 #include <signal.h>
-#include "ch.h";
+#include "ch.h"
 #include "phs.h"
 
 extern Chan     *ch_nm2struct();

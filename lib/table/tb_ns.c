@@ -21,8 +21,8 @@
 #include <netinet/in.h>
 #include <arpa/nameser.h>
 #include <resolv.h>
+#include <string.h>
 
-extern char *strncpy();
 extern int   h_errno;
 
 LOCFUN ns_getcn();
@@ -73,7 +73,6 @@ LOCFUN char *ns_skiphdr();
 #endif
 
 extern  struct  ll_struct *logptr;
-extern  char    *strdup(), *strcpy();
 extern  char *locfullmachine, *locfullname;
 
 union ansbuf {			/* potentially huge */

@@ -253,7 +253,6 @@ char *file;
 	register int i;
 	FILE *ifile, *cfile, *tcfile, *dfile, *topfile;
 	int hlen;
-	char *index(), *strcpy(), *strcat();
 
 	ifile = fopen(file, "r");
 	if (ifile == NULL) {
@@ -279,7 +278,7 @@ char *file;
 		return;
 	}
 	while (fgets(buf, BUFSIZ, ifile) != NULL) {
-		if ((sp = index(buf, '\n')) != NULL)
+		if ((sp = strchr(buf, '\n')) != NULL)
 			*sp = '\0';
 		/* copy the domain part */
 		for (sp=buf, sp2=dmnbuf;
@@ -302,7 +301,7 @@ char *file;
 		/* printf("before = %s\n", dmnbuf); */
 		(void) lowerify(dmnbuf);
 		/* printf("after = %s\n", dmnbuf); */
-		if ((sp = index(dmnbuf, '.')) == NULL)
+		if ((sp = strchr(dmnbuf, '.')) == NULL)
 			strcat(dmnbuf, ".uucp");
 		if (dmnbuf[0] == '.')
 			for (sp = dmnbuf; *sp != '\0'; sp++)

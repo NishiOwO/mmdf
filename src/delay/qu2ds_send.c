@@ -44,8 +44,6 @@
 extern struct ll_struct   *logptr;
 extern Chan *chanptr;
 
-extern char *rindex();
-extern char *strdup();
 extern char *multcat();
 extern char *blt();
 
@@ -170,7 +168,6 @@ LOCFUN
     char    adr[ADDRSIZE];
     char    *dchan, *dhost;
     char    info[ADDRSIZE];
-    char    *index();
     int     ndone = 0;
 
 #ifdef DEBUG
@@ -213,7 +210,7 @@ LOCFUN
 
 		if (nadrs++ == 0)
 		{
-		    if((dhost = index(host, '&')) != NULL){
+		    if((dhost = strchr(host, '&')) != NULL){
 			*dhost++ = 0;
 			dchan = host;
 			if(*dchan == '\0'){ /* no channel must be local */

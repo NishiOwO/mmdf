@@ -69,7 +69,6 @@ extern int      errno;
 extern char     *qu_msgfile;          /* name of file containing msg text   */
 extern long     qu_msglen;
 
-extern char *index();
 extern struct passwd *getpwmid();
 
 LOCFUN qu2lo_each(), lo_verify(), lo_master();
@@ -197,12 +196,11 @@ lo_verify ()                    /* send one address spec to local     */
 {
 	char    mailid[MAILIDSIZ];      /* mailid of recipient */
 	register char   *p;
-	extern char     *strncpy();
 #ifdef DEBUG
 	ll_log (logptr, LLOGBTR, "lo_verify()");
 #endif
 	/* Strip any trailing host strings from address */
-	if (p = index (lo_adr, '@'))
+	if (p = strchr (lo_adr, '@'))
 		*p = '\0';
 
 	for (p = lo_adr; ; p++) {

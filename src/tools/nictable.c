@@ -33,10 +33,6 @@ FILE    *infp = stdin;
 char    entry[1000],            /* fully-assembled entry (multi-line) */
 	linebuf[1000];          /* current line */
 
-extern  char *index();
-extern  char *rindex();
-extern  char *strncpy();
-
 main (argc, argv)
     int argc;
     char *argv[];
@@ -196,7 +192,7 @@ char *str;
 	for (i = 0; i < sargc; i++)
 	{
 	    ts = sargv [i];
-	    if ((sv = index (ts, '/')) != 0)
+	    if ((sv = strchr (ts, '/')) != 0)
 		    *sv++ = '\0';
 
 	    if (transport != (char *)0 && !lexequ (transport, ts))
@@ -239,7 +235,7 @@ output (argc, argv)       /* output the list of host references */
     char buf [LINESIZE];
 
     if (target == T_CHANNEL) {
-	if ((p = index (argv [2], ',')) != 0)
+	if ((p = strchr (argv [2], ',')) != 0)
 	    *p = '\0';
 	oargc = cstr2arg (argv [1], NUMPARTS, oargv, ',');
 	for (i = 0; i < oargc; i++)
@@ -253,12 +249,12 @@ output (argc, argv)       /* output the list of host references */
 		buf [strlen(oargv[0]) - domainlen - 1]  = '\0';
 	    } else {  /* KLUDGE: No domain specified, wing it! */
 		(void) strcpy (buf, oargv[0]);
-		if (p = rindex(buf, '.'))
+		if (p = strrchr(buf, '.'))
 		    *p = '\0';
 	    }
 	    printf ("%s:%s\n", buf, oargv [0]);
 	    for (i = 1; i < oargc; i++)
-		if ((index(oargv[i], '.') == (char *) 0)
+		if ((strchr(oargv[i], '.') == (char *) 0)
 			&& !lexequ (buf, oargv[i]))
 		    printf ("%s:%s\n", oargv  [i], oargv [0]);
 	}
@@ -267,14 +263,14 @@ output (argc, argv)       /* output the list of host references */
 	if (gooddomain (oargv[0]))
 	{
 	    for (i = 1; i < oargc; i++)
-		if ((index(oargv[i], '.') != (char *) 0)
+		if ((strchr(oargv[i], '.') != (char *) 0)
 			&& !gooddomain (oargv[i]))
 		    printf ("%s:%s\n", oargv  [i], oargv [0]);
 	}
 	else
 	{
 	    for (i = 0; i < oargc; i++)
-		if (index(oargv[i], '.')  != (char *) 0)
+		if (strchr(oargv[i], '.')  != (char *) 0)
 		    printf ("%s:%s\n", oargv  [i], oargv [0]);
 	}
     } else {

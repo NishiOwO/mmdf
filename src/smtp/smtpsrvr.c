@@ -44,9 +44,6 @@ extern int errno;               /* Has Unix error codes */
 extern int numfds;
 
 extern char *getline();
-extern char *index();
-extern char *rindex();
-extern char *strdup();
 extern struct passwd *getpwmid();
 extern char *multcat();
 extern Chan *ch_h2chan();
@@ -525,7 +522,7 @@ mail()
 	ll_log( logptr, LLOGFTR, "mail from: '%s'", arg );
 
 	/* Scan FROM: parts of arg */
-	sender = index (arg, ':') + 1;
+	sender = strchr (arg, ':') + 1;
 	sender = addrfix( sender );
 	/*
 	 * If the From part is not the same as where it came from
@@ -671,7 +668,7 @@ rcpt()
 	  netreply("501 No recipient named.\r\n");
 	  return;
 	}
-	p = index( arg, ':' ) + 1;
+	p = strchr( arg, ':' ) + 1;
 	p = addrfix( p );
 
 	if (setjmp(timerest)) {
@@ -718,9 +715,9 @@ char *addrp;
 {
 	register char   *cp;
 
-	if( cp = index( addrp, '<' )) {
+	if( cp = strchr( addrp, '<' )) {
 		addrp = ++cp;
-		if( cp = rindex( addrp, '>' ))
+		if( cp = strrchr( addrp, '>' ))
 			*cp = 0;
 	}
 	compress (addrp, addrp);
@@ -994,11 +991,11 @@ register char *arg;
 	}
 
 	/* check for a simple comma-separated list of addresses */
-	if ((p = index(buf, ',')) != 0 && strindex (":include:", buf) < 0 &&
-	    index (buf, '<') == 0 && index (buf, '|') == 0 && gotalias)
+	if ((p = strchr(buf, ',')) != 0 && strindex (":include:", buf) < 0 &&
+	    strchr (buf, '<') == 0 && strchr (buf, '|') == 0 && gotalias)
 	{
 		/* q is start of substring; it lags behind p */
-		for (q=buf; p != 0; q=p, p=index(p, ',')) {
+		for (q=buf; p != 0; q=p, p=strchr(p, ',')) {
 			*p++ = '\0';  /* null the comma */
 			expn_str(q);
 		}
@@ -1006,10 +1003,10 @@ register char *arg;
 	}
 
 	/* check for a simple RHS with no @'s and no /'s (e.g. foo:bar) */
-	if (index (buf, '/') == 0)
+	if (strchr (buf, '/') == 0)
 	{
 		/* check for a simple RHS (e.g. foo:bar) */
-		if ((p = index (buf, '@')) == 0)
+		if ((p = strchr (buf, '@')) == 0)
 		{
 			if( buf[0] == '~' ) {
 				if ((pw=getpwmid (buf[1])) != (struct passwd *) NULL) {
@@ -1059,25 +1056,25 @@ register char *arg;
 	}
 
 	/* Assume if multiple entries, that only the first one is used. */
-	if ((q = index (buf, ',')) != 0)
+	if ((q = strchr (buf, ',')) != 0)
 		*q = '\0';
 
 	/* check for aliases of the form: [user]|program */
-	if ((q = index (buf, '|')) != 0) {
+	if ((q = strchr (buf, '|')) != 0) {
 		*q++ = '\0';
 		expn_save (OK,"%s@%s (Mail piped into process: %s)", 
 			  alstr, us, q);
 		return;
 	}
 
-	if ((q = index (buf, '/')) == 0) {
+	if ((q = strchr (buf, '/')) == 0) {
 	        expn_save(NOTOK,"%s (Bad format for alias is %s)",alstr,buf);
 		return;
 	}
 
 	/* check for < and :include: */
-	if (index (buf, '<') != 0 || strindex (":include:", buf) >= 0) {
-		if ((p = index (buf, '@')) != 0) {
+	if (strchr (buf, '<') != 0 || strindex (":include:", buf) >= 0) {
+		if ((p = strchr (buf, '@')) != 0) {
 			*p++ = '\0';
 			if (ch_h2chan (p, 1)  != (Chan *) OK) {  /* not local */
 				expn_save (OK,"<%s@%s>",buf,p);
@@ -1206,7 +1203,7 @@ vrfy()
 			}
 
 			while (fgets (linebuf, LINESIZE, stdin)) {
-				if (cp = rindex(linebuf, '\n'))
+				if (cp = strrchr(linebuf, '\n'))
 					*cp-- = 0;
 				verify(linebuf);
 			}
@@ -1242,7 +1239,7 @@ vrfy()
 	}
 	s_alarm(0);
 
-	if (cp = rindex(linebuf, '\n'))
+	if (cp = strrchr(linebuf, '\n'))
 		*cp-- = 0;
 	sprintf(replybuf,"%s\r\n",linebuf);
 	netreply(replybuf);
@@ -1282,13 +1279,13 @@ char *p;
 			sprintf (replybuf, "550 %s\r\n", thereply.rp_line);
 			vrfyreply (replybuf);
 		} else {
-			if ((l=index(thereply.rp_line, '"')) &&
-			    (r=rindex(thereply.rp_line, '"')) &&
+			if ((l=strchr(thereply.rp_line, '"')) &&
+			    (r=strrchr(thereply.rp_line, '"')) &&
 			    (l != r) ) {
 				*l = '<';
 			        *r = '>';
 			}
-			if (l && r && !index(l,'@')) {
+			if (l && r && !strchr(l,'@')) {
 			    *l++ = '\0';
 			    *r++ = '\0';
 			    sprintf (replybuf, "250 %s<%s@%s>%s\r\n",

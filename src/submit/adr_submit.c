@@ -86,8 +86,6 @@ char *adr_fmc;                  /* name of 'full' machie                */
 char *adr_orgspec;              /* original mailbox string              */
 
 extern char *blt();
-extern char *index();
-extern char *rindex();
 extern char mgt_dlname[];	/* name of the delay channel */
 extern char *ap_p2s();
 
@@ -234,7 +232,7 @@ adr_check (local, domain, route) /* check & save an address            */
 	    case NOTOK:		  /* Not a valid hostname */
 				  /* SEK: first check for explicit       */
 				  /* channel refs (somehow)              */
-		if (cp = rindex(hptr -> ap_obvalue, '#')) {
+		if (cp = strrchr(hptr -> ap_obvalue, '#')) {
 		    *cp = 0;
 		    if ((thechan = ch_nm2struct (hptr -> ap_obvalue))
 						!= (Chan *) NOTOK) {
@@ -548,11 +546,11 @@ adr_local (local)                       /* process host-less reference */
      *      This assumes standard (from K&R) evaluation.
      *      If your compiler is non-standard, you're screwed.
      */
-    if ( (cp = rindex (tmpstr, '@')) != 0
-	  || (cp = rindex (tmpstr, '%')) != 0
-	  || (cp = index (tmpstr, '!')) != 0
+    if ( (cp = strrchr (tmpstr, '@')) != 0
+	  || (cp = strrchr (tmpstr, '%')) != 0
+	  || (cp = strchr (tmpstr, '!')) != 0
 #ifdef LEFTDOTS
-	  || (cp = rindex (tmpstr, '.')) != 0
+	  || (cp = strrchr (tmpstr, '.')) != 0
 #endif
 	)
 				/* SEK handle quoted @, and quoted or   */
@@ -807,14 +805,14 @@ int	bypass;
 				/* was part of "user=foo", check that alias */
 				/* was just a simple username (otherwise    */
 				/* alias=foo will make no sense).           */
-	if ((index (newalias.aliasbuf, '|') != 0) ||
-	    (index (newalias.aliasbuf, '/') != 0) ||
-	    (index (newalias.aliasbuf, ',') != 0)) {
+	if ((strchr (newalias.aliasbuf, '|') != 0) ||
+	    (strchr (newalias.aliasbuf, '/') != 0) ||
+	    (strchr (newalias.aliasbuf, ',') != 0)) {
 	    ll_log (logptr, LLOGTMP, "Illegal to use = in alias '%s:%s'",
 			mbox,  newalias.aliasbuf);
 	    return (RP_NO);
 	}
-	if ((p = rindex (newalias.aliasbuf, '@')) == 0)
+	if ((p = strrchr (newalias.aliasbuf, '@')) == 0)
 	    strcat (newalias.aliasbuf, qualstr);
 	else {
 	    *p++ = '\0';

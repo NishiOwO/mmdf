@@ -442,7 +442,7 @@ int     setflg;
 			/* Process Subject field, if any */
 			if( !isnull( subjstr[0]))  {
 				subjstr[MSG_BSIZE-1] = '\0';
-				if( (cpz = index(subjstr,'\n')) != 0 )
+				if( (cpz = strchr(subjstr,'\n')) != 0 )
 					*cpz = '\0';
 				if( filoutflag == ON ) {
 					for(cpz = subjstr,cpy = mptr->subject;
@@ -630,7 +630,7 @@ overwrit()
 	}  else  {
 		strcpy( tempfile, filename);
 		/* get the path to directory of file  */
-		if (ptr = rindex(tempfile, '/'))
+		if (ptr = strrchr(tempfile, '/'))
 			*++ptr = '\0';
 		else
 			ptr = tempfile;
@@ -817,7 +817,7 @@ binbuild()
 #endif /* HAVE_SIGSETMASK */
 	strcpy( tempfile, binarybox);
 	/* get the path to directory of file  */
-	if (ptr = rindex(tempfile, '/'))
+	if (ptr = strrchr(tempfile, '/'))
 		*++ptr = '\0';
 	else
 		ptr = tempfile;

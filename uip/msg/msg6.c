@@ -75,7 +75,6 @@ struct	match_tab	zone_tab[] = {
 #define	dysize(A) (isleap(A) ? 366: 365)
 
 static int dmsize[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-extern char *index();
 extern char *eatwhite();
 
 long
@@ -146,12 +145,12 @@ smtpdate(cp)
 			minutes = hours %100;
 			hours = hours/100;
 		}  else  {
-			cp = index(cp, ':');
+			cp = strchr(cp, ':');
 			if(cp == NULL) goto bad_date;
 			minutes = atoi(++cp);
 		}
 
-		dp = index(cp, ':');
+		dp = strchr(cp, ':');
 		if(dp)  {
 			seconds = atoi(++dp);
 			cp = dp;

@@ -79,9 +79,8 @@
 #define         PARTIAL         1
 
 extern char *dupfpath();
-extern char *strncpy();
 extern int  sys_nerr;
-extern char *sys_errlist[];
+/* extern char *sys_errlist[]; */
 extern int  errno;
 
 extern LLog msglog;

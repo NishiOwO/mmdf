@@ -600,7 +600,7 @@ xomsgrc( filept )
 	nkeysrd = 0;
 	while( xfgets( tbuf, sizeof(tbuf), filept ) != NULL ) {
 
-		if( (np = index( tbuf, '\n' )) == NULL )
+		if( (np = strchr( tbuf, '\n' )) == NULL )
 			continue;
 		*np = '\0';
 
@@ -680,7 +680,7 @@ xomsgrc( filept )
 		else if( (np = strend( "draftorig", tbuf )) != NULL ) {
 			if( *np != '\0' ) {
 				strcpy(draftorig,np);
-				np = rindex(draft_original,'/');
+				np = strrchr(draft_original,'/');
 				*++np = '\0';
 				strcat(draft_original,draftorig);
 			}

@@ -120,10 +120,7 @@ extern	char	*sitesignature;
 extern	char	*supportaddr;
 extern	char	*optarg;
 
-extern char *index();
-extern char *rindex();
 extern char *getenv();	/* get the Accounting system from the environment */
-extern char *strdup();
 extern char *compress();
 
 extern	int	optind;
@@ -234,9 +231,9 @@ char **argv;
 		    strncmp(linebuf, ">From ", 6))
 			break;
 
-		cp = index(linebuf, ' ');	/* start of name */
+		cp = strchr(linebuf, ' ');	/* start of name */
 		fromptr = ++cp;
-		cp = index(cp, ' ');		/* cp at end of name */
+		cp = strchr(cp, ' ');		/* cp at end of name */
 		*cp++ = '\0';			/* term. name, cp at date */
 		(void) strcpy(fromwhom, fromptr);
 		while (isspace(*cp)) cp++;	/* Skip any ws */
@@ -249,13 +246,13 @@ char **argv;
 		*d = '\0';
 
 		for (;;) {
-			cp = index(cp+1, 'r');
+			cp = strchr(cp+1, 'r');
 			if (cp == NULL) {
-				cp = rindex(fromwhom, '!');
+				cp = strrchr(fromwhom, '!');
 				if (cp != NULL) {
 					char *p;
 					*cp = '\0';
-					p = rindex(fromwhom, '!');
+					p = strrchr(fromwhom, '!');
 					if (p != NULL)
 						(void) strcpy(origsys, p+1);
 					else
@@ -310,12 +307,12 @@ out:
 	 * the last !. NOTE: We keep the trailing !, hence the +1.
 	 */
 	(void) strcpy(origpath, rm_from);
-	*(rindex(origpath, '!') + 1) = '\0';
+	*(strrchr(origpath, '!') + 1) = '\0';
 
 	/*
 	 * Savepath is given a copy of the immediate neighbour
 	 */
-	if ((d = index(rm_from, '!')) != NULL) {
+	if ((d = strchr(rm_from, '!')) != NULL) {
 		*d = '\0';
 		(void) strcpy(nextdoor, rm_from);
 		*d = '!';
@@ -484,7 +481,7 @@ char *from, *date;
 				 */
 				if (headertoken == HFROM
 				 || headertoken == HRFROM) {
-					if (lkp = index(rest, '<')) {
+					if (lkp = strchr(rest, '<')) {
 						*lkp = '\0';
 						if (*rest == ' ')
 							fprintf(rm_msgf, "%s<", rest+1);
@@ -499,11 +496,11 @@ char *from, *date;
 						 */
 						tmpbuf[0] = ' ';
 						rest = tmpbuf;
-						lkp = rindex(rest, '>');
+						lkp = strrchr(rest, '>');
 						if (lkp)
 							*lkp = '\0';
 					}
-					if (lkp = index(rest, '(')) {
+					if (lkp = strchr(rest, '(')) {
 						*lkp = '\0';
 						(void) sprintf(tmpbuf, " (%s\n", lkp+1);
 						finalstr = tmpbuf;
@@ -612,11 +609,11 @@ nextchar()
 	 * If it is in this ^^^^^^^ convert to  ^^^^^^^ 
 	 * NOTE: This won't handle list: "x<x@y> y<y@z>" conversions!
 	 */
-	if (index(adrs, ' ') != NULL &&
-	    index(adrs, ',') == NULL &&
-	    index(adrs, '<') == NULL &&
-	    index(adrs, '(') == NULL &&
-	    index(adrs, '"') == NULL) {
+	if (strchr(adrs, ' ') != NULL &&
+	    strchr(adrs, ',') == NULL &&
+	    strchr(adrs, '<') == NULL &&
+	    strchr(adrs, '(') == NULL &&
+	    strchr(adrs, '"') == NULL) {
 		for (s = adrs; *s; s++)
 			if (*s == ' ')
 				*s = ',';
@@ -723,7 +720,7 @@ AP_ptr the_addr;
 		printf("%s\n", s);
 
 	/* Is it a uucp style address? */
-	if (domain == (AP_ptr) 0 && index (s, '!') != (char *)NULL) {
+	if (domain == (AP_ptr) 0 && strchr (s, '!') != (char *)NULL) {
 		char	adr2[LINESIZE];
 
 		(void) strcpy(adr, s);
@@ -783,10 +780,10 @@ AP_ptr the_addr;
 		 * Look for the last address component and re-write to the
 		 * official form. There are probably better ways of doing this
 		 */
-		at = rindex(p, '@');
+		at = strrchr(p, '@');
 		fmt = "%s";
 		if (at) {
-			brace = index(at+1, '>');
+			brace = strchr(at+1, '>');
 			if (brace) *brace = '\0';
 			official = get_official(at+1, (int *)NULL);
 			if (official) {
@@ -1116,7 +1113,7 @@ char *from, *newfrom;
 		printf("fromcvt on %s\n", from);
 
 	(void) strcpy(buf, from);
-	cp = rindex(buf, '!');
+	cp = strrchr(buf, '!');
 	if (cp == 0) {
 		(void) strcpy(newfrom, from);
 		return;
@@ -1125,9 +1122,9 @@ char *from, *newfrom;
 	 *	look for @site at the end of the name
 	 */
 	atoff = NULL;
-	if ((at = index(cp, '@')) != NULL) {
+	if ((at = strchr(cp, '@')) != NULL) {
 		/* got one - is it followed by a ! ? */
-		if (index(at+1, '!') != NULL)
+		if (strchr(at+1, '!') != NULL)
 			 at = NULL;
 		else {
 			/* look up the official name of the at site */
@@ -1141,7 +1138,7 @@ char *from, *newfrom;
 		}
 	}
 	*cp = 0;
-	while (sp = rindex(buf, '!')) {
+	while (sp = strrchr(buf, '!')) {
 		/*
 		 * scan the path backwards looking for hosts that we
 		 * know about
@@ -1224,11 +1221,11 @@ char *route;
 	char	*enda, *endsecond, *official, *second;
 	char	*host_equal();
 
-	second = index(route, '!');
+	second = strchr(route, '!');
 	if (second == (char *)NULL)
 		return;
 	second++;
-	endsecond = index(second, '!');
+	endsecond = strchr(second, '!');
 	if (endsecond == (char *)NULL)
 		return;
 	second[-1] = '\0';
@@ -1408,12 +1405,12 @@ register char *adr;
 	/*
 	 * get out of anything other than bangs
 	 */
-	if (index(adr, '@') || index(adr, '%') || index(adr, ':'))
+	if (strchr(adr, '@') || strchr(adr, '%') || strchr(adr, ':'))
 		return(adr);
 	/*
 	 * get out if no '!'
 	 */
-	if ((bangptr = index(adr, '!')) == (char *)NULL)
+	if ((bangptr = strchr(adr, '!')) == (char *)NULL)
 		return(adr);
 
 	/*

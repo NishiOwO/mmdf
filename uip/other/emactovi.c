@@ -52,7 +52,7 @@ char **argv;
 
 	while (fgets(buf, BUFSIZ, fpi) != (char *)NULL) {
 		if (strncmp(buf, "Date:", 5) == 0) {
-			if ((p = index(buf, '\n')) != (char *)NULL)
+			if ((p = strchr(buf, '\n')) != (char *)NULL)
 				*p = '\0';	/* remove new-line */
 
 			p = &(buf[5]);

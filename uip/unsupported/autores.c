@@ -45,14 +45,14 @@ static char sccsid[] = "@(#)autores.c	1.6 (UKC) 14/2/86";
 #include <sys/types.h>
 #include <fcntl.h>
 
+#ifdef HAVE_STRING_H
+#  include <string.h>
+#endif /* HAVE_STRING_H */
 #ifdef SYS5
 #  include <time.h>
 #  include "cnvtdate.h"
 #  ifdef PLEXUS
-	char *index(), *rindex();
 	char *strcpy();
-#  else PLEXUS
-#    include <string.h>
 #  endif PLEXUS
 #else
 #  include <sys/time.h>
@@ -173,7 +173,7 @@ char **argv;
 	if (command)
 		/* Make sure they aren't getting out of bounds. TW */
 		/* Use "rindex" to maintain BSD compat */
-		if((badpath = rindex(command, '/')) == NULL)  /* TW */
+		if((badpath = strrchr(command, '/')) == NULL)  /* TW */
 			send_info(command);
 		else	/* TW */
 		{	/* TW */
@@ -194,7 +194,6 @@ char **argv;
 readheader(fin)
 FILE *fin;
 {	register char *cp;
-	char *index();
 
 	if (get_header_lines(fin))
 		return(1);
@@ -228,7 +227,6 @@ FILE *fin;
 	Header_line *look_header();
 	char	*storestr();
 	char	*storepair();
-	char 	*index();
 	
 	for (;;)
 	{	if (fgets(line, sizeof line - 1, fin) == NULL)
@@ -240,7 +238,7 @@ FILE *fin;
 		if (line[0] == '\n')
 			break;
 		hp = (Header_line *)0;
-		if (p = index(line, ':'))
+		if (p = strchr(line, ':'))
 		{	*p++ = '\0';
 			if (hp = look_header(line))
 			{	/* we want to know about this line */
@@ -252,7 +250,7 @@ FILE *fin;
 				/* clean up this line */
 				if (*p == ' ') p++;
 				startfield = p;
-				p = index(startfield, '\n');
+				p = strchr(startfield, '\n');
 				if (p == NULL)
 					line[BUFSIZ-1] = '\0';
 				else
@@ -275,7 +273,7 @@ FILE *fin;
 			 * new bit onto the old stored piece
 			 */
 			if (hp)
-			{	if (p = index(line, '\n'))
+			{	if (p = strchr(line, '\n'))
 					*p = '\0';
 				else	line[BUFSIZ-1] = '\0';
 				hp->dataline = storepair(hp->dataline, line, 1);
@@ -384,12 +382,9 @@ init_mail()
 {	register pid;
 	register i;
 	char	*subcmd;
-#ifndef SYS5
-	char	*rindex();
-#endif SYS5
 	char	*maildate();
 		
-	subcmd = rindex(submit, '/');
+	subcmd = strrchr(submit, '/');
 	if (subcmd)
 		subcmd++;
 	else

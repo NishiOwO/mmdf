@@ -58,7 +58,6 @@ extern char *ch_dflnam;            /* default channel name             */
 
 extern struct passwd *getpwmid ();
 extern struct ll_struct *logptr;
-extern char *index ();
 extern char *multcat();
 extern Chan *ch_nm2struct();
 extern Domain *dm_v2route();
@@ -134,6 +133,9 @@ LOCVAR short   mgt_trust,        /* pass on author authentication?     */
 	mgt_hops;                 /* number of hops message has gone    */
 char *mgt_helo = NULL;
 char *mgt_fromhost = NULL;
+#ifdef HAVE_ESMTP
+smtp_protocol mgt_protocol = PRK_UNKNOWN;
+#endif
 /**/
 
 LOCFUN mgt_fromline();
@@ -274,7 +276,15 @@ register char *theparm;
 	    theparm = prm_dupval (++theparm, &mgt_fromhost);
 	    break;                /* just save the info, for now        */
 
-	default:
+#ifdef HAVE_ESMTP
+    case 'p':
+	    theparm = prm_dupval (++theparm, &ptr);
+	    mgt_protocol = atoi(ptr);
+	    free(ptr);
+        break;                /* just save the info, for now        */
+#endif
+        
+    default:
 	    return ((char *) NOTOK);    /* not a management parameter   */
     }
 
@@ -446,7 +456,7 @@ mgt_aend ()
     {                             /* claiming to be a relay             */
 	if (!mgt_s2return &&       /* hack past possible bad parsing     */
 	    mgt_return != NULL && !isnull (*mgt_return) &&
-	    !index(mgt_return, '@'))/* add host if necessary if not given */
+	    !strchr(mgt_return, '@'))/* add host if necessary if not given */
 	{
 	    char *cp;
 
@@ -980,6 +990,12 @@ LOCFUN
 	len = mgt_rcv (len, "by %s.%s",
 		mgt_vchan.mgt_achan -> ch_lname,
 		mgt_vchan.mgt_achan -> ch_ldomain);
+#ifdef HAVE_ESMTP
+    switch(mgt_protocol) {
+        case PRK_SMTP: len = mgt_rcv (len, "with SMTP"); break;
+        case PRK_ESMTP: len = mgt_rcv (len, "with ESMTP"); break;
+    }
+#endif
     if (adr_orgspec != (char *) 0)
 	len = mgt_rcv (len, "for %s", adr_orgspec);
     len = mgt_rcv (len, "id %s", &mq_munique[4]);

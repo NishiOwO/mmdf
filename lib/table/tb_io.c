@@ -85,7 +85,6 @@ extern char *tbldfldir;
 extern Table **tb_list;         /* all known tables                     */
 				/* SEK change syntax                    */
 extern int   tb_numtables;      /* how many of them there are           */
-extern char  *index();
 extern char  *compress();
 
 LOCVAR char _hkeyend[] = ": \t\n\377",
@@ -265,7 +264,7 @@ tb_read (table, key, value)       /* read a table's record        */
 	if (len > 1)
 	    compress (key, key);
 
-	if (index(_hvalend, terminator) > (char *)NULL)
+	if (strchr(_hvalend, terminator) > (char *)NULL)
  	    value[0] = '\0';		/* whole line was a key */
         else {
 	  /*if ((len = gcread (fp, value, LINESIZE, _hvalend)) > 0)*/

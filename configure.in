@@ -587,9 +587,10 @@ AC_STRUCT_TIMEZONE
 
 AC_CHECK_HEADERS(lastlog.h libio.h malloc.h memory.h termio.h)
 AC_CHECK_HEADER(sgtty.h,ac_cv_header_sgtty_h="yes")
-AC_CHECK_HEADERS(strings.h syslog.h)
+AC_CHECK_HEADERS(string.h strings.h syslog.h)
 AC_CHECK_HEADERS(sys/file.h sys/ioctl.h sys/time.h sys/termio.h sys/termios.h)
-AC_CHECK_HEADERS(utmp.h varargs.h)
+AC_CHECK_HEADERS(sys/unistd.h)
+AC_CHECK_HEADERS(unistd.h utmp.h varargs.h)
 if test "$ac_cv_header_varargs_h" != "yes"; then
     AC_MSG_WARN(you don't have varargs.h)
     AC_MSG_WARN(          lib/util/multcat.c will not compile)

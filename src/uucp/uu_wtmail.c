@@ -43,7 +43,6 @@ static char     who[LINESIZE];
 uu_wtadr (host, adr, sender, realfrom)
 	char    *host, *adr, *sender, *realfrom;
 {
-    char        *index(), *rindex();
     FILE        *popen();
     char        *bangptr;
     time_t      timenow;
@@ -71,13 +70,13 @@ uu_wtadr (host, adr, sender, realfrom)
     ap_t2parts(ap, (AP_ptr *)0, (AP_ptr *)0, &local, &domain, (AP_ptr *)0);
     lp = ap_p2s( (AP_ptr)0, (AP_ptr)0, local, domain, (AP_ptr)0);
 
-    atp = index (lp, '@');
+    atp = strchr (lp, '@');
     if (atp != (char *)0)
 	*atp++ = '\0';
     if (lexequ(atp, host))
 	atp = (char *)0;	/* don't make path-to-foo!foo.uucp!user */
 	
-    percentp = rindex (lp, '%');
+    percentp = strrchr (lp, '%');
     if (percentp != (char *) 0) {
 	*percentp = '\0';
     	if (atp)
@@ -105,7 +104,7 @@ uu_wtadr (host, adr, sender, realfrom)
     }
 
     /* Extract first host name for destination */
-    if ((bangptr=index (who, '!')) != NULL)
+    if ((bangptr=strchr (who, '!')) != NULL)
     {
 	/* There is at least one relay machine */
 	*bangptr++ = '\0';

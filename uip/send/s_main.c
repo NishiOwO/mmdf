@@ -45,7 +45,6 @@
 
 extern int errno;
 extern char *compress ();
-extern char *index();
 
 /* mmdf globals */
 

@@ -4,8 +4,6 @@
 #include "dm.h"
 #include <pwd.h>
 
-extern char *index();
-extern char *rindex();
 extern char *multcat();
 extern struct passwd *getpwmid();
 
@@ -61,13 +59,13 @@ register char *arg;
 			alstr, buf);
 		return(1);
 	}
-	if (index (buf, ',') != 0 && strindex (":include:", buf) < 0
-		&& index (buf, '<') == 0 && index (buf, '|') == 0)
+	if (strchr (buf, ',') != 0 && strindex (":include:", buf) < 0
+		&& strchr (buf, '<') == 0 && strchr (buf, '|') == 0)
 	{
 		printf ("%s is list of aliases: %s\n", alstr, buf);
 		return(1);
 	}
-	if (((p = index (buf, '@')) == 0) && (index (buf, '/') == 0))
+	if (((p = strchr (buf, '@')) == 0) && (strchr (buf, '/') == 0))
 	{
 		printf ("%s has alias %s\n", alstr, buf);
 		return(1);
@@ -75,7 +73,7 @@ register char *arg;
 
 	/* Assume if multiple entries, that     */
 	/* only the first one is used.		*/
-	if ((q= index (buf, ',')) != 0)
+	if ((q= strchr (buf, ',')) != 0)
 		*q = '\0';
 	if (p) {
 		*p++ = '\0';
@@ -86,18 +84,18 @@ register char *arg;
 		}
 	} else
 		p = buf;
-	if ((p = index (buf, '/')) == 0) {
+	if ((p = strchr (buf, '/')) == 0) {
 		printf ("bad format for alias '%s': value '%s'\n",
 				alstr, buf);
 		return(1);
 	}
-	if ((q = index (buf, '|')) != 0) {
+	if ((q = strchr (buf, '|')) != 0) {
 		*q++ = '\0';
 		printf ("%s is a pipe alias which runs %s as user %s\n",
 				alstr, q, buf[0] ? buf : "root");
 		return(1);
 	}
-	if (index (buf, '<') == 0 && strindex (":include:", buf) < 0)
+	if (strchr (buf, '<') == 0 && strindex (":include:", buf) < 0)
 	{
 		*p++ = '\0';
 		printf ("mail for %s is filed in %s as user %s\n",
