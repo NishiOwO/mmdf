@@ -91,6 +91,7 @@ main (argc, argv)
 
 user_init ()
 {
+    struct passwd *pwd;
     char *getmailid();
     int effid;
 
