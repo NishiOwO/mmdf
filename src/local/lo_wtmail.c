@@ -22,6 +22,7 @@
 #endif  /* HAVE_SGTTY_H */
 #include "adr_queue.h"
 #include "hdr.h"
+#include "cnvtdate.h"
 
 extern Chan	*chanptr;
 extern LLog	*logptr;
@@ -31,6 +32,7 @@ extern int	errno;
 extern int	sentprotect;
 extern int	flgtrest;
 extern int	numfds;
+extern char     *qu_msgfile;          /* name of file containing msg text   */
 extern long	qu_msglen;
 extern jmp_buf  timerest;
 
@@ -238,18 +240,6 @@ char	*mboxname;
 		printx (", failed\r\n");
 		return (retval);
 	}
-    if (lo_adr && *lo_adr) {
-      char buffer[BUFSIZ];
-      int len;
-
-      (void) sprintf (buffer, "X-Envelope-To: <%s>\n", lo_adr);
-      len = strlen(buffer);
-      if (write (mbx_fd, buffer, len) != len) {
-        ll_err (logptr, LLOGTMP, "error writing out X-Envelope-To");
-        retval = RP_LIO;
-        goto closeit;
-      }
-    }
     if (lo_sender && *lo_sender) {
       char buffer[BUFSIZ];
       int len;
@@ -258,6 +248,28 @@ char	*mboxname;
       len = strlen(buffer);
       if (write (mbx_fd, buffer, len) != len) {
         ll_err (logptr, LLOGTMP, "error writing out return-path");
+        retval = RP_LIO;
+        goto closeit;
+      }
+    }
+    if (lo_adr && *lo_adr) {
+      char buffer[BUFSIZ];
+      char    thedate[LINESIZE];
+      char *p;
+      int len;
+
+      p = rindex(qu_msgfile, '.');
+      if(p!=NULL) p++;
+      else p = qu_msgfile;
+      
+      cnvtdate (TIMSHRT, thedate);  /* net name & short date/time         */
+      (void) sprintf (buffer, "Received: from %s.%s by %s-channel id %s\n",
+                      chanptr->ch_lname, chanptr->ch_ldomain, chanptr->ch_name, p);
+      (void) sprintf (buffer, "%s          for <%s>; %s\n", buffer,
+                      lo_adr, thedate);
+      len = strlen(buffer);
+      if (write (mbx_fd, buffer, len) != len) {
+        ll_err (logptr, LLOGTMP, "error writing out last Received-line");
         retval = RP_LIO;
         goto closeit;
       }
@@ -457,11 +469,11 @@ char	*prog;
 		flgtrest = FALSE;
 		printx (", user program taking too long");
 		ll_log (logptr, LLOGGEN, "user program taking too long - killing");
-#ifndef V4_2BSD
-		kill (procid, SIGKILL); /* we're superuser, so always works */
-#else /* V4_2BSD */
+#ifdef HAVE_KILLPG
 		killpg (procid, SIGKILL); /* we're superuser, so always works*/
-#endif /* V4_2BSD */
+#else /* HAVE_KILLPG */
+		kill (procid, SIGKILL); /* we're superuser, so always works */
+#endif /* HAVE_KILLPG */
 		return (RP_TIME);
 	}
 }

@@ -446,11 +446,11 @@ char  *prog;
               flgtrest = FALSE;
               printx (", user program taking too long");
               ll_log (logptr, LLOGGEN, "user program taking too long - killing");
-#ifndef V4_2BSD
-              kill (procid, SIGKILL); /* we're superuser, so always works */
-#else /* V4_2BSD */
+#ifdef HAVE_KILLPG
               killpg (procid, SIGKILL); /* we're superuser, so always works*/
-#endif /* V4_2BSD */
+#else /* HAVE_KILLPG */
+              kill (procid, SIGKILL); /* we're superuser, so always works */
+#endif /* HAVE_KILLPG */
               return (RP_TIME);
       }
 }
@@ -503,11 +503,7 @@ char  *file;
       mbxmade = mbx_wasclear = FALSE;
 
 reopen:
-#if defined(SYS5) && defined(V4_2BSD)
-      if ((mbx_fd = lk_open (file, 2, "/usr/tmp", (char *) 0, 10)) < 0)
-#else
       if ((mbx_fd = lk_open (file, 2, (char *) 0, (char *) 0, 10)) < 0)
-#endif
       {
               switch (errno) {
 #ifdef EWOULDBLOCK
@@ -595,11 +591,7 @@ char  *file;
       {       /* couldn't put ending delimiter on   */
               ll_err (logptr, LLOGTMP, "error writing delim2");
       }
-#if defined(SYS5) && defined(V4_2BSD)
-      lk_close (mbx_fd, file, "/usr/tmp", (char *) 0);
-#else
       lk_close (mbx_fd, file, (char *) 0, (char *) 0);
-#endif
       mbx_fd = -1;
 }
 /*^L*/
