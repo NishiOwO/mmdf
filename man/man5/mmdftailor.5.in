@@ -310,7 +310,7 @@ which is used for pretty printing purposes to explain what
 the table is all about.
 .RE
 .B type=
-<\fIfile\fR |\fIdbm\fR |\fIns\fR | \fIregexp\fR>
+<\fIfile\fR |\fIdbm\fR |\fIns\fR | \fInis | \fIregexp | \fIrbl | \fIldap\fR>
 .RS
 .sp
 There are four source types defined: ``file'', ``dbm'', ``ns'' and ``nis''.
@@ -326,7 +326,14 @@ queries on a nameserver.
 .br
 \fInis\fR means that the table data is obtained by making
 queries on a nis-server.  
+.br
+\fIregexp\fR see mmdf_regexp(5)
+.br
+\fIrbl\fR see mmdf_rbl(5)
+.br
+\fIldap\fR see mmdf_ldap(5)
 .sp
+.RE
 
 .B flags=
 <\fIabort\fR | \fIchannel\fR |\fIdomain\fR |\fIpartial\fR |\fIroute\fR>
@@ -388,7 +395,7 @@ alternate domain tables were consulted occasionally).
 The following tables are provided automatically via chan.c
 and the tailoring package when Mail-IDs are enabled (see section 3.2 above):
 .RE
-.RS
+
 .IP users 10
 A mapping of usernames to Mail-IDs
 .IP mailids 10
@@ -1109,6 +1116,7 @@ config/<site>/conf.c
 
 
 .SH "SEE ALSO"
-tables(5), script(5), logs(5), queue(5)
+tables(5), script(5), logs(5), queue(5), mmdf_auth(5), mmdf_ldap(5),
+mmdf_regex(5), mmdf_rbl(5)
 .PP
 \fIRuntime Tailoring the MMDF II system\fR

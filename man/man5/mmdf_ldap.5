@@ -1,0 +1,83 @@
+.TH MMDF_LDAP 5 "01 January 2001"
+.SH NAME
+.SH SYNOPSIS
+Configuring MMDF LDAP table access
+.SH DESCRIPTION
+
+.B type= 
+.I ldap
+.RS
+Use routing information instead of hostname
+.RE
+
+.B attrib= 
+<
+.I attributename
+>
+.RS
+Attribute used as RHS in standart tables.
+.RE
+
+.B filter= 
+<
+.I string
+>
+.RS
+search filter used as LHS in standart tables.
+.RE
+
+.B scope= 
+<
+.I base | one | sub
+>
+default:
+.I sub
+.RS
+Scope is the scope of the search and should be one of 
+.I base
+, to search the object itself,
+.I one
+(onelevel) to search the object's immediate children, or
+.I sub
+(subtree), to  search  the object and all its descendents.
+.RE
+
+.B search_base= 
+<
+.I DN
+>
+.RS
+Base is the DN of the entry at which to start the search.
+.RE
+
+
+.B server_host= 
+<
+.I hostname
+>
+.RS
+LDAP Server name
+.RE
+
+.B server_port= 
+<
+.I port number
+>
+.RS
+LDAP Server port
+.RE
+
+.B timeout= 
+<
+.I xxx
+>
+.RS
+LDAP Server timeout
+.RE
+
+
+.PP
+.SH FILES
+.SH "SEE ALSO"
+mmdftailor(5), ldap_search(3)
+\fIConfiguring MMDF LDAP\fR

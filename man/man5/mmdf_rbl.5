@@ -1,0 +1,46 @@
+.TH MMDF_RBL 5 "01 January 2001"
+.SH NAME
+.SH SYNOPSIS
+Configuring MMDF RBL table
+.SH DESCRIPTION
+
+.B type= 
+.I rbl
+.RS
+Use routing information instead of hostname
+.RE
+
+.B domain=
+<
+.I xxx
+>
+.RS
+RBL domain
+.I relays.orbs.org
+
+.I rbl.maps.vix.com
+
+.I dul.maps.vix.com
+
+.I relays.mail-abuse.org
+.RE
+
+.B link
+<
+.I xxx
+>
+.RS
+Link ti cite
+
+.I http://www.orbs.org/blocked.html
+ 
+.I http://www.mail-abuse.org/rbl/
+
+.I http://www.mail-abuse.org/rss/
+.RE
+
+.PP
+.SH FILES
+.SH "SEE ALSO"
+mmdftailor(5),
+\fIConfiguring MMDF LDAP\fR

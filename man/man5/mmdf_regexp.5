@@ -1,0 +1,102 @@
+.TH MMDF_REGEXP 5 "01 January 2001"
+.SH NAME
+.SH SYNOPSIS
+Configuring MMDF Regular expression table
+.SH DESCRIPTION
+
+Read sequentially the file specified by 
+.I file.
+The LHS of an line consists of an regular expression.
+On success of the regexec() call, the RHS is returned.
+If the LHS starts with 
+.I !
+then on failure of regexec() the RHS is returned.
+
+.B type= 
+.I regexp
+.RS
+.RE
+
+.B addprefix=
+<
+.I 0 | 1
+>
+default:
+.I 0
+.RS
+If set to 1, '^' is prepended to the LHS.
+.RE
+
+.B addsuffix=
+<
+.I 0 | 1
+>
+default:
+.I 0
+.RS
+If set to 1, '$' is appended to the LHS.
+.RE
+
+.B cflag=
+<
+.I extended | icase | newline | none | nosub
+>
+.RS
+cflags may be the bitwise-or of one or more of the following:
+
+.I extended
+.RS
+Use POSIX Extended Regular Expression syntax when interpreting
+regex. If not set, POSIX Basic Regular Expression syntax is used.
+.RE
+.I icase
+.RS
+Do not differentiate case. Subsequent regexec searches using this
+pattern buffer will be case insensitive.
+.RE
+.I nosub
+.RS
+Support for substring addressing of matches is not required. The
+nmatch and pmatch parameters to regexec are ignored if the pattern
+buffer supplied was compiled with this flag set.
+.RE
+.I newline
+.RS
+Match-any-character operators don't match a newline.
+.sp
+A non-matching list ([^...]) not containing a newline does not match a
+newline. Match-beginning-of-line operator (^) matches the empty string
+immediately after a newline, regardless of whether eflags, the
+execution flags of regexec, contains REG_NOTBOL (eflag=notbol).
+.sp
+Match-end-of-line operator ($) matches the empty string immediately
+before a newline, regardless of whether eflags contains REG_NOTEOL (eflag=noteol).
+.RE
+.RE
+
+.B eflag=
+<
+.I none | notbol | noteol
+>
+.RS
+.I notbol
+.RS
+The  match-beginning-of-line  operator always fails to match (but see
+the cflag=newline above)  This  flag  may be used when
+different portions of a string are passed  to  regexec  and  the
+beginning  of  the string should not be interpreted as the beginning
+of the line.
+.RE
+
+.I noteol
+.RS
+The  match-end-of-line operator always fails to match (but see the
+compilation flag REG_NEWLINE above (cflag=newline)).
+.RE
+.RE
+
+.PP
+.SH FILES
+.SH "SEE ALSO"
+mmdftailor(5), regexe(3)
+\fIConfiguring MMDF Regular expression table\fR
