@@ -1,3 +1,68 @@
+Changes between 2.44b4 and 2.44+a6
+   - make install creates files.list of installed files
+   - first attempt of esmtp-support
+     + smtpsrvr: command recognition
+     + helo/ehlo finished
+     + MAIL-cmd: SIZE, 8BITMIME, DSN currently disabled
+     + RCPT-cmd: DSN currently disabled
+     + smtp-client: added extension SIZE and DSN of MAIL FROM, RCPT TO
+       currently disabled 
+   - first attempt of wildcard-support
+   - Added first attempt of rbl-support
+   - Added program check.pl
+   - Submit: added checking of sender
+
+Changes from 2.44b3 to 2.44b4
+Mon Aug 16 20:07:18 CEST 1999 Kai Krueger <krueger@mathematik.uni-kl.de>
+   - incorporated changes made by Brad Allen <Ulmo@Q.Net>
+     + some fixes in the Makefiles
+     + added site-dependent tree conf/linux2.2-glibc2.1-fhs2.0
+     + removed compiler warnings 'comment within comment'
+     + bug fix in lib/addr/ap_1adr.c (freeing address-chain)
+     + fixed some spelling bugs
+     + typeconversion of res_mkquery in lib/table/tb_ns.c
+     + pretty printing of time: removed cleartext timezone output
+     + added man-page address.3
+     + added sh-configure
+     + Added some explicit type definition
+     + replaced some strcpy by strncpy, sprintf by snprintf
+     + changed mode-range of checkup
+     + fixed some implicit const char * definitions
+     + changed getenv("ACCTSYS") into getenv("UU_MACHINE") in
+       src/uucp/rmail.c
+     + changed install directory of v6mail from <somewhere>/mmdf/lib
+       to <bindir>
+     + pathname changes of uip/ucbmail/v7.local.h
+     + 
+
+   - moved old Makefiles conf/*/Makefile.src, conf/*/Makefile.lib and 
+     conf/*/Makefile.uip to attic
+   - work on configure:
+     + changed default protection from 711 to 511
+     + Added option enable/disable the patnames according to fhs 2.0
+       Please refer to README.pathnames for details.
+     + rewrite of configure and Makefile conf/*/conf.c so that pathname
+       option, variables and defines are the same as the definition in 
+       mmdftailor.
+     + Added check for libtermcap
+     + some fixes on the checks for a dbm-library
+     + Added checks for mkstemp(), snprintf(), strncpy(), strncat(),
+       tzset(), getshort and _getshort()
+     + check for existence of program xstr. If not disable compilation 
+       of ucbmail
+   - autoconf/*.m4: changes due to changes of variables, and pathnames
+   - conf/*/*.[ch]: changes due to changes of pathname-defines
+   - replaced nearly all possible sprintf by snprintf and strcpy by
+     strncpy
+   - added snprintf-fake For those machines that don't have any
+     snprintf(). CAUTION: this fake is using vsprintf() if
+     vsnprintf() does not exists!
+   - h/ch.h, lib/table/ch_*.c and related programs
+     replace if-commands by case-command for an easier implementation of
+     new table types.(currently supported: DBM/SEQ, NS, NIS)
+   - use tzset() if exists, envirenment variable TZ if not.
+
+Older Changes:
 - Major cleanup of the defines SYS5, SYS5r3, V4_?BSD, a.s.o.
   added configure and h/config.h with all the new defines for each
   specific OS-depend function/component. 
