@@ -465,7 +465,7 @@ process (tblptr)
       if (Debug || Verbose)
           fprintf (stderr, "   (NIS table)\n");
       return;
-      break:
+      break;
 #endif /* HAVE_NIS */
         default:
           break;
