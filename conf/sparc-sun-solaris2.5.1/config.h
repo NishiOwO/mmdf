@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.3 1999/08/12 13:15:34 krueger Exp $
+ * $Id: config.h,v 1.4 2001/01/19 13:22:58 mmdf Exp $
  *
  * please set every configuration-switch here
  *
@@ -146,7 +146,7 @@
  *             als  properly, use of this option is strongly
  *             advised.
  */
-#define NODOMLIT
+/* #define NODOMLIT */
 
 /*             Enables intpretation of dots as delimiters on
  *             the  LHS  of an @ in addresses.  For example,
@@ -190,7 +190,7 @@
  *             Tailor the CONFIGDEFS  line  to  your  site's
  *             requirements and system type. 
  */
-#define STATSORT
+/* #define STATSORT */
 
 /**********************************************************************/
 /*             Enable site depend code
