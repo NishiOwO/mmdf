@@ -8,6 +8,7 @@
 static char *sccsid = "@(#)sigretro.c	5.2 (Berkeley) 6/21/85";
 #endif not lint
 
+#include "config.h"
 #include <signal.h>
 #include <errno.h>
 #include <setjmp.h>
@@ -28,7 +29,7 @@ static char *sccsid = "@(#)sigretro.c	5.2 (Berkeley) 6/21/85";
  *		child process after fork(2)
  */
 
-typedef	int	(*RETSIGTYPE)();
+/*typedef	int	(*RETSIGTYPE)();*/
 
 RETSIGTYPE	sigdisp(), sighold(), sigignore();
 

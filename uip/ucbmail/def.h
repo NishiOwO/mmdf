@@ -260,6 +260,10 @@ struct ignore {
 
 #ifndef HAVE_SIGSET
 #  define	sigset(s, a)	signal(s, a)
+#else
+/* ERROR*/
+#endif
+#ifndef HAVE_SIGSYS
 #  define	sigsys(s, a)	signal(s, a)
 #else
 /* ERROR*/
