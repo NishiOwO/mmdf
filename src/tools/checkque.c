@@ -60,6 +60,25 @@
 #include <string.h>
 #endif
 
+#if HAVE_DIRENT_H  /* XXX rja, krueger */
+#  include <dirent.h>
+#  define NAMLEN(dirent) strlen((dirent)->d_name)
+#  define dirtype dirent
+#else /* HAVE_DIRENT_H */
+#  define dirtype direct
+#  define dirent direct
+#  define NAMLEN(dirent) (dirent)->d_namlen
+#  if HAVE_SYS_NDIR_H
+#    include <sys/ndir.h>
+#  endif
+#  if HAVE_SYS_DIR_H
+#    include <sys/dir.h>
+#  endif
+#  if HAVE_NDIR_H
+#    include <ndir.h>
+#  endif
+#endif /* HAVE_DIRENT_H */
+
 #define WARNTIME	(60L * 60L * 24) /* 1 day */
 
 extern time_t time();

@@ -59,6 +59,25 @@
 #ifdef HAVE_SGTTY_H
 #  include <sgtty.h>
 #endif /* HAVE_SGTTY_H */
+#if HAVE_DIRENT_H  /* XXX rja, krueger */
+#  include <dirent.h>
+#  define NAMLEN(dirent) strlen((dirent)->d_name)
+#  define dirtype dirent
+#else /* HAVE_DIRENT_H */
+#  define dirtype direct
+#  define dirent direct
+#  define NAMLEN(dirent) (dirent)->d_namlen
+#  if HAVE_SYS_NDIR_H
+#    include <sys/ndir.h>
+#  endif
+#  if HAVE_SYS_DIR_H
+#    include <sys/dir.h>
+#  endif
+#  if HAVE_NDIR_H
+#    include <ndir.h>
+#  endif
+#endif /* HAVE_DIRENT_H */
+
 /* ***        RUN SETUID TO ROOT, so it can setuid to MMDF          *** */
 /* ***                                                              *** */
 /* ***  This is so that BOTH real and effective id's show as MMDF   *** */

@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.26 1998/06/01 09:46:36 krueger Exp $
+ * $Id: config.h.in,v 1.27 1998/06/15 20:26:37 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -426,25 +426,6 @@
 #undef HAVE_NOSRCROUTE
 
 /*****************************************************************************/
-#if HAVE_DIRENT_H
-#  include <dirent.h>
-#  define NAMLEN(dirent) strlen((dirent)->d_name)
-#  define dirtype dirent
-#else /* HAVE_DIRENT_H */
-#  define dirtype direct
-#  define dirent direct
-#  define NAMLEN(dirent) (dirent)->d_namlen
-#  if HAVE_SYS_NDIR_H
-#    include <sys/ndir.h>
-#  endif
-#  if HAVE_SYS_DIR_H
-#    include <sys/dir.h>
-#  endif
-#  if HAVE_NDIR_H
-#    include <ndir.h>
-#  endif
-#endif /* HAVE_DIRENT_H */
-
 #if STDC_HEADERS
 #  include <string.h>
 #else

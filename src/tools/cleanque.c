@@ -1,4 +1,4 @@
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.10 1998/05/31 15:43:49 krueger Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.11 1998/06/15 20:26:41 krueger Exp $ */
 /*
  *     MULTI-CHANNEL MEMO DISTRIBUTION FACILITY  (MMDF)
  *     
@@ -37,6 +37,25 @@
 #include "ch.h"
 #include <sys/stat.h>
 #include "ml_send.h"
+
+#if HAVE_DIRENT_H  /* XXX rja, krueger */
+#  include <dirent.h>
+#  define NAMLEN(dirent) strlen((dirent)->d_name)
+#  define dirtype dirent
+#else /* HAVE_DIRENT_H */
+#  define dirtype direct
+#  define dirent direct
+#  define NAMLEN(dirent) (dirent)->d_namlen
+#  if HAVE_SYS_NDIR_H
+#    include <sys/ndir.h>
+#  endif
+#  if HAVE_SYS_DIR_H
+#    include <sys/dir.h>
+#  endif
+#  if HAVE_NDIR_H
+#    include <ndir.h>
+#  endif
+#endif /* HAVE_DIRENT_H */
 
 /*  QUECLEAN:  Clean up the mail queue directories                      */
 
