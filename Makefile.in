@@ -152,6 +152,8 @@ dirs:
 		mkdir -p ${install_prefix}${prefix}; \
 		chmod 755 ${install_prefix}${prefix}; \
 	fi
+	-if test ! -x ${install_prefix}/bin; then \
+		mkdir -p ${install_prefix}/bin; fi
 	-if test ! -x ${install_prefix}/usr/lib; then \
 		mkdir -p ${install_prefix}/usr/lib; fi
 	-if test ! -x ${install_prefix}${bindir}; then \

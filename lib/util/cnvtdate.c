@@ -25,7 +25,6 @@ char *datbuf;
 {
 	register	struct	tm	*i;
 			time_t		tsec;
-
 	int tz_num = timezone/36;
 
     if (tz_num < 0) tz_num = -tz_num;
