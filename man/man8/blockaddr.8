@@ -1,0 +1,121 @@
+.TH "BLOCKADDR" 8 "3 Dec 87"
+.SH NAME
+blockaddr \- Address blocking channel for MMDF
+.SH SYNOPSIS
+blockaddr
+.SH DESCRIPTION
+.I Blockaddr
+is an MMDF channel program for intercepting mail to outdated addresses
+and sending an explanation to the sender about the address change.
+This program is called by the program \fIdeliver\fR and is not
+meant to be invoked by users directly.
+.PP
+Depending on the setting of the first character of the
+confstr= \fImmdftailor\fR channel parameter,
+the 
+.I blockaddr 
+channel operates in either ``reject'' (confstr=``r...'') or ``warn''
+(confstr=``w...'') mode.  In the ``reject''
+mode, all mail is returned to the original sender with the reason
+``Hostname no longer valid'' or ``Username no longer valid''.  A separate
+message is sent to the
+original sender explaining that the addresses used have been changed to
+something new.
+In the ``warn'' mode, all mail is resubmitted for normal
+delivery.  In the case of usernames on the local machine, mail is resubmitted
+to the ~username address to avoid alias loops.
+A separate message is sent to the sender of the original
+message explaining that the addresses used are about to expire but that the
+mail was delivered anyway.
+.PP
+When an explanatory message is sent to the original sender, either in ``warn''
+or ``reject'' mode, the initial text
+of the message is taken from a file specified by the rest (i.e. beginning at
+the second character) of the channel's
+confstr= \fImmdftailor\fR channel parameter.
+If this file is missing or its name is omitted,
+.I
+blockaddr
+inserts its own initial text.  Appended to this initial text
+is the list of addresses processed by the
+.I 
+blockaddr
+channel and an explanation from the RHS of the channel's table about why the
+address is no longer valid.  If the channel table does not contain an entry for
+the address (see the example below), then
+.I blockaddr
+uses a ``canned'' message instead.
+.PP
+Note that you must include a host= 
+.I locname.locdomain
+parameter in the MCHN entry.
+.SH EXAMPLE
+To set up
+.I blockaddr
+channels to handle both expired users and soon-to-expire hostnames, 
+put the following entries in your \fImmdftailor\fR file:
+.nf
+.ta 1.0i
+.sp
+.in +.6i
+MCHN	blockhost, show=``Block Host Channel'', que=blockhost, tbl=blockhost,
+	pgm=blockaddr, mod=reg, mod=send, host=dev.cs.net, 
+	confstr=``w/mmdf/table/warnhosts'', ap=822
+.sp
+MCHN	blockuser, show=``Block User Channel'', que=blockuser, tbl=blockuser,
+	pgm=blockaddr, mod=reg, mod=send, host=dev.cs.net, 
+	confstr=``r/mmdf/table/rejectuser'', ap=822
+.in -.6i
+.fi
+.sp
+Put the following lines in your Top-Level domain table:
+.nf
+.ta 1.0i
+.in +.6i
+blockuser:	blockuser
+blockhost:	blockhost
+acme-cs:	cs.acme.com,blockhost
+beta-vax:	beta.com,blockhost
+.in -.6i
+.fi
+.sp
+Put the following lines in your alias table:
+.nf
+.ta 1.0i
+.in +.6i
+ted:	ted@blockuser
+alice:	alice@blockuser
+.in -.6i
+.fi
+.sp
+Put the following lines in your blockhost channel table:
+.nf
+.ta 1.0i
+.in +.6i
+blockhost:	blockhost
+cs.acme.com:	``Address all mail to Acme Co. as user@host.acme.com''
+beta.com:	``All users at Beta Co. are now user@beta.com''
+.in -.6i
+.fi
+.sp
+Put the following lines in your blockuser channel table:
+.nf
+.ta 1.0i
+.in +.6i
+blockuser:	blockuser
+ted:	``Ted disappeared--if you see him, contact the FBI''
+alice:	``Alice's new address is (groan) alice@competitor.com''
+.in -.6i
+.fi
+.PP
+In this example, mail to ``fred@acme-cs'' would be routed through the blockhost
+channel which would send it along to ``fred@cs.acme.com'' and would send a
+message
+to the sender saying that the address used was about to expire and to ``Address
+all mail to Acme Co. as user@host.acme.com''.  Mail to the local user ``alice''
+would be returned to the sender and
+.I blockaddr
+would send an explanatory message
+saying that ``Alice's new address is (groan) alice@competitor.com''.
+.SH SEE ALSO
+\fIdeliver\fR(8), \fIsubmit\fR(8), ``Configuring MMDF Authorisation''

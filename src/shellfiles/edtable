@@ -1,0 +1,59 @@
+# Edtable edits the mmdf database using dbmedit.  Usage is
+#
+# edtable table_name old_file new_file
+#
+# where table_name is the name of the mmdf table,  old_file  is  the  current
+# file  from  which  table_name is built, and new_file is the data we want in
+# the table now.  Edtable  compares  old_file  with  new_file  and  generates
+# appropriate add/change/delete commands for dbmedit. Edtable copies new_file
+# on top of old_file and deletes new_file.
+#
+# Don't try to update very large (eg pathalias) tables with this.  You
+# might as well run dbmedit because the seds and awks are slow.  This
+# is designed to fix small tables in a large database.
+#
+#                                 Steve Losen <scl@virginia.acc.virginia.edu>
+
+AWKPROG='
+BEGIN {
+	q="\""
+	tname="'$1'"
+}
+$1 != key {
+	if (key) {
+		if (edit == "delete")
+			print edit, q key q, tname
+		else
+			print edit, q key q, tname, q value q
+	}
+	key=$1
+	value=$2
+	if ($3 == "old")
+		edit="delete"
+	else
+		edit="add"
+	next
+}
+value == $2 {
+	key = ""
+	next
+}
+{
+	edit = "change"
+	if ($3 == "new") value = $2
+}
+END {
+	if (key) {
+		if (edit == "delete")
+			print edit, q key q, tname
+		else
+			print edit, q key q, tname, q value q
+	}
+}' 
+
+{
+	sed -e 's/["\]/\\&/g' -e "s/$/:old/" $2
+	sed -e 's/["\]/\\&/g' -e "s/$/:new/" $3
+} | sort | awk -F: "$AWKPROG" | /usr/mmdf/table/dbmedit > /dev/null
+/bin/cp $3 $2
+/bin/rm -f $3

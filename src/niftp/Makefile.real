@@ -1,0 +1,54 @@
+#
+#   niftp (jntmail) channel
+#
+MODULES =       hdr_proc ni_mail ni_niftp pn_wtmail qn2mm_send \
+		qn_rdmail rtn_proc qu2pn_send
+
+OBJECTS =       hdr_proc.o ni_mail.o ni_niftp.o pn_wtmail.o qn2mm_send.o \
+		qn_rdmail.o rtn_proc.o qu2pn_send.o
+
+SOURCES =       hdr_proc.c ni_mail.c ni_niftp.c pn_wtmail.c qn2mm_send.c \
+		qn_rdmail.c rtn_proc.c qu2pn_send.c
+
+real-default:   niftp ni_niftp
+
+install:        $(CHANDIR)/$(MMPREF)niftp $(LIBDIR)/$(MMPREF)ni_niftp
+
+$(CHANDIR)/$(MMPREF)niftp:      xniftp
+	$(INSTALL) -c -m 04$(PGMPROT)   -o daemon  xniftp $(CHANDIR)/$(MMPREF)niftp
+#	cp xniftp $(CHANDIR)/$(MMPREF)niftp
+#	-$(CHOWN) daemon $(CHANDIR)/$(MMPREF)niftp
+#	-chmod 04$(PGMPROT) $(CHANDIR)/$(MMPREF)niftp
+	-@ls -ls $(CHANDIR)/$(MMPREF)niftp
+	-@echo "niftp installed normally"; echo ""
+
+niftp:  xniftp
+xniftp: ch_niftp.o qu2pn_send.o pn_wtmail.o $(MMDFLIBS)
+	    $(CC) $(LDFLAGS) -o $@ ch_niftp.o qu2pn_send.o \
+		pn_wtmail.o $(MMDFLIBS) $(SYSLIBS)
+
+
+$(LIBDIR)/$(MMPREF)ni_niftp:      xni_niftp
+	$(INSTALL) -c -m 04$(PGMPROT)   -o daemon  xni_niftp $(CHANDIR)/$(MMPREF)ni_niftp
+#	cp xni_niftp $(LIBDIR)/$(MMPREF)ni_niftp
+#	-$(CHOWN) mmdf $(LIBDIR)/$(MMPREF)ni_niftp
+#	-chmod 04$(PGMPROT) $(LIBDIR)/$(MMPREF)ni_niftp
+	-@ls -ls $(LIBDIR)/$(MMPREF)ni_niftp
+	-@echo "ni_niftp installed normally"; echo ""
+
+ni_niftp:  xni_niftp
+xni_niftp: ni_niftp.o qn2mm_send.o qn_rdmail.o hdr_proc.o rtn_proc.o  \
+		$(MMDFLIBS)
+	    $(CC) $(LDFLAGS) -o $@ ni_niftp.o qn2mm_send.o qn_rdmail.o \
+		hdr_proc.o rtn_proc.o $(MMDFLIBS) $(SYSLIBS)
+
+
+
+lint:   ;  $(LINT) $(LFLAGS) $(SOURCES) $(LLIBS)
+
+clean:
+	-rm -f xni_niftp xniftp *.o x.c makedep eddep make.out errs
+
+
+# DO NOT DELETE THIS LINE -- make depend uses it
+

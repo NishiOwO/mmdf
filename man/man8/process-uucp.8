@@ -1,0 +1,99 @@
+.TH PROCESS-UUCP 8 "November 11, 1987" "U of Kentucky" "Brand X Programmer's Manual"
+.SH NAME
+process-uucp \- generate MMDF mail style domain and channel tables from pathalias output
+.SH SYNOPSIS
+.B process-uucp
+[
+.B \-r
+relay-host ] [
+.B \-c
+host ... ] [
+.B \-d
+domain ... ] file ... 
+.SH DESCRIPTION
+.B Process-uucp(8)
+takes output from pathalias and generates tables one would want to use
+within MMDF for routing UUCP based mail.
+The two type of tables which can be generated are channel tables
+and domain tables.
+.PP
+By default, the domain tables contain entries of the form:
+.nf
+
+    domain: domain.upper.domain
+
+.fi
+And channel table entries are of the form:
+.nf
+
+    domain.upper.domain: path!path!path!%s
+
+.fi
+These tables can be modified by the following options:
+.IP -r
+This option causes domain entries to be changed to have the form:
+.nf
+
+    domain: domain.upper.domain, relay-host
+
+.nf
+Locally I use this option in generating the original table, then
+when installing the table I run the following sed command:
+.nf
+
+    sed "s/, *`hostname`.*$//" <table.new >table
+
+.fi
+which will remove the ", relay-host" stuff when we're installing
+the table on "relay-host".
+We have one host here which interfaces us to the UUCP network,
+and that host is what is listed as relay-host.
+.IP -c
+This option causes there to be generated many channel tables
+depending on the first host of the path.
+The intention is to have authorization set up so that channels
+where we pay out money to make the UUCP connection can be restricted
+from people as necessary.
+However, I have not managed to understand authorization as yet
+and this is not used.
+.IP -d
+This option selects domains for which to make extra domain tables.
+Domain entries for domains not listed in a -d option are
+put into wrkdmn.uucp-top with an entry like:
+.nf
+
+    domain.upper.domain: domain.upper.domain
+
+.fi
+Sometimes it is desired to have other domains seperated out into
+their own tables.
+If -d is used, entries in these tables will be as described earlier.
+.PP
+NOTE that a wrkdmn.uucp-uucp file is not automatically created.
+.SH FILES
+wrkchn.uucp-uucp, wrkchn.uucp-<host>, wrkdmn.uucp-top, wrkdmn.uucp-<domain>
+.SH SEE ALSO
+pathalias(1), the MMDF manual pages and installation documents,
+.br
+<mmdf-sources>/src/shellfiles/RUN-UUCP, <mmdf-sources>/src/shellfiles/PROCESS-UUCP
+.SH AUTHOR
+David Herron -- Resident E-Mail Hack
+.br
+University of Kentucky
+.br
+Mathematical Sciences
+.br
+Patterson Office Tower rm 907
+.br
+Lexington, KY  40506
+.br
+.sp 1
+david@ms.uky.edu, {rutgers,uunet,cbosgd}!ukma!david, david@ukma.bitnet
+.SH BUGS
+When writing records to files, all opens are done in "append" mode.
+This means that if you do not remove the files before you run process-uucp
+then you probably won't get what you really want.
+.PP
+The file names chosen are arguably silly.
+However for my justification of the file names,
+see the comments in the source.

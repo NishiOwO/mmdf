@@ -1,0 +1,35 @@
+.TH EMACTOVI 1 "23 Apr 88"
+.SH NAME
+emactovi \- process two messages into one and edit
+.SH SYNOPSIS
+.B emactovi 
+editor oldmessagefile newmessagefile
+.SH DESCRIPTION
+.P
+.I Emactovi
+is intended to be used by
+.IR msg (1)
+when in the 2-window reply mode.
+When
+.I msg
+exec's the EDITOR in this mode,
+two file names are provided as arguments.
+The first file holds a copy of the message being replied to,
+the second file is for the new message.
+.I Emactovi
+copies the first file into the second file then exec's the
+program whose name is given by the first arguement.
+A citation line is created in the new message from the date of
+the original message and the entire first message is copied into
+the second with each line preceeded by a ``>''.
+.P
+New filters may be created so long as they copy ``oldmessagefile''
+into ``newmessagefile'' and exec ``program''.
+.SH "SEE ALSO"
+msg(1)
+.SH DIAGNOSTICS
+None.
+.SH BUGS
+Cockroaches.
+.SH AUTHOR
+Edward C. Bennett

@@ -1,0 +1,90 @@
+.TH SMSLAVE 8
+.SH NAME
+smslave \- MMDF SMTP-over-PhoneNet Slave Program
+.SH SYNOPSIS
+smslave
+.SH DESCRIPTION
+.PP
+The \fIsmslave\fR program is the passive component of the
+SMTP-over-PhoneNet protocol
+package.  The active component is the \fIsmphone\fR channel (see
+\fIsmphone\fR(8)).
+Typically, \fIsmslave\fR is the login shell for an account which is reserved
+for picking up mail on a particular channel.  When invoked, \fIsmslave\fR asks
+for the channel name of a pobox channel defined in the runtime tailoring file.
+The user= field in that channel's definition must match the username of the
+account running \fIsmslave\fR.
+.LP
+If a valid channel specification has been given, 
+\fIsmslave\fR starts up the PhoneNet link-level protocol (dial package).
+The dial package uses the default illegal character sets configured in
+conf_dial.c and (possibly) overridden by DBADIN, DBADOUT, or DBAD in the
+runtime tailoring file.  See section 3.13 of the ``Installing and Operating
+MMDF II'' document for more information regarding illegal character sets.
+The dial package defaults to a packet window size of 1.  It is the master's
+responsibility to override that default if desired (see the ``window'' command
+documented in script(5)).
+.LP
+The SMTP-over-PhoneNet system uses the dial package as the transport level for
+sending and receiving messages with standard SMTP (see RFC821).  The only
+addition to conventional SMTP's is that the TURN command is implemented.  
+\fISmslave\fR first acts as the ``smtpsrvr'', accepting mail from the remote
+machine, and then, upon receipt of a TURN command, switches roles and acts as
+the SMTP sender, sending any queued mail to the remote machine.  
+.LP 
+When acting as the SMTP sender, \fIsmslave\fR invokes 
+\fIdeliver\fR in pickup mode (-p) on the specified channel.  The \fIpobox\fR
+program manages the interface between \fIsmslave\fR (i.e. the dial package) 
+and \fIdeliver\fR (i.e. the mail queue).  
+.LP
+When acting as the ``smtpsrvr'', \fIsmslave\fR passes messages to the local
+\fIsubmit\fR program
+which queues messages on the local machine.  The source channel
+and host are set according to the values defined for the specified pobox
+channel.
+.SH "EXAMPLE"
+In the following example dialog, ``S'' indicates the \fIsmslave\fR and ``P''
+indicates the \fIsmphone\fR.  One message is sent each way and then the call
+is terminated.
+.nf
+
+	S: 220 Server SMTP (Complaints/bugs to: MMDF@A.CS.OKSTATE.EDU)
+	P: HELO RELAY.CS.NET
+	S: 250 a.cs.okstate.edu
+	P: MAIL FROM:<@RELAY.CS.NET:long@sh.cs.net>
+	S: 250 OK
+	P: RCPT TO:<vasoll@a.cs.okstate.edu>
+	S: 250 Recipient OK.
+	P: DATA
+	S: 354 Enter Mail, end by a line with only '.'
+	P: Date: Tue 9 Jun 87 16:38:19 EDT
+	P: From: long@sh.cs.net
+	P: To: vasoll@a.cs.okstate.edu
+	P: 
+	P: Hello, there.
+	P: .
+	S: 250 Submitted & queued (msg.aa00125)
+	P: TURN
+	S: 250 OK
+	P: 220 Server SMTP (Complaints/bugs to MMDF@RELAY.CS.NET)
+	S: HELO a.cs.okstate.edu
+	P: 250 RELAY.CS.NET
+	S: MAIL FROM:<@RELAY.CS.NET:long@sh.cs.net>
+	P: 250 OK
+	S: RCPT TO:<vasoll@a.cs.okstate.edu>
+	P: 250 Recipient OK.
+	S: DATA
+	P: 354 Enter Mail, end by a line with only '.'
+	S: Date: Tue 9 Jun 87 13:33:48 EDT
+	S: From: vasoll@a.cs.okstate.edu
+	S: To: long@relay.cs.net
+	S:
+	S: It works!
+	S: .
+	P: 250 Submitted & queued (msg.aa10744)
+	S: QUIT
+	P: 221 session complete at Wed Jun 10 03:58:23.
+.fi
+.SH "SEE ALSO"
+\fIsmphone\fR(8), \fIsubmit\fR(8), \fIdeliver\fR(8), RFC821
+

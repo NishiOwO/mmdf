@@ -1,0 +1,35 @@
+.tr ~
+.de NP
+.IP "\fI\\$1\fP" 10
+..
+.de II
+.nr P- \\n()P	 \" save the preceeding IP space
+.nr )P 0	\" now set it to 0
+.NP "\\$1\fP"
+.nr )P \\n(P-	 \" restore the preceeding IP space
+..
+.ds M \fI.forward\fP
+.TH FORWARD 5 "21 January 1986"
+.SH NAME
+forward
+.SH SYNOPSIS
+Mail forwarding file
+.SH DESCRIPTION
+While MMDF is working on delivering a message it (submit) looks
+in the users home directory to see if they have a .forward file.
+If this file exists,
+is owned by either the user or one of MMDFs ``priveledged'' users,
+and is publicly readable 
+then its contents are treated as an alias, and used to send the mail to the
+specified address(es).
+.PP
+The format of alias values is described in tables(5).
+MMDF acts as if the alias were:
+.nf
+    user: contents-of-file
+.fi
+.PP
+.SH FILES
+$HOME/.forward
+.SH "SEE ALSO"
+rcvtrip(1) maildelivery(5) tables(5)

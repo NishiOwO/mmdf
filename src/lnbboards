@@ -1,0 +1,30 @@
+#
+# lnbboards - relink the pop code to the bboards code
+#
+# Since the source code for the bboards and pop channels is identical,
+# the two directories have links to the same files. After installing a
+# set of updates, this script should be run to bring the two directories
+# back in phase.
+#
+# Edward C. Bennett - 11/89
+#
+rm -f bboards/bb_wtmail.c bboards/bboards.h bboards/ch_bboards.c
+rm -f bboards/dropsbr.c bboards/dropsbr.h bboards/getbbent.c bboards/lock.c
+rm -f bboards/mmdfonly.c bboards/mmdfonly.h bboards/mts.h bboards/qu2bb_send.c
+rm -f bboards/r1bindex.c bboards/strindex.c bboards/strings.h bboards/uprf.c
+
+ln pop/bboards.h bboards/bboards.h
+ln pop/ch_pop.c bboards/ch_bboards.c
+ln pop/dropsbr.c bboards/dropsbr.c
+ln pop/dropsbr.h bboards/dropsbr.h
+ln pop/getbbent.c bboards/getbbent.c
+ln pop/lock.c bboards/lock.c
+ln pop/mmdfonly.c bboards/mmdfonly.c
+ln pop/mmdfonly.h bboards/mmdfonly.h
+ln pop/mts.h bboards/mts.h
+ln pop/po_wtmail.c bboards/bb_wtmail.c
+ln pop/qu2po_send.c bboards/qu2bb_send.c
+ln pop/r1bindex.c bboards/r1bindex.c
+ln pop/strindex.c bboards/strindex.c
+ln pop/strings.h bboards/strings.h
+ln pop/uprf.c bboards/uprf.c

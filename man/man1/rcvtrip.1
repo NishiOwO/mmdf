@@ -1,0 +1,128 @@
+.TH RCVTRIP 1 "5 December 1984"
+.SH NAME
+rcvtrip \- notifies mail sender that recipient is away.
+.SH SYNOPSIS
+.B rcvtrip
+[
+.B \-d
+] [
+.B address
+]
+.SH DESCRIPTION
+.I Rcvtrip
+makes it possible for you
+to notify the sender of a message that you are on
+holiday and you won't be answering your mail for some time.
+.I Rcvtrip
+is run by MMDF on your behalf rather than by you directly.
+.PP
+To enable use of
+.I rcvtrip,
+put the following line in your .maildelivery file:
+.sp
+.nf
+*    \-    pipe    R    rcvtrip $(sender)
+.fi
+.sp
+Make sure that your .maildelivery file is not writable by anyone but you.
+You may also place a "custom" reply message in a file named `tripnote'.
+Finally, you should create an empty `triplog' file.
+.PP
+When
+.I rcvtrip 
+processes a message, it performs the following steps:
+.RS
+.IP "1)"
+Decide whether this is the type of message that should get a reply.
+.IP "2)"
+Decide who the reply should get sent to.
+.IP "3)"
+Decide whether this sender has already gotten a reply.
+.RE
+.PP
+.I Rcvtrip
+decides whether this is the type of message that should get a reply by looking
+at the contents of the "Resent-To:", "Resent-Cc:", "To:" and "Cc:" header
+fields.
+If the recipient has an .alter_egos file (described below), 
+then one of the addresses in that file must
+appear in the one of these header fields for a reply to be sent.  
+If the recipient
+does not have an .alter_egos file, then the recipient's name or a first-order
+alias of the recipient's name (e.g. dlong\-\->long) must appear in one of these
+header fields for a reply to be sent.  This procedure insures that
+.I rcvtrip
+will not reply to messages sent to mailing lists, unless the recipient's name
+(or some variant of the recipient's name) is explicitly mentioned in a
+header field.
+.PP
+If
+.I rcvtrip
+has decided that it should send a reply for the message, then it looks at
+several other address fields to determine to whom the reply should be sent.
+It uses, in order of precedence:
+.RS
+.IP "1)"
+addresses in `Resent-Reply-To:' 
+.IP "2)"
+addresses in `Resent-From:' and, if present, `Resent-Sender:'
+.IP "3)"
+addresses in `Reply-To:' 
+.IP "4)"
+addresses in `From:' and either `Sender:', if present, or the
+.B address
+argument from the command line.
+.RE
+.PP
+.I Rcvtrip
+will notify any originator of mail who has not previously been notified
+unless you pre-load their address into the `triplog' file (see below).
+The reply
+begins with some standard text (supplied by
+\fIrcvtrip\fR) followed by whatever
+text the user has placed in the `tripnote' file (or a canned message if
+the `tripnote' file is missing).
+The originators' names are recorded in `triplog', along with the date and
+time the message came in, an indication of whether it was answered (`+'=yes),
+and the first few characters of the subject.
+This appears as:
+.sp
+.nf
++ jpo@nott.ac.uk	Wed Oct 8 16:08 >> about your last message
+.fi
+.SH FILES
+.IP "<login directory>/tripnote" 25
+The user-written reply message is located in this file.
+.IP "<login directory>/triplog" 25
+This contains a list of who sent a message, what was its subject,
+when it arrived, and if a response was sent.  It can also be initialized by
+hand to contain
+the addresses, one per line, which are not to receive replies.
+.IP "<login directory>/logfile" 25
+If this file exists, then 
+.I rcvtrip
+will log diagnostic information into it.
+If the \fB\-d\fR switch is given, then extensive output is
+generated for debugging purposes. It is not a good idea to leave
+\fB\-d\fR enabled if this file is left lying around, 
+as the output can be quite voluminous.
+.IP "<login directory>/.alter_egos" 25
+The optional file composed of `user@domain' lines for all addresses to be
+considered `you'.  This is needed if you have multiple hosts forwarding their
+mail to you.  If this file is present, then the standard comparisons against
+your username and first-level aliases of your username do not occur.  
+.IP "<login directory>/.maildelivery" 25
+The user's mail delivery specification file.  The example above shows the line
+that should be added to .maildelivery to enable use of
+.I rcvtrip.
+In this line, the $(sender) argument is optional (but recommended).
+You may need to give the full pathname of
+.I rcvtrip
+if it is not in the search path of a vanilla /bin/sh.
+.SH SEE ALSO
+rcvalert(1), maildelivery(5)
+.SH AUTHOR
+.nf
+Bruce Whittaker (Initial Version)
+.br
+Julian Onions (Total Rewrite)

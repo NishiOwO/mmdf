@@ -1,0 +1,20 @@
+.TH TABLELIST 8 "14 March 1988"
+.SH NAME
+tablelist \- list tables referenced by a tailorfile
+.SH SYNOPSIS
+tablelist [ \-t tailorfile ]
+.SH DESCRIPTION
+.I Tablelist
+lists the filenames referenced in an MMDF runtime tailor file.  If no
+tailor file is specified, then the standard tailor file for this system is used.
+.PP
+One possible use for
+.I tablelist
+is in building makefile dependencies for the MMDF hashed database.
+This is especially useful if one machine acts as the table distributor for
+several other machines. 
+.I Tablelist
+can be used to insure that all files are in place before beginning the 
+.I dbmbuild.
+.SH "SEE ALSO"
+tables(5), dbmbuild(8), "Installing and Operating MMDFII", make(1)

@@ -1,0 +1,133 @@
+.TH SMPHONE 8
+.SH NAME
+smphone \- MMDF SMTP-over-PhoneNet Phone Channel
+.SH SYNOPSIS
+smphone
+.SH DESCRIPTION
+.PP
+The \fIsmphone\fR channel is the active (or master) component of the
+SMTP-over-PhoneNet protocol
+package.  The passive component is the \fIsmslave\fR program
+(see \fIsmslave\fR(8)).
+\fISmphone\fR establishes a connection to a remote machine's \fIsmslave\fR
+by following
+the instructions contained in a dialing script.  The dialing script is
+specified in the channel's definition in the runtime tailoring file by the scr=
+parameter.  Scripts reside, by default, in the table directory.  See script(5)
+for information about how to construct a dialing script.
+.PP
+Once a connection has been established, the ``start'' command initiates
+the PhoneNet link-level (dial) protocol.  Several dial package parameters are
+set by commands in the dialing script.  The default illegal character sets are
+typically compiled into conf_dial.c but those defaults may be overridden by 
+using the DBADIN, DBADOUT, or DBAD specifications in the
+runtime tailoring file (see section 3.13 of the ``Installing and Operating
+MMDF II'' document).  The defaults may be further superseded by specifying
+replacement illegal character sets in the dialing script.
+The dial package defaults to a packet window size of 1.  It is the master's
+responsibility to override that default if desired (see the ``window'' command
+documented in script(5)).
+.PP
+\fISmphone\fR is a two-way channel; mail queued on the local machine is 
+delivered
+to the remote machine and mail queued on the remote machine is picked up.
+If \fIdeliver\fR is called on a \fIsmphone\fR channel and mail is queued
+for that channel, a connection is attempted immediately.
+If no messages are waiting, then \fIdeliver\fR decides whether to invoke 
+the channel
+to do a pickup of mail from the remote machine.  Such a pickup is called a
+"poll".  \fIDeliver\fR looks at the value of the poll= parameter in the 
+\fIsmphone\fR 
+channel's runtime tailoring file definition to decide whether to initiate a
+poll.  If the value of poll is 0, polls are never performed.  If the value is
+-1, polls are always performed.  Otherwise, the value of poll 
+represents the number of 15-minute intervals to wait before doing a poll.  For
+example, if poll=3 and no messages are queued to be sent out, then any
+\fIdeliver\fR's attempted within 45 minutes of the last successful pickup will 
+return immediately without attempting connection to the remote machine.
+.PP
+The SMTP-over-PhoneNet system uses the dial package as the transport level for
+sending and receiving messages with standard SMTP (see RFC821).  The only
+addition to conventional SMTP's is that the TURN command is implemented.  
+\fISmphone\fR first acts as the SMTP sender, sending any queued mail to the
+remote machine.  Then it sends the TURN command and switches to the 
+``smtpsrvr'' role, accepting mail from the remote machine.  When it receives a
+QUIT command from the remote machine indicating that all messages have been
+picked up, \fIsmphone\fR resumes processing the dialing script
+on the line following the ``start'' command.
+.LP 
+When acting as the ``smtpsrvr'', \fIsmphone\fR passes messages
+to the local \fIsubmit\fR program which queues messages on the local machine.
+The source channel
+and host are set according to the values defined for the specified pobox
+channel.
+.SH "EXAMPLE"
+In the following example dialog, ``S'' indicates the \fIsmslave\fR and ``P''
+indicates the \fIsmphone\fR.  One message is sent each way and then the call
+is terminated.
+.nf
+
+	S: 220 Server SMTP (Complaints/bugs to: MMDF@A.CS.OKSTATE.EDU)
+	P: HELO RELAY.CS.NET
+	S: 250 a.cs.okstate.edu
+	P: MAIL FROM:<@RELAY.CS.NET:long@sh.cs.net>
+	S: 250 OK
+	P: RCPT TO:<vasoll@a.cs.okstate.edu>
+	S: 250 Recipient OK.
+	P: DATA
+	S: 354 Enter Mail, end by a line with only '.'
+	P: Date: Tue 9 Jun 87 16:38:19 EDT
+	P: From: long@sh.cs.net
+	P: To: vasoll@a.cs.okstate.edu
+	P: 
+	P: Hello, there.
+	P: .
+	S: 250 Submitted & queued (msg.aa00125)
+	P: TURN
+	S: 250 OK
+	P: 220 Server SMTP (Complaints/bugs to MMDF@RELAY.CS.NET)
+	S: HELO a.cs.okstate.edu
+	P: 250 RELAY.CS.NET
+	S: MAIL FROM:<@RELAY.CS.NET:long@sh.cs.net>
+	P: 250 OK
+	S: RCPT TO:<vasoll@a.cs.okstate.edu>
+	P: 250 Recipient OK.
+	S: DATA
+	P: 354 Enter Mail, end by a line with only '.'
+	S: Date: Tue 9 Jun 87 13:33:48 EDT
+	S: From: vasoll@a.cs.okstate.edu
+	S: To: long@relay.cs.net
+	S:
+	S: It works!
+	S: .
+	P: 250 Submitted & queued (msg.aa10744)
+	S: QUIT
+	P: 221 session complete at Wed Jun 10 03:58:23.
+
+.fi
+
+.PP
+
+.SH "TROUBLESHOOTING"
+If a connection to a remote \fIsmslave\fR cannot be made, check the PHLOG
+(usually ph.log) for information about why the connection is failing.  If
+possible, try to connect to the remote \fIsmslave\fR by hand.  If the manual
+attempt fails, you know to go check the modem (or direct line) and the remote
+machine for problems.
+.PP
+Often a connection will be made with the remote machine but
+there will be a problem getting to the point where the \fIsmslave\fR begins the
+link-level protocol.  A common error message to see in PHLOG is: 
+``Timeout while processing script''.  This message indicates that a string
+expected by a ``recv'' command was not matched within the specified
+number of seconds.  Look in the transcript file (specified by the trn= channel
+parameter which defaults to DEFTRAN, usually ph.trn) to see why the ``recv''
+string was not matched.  
+.PP
+Often, noise characters can prevent transmitted
+strings from being received correctly by the remote host.  One trick to reduce
+the possibility of interference is to precede transmitted lines with the remote
+machine's line-erase character (e.g. xmit ``@username\\r'').
+.SH "SEE ALSO"
+script(5), \fIsmslave\fR(8), \fIdeliver\fR(8), \fIsubmit\fR(8), RFC821
+

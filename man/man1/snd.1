@@ -1,0 +1,354 @@
+.TH SND 1 "01/29/86"
+.SH NAME
+snd \- send mail (using a visual editor)
+.SH SYNOPSIS
+.B snd
+[address\.\.\.] [\-b\ address\.\.\.] [\-c\ address\.\.\.] [\-h\ host]
+[\-s\ subject] [\-t\ address\.\.\.] [\-f\ file] [\-n]
+.SH DESCRIPTION
+.PP
+.I Snd
+sends messages to a user-specified list of recipients.
+When invoked without arguments, snd places the user in $EDITOR with 
+the "from" line already filled in, and the following fields blank:
+.sp 1
+.RS
+.nf
+To:
+cc:
+Subject:
+.fi
+.sp 1
+.RE
+Snd will select the editor by first looking in the .sendrc for "veditor", then
+for "editor", then $VISUAL, then $EDITOR, and then the default (as
+compiled-in by your system manager).
+The expected user responses are:
+.RS
+.IP "1)" 4
+To the "To:" and "cc:" prompts,
+a list of valid user names (see below).
+.IP "2)" 4
+To the "Subject:" prompt,
+a brief description of the subject of the message.
+.RE
+.PP
+Copies of the message are delivered to recipients on
+the "To:" and "cc:" lists.
+A response to the "To:" prompt is required, unless blind carbon
+copies (bcc) are specified.
+.PP
+The user should fill-in the header fields to the right of the colon.
+.PP
+The user must leave a blank line between the header field and the body
+of the message.  Without the blank line after the headers, the message
+text up to the first blank line will be construed as just a continuation
+of the last header line.  
+.sp
+.SS Arguments
+.PP
+.I "Snd"
+may be invoked with arguments.
+If they are specified, then the
+contents of any resulting fields will be filled in when the user enters the
+editor.
+Unless switches (a character preceded by a dash) are used, the
+arguments are taken to be addresses for the "To:" field.
+.RS
+.IP "\-b" 4
+causes following arguments to be added to the "BCC:" field.
+.IP "\-h" 4
+causes the next argument to be used as the default host reference,
+for addresses not explicitly containing a hostname.  When not
+specified, the default is the local host.
+.IP "\-c" 4
+causes following arguments to be added to the "cc:" field.
+.IP "\-s" 4
+causes the next argument to be used as
+the "Subject:" field's contents.
+.IP "\-t" 4
+causes following arguments to be added to the "To:" field.
+.IP "\-f" 4
+causes following file to be included in the message.
+.IP "\-n" 4
+causes the text input stage to be skipped.  The user is given 
+the "command or ?:" prompt immediately after the header information is given.
+.RE
+.sp
+.SS "Valid User Addresses"
+.PP
+A valid address name takes one of the following forms:
+.RS
+.IP "1)" 4
+A local Unix user's login name, such as "crocker."
+.IP "2)" 4
+A name which has been designated as a local alias, such as "support."
+This usually will not look any different from login names, except
+that it may be longer than their 8-character limit.
+.IP "3)" 4
+The two-part "mailbox@host" address for a user on another machine.
+.RE
+.PP
+Validation of names is done at posting time, and is performed
+by the message delivery system, rather than by
+.I "snd."
+All addresses
+are made to have a host reference.  If the user does not specify
+a host for an address, then the default host is assumed.
+.PP
+The user enters the text of the message below the address and subject fields.
+When the message is completed, or when the user wishes to insert
+a file, s/he merely exits the editor normally.
+.I Snd
+then prompts the user for its next action.
+.sp
+.SS "User Options and Environmental Tailoring"
+.PP
+The user may define a file in his home directory called ".sendrc".  If such a
+file exists,
+.I "snd"
+will open the file and set options as specified,
+otherwise the defaults will be used. Below are listed the options available
+for user modification along with their default values.
+.sp 2
+.IP "aliases"
+.RS
+Allows the user to declare his own set of aliases for use with
+.I "snd."
+Unless this file name begins with a '/', 
+.I snd
+will look for this file in the user's home directory.
+The format for this file is:
+.RS
+aliasname  user1@host,user2@host,user3@host...
+.RE
+Note that each entry must be on a single line but each line may be
+up to 511 characters long.  The host may be eliminated if the default
+host is correct.
+.RE
+.IP "checker"
+.RS
+This will be the user's spelling checker while using \fIsnd\fR.  The default
+for this option is \fIspell\fR.
+.RE
+.IP "copyfile"
+.RS
+This is the file in which copies of messages will be stored if
+requested by the user. Unless the first character of the supplied
+filename is '/', the file will be created in the user's home
+directory. The default for the copyfile is a file
+called ".sent" in the users home directory.
+See also 
+"file, nofile, fileonquery" below.
+.RE
+.IP "draftdir"
+.RS
+If supplied, draft files will be created in this directory.
+Otherwise, they will be created in the user's home directory.  
+Drafts are used for intermediate storage of the message body, and are
+deleted after a normal exit.  Should snd exit abnormally, your message
+will be saved as a draft file.
+Draftdir should be a complete path name.
+.RE
+.IP "editor, veditor"
+.RS
+This will be the user's editor while using
+.I "snd."
+The default for this option is described above.  If both "editor" and "veditor"
+are specified, the latter definition will apply.
+.RE 
+.IP "file, nofile, fileonquery"
+.RS
+The presence of one of these options allows the users to control
+the keeping of file copies. 
+"File"
+will result in a copy being kept of every
+message sent by the user. 
+"Nofile" 
+will turn off the file copy
+option and no copies will ever be kept.
+"Fileonquery"
+will cause
+.I "snd"
+to query the user as to whether a copy should be kept or not.
+.RE
+.IP "header"
+.RS
+This option allows user-defined header lines to be added to the message being
+sent.  The first argument is the field name (e.g. Organization).  The second
+argument is the contents of the field (e.g. West Podunk College).  A separate
+header line will be added for each "header" command in the .sendrc file.
+.RE
+.IP "paging"
+.RS
+Having this in your .sendrc will cause your message to be displayed through
+the "more" program when using the "review message" command.
+.RE
+.IP "signature, nosignature"
+.RS
+.I "Snd"
+will automatically fill in the "From:" field with your address.  The
+form of the contents is either:
+.RS
+login@host  or  Full Name <login@host>
+.RE
+.RE
+where "login" is your Unix login name, and "host"
+is the name of the Unix you are using.  The second form is the default on
+some systems.  On these systems, "Full Name" is derived from the system
+password file.  The "nosignature" command forces \fIsnd\fR to use the form:
+.RS
+login@host
+.RE
+.PP
+You may personalize your messages by including a signature.  If
+your 
+.I ".sendrc"
+file contains a signature line, its contents
+will be used in the "From:" field, ahead of the address information.
+The signature cannot contain any of the following characters
+unless quoted with double quotes: '( ) < > @ , ; : \ \ " . [ ]' 
+and it cannot be blank.
+The program will verify the signature line for correctness at startup
+and will complain if your signature is illegal.
+The "From:" field then will appear as follows:
+.RS
+.sp
+signature <login@host>
+.RE
+.IP "subargs"
+.RS
+Allows the user to specify additional flags for the \fIsubmit\fR program
+('v' and 'm' are always passed). Probably not for general use.
+.RE
+.sp
+.PP
+The format for a typical
+.I ".sendrc"
+profile is shown below:
+.RS
+.nf
+
+copyfile sent_mail
+draftdir /usr/joe/.drafts
+signature Joe Foobar
+subargs w
+editor gemacs
+fileonquery
+aliases joes_aliases
+header Organization "West Podunk College"
+.fi
+.RE
+.SS "Commands"
+.PP
+.I "snd"
+commands must be followed by a carriage return.
+Only enough of a command to make it unique need be typed.
+The following are valid commands:
+.IP "?"
+.br
+displays a list of
+.I "snd's"
+commands.
+.IP "bcc"
+.br
+prompts for addresses for the "BCC:" Blind carbon copies field.
+If any addresses are specified for Blind carbon copies, 
+they receive a slightly different message than those listed in
+"To:" or "cc:".  Their copy has a header component named "BCC:"; its
+contents are the string "(Private)".
+If the message had no "To:" addresses, then the
+"To:" field will contain the string "list:" and there will be no
+BCC field.  In addition, the "To:" and "cc:" fieldnames are modified to prevent
+recipients from
+automatically replying to
+anyone in the "To:" or "cc:" fields.
+.RS
+.IP
+NOTE: If a message has normal and BCC recipients and there is an error
+with a BCC address, the normal addresses will have been processed,
+and the copy of their message sent, before the BCC address error
+is detected.
+.RE
+.IP "quit"
+.br
+exits the
+.I "snd"
+program.
+If the user has not yet sent the message, the user is asked
+to confirm the action.
+A "yes" (or 'y') is required, followed by a <CR>, or the command will
+be aborted and the user returned to the "Command or ?:" prompt.
+.IP "bye"
+.br
+same as "quit".
+.IP "check spelling"
+.br
+will invoke the spelling checker with the draft filename as the argument
+to the checker program.  (See "checker" user option above.)
+.IP "ed"
+.br
+will invoke the user's editor 
+and read in the user's headers, and message body for editing. (See "editor" 
+user option above.)
+.IP "file"
+.br
+indicates the user wishes to append a file to the end of the message body.
+.I "Snd"
+will prompt for file name.
+.IP "post"
+.br
+same as "send".
+.IP "review message"
+.br
+retypes message in its current form.  If "paging" is specified in the .sendrc,
+then the draft will be displayed via the "more" program.
+.IP "send"
+.br
+posts the message to the message delivery system.
+The message is delivered immediately to local users and queued for later
+delivery to non-local users.
+The sender is informed of the posting disposition of the message.
+Each address
+is listed and followed by its status, indicating that the
+address is ok, or that there was a problem.
+.RS
+.PP
+If all addresses are valid, the sender is then informed that the message
+has successfully been posted for delivery.
+If any addresses are found to be invalid, the remaining addresses are
+still checked, but submission is aborted.  The user
+is returned to command input,
+so that he may change the addresses and make them legal.
+.RE
+.IP "set"
+.br
+allows the user to check the current values of option variables. If followed
+by arguments, allows the user to change the current setting of variables.
+The changed value lasts only for the current invocation of 
+.I "snd."
+.IP "program run"
+.br
+allows the user to give a shell command.
+.I "Snd"
+prompts for program.
+The user's response is passed to the shell.
+Control is returned to
+.I "snd"
+when the command has been executed.
+.IP "CTRL-D"
+.br
+same as "quit"
+.SH FILES
+.IP "<login directory>/.sendrc" 38
+user options
+.IP "<login directory>/aliases" 38
+user supplied alias file
+.IP "<login directory>/.sent" 38
+sent messages
+.IP "<login directory>/drft.XXXXXX" 38
+body of current message
+.SH "SEE ALSO"
+v6mail(1), msg(1), resend(1), send(1)
+.SH DIAGNOSTICS
+All diagnostic messages are intended to be self explanatory.

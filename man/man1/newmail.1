@@ -1,0 +1,33 @@
+.TH NEWMAIL 1 "13 Feb 89"
+.SH NAME
+newmail \- determine if you have (new) mail
+.SH SYNOPSIS
+.B newmail 
+.SH DESCRIPTION
+.P
+.I Newmail
+examines your mailbox and determines if you have any new mail.
+If new mail is found, the message
+.sp
+.RS
+You have new mail
+.RE
+.sp
+is displayed.
+If your mailbox contains only old mail, the message
+.sp
+.RS
+You have mail
+.RE
+.sp
+is displayed.
+If your mailbox is empty, no message is displayed.
+.PP
+.I Newmail
+is intended to be called from .profile or .login files.
+.SH DIAGNOSTICS
+None.
+.SH BUGS
+Termites.
+.SH AUTHOR
+Edward C. Bennett

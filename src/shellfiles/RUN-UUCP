@@ -1,0 +1,9 @@
+#! /bin/sh
+
+pathalias \
+	-d cbatt -d vax135 -d ihnp4 -d cbosgd!ihnp4 -d ihnp4!cbosgd \
+	-v -l ukma \
+	d.* u.* \
+	2>ERRORS >ukma.new
+
+PROCESS-UUCP ukma.new
