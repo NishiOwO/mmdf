@@ -79,10 +79,10 @@
 #define         PARTIAL         1
 
 extern char *dupfpath();
+#if !HAVE_SYS_ERRLIST_DECL
 extern int  sys_nerr;
-#ifndef HAVE_SYS_ERRLIST
 extern  char    *sys_errlist[];
-#endif /* HAVE_SYS_ERRLIST */
+#endif /* HAVE_SYS_ERRLIST_DECL */
 extern int  errno;
 
 extern LLog msglog;

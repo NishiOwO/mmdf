@@ -67,6 +67,8 @@ struct RCOPTION rcoptions[] = {
 	"checker", CHECKER,
 	"header", ADDHEADER,
 	"paging", PAGING,
+	"sign_cmd", SIGN_CMD,
+	"encrypt_cmd", ENCRYPT_CMD,
 	END
 };
 
@@ -354,6 +356,34 @@ char **pp;
 		++pp;
 		if (isstr(*pp))
 			addheader(pp[0], pp[1]);
+		break;
+
+	case SIGN_CMD:
+		if( pp[1] )  {
+			int		arg = 1;
+			sign_cmd[0] = '\0';
+			while( pp[arg] != NULL )  {
+				if( arg > 1 )  strcat( sign_cmd, " " );
+				strcat( sign_cmd, pp[arg] );
+				arg++;
+			}
+		} else {
+			fprintf(stderr,"You need to specify an argument to 'sign_cmd' your .sendrc.  Setting not changed.\n");
+		}
+		break;
+
+	case ENCRYPT_CMD:
+		if( pp[1] )  {
+			int		arg = 1;
+			encrypt_cmd[0] = '\0';
+			while( pp[arg] != NULL )  {
+				if( arg > 1 )  strcat( encrypt_cmd, " " );
+				strcat( encrypt_cmd, pp[arg] );
+				arg++;
+			}
+		} else {
+			fprintf(stderr,"You need to specify an argument to 'encrypt_cmd' your .sendrc.  Setting not changed.\n");
+		}
 		break;
 
 	default:

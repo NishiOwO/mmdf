@@ -34,6 +34,7 @@ char *aliasfile;
 	if( afd <= (FILE *)NULL ) {
 		aflag = 0;
 		perror(" Can't open alias file ");
+		return;
 	}
 	als = &alias_ptr;
 	old_als = NULL;

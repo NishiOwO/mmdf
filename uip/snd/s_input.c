@@ -49,6 +49,8 @@ called by:
 **			following options:
 **				direct edit, header edit, input more body,
 **				delete body, visual edit (same as edit)
+**
+**	07/20/94 Mike Muuss	Added "sign" and "encrypt" commands.
 */
 
 #include "./s.h"
@@ -58,6 +60,12 @@ extern  char *verdate;
 extern  int errno;
 extern	RETSIGTYPE onint (), onint2(), onint3 ();
 int    bccflag;
+
+/* Initialized for PGP 5.0 */
+char	sign_cmd[128] = "pgps --armor -f -t";
+char	encrypt_cmd[128] = "pgpe --armor -f -t";
+
+extern char	*malloc();
 
 input ()
 {
@@ -280,6 +288,8 @@ edit:
 
 		i = sstr2arg(bigbuf, 20, av, " \t");
 		if( i == 1 ) {	/* tell him what the current options are */
+			printf(" Sign_cmd  - '%s'\n", sign_cmd);
+			printf(" Encrypt_cmd '%s'\n", encrypt_cmd);
 			printf(" Copyfile  - '%s'\n", copyfile);
 			printf(" Signature - '%s'\n", signature);
 			printf(" Aliases   - '%s'\n", aliasfilename);
@@ -404,6 +414,7 @@ edit:
 		/*	Fire-up the editor	*/
 		goto edit;
 	}
+
 /*	"File include" option	*/
 	if (prefix ("file include", bigbuf))
 	{
@@ -435,8 +446,10 @@ edit:
 	{
 	    printf ("Program: ");
 	    fflush (stdout);
-	    if (gets (tempbuf) == NULL)
+	    if (fgets (tempbuf, BBSIZE, stdin) == NULL)
 		continue;
+	    if (cp = index(bigbuf, '\n'))
+    		*cp = '\0';
 	    drclose ();
 
 	    /* ignore signals intended for subprocess */
@@ -628,7 +641,130 @@ edit:
 
 	    goto byebye;
 	}
+
+/*	Sign message with digital signature  -MJM */
+
+	if (prefix ("sign message with digital signature", bigbuf) )
+	{
+		dropen( DRBEGIN );
+    		if((tmpfd = open(tmpdrffile, 2, 0600)) < 0)
+    		{
+    			fprintf(stderr,"Cannot open temporary draft file %s\n", tmpdrffile);
+    			s_exit(-1);
+    		}
+    		if(chmod(drffile, 0600) < 0)
+    			fprintf(stderr,"Could not make draft %s writable\n", drffile);
+
+		/* Skip over leading blank line in input file. */
+		if(lseek(drffd, 1L, 0) < 0)
+		{
+		 	fprintf(stderr,"Lseek failed on draft %s\n", drffile);
+		 	s_exit(-1);
+		}
+    		/* Process from draft file (no headers) to temp draft file */
+		if( run_filter( sign_cmd, drffd, tmpfd, 0 ) < 0 )  {
+			/* Signature failed, don't change draft */
+			fprintf(stderr,"Digital signature failed, draft unchanged\n");
+			continue;
+		}
+
+    		if(lseek(tmpfd, 0L, 0) < 0)
+    		{
+    			fprintf(stderr,"Lseek failed on temporary draft file %s\n", tmpdrffile);
+    			s_exit(-1);
+    		}
+		if(lseek(drffd, 0L, 0) < 0)
+		{
+		 	fprintf(stderr,"Lseek failed on draft %s\n", drffile);
+		 	s_exit(-1);
+		}
+
+		/* Start draft file with blank line again */
+		write( drffd, "\n", 1 );
+    		dist = 1L;
+
+		/* Copy temp. draft (no headers) back into draft file */
+    		while((i = read(tmpfd, bigbuf, BBSIZE-1)) > 0)
+    			dist += write(drffd, bigbuf, i);
+
+    		if(truncate( drffile, dist ) < 0)
+    			fprintf(stderr,"Could not truncate draft %s\n", drffile);
+    		if(truncate( tmpdrffile, 0 ) < 0)
+    			fprintf(stderr,"Could not truncate temporary draft\n");
+    		if(close( tmpfd ) < 0)
+    			fprintf(stderr,"Could not close temporary draft\n");
+    		if(lseek(drffd, 0L, 0) < 0)
+    			fprintf(stderr,"Lseek failed on draft %s\n", drffile);
+    		if(chmod(drffile, 0400) < 0)
+    			fprintf(stderr,"Could not protect draft %s\n", drffile);
+		printf("\n");
+		continue;
+	}
+
+/*	Encrypt message body  -MJM */
+
+	if (prefix ("encrypt message body", bigbuf) )
+	{
+		/* XXX Perhaps confirmation should be requested? */
+		dropen( DRBEGIN );
+    		if((tmpfd = open(tmpdrffile, 2, 0600)) < 0)
+		{
+    			fprintf(stderr,"Cannot open temporary draft file %s\n", tmpdrffile);
+    			s_exit(-1);
+    		}
+    		if(chmod(drffile, 0600) < 0)
+    			fprintf(stderr,"Could not make draft %s writable\n", drffile);
+
+
+		/* Skip over leading blank line in input file. */
+		if(lseek(drffd, 1L, 0) < 0)
+		{
+		 	fprintf(stderr,"Lseek failed on draft %s\n", drffile);
+		 	s_exit(-1);
+		}
+
+    		/* Process from draft file (no headers) to temp draft file */
+		if( run_filter( encrypt_cmd, drffd, tmpfd, 1 ) < 0 )  {
+			/* Signature failed, don't change draft */
+			fprintf(stderr,"Encryption failed, draft unchanged\n");
+			continue;
+		}
+
+    		if(lseek(tmpfd, 0L, 0) < 0)
+    		{
+    			fprintf(stderr,"Lseek failed on temporary draft file %s\n", tmpdrffile);
+    			s_exit(-1);
+    		}
+		if(lseek(drffd, 0L, 0) < 0)
+		{
+		 	fprintf(stderr,"Lseek failed on draft %s\n", drffile);
+		 	s_exit(-1);
+		}
+
+		/* Add leading blank line back, on output file. */
+		write( drffd, "\n", 1 );
+    		dist = 1L;
+
+		/* Copy temp. draft (no headers) back into draft file */
+    		while((i = read(tmpfd, bigbuf, BBSIZE-1)) > 0)
+    			dist += write(drffd, bigbuf, i);
+
+    		if(truncate( drffile, dist ) < 0)
+    			fprintf(stderr,"Could not truncate draft %s\n", drffile);
+    		if(truncate( tmpdrffile, 0 ) < 0)
+    			fprintf(stderr,"Could not truncate temporary draft\n");
+    		if(close( tmpfd ) < 0)
+    			fprintf(stderr,"Could not close temporary draft\n");
+    		if(lseek(drffd, 0L, 0) < 0)
+    			fprintf(stderr,"Lseek failed on draft %s\n", drffile);
+    		if(chmod(drffile, 0400) < 0)
+    			fprintf(stderr,"Could not protect draft %s\n", drffile);
+		printf("\n");
+		continue;
+	}
+
 /*	help	*/
+
 	if (prefix ("?", bigbuf))
 	{
 	    printf ("bcc\n");
@@ -641,6 +777,8 @@ edit:
 	    printf ("review message\n");
 	    printf ("send message\n");
 	    printf ("set [option] [option value]\n");
+	    printf ("sign message with digital signature\n");	/* MJM */
+	    printf ("encrypt message body\n");			/* MJM */
 	    continue;
 	}
 
@@ -880,3 +1018,187 @@ long length;
 }
 
 #endif /* HAVE_TRUNCATE */
+
+
+/*
+ *			R U N _ F I L T E R
+ *
+ *  Run the given string as a filter, with given stdin and stdout.
+ *  Append recipient names in canonical format, if desired.
+ *  The string may have embedded spaces separating arguments.
+ *
+ *  Returns -
+ *	 0	Success
+ *	-1	Failure, output file is not useful.
+ *
+ *  Written by Mike Muuss, ARL, 20-July-94.
+ *  Public Domain, Distribution Unliminted.
+ */
+int
+run_filter( prog, in, out, names )
+char	*prog;		/* Command string, perhaps with spaces */
+int	in;		/* file descriptor */
+int	out;		/* file descriptor */
+int	names;		/* non-zero for listing recipient names */
+{
+	int     (*old1) ();
+	int	(*old2) ();
+	int	(*old3) ();
+	int	pid;
+	int	stat;
+	int	i;
+	int	first_i;
+	int	j;
+
+        old1 =  signal (SIGHUP, SIG_IGN); /* ignore signals intended for edit */
+        old2 =  signal (SIGINT, SIG_IGN);
+        old3 =  signal (SIGQUIT, SIG_IGN);
+
+	if( (pid = fork()) == -1 )  {
+		perror("run_filter fork()");
+		return -1;
+	}
+	if( pid == 0 )  {
+		char	*argv[1024];
+		char	*argv2[512];
+        	char	*cp;
+
+		/* Space separated options become separate args. */
+        	i = 0;
+        	cp = prog;
+		for(;;)  {
+			argv[i++] = cp;
+        		if( (cp = strchr( cp, ' ' )) == (char *)NULL )  break;
+        		*cp++ = '\0';
+        	}
+		first_i = i;
+		if( names )  {
+			j = 0;
+			/* Only include FROM address if a file copy is being made */
+			if( qflag || cflag )
+				j = chop_addr( j, argv2, from );
+			j = chop_addr( j, argv2, to );
+			j = chop_addr( j, argv2, cc );
+			/* Including BCC list to encryption might disclose their presence to explicit recipients */
+			if( bccflag )
+				fprintf(stderr,"WARNING: bcc recipients will not be able to decrypt this message\n");
+
+			/* Now merge them into final argv[] with -r */
+			for( pid=0; pid < j; pid++ )  {
+				argv[i++] = "-r";
+				argv[i++] = argv2[pid];
+			}
+        	}
+		argv[i] = (char *)NULL;
+
+		for(pid=0; pid < i; pid++)
+			fprintf(stderr, "%s ", argv[pid]);
+		fprintf(stderr, "\n");
+
+		dup2( in, 0 );			/* new stdout */
+		dup2( out, 1 );			/* new stdout */
+
+        	/* Leave stderr alone, close the most likely fd's */
+        	for( i=3; i<20; i++ )  close(i);
+
+		signal (SIGHUP, old1);
+		signal (SIGINT, old2);
+		signal (SIGQUIT, old3);
+
+		execvp( argv[0], argv );
+        	/* Returns only on error */
+
+        	perror(prog);
+		fprintf (stderr,"can't execute\n");
+		s_exit (-1);
+        }
+	stat = 0;
+	if( wait(&stat) == -1 || stat != 0 )  {
+		fprintf (stderr,"ERROR: '%s' failed, exit code %d (0x%x)\n", prog, stat, stat);
+		return -1;
+	}
+
+        body = TRUE;	/* Don't know but assume he created a draft */
+        lastsend = 0;
+
+        signal (SIGHUP, old1);     /* restore signals */
+        signal (SIGINT, old2);
+        signal (SIGQUIT, old3);
+
+	return 0;	/* OK */
+}
+
+/*
+ *			C H O P _ A D D R
+ *
+ *  Given a comma separated list of addresses, chop them apart.
+ *  Each address is added to the provided argv[] array, starting
+ *  at location 'argc'.
+ *
+ *  Addresses are stored in "canonical form", <user@host> with no
+ *  leading or trailing decorations.
+ *  This form is used to prevent accidental partial matches in the
+ *  digital signature program's "keyring" file, which might otherwise
+ *  happen with, e.g., "smith@arl.mil" and "tsmith@arl.mil".
+ *  The strings "<smith@arl.mil>" and "<tsmith@arl.mil>" will match uniquely.
+ *
+ *  Returns updated argc.
+ *
+ *  It is the caller's responsibility to free the dynamic strings.
+ *  In practice, the caller is usually a child process, and just
+ *  dumps the whole address space with an exec().
+ *
+ *  Written by Mike Muuss, ARL, 20-July-94.
+ *  Public Domain, Distribution Unliminted.
+ */
+int
+chop_addr( argc, argv, str )
+int	argc;
+char	**argv;
+char	*str;
+{
+	/* adrptr is global external */
+	char		buf[ADDRSIZE];
+	char		*cp;
+	char		*bp;
+	extern char	*strdup();
+
+	for( adrptr = str;; )  {
+		switch( next_address(buf) )  {
+		case -1:
+			/* All addresses have been processed */
+			return argc;
+		case 0:
+			/* Empty address component */
+			continue;
+		default:
+			/* Now, convert to canonical form */
+			/* Just the part inside the angle brackets */
+			if( (cp = strchr( buf, '>' )) )  {
+				cp[1] = '\0';
+			}
+			if( (cp = strchr( buf, '<' )) )  {
+				argv[argc++] = strdup(cp);
+				break;
+			}
+			/* Address had no angle brackets, add them */
+			if( !(cp = malloc( strlen(buf)+3 )) )  {
+				perror("chop_addr() malloc");
+				return argc;
+			}
+			*cp = '<';
+			/* Strip off any leading spaces in buf */
+			bp = buf;
+			while( isascii(*bp) && isspace(*bp) )  bp++;
+			strcpy( cp+1, bp );
+			bp = cp + strlen(cp)-1;
+			while( isascii(*bp) && isspace(*bp) )  bp--;
+			bp[1] = '>';
+			bp[2] = '\0';
+
+			argv[argc++] = cp;
+			break;
+		}
+	}
+	/* NOTREACHED */
+}

@@ -96,10 +96,10 @@ extern char *namdeliver;      /* name of mailer process             */
 extern char *pathdeliver;     /* file path to mailer proc.          */
 extern int  *regfdary;
 extern int  errno;
+#if !HAVE_SYS_ERRLIST_DECL
 extern int  sys_nerr;
-#ifndef HAVE_SYS_ERRLIST
 extern  char    *sys_errlist[];
-#endif /* HAVE_SYS_ERRLIST */
+#endif /* HAVE_SYS_ERRLIST_DECL */
 
 char *prm_dupval();
 

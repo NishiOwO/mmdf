@@ -323,9 +323,9 @@ char    *cmd;
 int     time;                   /* Max time for sending and getting reply */
 {
     short     retval;
-#ifndef HAVE_SYS_ERRLIST
+#if !HAVE_SYS_ERRLIST_DECL
     extern  char    *sys_errlist[];
-#endif /* HAVE_SYS_ERRLIST */
+#endif /* HAVE_SYS_ERRLIST_DECL */
     extern int errno;
 
     ll_log (logptr, LLOGPTR, "sm_cmd (%s)", cmd);

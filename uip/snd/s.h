@@ -53,6 +53,8 @@
 #define PAGING		12
 #define CHECKER		13
 #define ADDHEADER	14
+#define SIGN_CMD	15
+#define ENCRYPT_CMD	16
 
 /* Macro definition for use in s_get.c */
 

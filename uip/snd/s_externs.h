@@ -35,6 +35,9 @@ extern char replyto[];
 extern char aliasfilename[];
 extern struct header *headers;
 
+extern char	sign_cmd[];		/* MJM */
+extern char	encrypt_cmd[];		/* MJM */
+
 extern RETSIGTYPE (*orig) ();
 
 extern int errno;

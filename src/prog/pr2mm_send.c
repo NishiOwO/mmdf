@@ -28,7 +28,7 @@
  *		Added #ifdef NODUP2 - ECB
  */
 
-#include "config.h"
+#include "util.h"
 #include <stdio.h>
 #ifdef HAVE_SYS_FILE_H
 #  include <sys/file.h>
@@ -37,7 +37,6 @@
 #  include <sys/wait.h>
 #endif /* HAVE_SYS_WAIT_H */
 #include <signal.h>
-#include "util.h"
 #include "mmdf.h"
 #include "ch.h"
 #include "ap.h"
