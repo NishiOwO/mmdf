@@ -1,15 +1,42 @@
 .ds M \fBMMDFII\fR
 .TH MMDFVIRTUAL 5 "26 April 2001"
 .SH NAME
-mmdfvirtual \- MMDF runtime tailoring 
+mmdfvirtual \- MMDF runtime tailoring for virtual domains
 .SH SYNOPSIS
-MMDF tailoring file
+MMDF virtual domain tailoring file
 .SH DESCRIPTION
+
 
 .bp
 .NH
 .B mmdfvirtual
 
+.PP
+
+.B MMVIRT
+.I <options>=<value>[,...]
+.RS
+Tailoring entry of a new Virtual Domain
+.PP
+.B name=
+.RS
+Name of the virtual domain.
+.RE
+.B file=
+.RS
+path to the given mmdftailor file.
+.B if=
+.RS
+NIC to bind on the domain
+.RE
+.B flags=
+.RS
+restricted flags for smtpsrvr (options -f)
+.RE
+
+.SH FILES
+@MMDFCFGDIR@/mmdfvirtual
+.br
 
 .SH "SEE ALSO"
 mmdftailor(5)
