@@ -1,5 +1,5 @@
 /*
- *      TB_NS.C
+ *      TB_REGEXP.C
  *
  * Original version by Phil Cockcroft to use MF and MD records.
  * Also had several speed improvements such as caching.  Later
