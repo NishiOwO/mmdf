@@ -117,9 +117,9 @@ char *signame (sig)
      * libc.a doesn't have a "sys_siglist".  Possibly this only works
      * on 4.[23]BSD? -- David Herron <david@ms.uky.edu>
      */
-#ifndef LINUX
+#if !defined(SYS_SIGLIST_DECLARED) && !defined(LINUX)
     extern char *sys_siglist[];
-#endif /* LINUX */
+#endif /* SYS_SIGLIST_DECLARED */
 
     if (sig >= 0 && sig < NSIG) {
 	return (sys_siglist [sig]);
