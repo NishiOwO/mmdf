@@ -8,11 +8,11 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  *
  *  $Log: names.c,v $
- *  Revision 1.2  1986/01/10 12:35:44  galvin
- *  Added comment header for revision history.
+ *  Revision 1.3  1986/01/14 16:20:09  galvin
+ *  Initial revision
  *
  * Revision 1.3  86/01/14  16:20:09  galvin
  * Throw away extract and rewrite it.  In order to provide some amount of
