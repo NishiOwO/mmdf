@@ -1,13 +1,12 @@
-#include "util.h"
-#include "conf.h"
-#include "ap.h"
-#include "ap_lex.h"
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/** 
+ *
+ * $Id: ap_1adr.c,v 1.7 2001/10/03 18:08:23 krueger Exp $
+ *
+ **/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
-#ifdef DEBUG
-#include "ll_log.h"
-#endif
-
-/*  ADDRESS PARSER, as per:
+/**  ADDRESS PARSER, as per:
 
     "Standard for the Format of ARPA Network Text Messages", D.  Crocker,
     J. Vittal, K. Pogran & D. Henderson, in ARPANET PROTOCOL HANDBOOK, E.
@@ -74,7 +73,26 @@
     away.  It is, of course, possible for the core-limiting heuristic to
     lose if a ridiculous number of groups and personal lists are specified
     in a particular way.  I am assuming that won't happen.
- */
+**/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * System headers
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Local headers
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+#include "util.h"
+#include "conf.h"
+#include "ap.h"
+#include "ap_lex.h"
+
+#ifdef DEBUG
+#include "ll_log.h"
+#endif
+
 /**/
 
 #ifdef HAVE_STRING_H
@@ -83,6 +101,10 @@
 extern char *strdup();
 #endif /* HAVE_STRING_H */
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Macros
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #define STITER     0
 #define STINIT     1
 #define STECMNT    2
@@ -98,6 +120,16 @@ extern char *strdup();
 #define STDOMAIN  12
 #define STEDOMAIN 13
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Structures and unions
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * File scope Variables (Variables share by several functions in
+ *                       the same file )
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 int  ap_intype = AP_733;          /* default to RFC #733 input           */
 int  ap_outtype = AP_822;
 				/* default to RFC #822 output          */
@@ -129,24 +161,43 @@ char   *typtab[] =
 };
 #endif
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * External Variables
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #ifdef DEBUG
 extern LLog *logptr;
 extern AP_ptr ap_sqinsert ();
 #endif
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Extern Functions declarations
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Functions declarations
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+int ap_1adr();
 LOCFUN void ap_7to8();
 
 /**/
 
-/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/** 
+ * ap_1adr()
+ * @param
+ * @return
  *
- *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+ **/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 int ap_1adr ()
 {
     struct ap_node basenode;
-    AP_ptr ap_sp = (AP_ptr)0;        /* Saved ap node ptr                    */
-    AP_ptr r822ptr = (AP_ptr)0,
-	   r733prefptr = (AP_ptr)0;
+    AP_ptr ap_sp       = (AP_ptr)0;        /* Saved ap node ptr        */
+    AP_ptr r822ptr     = (AP_ptr)0;
+	AP_ptr r733prefptr = (AP_ptr)0;
     int    got822;
     char    buf[LINESIZE];
     register int    state;
@@ -156,6 +207,7 @@ int ap_1adr ()
 	(void) putchar ('\n');
 #endif
 
+    memset(buf, 0, sizeof(buf));
     ap_routing = DONE;
     ap_ninit (&basenode);
     ap_sqinsert (&basenode, APP_ETC, ap_pstrt);
@@ -460,9 +512,15 @@ int ap_1adr ()
 }
 
 
-/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/** 
+ * ap_7to8()
+ * @param  r733prefptr
+ * @param  r822ptr
+ * @return
  *
- *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+ **/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 LOCFUN void
 ap_7to8 (r733prefptr, r822ptr)
     AP_ptr r733prefptr,

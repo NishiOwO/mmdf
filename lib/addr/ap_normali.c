@@ -1,3 +1,20 @@
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/** 
+ *
+ * $Id: ap_normali.c,v 1.9 2001/10/03 18:08:23 krueger Exp $
+ *
+ **/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * System headers
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Local headers
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #include "config.h"
 #include "conf.h"
 #include "ll_log.h"
@@ -12,6 +29,21 @@
  *              -1 if error
  */
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Structures and unions
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * File scope Variables (Variables share by several functions in
+ *                       the same file )
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * External Variables
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 extern LLog *logptr;
 extern struct ap_hstab *ap_exhstab;     /* translation table */
 extern char *locname;
@@ -19,33 +51,53 @@ extern char *locdomain;
 extern char *locfullname;
 extern char *locfullmachine;
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Extern Functions declarations
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 extern char *multcat ();
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Functions declarations
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+AP_ptr  ap_normalize ();
+LOCFUN void ap_ptinit();
+void    ap_locnormalize ();
+
 Domain *dm_v2route();
 
 LOCFUN void logtree();
-LOCFUN void ap_ptinit();
 
 /**/
 
-/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/** 
+ * ap_normalize()
+ * @param  dflhost    [IN]  string to append, as host name
+ * @param  dfldomain  [IN]  string to append, as domain name
+ * @param  thetree    [IN]  the parse tree
+ * @param  exorchan   [IN]  The channel to exorcise with respect to
+ * @return AP_ptr
  *
- *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+ **/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 AP_ptr
 	ap_normalize (dflhost, dfldomain, thetree, exorchan)
-    char *dflhost,             /* string to append, as host name */
-	 *dfldomain;           /* string to append, as domain name */
+    char *dflhost;             /* string to append, as host name */
+	char *dfldomain;           /* string to append, as domain name */
     AP_ptr thetree;             /* the parse tree */
     Chan  *exorchan;            /* The channel to exorcise with respect to */
 {
     struct ap_node  basenode;     /* first node in routing chain          */
-    AP_ptr r822prefptr,
-	   perptr,
-	   mbxprefptr,
-	   dmprefptr,
-	   lstcmntprefptr,
-	   lastptr,
-	   grpptr,
-	   ap;
+    AP_ptr   r822prefptr    = (AP_ptr)0;
+	AP_ptr   perptr         = (AP_ptr)0;
+	AP_ptr   mbxprefptr     = (AP_ptr)0;
+	AP_ptr   dmprefptr      = (AP_ptr)0;
+	AP_ptr   lstcmntprefptr = (AP_ptr)0;
+	AP_ptr   lastptr        = (AP_ptr)0;
+	AP_ptr   grpptr         = (AP_ptr)0;
+	AP_ptr   ap             = (AP_ptr)0;
     struct ap_hstab  *tabp;
     char    official[128];
     char *save;
@@ -304,20 +356,32 @@ AP_ptr
 }
 /**/
 
-/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/** 
+ * function()
+ * @param   baseprefptr     [IN]
+ * @param   perptr          [OUT]
+ * @param   r822prefptr     [OUT]
+ * @param   mbxprefptr      [OUT]
+ * @param   dmprefptr       [OUT]
+ * @param   lstcmntprefptr  [OUT]
+ * @param   lastptr         [OUT]
+ * @param   grpptr          [OUT]
+ * @return  NONE
  *
- *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+ **/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 LOCFUN void
 	ap_ptinit (baseprefptr, perptr, r822prefptr, mbxprefptr, dmprefptr,
 				lstcmntprefptr, lastptr, grpptr)
-    AP_ptr baseprefptr;
-    AP_ptr *perptr,
-	   *r822prefptr,
-	   *mbxprefptr,
-	   *dmprefptr,
-	   *lstcmntprefptr,
-	   *lastptr,
-	   *grpptr;
+    AP_ptr   baseprefptr;
+    AP_ptr   *perptr;
+	AP_ptr   *r822prefptr;
+	AP_ptr   *mbxprefptr;
+	AP_ptr   *dmprefptr;
+	AP_ptr   *lstcmntprefptr;
+	AP_ptr   *lastptr;
+	AP_ptr   *grpptr;
 {
     AP_ptr ap;
 
@@ -429,11 +493,15 @@ LOCFUN void
 
 }
 /**/
-/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/** 
+ * ap_locnormalize()
+ * @param
+ * @return
  *
- *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+ **/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #ifndef	JNTMAIL
-
 void ap_locnormalize (obaseptr, or822prefptr, ombxprefptr, odmprefptr)
     AP_ptr obaseptr,
 	   *or822prefptr,

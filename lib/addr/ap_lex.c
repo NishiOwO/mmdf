@@ -1,8 +1,19 @@
-#include "util.h"
-#include "ap.h"
-#include "ap_lex.h"
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/** 
+ *
+ * $Id: ap_lex.c,v 1.7 2001/10/03 18:08:23 krueger Exp $
+ *
+ *  < 1978  B. Borden       Wrote initial version of parser code
+ *  78-80   D. Crocker      Reworked parser into current form
+ *  Apr 81  K. Harrenstein  Hacked for SRI
+ *  Jun 81  D. Crocker      Back in the fold.  Finished v7 conversion
+ *                          minor cleanups.
+ **/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
-/*  Perform lexical analysis on input stream
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/** 
+ *  Perform lexical analysis on input stream
 
     The stream is assumed to be "unfolded" and the <crlf>/<lwsp> sequence
     is NOT checked for.  This must be done by the character-acquisition
@@ -19,15 +30,43 @@
 
     Only COMMENTs and WORDs have data associated with them.
 
-*/
+ **/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
-/*  < 1978  B. Borden       Wrote initial version of parser code
- *  78-80   D. Crocker      Reworked parser into current form
- *  Apr 81  K. Harrenstein  Hacked for SRI
- *  Jun 81  D. Crocker      Back in the fold.  Finished v7 conversion
- *                          minor cleanups.
- */
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * System headers
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Local headers
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+#include "util.h"
+#include "ap.h"
+#include "ap_lex.h"
+
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Macros
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Structures and unions
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * File scope Variables (Variables share by several functions in
+ *                       the same file )
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * External Variables
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 extern char ap_lxtable[];         /* ascii chars -> symbolic terminals    */
 extern int ap_intype;
 int     ap_peek = -1;             /* one-character look-ahead             */
@@ -52,11 +91,29 @@ char   *namtab[] =
 };
 #endif
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Extern Functions declarations
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+extern int  (*ap_gfunc) ();   /* Ptr to character get fn              */
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Functions declarations
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+int ap_lex ();
+int ap_char ();
+
 /**/
 
-/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/** 
+ * ap_lex()
+ * @param
+ * @return
  *
- *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+ **/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 int ap_lex (lexval)
 char    lexval[];
 {
@@ -237,11 +294,17 @@ char    lexval[];
 
     return (ap_llex = retval);
 }
-/* *******************  GET NEXT INPUT CHARACTER  ********************* */
-
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/** 
+ * ap_char()
+ * @param
+ * @return
+ *  GET NEXT INPUT CHARACTER
+ *
+ **/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 int ap_char ()
 {                                 /* handle lookahead and 8th bit         */
-    extern int  (*ap_gfunc) ();   /* Ptr to character get fn              */
     register int    i;
 
     if (ap_peek == 0)

@@ -1,12 +1,20 @@
-#include "ap_lex.h"
-#include "util.h"
-#include "conf.h"
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/** 
+ *
+ * $Id: ap_lxtable.c,v 1.6 2001/10/03 18:08:23 krueger Exp $
+ *
+ **/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/ap_lxtable.c,v 1.5 2000/08/08 20:38:02 krueger Exp $ */
+
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/ap_lxtable.c,v 1.6 2001/10/03 18:08:23 krueger Exp $ */
 /* $Log: ap_lxtable.c,v $
-/* Revision 1.5  2000/08/08 20:38:02  krueger
-/* 1. Cleanups warnings of gcc -Wall --pedantic
+/* Revision 1.6  2001/10/03 18:08:23  krueger
+/* some work on source outfit
 /*
+ * Revision 1.5  2000/08/08 20:38:02  krueger
+ * 1. Cleanups warnings of gcc -Wall --pedantic
+ *
  * Revision 1.4  1999/08/12 13:15:36  krueger
  * Added patch 2.44b3 and 2.44b4
  *
@@ -37,7 +45,29 @@
  *  */
 
 /* mappings of lexical symbols to ascii values for address parser */
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * System headers
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Local headers
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+#include "ap_lex.h"
+#include "util.h"
+#include "conf.h"
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Structures and unions
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * File scope Variables (Variables share by several functions in
+ *                       the same file )
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 char    ap_lxtable[] =
 {
     LT_EOD, LT_ERR, LT_ERR, LT_ERR,
@@ -110,3 +140,18 @@ char    ap_lxtable[] =
     LT_XTR, LT_XTR, LT_XTR, LT_ERR,
 				  /*    174-177          |  }  ~  del   */
 };
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * External Variables
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Extern Functions declarations
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Functions declarations
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
