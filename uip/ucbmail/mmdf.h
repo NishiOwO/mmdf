@@ -8,11 +8,12 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.3 $
+ *  $Revision: 1.4 $
  *
  *  $Log: mmdf.h,v $
- *  Revision 1.3  1985/12/18 13:24:03  galvin
- *  Add declaration of sentprotect.
+ *  Revision 1.4  1986/01/02 16:23:51  galvin
+ *  Add some defines from "util.h" since we can not include
+ *  it directly.  What a pity.
  *
  * Revision 1.4  86/01/02  16:23:51  galvin
  * Add some defines from "util.h" since we can not include
