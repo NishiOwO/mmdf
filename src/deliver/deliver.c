@@ -172,7 +172,7 @@ char    pgm_bakgrnd;              /* True if running as system daemon   */
 extern char *mquedir;            /* directory under quedfldir for texts */
 extern char *supportaddr;        /* orphaned mail goes here             */
 
-int daemon();
+int daemonize();
 
 /*  mn_  */
 
@@ -273,7 +273,7 @@ char   *argv[];
     else
     {                             /* go through the whole queue         */
 	if (pgm_bakgrnd) {        /* background daemon                  */
-      daemon();
+      daemonize();
 	    FOREVER
 	    {
 		ovr_cstep (ovr_dolin, 0);
@@ -1819,10 +1819,10 @@ char    *fmt, *b, *c, *d;
 }
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
- * daemon(): daemonize
+ * daemonize(): daemonize
  * 
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
-int daemon()
+int daemonize()
 {
   int pid;
   
