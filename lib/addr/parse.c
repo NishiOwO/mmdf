@@ -1,8 +1,11 @@
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/parse.c,v 1.8 2001/04/26 22:02:13 krueger Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/parse.c,v 1.9 2002/09/30 19:30:36 krueger Exp $ */
 /* $Log: parse.c,v $
-/* Revision 1.8  2001/04/26 22:02:13  krueger
-/* Added support for virtual hosts
+/* Revision 1.9  2002/09/30 19:30:36  krueger
+/* *** empty log message ***
 /*
+ * Revision 1.8  2001/04/26 22:02:13  krueger
+ * Added support for virtual hosts
+ *
  * Revision 1.7  2000/08/08 20:38:02  krueger
  * 1. Cleanups warnings of gcc -Wall --pedantic
  *
