@@ -172,6 +172,12 @@ AC_CHECK_PROG(ASSIGN, assign, assign)
 if test "$ac_cv_prog_ASSIGN" != ""; then
     AC_DEFINE(HAVE_ASSIGN)
 fi
+AC_CHECK_PROG(LORDER, lorder, lorder)
+if test "$ac_cv_prog_LORDER" != ""; then
+    LIBFIX="libfix"
+else
+    LIBFIX="libfix.linux"
+fi
 AC_CHECK_FILE(SECURETTY, /etc/securetty)
 AC_PATH_PROG(CHOWN, chown)
 AC_PATH_PROG(AR, ar)
@@ -472,9 +478,9 @@ AC_SUBST(mmdf_prefix)
 AC_SUBST(CXXTEMPLFLAGS)
 AC_SUBST(STATIC_LDFLAGS)
 AC_SUBST(CH_TB)
+AC_SUBST(LIBFIX)
 
-AC_OUTPUT(Makefile)
-dnl AC_OUTPUT(lib/Makefile src/Makefile uip/Makefile conf/common/Makefile.com \
-dnl Makefile)
-dnl rm -f Makefile.com
-dnl ln -s conf/common/Makefile.com Makefile.com
+AC_OUTPUT(lib/Makefile src/Makefile uip/Makefile conf/common/Makefile.com \
+Makefile)
+rm -f Makefile.com
+ln -s conf/common/Makefile.com Makefile.com

@@ -2,7 +2,7 @@
 echo Removing old config files and linking in new ones
 set -x
 rm -f ../h/conf.h ../h/d_lock.h ../h/config.h
-rm -f ../Makefile.com ../lib/Makefile ../src/Makefile
+#rm -f ../Makefile.com ../lib/Makefile ../src/Makefile
 rm -f ../lib/mmdf/chan.c ../lib/mmdf/conf.c
 rm -f ../lib/mmdf/conf.o ../lib/mmdf/chan.o
 rm -f ../lib/dial/conf_dial.c ../lib/dial/conf_dial.o
