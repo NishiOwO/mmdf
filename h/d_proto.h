@@ -145,7 +145,10 @@
 # define PORTPONC	(CS7|PARENB|CREAD|HUPCL)
 # define PORTPONL	(ICANON)
 
-#else
+#else /* HAVE_SGTTY */
+
+/* PORT*I is for c_iflag field in termio */
+
 
 # define  PORTSON       (EVENP|ODDP|RAW)
 				 /*  bits to turn on in script mode    */
@@ -155,7 +158,7 @@
 				 /*  bits to turn on in protocol mode    */
 # define  PORTPOFF      (ALLDELAY|CRMOD|ECHO|RAW|LCASE)
 				 /*  bits to turn off in protocol mode   */
-#endif SYS5
+#endif /* HAVE_SGTTY */
 
 #define DELAY_CH '\377'		 /* used by d_canon & d_script */
 #define BREAK_CH '\376'          /* used by d_canon & d_script */

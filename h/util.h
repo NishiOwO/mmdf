@@ -20,7 +20,7 @@
 
 extern char *strcat ();
 extern char *strcpy ();
-#if !defined(BSD_SPRINTF) || defined(SYS5) || defined(ULTRIX)
+#if !defined(BSD_SPRINTF) || defined(ULTRIX)
 extern int sprintf ();
 #else
 extern char *sprintf ();
@@ -30,12 +30,6 @@ extern struct passwd *getpwnam(), *getpwuid();
 #else
 #  include <libio.h>
 #endif /* not LINUX */
-
-#if defined(SYS5) || defined(__STDC__)
-#define sigtype void
-#else
-#define sigtype int
-#endif
 
 #if !defined(HAVE_DEF_SIGSYS) || defined(LINUX)
 #  define SIGSYS SIGUNUSED
