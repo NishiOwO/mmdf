@@ -51,6 +51,7 @@
 extern LLog     *logptr;
 extern Chan     *chanptr;
 extern char     *blt();
+extern long	qu_msglen;      /* message length */
 
 LOCFUN sm_rrec();
 
@@ -81,18 +82,24 @@ char    *sender;
     
     infoboo=snprintf(linebuf, sizeof(linebuf), "MAIL FROM:<%s>", sender);
     INFOBOO;
-#if notdef
-#  ifdef HAVE_ESMTP_SIZE
-    if (smtp_use_size)
+#  ifdef HAVE_ESMTP
+    if (sm_chptr->ch_access & CH_ESMTP /*smtp_use_size || 1*/)
     {
       infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen,
-                 " SIZE=%d", message_size + message_linecount + ob->size_addition);       
+                        " SIZE=%ld", qu_msglen
+                        /*+ message_linecount + ob->size_addition*/);
       INFOBOO;
     }
-#endif /* HAVE_ESMTP_SIZE */
+#endif /* HAVE_ESMTP */
+#if notdef
 #ifdef HAVE_ESMTP_DSN
     if (smtp_use_dsn)
     {
+      extern char *qu_msgfile;
+      char dsn_envid[16];
+
+      sscanf(qu_msgfile, "msg.%s", dsn_envid);
+      
       if (dsn_ret == dsn_ret_hdrs)
       {
         infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen, " RET=HDRS");
@@ -104,7 +111,8 @@ char    *sender;
         INFOBOO;
       }
       if (dsn_envid != NULL)
-        infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen," ENVID=%s", dsn_envid);
+        infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen,
+                          " ENVID=%s", dsn_envid);
         INFOBOO;
     }
 #endif /* HAVE_ESMTP_DSN */
@@ -126,7 +134,7 @@ char    *sender;
               case 421:
               case 450:
               case 451:
-              case 452:
+              case 452: /* disk size limit exceeded, try again later */
               default:
                 return( sm_rp.sm_rval = RP_AGN);
           }
@@ -138,7 +146,7 @@ char    *sender;
               case 501:
               case 550:
               case 551:
-              case 552:
+              case 552: /* size limit exceeded */
               case 553:
               case 571:
               default:
