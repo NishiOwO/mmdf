@@ -104,6 +104,57 @@ AC_DEFUN(AC_ENABLE_DEFAULT_CODE,
 ])
 AC_PROVIDE(AC_ENABLE_DEFAULT_CODE)
 
+AC_DEFUN(AC_GET_UNAME,
+[
+  UNAME_MACHINE=`(uname -m) 2>/dev/null` || UNAME_MACHINE=unknown
+  UNAME_NODE=`(uname -n) 2>/dev/null` || UNAME_NODE=unknown
+  UNAME_RELEASE=`(uname -r) 2>/dev/null` || UNAME_RELEASE=unknown
+  UNAME_SYSTEM=`(uname -s) 2>/dev/null` || UNAME_SYSTEM=unknown
+  UNAME_VERSION=`(uname -v) 2>/dev/null` || UNAME_VERSION=unknown
+])
+AC_PROVIDE(AC_GET_UNAME)
+
+AC_DEFUN(AC_LOAD_LOCAL_CONFIG,
+[
+  AC_MSG_CHECKING(for local config '$1')
+  if test ! -x "conf"; then
+     mkdir conf
+  fi
+  if test ! -x "conf/sites"; then
+     mkdir conf/sites
+  fi
+  if test -r conf/sites/$1; then
+    AC_MSG_RESULT(yes)
+    echo "loading local configuration '"$1"'"
+    . conf/sites/$1
+    for i in `set | grep CONFIG_CODE_`
+    do
+      var=`echo $i | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'| sed s/config_/enable_/`
+      eval ac_cv_$var
+    done
+    for i in `set | grep CONFIG_LIB_`
+    do
+      var=`echo $i | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'| sed s/config_lib_/enable_/`
+      eval ac_cv_$var
+    done
+    for i in `set | grep CONFIG_SRC_`
+    do
+      var=`echo $i | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'| sed s/config_src_/enable_/`
+      eval ac_cv_$var
+    done
+    for i in `set | grep CONFIG_UIP_`
+    do
+      var=`echo $i | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'| sed s/config_uip_/enable_/`
+      eval ac_cv_$var
+    done
+    ac_cv_enable_lib_dbm=$ac_cv_enable_code_dbm
+    ac_cv_enable_lib_wrap=$ac_cv_enable_code_wrap
+  else
+    AC_MSG_RESULT(no)
+  fi
+])
+AC_PROVIDE(AC_LOAD_LOCAL_CONFIG)
+
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl Version business -- should be the same as in Singular subdir 
@@ -122,6 +173,9 @@ chandir="\${mmdf_prefix}/chans"
 tbldir="\${mmdf_prefix}/table"
 rcvdir="\${exec_prefix}/lib/mh"
 
+AC_GET_UNAME
+MMDF_CONFIG=$UNAME_NODE.config
+AC_LOAD_LOCAL_CONFIG($MMDF_CONFIG)
 AC_CANONICAL_HOST
 AC_PROG_CC
 AC_PROG_CPP
@@ -306,21 +360,25 @@ dnl
 dnl Checks for libraries.
 dnl AC_CHECK_LIB(BSD, atof)
 dnl AC_CHECK_LIB(bsd, atof)
-AC_CHECK_LIB(gdbm, gdbm_open)
-if test "$ac_cv_lib_gdbm_gdbm_open" = "no"; then
-   AC_CHECK_LIB(ndbm, dbm_open)
-   if test "$ac_cv_lib_ndbm_gdbm_open" = "no"; then
-     AC_CHECK_LIB(dbm, dbm_open)
+if test "$ac_cv_enable_code_dbm" != "no"; then
+   AC_CHECK_LIB(gdbm, gdbm_open)
+   if test "$ac_cv_lib_gdbm_gdbm_open" = "no"; then
+      AC_CHECK_LIB(ndbm, dbm_open)
+      if test "$ac_cv_lib_ndbm_gdbm_open" = "no"; then
+         AC_CHECK_LIB(dbm, dbm_open)
+      fi
+   fi
+   if test "$ac_cv_lib_gdbm_gdbm_open" = "yes" || 
+	   test "$ac_cv_lib_ndbm_dbm_open" = "yes" ||
+	   test "$ac_cv_lib_dbm_dbm_open" = "yes"; then
+      ac_cv_lib_dbm="yes"
+   else
+      ac_cv_lib_dbm="no"
    fi
 fi
-if test "$ac_cv_lib_gdbm_gdbm_open" = "yes" || 
-	test "$ac_cv_lib_ndbm_dbm_open" = "yes" ||
-	test "$ac_cv_lib_dbm_dbm_open" = "yes"; then
-   ac_cv_lib_dbm="yes"
-else
-   ac_cv_lib_dbm="no"
+if test "$ac_cv_enable_code_wrap" != "no"; then
+   AC_CHECK_LIB(wrap, eval_client)
 fi
-AC_CHECK_LIB(wrap, eval_client)
 dnl AC_CHECK_LIB(socket, atof)
 dnl AC_CHECK_LIB(inet, atof)
 dnl AC_CHECK_LIB(nsl, atof)
@@ -717,7 +775,11 @@ AC_SUBST(CXXTEMPLFLAGS)
 AC_SUBST(STATIC_LDFLAGS)
 AC_SUBST(CH_TB)
 AC_SUBST(LIBFIX)
-AC_SUBST(UNAME_PROCESSOR)
+AC_SUBST(UNAME_MACHINE)
+AC_SUBST(UNAME_RELEASE)
+AC_SUBST(UNAME_SYSTEM)
+AC_SUBST(UNAME_VERSION)
+AC_SUBST(UNAME_NODE)
 
 AC_OUTPUT(lib/Makefile src/Makefile uip/Makefile conf/common/Makefile.com \
 Makefile)

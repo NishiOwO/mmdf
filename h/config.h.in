@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.14 1998/03/19 07:46:55 krueger Exp $
+ * $Id: config.h.in,v 1.15 1998/03/19 22:41:53 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -386,6 +386,12 @@
  */
 #undef HAVE_NIS
 #undef HAVE_NN
+
+/*             Enable code to disable source-routing of addresses
+ *             Should not be done according to RFC 1123, but needed for 
+ *             sendmail-host that don't accept source-routes to avoid
+ *             spam-mails.
+ */
 #undef HAVE_NOSRCROUTE
 
 /*****************************************************************************/

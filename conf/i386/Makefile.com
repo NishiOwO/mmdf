@@ -5,11 +5,11 @@ HOST		= gandalf
 SYSTEM		= 4.2
 SERVER_SYSTEM		= 4.3
 MMPREF		=
-LIBDIR		= /usr/mmdf/lib
-CHANDIR		= /usr/mmdf/chans
-TBLDIR		= /usr/mmdf/table
-BINDIR		= /usr/bin
-RCVDIR		= /usr/lib/mh
+LIBDIR		= /usr/local/mmdf/lib
+CHANDIR		= /usr/local/mmdf/chans
+TBLDIR		= /usr/local/mmdf/table
+BINDIR		= /usr/local/mmdf/bin
+RCVDIR		= /usr/local/mmdf/lib/mh
 
 #
 #  Defines used during installation
@@ -40,7 +40,7 @@ AR		= ar
 
 #  Specify either ch_tbdbm (for DBM based tables) or ch_tbseq for
 #  sequential IO based tables.
-# CH_TB	= ch_tbdbm
+#CH_TB	= ch_tbdbm
 CH_TB = ch_tbseq
 
 #  Specify one of the nameserver modules or the fake module

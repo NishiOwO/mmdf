@@ -41,7 +41,7 @@ struct directlines  *d_lines = thelines;
  *     ports and autodialer devices.
  */
 
-char  *d_calllog  =  "/var/spool/mmdf/log/dial_log";
+char  *d_calllog  =  "//usr/local/mmdf/spool/log/dial_log";
 
 /*
  *	this is the name of the programs will actually do dialing

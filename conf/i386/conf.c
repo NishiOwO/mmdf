@@ -9,7 +9,7 @@
  *   the message system needs to have.
  */
 
-char *mmtailor = "/usr/mmdf/mmdftailor";
+char *mmtailor = "/usr/local/mmdf/mmdftailor";
 				/* location of external tailoring file  */
 
 /* ************************  PUBLIC NAMES  ****************************** */
@@ -32,24 +32,24 @@ char
  *  The following pathnames must be anchored.
  */
 
-char	*cmddfldir = "/usr/mmdf/";
+char	*cmddfldir = "/usr/local/mmdf/";
 			      /* contains MMDF commands, such as      */
 			      /* submit, deliver, and queclean        */
-char	*logdfldir = "/var/spool/mmdf/log";
+char	*logdfldir = "/usr/local/mmdf/spool/log";
 			      /* contains highly volatile files, such */
 			      /* as logs and check-point markers      */
-char	*phsdfldir = "/var/spool/mmdf/log/phase";
+char	*phsdfldir = "/usr/local/mmdf/spool/log/phase";
 			      /* contains timestamp files             */
-char	*tbldfldir = "/usr/mmdf/table";
+char	*tbldfldir = "/usr/local/mmdf/table";
 			      /* contains sticky files, such as       */
 			      /* name tables & dialing scripts        */
-char	*tbldbm = "/usr/mmdf/table/mmdfdbm";
+char	*tbldbm = "/usr/local/mmdf/table/mmdfdbm";
 			      /* dbm() hash of name tables      */
-char	*quedfldir = "/var/spool/mmdf/home";
+char	*quedfldir = "/usr/local/mmdf/spool/home";
 			      /* contains queued mail files, in       */
 			      /* subordinate directories              */
 			      /* (also see below)                     */
-char	*chndfldir = "/usr/mmdf/chans";
+char	*chndfldir = "/usr/local/mmdf/chans";
 				/* contains the channel programs        */
 				/* (ch_*) called by deliver             */
 char	*lckdfldir = "/tmp/mmdf";
@@ -152,6 +152,8 @@ char
 
 int     maxhops = 20;               /* number of Via fields permitted   */
 int	mgt_addid = 1;		    /* if set, add message-id if necessary */
+int     mgt_addipaddr = 1;          /* if set, add IP-address */
+int     mgt_addipname = 1;          /* if set, add IP-name */
 int	lnk_listsize = 12;	    /* if more than this many addresses,
 				     * then do not send warning and only
 				     * send citation on return
@@ -237,6 +239,6 @@ char	*locmachine = "gandalf";
 /******************* AUTHORIZATION TAILORING **************************/
 char	*authrequest = "Postmaster@mathematik.uni-kl.de";
 				/* authorisation request address        */
-char	*authfile = "/usr/mmdf/warning";
+char	*authfile = "/usr/local/mmdf/warning";
 				/* warning letter - full pathname       */
 

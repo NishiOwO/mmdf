@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.9 1998/03/17 19:35:19 krueger Exp $
+ * $Id: config.h,v 1.10 1998/03/19 22:41:53 krueger Exp $
  *
  * please set every configuration-switch here
  *
@@ -224,6 +224,7 @@
 
 /*             Enable the yp_match lookup code for accessing tables over
  *             NIS.
+ *    set by configure in config.h.in
  */
 /* #undef HAVE_NIS */
 
@@ -231,7 +232,8 @@
  *             Should not be done according to RFC 1123, but needed for 
  *             sendmail-host that don't accept source-routes to avoid
  *             spam-mails.
+ *    set by configure in config.h.in
  */
-#define HAVE_NOSRCROUTE
+/* #undef HAVE_NOSRCROUTE */
 
 #endif /* CONFIG_OLD_H */
