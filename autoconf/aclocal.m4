@@ -1,5 +1,5 @@
 dnl
-dnl $Id: aclocal.m4,v 1.3 1999/08/04 13:09:15 krueger Exp $
+dnl $Id: aclocal.m4,v 1.4 1999/08/06 07:19:56 krueger Exp $
 dnl
 dnl
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -241,6 +241,13 @@ fi
 if test "$sysconfdir" = "\${prefix}/etc"; then
    sysconfdir="/etc/mmdf"
 fi
+mmtailor="\${sysconfdir}/mmdftailor"
+tbldbm="\${mtbldir}/mmdfdbm"
+lckdfldir="\${uucplock}/mmdf"
+authfile="\${sysconfdir}/warning"
+uucplock="\${varprefix}/lock"
+resendprog="\${bindir}/resend"
+sendprog="\${bindir}/send"
 ])
 AC_PROVIDE(AC_SET_FHS_PATHNAME)
 
@@ -306,6 +313,13 @@ fi
 if test "$sysconfdir" = "\${prefix}/etc"; then
    sysconfdir="\${mmdfprefix}"
 fi
+mmtailor="\${sysconfdir}/mmdftailor"
+tbldbm="\${mtbldir}/mmdfdbm"
+lckdfldir="/tmp/mmdf"
+authfile="\${sysconfdir}/warning"
+uucplock="/var/spool/locks"
+resendprog="\${bindir}/resend"
+sendprog="\${bindir}/send"
 ])
 AC_PROVIDE(AC_SET_OLD_PATHNAME)
 
@@ -329,6 +343,9 @@ AC_DEFUN(AC_C_SUBST,[
 dnl  eval $2=$dummy1
 dnl  AC_SUBST($2)
   c_$1=$dummy1
-  AC_SUBST(c_$1)
+  AC_SUBST_FILE(c_$1)
 ])
 AC_PROVIDE(AC_C_SUBST)
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
