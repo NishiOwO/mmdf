@@ -1,4 +1,4 @@
-#include "util.h"
+#include "config.h"
 #include "mmdf.h"
 #include <sys/stat.h>
 #include "ch.h"
