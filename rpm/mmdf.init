@@ -1,0 +1,44 @@
+#!/bin/sh
+#
+# Version:      @(#) /etc/init.d/mmdf.ini 1.01 16-Jul-1996
+#
+# Author:       Kai Krueger, <krueger@mathematik.uni-kl.de>
+#
+# Origin: skeleton by Miquel van Smoorenburg, <miquels@drinkel.nl.mugnet.org>
+#
+
+get_channels() {
+    MMDFTAILOR="/etc/mmdf/mmdftailor"
+
+    MCHN=`expand $MMDFTAILOR | grep "^MCHN " | awk '{print $2}' | sed 's/,//g'`
+    CHANNEL=`echo $MCHN | sed 's/ /,/g'`
+    echo $CHANNEL
+}
+
+export PATH=/usr/lib/mmdf/lib:$PATH
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# See how we were called.
+case "$1" in
+  start)
+	echo -n "Starting mmdf: "
+	MCHN=`get_channels`
+	echo deliver -b -c$MCHN
+	deliver -b -c$MCHN &
+	touch /var/lock/subsys/mmdf
+	echo
+	;;
+  stop)
+	echo -n "Shutting down deliver: "
+	killproc deliver
+	echo "done"
+	rm -f /var/lock/subsys/mmdf
+	;;
+  *)
+	echo "Usage: mmdf {start|stop}"
+	exit 1
+esac
+
+exit 0
+

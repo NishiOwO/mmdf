@@ -1,0 +1,156 @@
+###############
+# MMDF - IIb tailoring file for Kaiserslautern University, MATHEMATIK
+# ==== URANUS MAILHOST ====
+###############
+
+MLDOMAIN "uni-kl.de"
+MLNAME	"mathematik"
+MLOCMACHINE "galadriel"
+MMAILID 0
+
+UUNAME "galadriel.mathematik.uni-kl.de"
+UUXSTR "uux -"
+
+MSIG "Uni Kaiserslautern, FB-Mathe Mailsystem"
+MLOGIN  mmdf
+MSUPPORT mmdf@mathematik.uni-kl.de
+AUTHREQUEST mmdf@mathematik.uni-kl.de
+MMSERVER   Popserv.Mathematik.Uni-Kl.De
+
+# -- Directory Tailoring, Database Files
+
+MDLVRDIR	"/var/spool/mail"
+MMBXNAME	""
+MMBXPROT	660
+
+
+# -- Log files
+
+MLOGDIR "/var/spool/mmdf/log"
+MPHSDIR "/var/spool/mmdf/log/phase"
+MQUEDIR "/var/spool/mmdf/home"
+# PHLOG "/var/spool/mmdf/log/ph.log", level=FTR
+# PHTRAN "/var/spool/mmdf/log/ph.trn", level=FTR
+
+MTBLDIR "/usr/mmdf/table"
+MCMDDIR "/usr/mmdf/lib"
+MCHNDIR "/usr/mmdf/chans"
+#MDFLCHAN "math"
+
+#  -  - Domain entries
+# ( Reihenfolge:    Mathematik, uni-kl, de, top , bboards, pop)
+
+MTBL	name=domain.home,file="domains/local",
+	show="Mathematik Domains",flags=partial,flags=dbm,flags=route
+MDMN    "MATH",dmn="",table=domain.home,
+	show="home Domain"
+;# MDMN    "MATH",dmn="home-kl.de",table=domain.home,
+
+MTBL	name=domain.math,file="domains/math",
+	show="Mathematik Domains",flags=partial,flags=dbm,flags=route
+MDMN    "MATH",dmn="mathematik.uni-kl.de",table=domain.math,
+	show="mathematik Domain"
+
+MTBL	name=domain.uni-kl.ns, show="Universitaets Domains",
+	flags=ns, flags=domain, flags=route, flags=partial
+MDMN    "UNI-KL-NS", dmn="uni-kl.de", table=domain.uni-kl.ns, 
+	show="UNI-KL Domain"
+
+;;;;;;;;;;;;;;
+
+MTBL	name=domain.de.ns,show="DE Domain (routed to stepsun)",
+	flags=domain,flags=route,flags=partial,flags=ns
+MDMN	"DE-NS",dmn="de",table=domain.de.ns,show="DE Domain"
+
+#; Top-Level
+MTBL    name=domain.top.ns, show="Top Level Domain (ns)",
+	flags=domain, flags=ns
+MDMN    "TOP-NS", show="Top Level Domain (ns)", table=domain.top.ns,
+	dmn=""
+
+MTBL    uucpdom, file="domains/uucp", show="UUCP - Domains"
+MDMN    "UUCP", show="UUCP- Domain", table=uucpdom
+
+; MTBL	pop, file="domains/pop", show="POP service"
+; MDMN	POP, show="POP Psuedo-domain", table=pop
+
+#;;;;;;;;;;;;;;;;;;;;
+#; Aliases
+MTBL	name=forward,		file="aliases/forward",	show="FORWARD aliases"
+MTBL    name=global,		file="aliases/global",	show="GLOBAL aliases"
+MTBL    name=aliases,		file="aliases/local",	show="LOCAL aliases"
+MTBL    name=sysaliases,	file="aliases/sys",	show="SYSTEM aliases"
+ALIAS	table=sysaliases,	trusted, nobypass
+ALIAS	table=forward,		trusted, nobypass
+ALIAS   table=global,		trusted, nobypass
+ALIAS   table=aliases,		trusted,public
+
+#; Table & Channel entries
+
+; MTBL	chan.list,	file="channels/list",	show="LIST Channel"
+MTBL	chan.local,	file="channels/local",	show="LOCAL Channel"
+MTBL	chan.home,	file="channels/home",	show="SMTP ChannelTab"
+MTBL	chan.smtp,	file="channels/smtp",	show="SMTP ChannelTab"
+ 	flags=channel, flags=partial
+MTBL	chan.uucp,	file="channels/uucp",	show="UUCP-Channel"
+	flags=channel, flags=route
+; MTBL	chan.pop,	file="channels/pop",	show="POP-Channel"
+
+
+
+#;
+; MCHN	list, show="Mailing List Processor", que=list, tbl=chan.list,
+; 	pgm=list, mod=imm, ap=822, host=mathematik.uni-kl.de, auth=free,
+; 	auth=inlog, auth=outlog, level=FST, log=list.log
+
+#;  Channel fuer Mail auf der urmel
+MCHN	local, show="Local Delivery", que=local, tbl=chan.local,
+	pgm=local, mod=imm, ap=822, level=FST, auth=inlog, auth=outlog,
+	auth=free
+
+#;  Channel fuer den Rest der Mail 
+MCHN	home, show="Garbage Collection via SMTP/TCP", que=smtp, tbl=chan.home,
+	pgm=smtp, ap=822, level=FST, log=smtp.log, mod=imm,
+	auth=inlog, auth=outlog, auth=free
+
+#;  Channel fuer den Rest der Mail 
+MCHN	smtp, show="Garbage Collection via SMTP/TCP", que=smtp, tbl=chan.smtp,
+	pgm=smtp, ap=822, level=FST, log=smtp.log, mod=imm,
+	auth=inlog, auth=outlog, auth=free, host=popserv.mathematik.uni-kl.de
+
+#;  Channel fuer den Rest der Mail 
+MCHN	badhosts, show="Garbage Collection via SMTP/TCP", que=bhst, 
+	tbl=chan.smtp,pgm=smtp, ap=822, level=FST, log=smtp.log, mod=imm,
+	auth=inlog, auth=outlog, auth=free, host=popserv.mathematik.uni-kl.de
+
+; #;  Channel fuer Mail innerhalb der Universitaet-Kaiserslautern
+#; Channel via uucp over modem
+MCHN	uucp, show="UUCP-Chanel", que=uucp, tbl=chan.uucp, pgm=uucp,
+	mod=imm, ap=822, lname=galadriel, ldomain=mathematik.uni-kl.de,
+	log=uucp.log, level=FTR
+
+; #;
+; #;MCHN	xuni, show="SmPhone", que=uni, tbl=chan.uni,
+; #;	pgm="smphone", ap=822, level=FTR, log=uni.log, mod=reg,
+; #;	mod=send, scr="script14400",
+; #;	host=gandalf, ldomain=mathematik.uni-kl.de, lname=gandalf
+
+#;
+MCHN	delay, show="Delayed Delivery", que=delay, tbl=chan.smtp, pgm=smtp
+	mod=reg, ap=822, auth=inlog, auth=outlog
+
+; #;
+; MCHN	pop, show="POP Delivery", que=pop, tbl=chan.pop,
+; 	pgm=pop, mod=imm, ap=822, level=FST, log=pop.log
+
+#;logging levels
+MMSGLOG     level=FST, timer=10
+MCHANLOG    level=FST, timer=10
+# MMSGLOG     level=FTR, size=16, stat=timed
+# MCHANLOG    level=FTR, size=16, stat=some
+
+MADDID		1
+MWARNTIME	24
+MFAILTIME	72
+
+AUTHLOG	auth.log ,level=FST
