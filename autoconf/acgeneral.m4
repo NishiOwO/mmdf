@@ -153,6 +153,14 @@ ac_help=
 ac_default_prefix=/usr/local
 [#] Any additions from configure.in:])
 
+dnl
+dnl AC_INIT_VAR(<Variable>, <value>)
+AC_DEFUN(AC_INIT_VAR,
+[AC_DIVERT_PUSH(1)dnl
+  dummy="$1=$2"
+  eval $dummy
+AC_DIVERT_POP()])
+
 dnl AC_PREFIX_DEFAULT(PREFIX)
 AC_DEFUN(AC_PREFIX_DEFAULT,
 [AC_DIVERT_PUSH(AC_DIVERSION_NOTICE)dnl
@@ -198,11 +206,23 @@ includedir='${prefix}/include'
 oldincludedir='/usr/include'
 infodir='${prefix}/info'
 mandir='${prefix}/man'
-varprefix=${prefix}/var
-mmdfphasedir=${varprefix}/mmdf/log/phase
-mmdflogdir=${varprefix}/mmdf/log
-mmdfdiallog=${logdir}/dial_log
-mmdfspooldir=${varprefix}/mmdf/home
+varprefix='/var/spool'
+mmdfprefix='${prefix}/mmdf'
+mmdfphasedir='${varprefix}/mmdf/log/phase'
+mmdflogdir='${varprefix}/mmdf/log'
+mmdfdiallog='${mmdflogdir}/dial_log'
+mmdfspooldir='${varprefix}/mmdf/home'
+if test "$mmdfdebug"  = ""; then mmdfdebug=0;  fi
+if test "$mmdfdlog"   = ""; then mmdfdlog=0;   fi
+if test "$mmdfdbglog" = ""; then mmdfdbglog=0; fi
+if test "$mmdfnodomlit" = ""; then mmdfnodomlit=0; fi
+if test "$mmdfleftdots" = ""; then mmdfleftdots=0; fi
+if test "$mmdfstatsort" = ""; then mmdfstatsort=0; fi
+if test "$mmdfcitation" = ""; then mmdfcitation=0; fi
+used_mmdfphasedir=0
+used_mmdflogdir=0
+used_mmdfdiallog=0
+used_mmdfspooldir=0
 
 # Initialize some other variables.
 subdirs=
@@ -311,12 +331,20 @@ Configuration:
   --version               print the version of autoconf that created configure
 
   --create-target         force creation of conf/<target>/* if needed
+  --mmdf-debug=[0,1,2]    enable more logging information      [default: $mmdfdebug]
+  --mmdf-dlog             enable debug-option of dial packages [default: $mmdfdlog]
+  --mmdf-dbglog           enable debug-option of dial packages [default: $mmdfdbglog]
+  --mmdf-nodomlit         toggle define NODOMLIT [default: $mmdfnodomlit]
+  --mmdf-leftdots         toggle define LEFTDOTS [default: $mmdfleftdots]
+  --mmdf-statsort         toggle define STATSORT [default: $mmdfstatsort]
+  --mmdf-citation         toggle define CITATION [default: $mmdfcitation]
 
 Directory and file names:
   --prefix=PREFIX         install architecture-independent files in PREFIX
                           [$ac_default_prefix]
   --exec-prefix=EPREFIX   install architecture-dependent files in EPREFIX
                           [same as prefix]
+  --mmdf-prefix=DIR       default home of mmdf in DIR [PREFIX/mmdf]
   --bindir=DIR            user executables in DIR [EPREFIX/bin]
   --sbindir=DIR           system admin executables in DIR [EPREFIX/sbin]
   --libexecdir=DIR        program executables in DIR [EPREFIX/libexec]
@@ -406,31 +434,90 @@ EOF
   -mandir=* | --mandir=* | --mandi=* | --mand=* | --man=* | --ma=* | --m=*)
     mandir="$ac_optarg" ;;
 
+  -mmdf-citation | --mmdf-citation | --mmdf-citatio | --mmdf-citati \
+  | --mmdf-citat | --mmdf-cita | --mmdf-cit | --mmdf-ci | --mmdf-c )
+    ac_prev=mmdfcitation ;;
+  -mmdf-citation=* | --mmdf-citation=* | --mmdf-citatio=* | --mmdf-citati=* \
+  | --mmdf-citat=* | --mmdf-cita=* | --mmdf-cit=* | --mmdf-ci=* \
+  | --mmdf-c=* )
+    mmdfcitation="$ac_optarg" ;;
+
+  -mmdf-dbglog | --mmdf-dbglog | --mmdf-dbglo | --mmdf-dbgl \
+  | --mmdf-dbg | --mmdf-db )
+    if test "$mmdfdbglog" = 0; then
+	mmdfdbglog=1 ;
+    else
+	mmdfdbglog=0 ;
+    fi;;
+
+  -mmdf-debug | --mmdf-debug | --mmdf-debu | --mmdf-deb | --mmdf-de )
+    ac_prev=mmdfdebug ;;
+  -mmdf-debug=* | --mmdf-debug=* | --mmdf-debu=* | --mmdf-deb=* | --mmdf-de=* )
+    mmdfdebug="$ac_optarg" ;;
+
   -mmdf-diallog | --mmdf-diallog | --mmdf-diallo | --mmdf-diall | --mmdf-dial | --mmdf-dia)
     ac_prev=mmdfdiallog ;;
   -mmdf-diallog=* | --mmdf-diallog=* | --mmdf-diallo=* | --mmdf-diall=* | --mmdf-dial=* | --mmdf-dia=*)
-    mmdfdiallog="$ac_optarg" ;;
+    mmdfdiallog="$ac_optarg"; used_mmdfdiallog=1 ;;
+
+  -mmdf-dlog | --mmdf-dlog | --mmdf-dlo | --mmdf-dl )
+    if test "$mmdfdlog" = 0; then
+        mmdfdlog=1 ;
+    else
+	mmdfdlog=0 ;
+    fi;;
+
+  -mmdf-leftdots | --mmdf-leftdots | --mmdf-leftdot | --mmdf-leftdo \
+  | --mmdf-leftd | --mmdf-left | --mmdf-lef | --mmdf-le )
+    if test "$mmdfleftdots" = 0; then
+	mmdfleftdots=1
+    else
+	mmdfleftdots=0
+    fi ;;
 
   -mmdf-logdir | --mmdf-logdir | --mmdf-logdi | --mmdf-logd | --mmdf-log \
-  | --mmdf-lo | --mmdf-l )
+  | --mmdf-lo )
     ac_prev=mmdflogdir ;;
   -mmdf-logdir=* | --mmdf-logdir=* | --mmdf-logdi=* | --mmdf-logd=* | --mmdf-log=* \
-  | --mmdf-lo=* | --mmdf-l=* )
-    mmdflogdir="$ac_optarg" ;;
+  | --mmdf-lo=* )
+    mmdflogdir="$ac_optarg"; used_mmdflogdir=1 ;;
+
+  -mmdf-nodomlit | --mmdf-nodomlit | --mmdf-nodomli | --mmdf-nodoml \
+  | --mmdf-nodom | --mmdf-nodo | --mmdf-nod | --mmdf-no | --mmdf-n )
+    if test "$mmdfnodomlit" = 0; then
+	mmdfnodomlit=1
+    else
+	mmdfnodomlit=0
+    fi ;;
 
   -mmdf-phasedir | --mmdf-phasedir | --mmdf-phasedi | --mmdf-phased | --mmdf-phase | --mmdf-phas \
   | --mmdf-pha | --mmdf-ph)
     ac_prev=mmdfphasedir ;;
   -mmdf-phasedir=* | --mmdf-phasedir=* | --mmdf-phasedi=* | --mmdf-phased=* | --mmdf-phase=* \
   | --mmdf-phas=* | --mmdf-pha=* | --mmdf-ph=*)
-    mmdfphasedir="$ac_optarg" ;;
+    mmdfphasedir="$ac_optarg"; used_mmdfphasedir=1 ;;
+
+  -mmdf-prefix | --mmdf-prefix | --mmdf-prefi | --mmdf-pref | --mmdf-pre \
+  | --mmdf-pr )
+    ac_prev=mmdfprefix ;;
+  -mmdf-prefix=* | --mmdf-prefix=* | --mmdf-prefi=* | --mmdf-pref=* \
+  | --mmdf-pre=* | --mmdf-pr=* )
+    mmdfprefix="$ac_optarg"; used_mmdfprefix=1 ;;
 
   -mmdf-spooldir | --mmdf-spooldir | --mmdf-spooldi | --mmdf-spoold | --mmdf-spool | --mmdf-spoo \
   | --mmdf-spo | --mmdf-sp)
     ac_prev=mmdfspooldir ;;
   -mmdf-spooldir=* | --mmdf-spooldir=* | --mmdf-spooldi=* | --mmdf-spoold=* | --mmdf-spool=* \
   | --mmdf-spoo=* | --mmdf-spo=* | --mmdf-sp=*)
-    mmdfspooldir="$ac_optarg" ;;
+    mmdfspooldir="$ac_optarg"; used_mmdfspooldir=1 ;;
+
+  -mmdf-statsort | --mmdf-statsort | --mmdf-statsor | --mmdf-statso \
+  | --mmdf-stats | --mmdf-stat | --mmdf-sta | --mmdf-st )
+    if test "$mmdfstatsort" = "0"; then
+	mmdfstatsort=1
+    else
+	mmdfstatsort=0
+    fi ;;
 
   -nfp | --nfp | --nf)
     # Obsolete; use --without-fp.
@@ -757,6 +844,12 @@ AC_SUBST(phasedir)dnl
 AC_SUBST(logdir)dnl
 AC_SUBST(spooldir)dnl
 AC_SUBST(diallog)dnl
+AC_SUBST(varprefix)dnl
+AC_SUBST(mmdfprefix)dnl
+AC_SUBST(mmdfphasedir)dnl
+AC_SUBST(mmdflogdir)dnl
+AC_SUBST(mmdfdiallog)dnl
+AC_SUBST(mmdfspooldir)dnl
 ])
 
 
@@ -2354,3 +2447,4 @@ changequote([, ])dnl
   done
 fi
 ])
+
