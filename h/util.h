@@ -1,8 +1,6 @@
 /* 
  *  include Config-Switches
  */
-#ifdef _UTIL_H_
-#define _UTIL_H_
 #include "config.h"
 
 #ifndef DIDUTIL
@@ -22,7 +20,7 @@
 /* declarations that should have been in the system files */
 
 #if !defined(BSD_SPRINTF) || defined(ULTRIX)
-extern int sprintf ();
+/*extern int sprintf ();*/
 #else
 extern char *sprintf ();
 #endif
@@ -122,4 +120,3 @@ long	siz2lon();
 				  /* high byte from the "returned"      */
 				  /* value                              */
 #endif /* DIDUTIL */
-#endif /* _UTIL_H_ */
