@@ -563,14 +563,7 @@ mail()
 				themap->ap_chain = route;
 				route = themap;
 		}
-#ifdef HAVE_NOSRCROUTE
-		ap_outtype_save = ap_outtype;
-		ap_outtype |= AP_NOSRCRT;
-#endif
 		sender = ap_p2s((AP_ptr)0, (AP_ptr)0, mbox, domain, route);
-#ifdef HAVE_NOSRCROUTE
-		ap_outtype = ap_outtype_save;
-#endif
 		if(sender == (char *)MAYBE){    /* help !! */
 	tout:;
 			sender = (char *) 0;

@@ -1,14 +1,14 @@
 /*  environment for address parser */
 
-#define AP_SAME     0000          /* do not transorm the address */
-#define AP_733      0001          /* follow RFC #733 rules */
-#define AP_822      0002          /* follow RFC #822 rules */
-#define AP_NODOTS   0004          /* strip down to hostname on next hop */
-#define AP_BIG      0010          /* Use Big-endian domains, FLAG */
-#define AP_TRY      0020          /* Try header rewrite--don't die upon NS timeo*/
+#define AP_SAME       0000          /* do not transorm the address */
+#define AP_733        0001          /* follow RFC #733 rules */
+#define AP_822        0002          /* follow RFC #822 rules */
+#define AP_NODOTS     0004          /* strip down to hostname on next hop */
+#define AP_BIG        0010          /* Use Big-endian domains, FLAG */
+#define AP_TRY        0020          /* Try header rewrite--don't die upon NS timeo*/
 #ifdef HAVE_NOSRCROUTE
-#define AP_NOSRCRT  0100          /* remove source routes */
-#define AP_REJSRCRT 0200          /* reject source routes */
+#  define AP_NOSRCRT  0100          /* remove source routes */
+#  define AP_REJSRCRT 0200          /* reject source routes */
 #endif
 
 struct ap_node

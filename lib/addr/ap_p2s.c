@@ -15,6 +15,9 @@
  *              separate?
  */
 
+extern   int     domsg;
+#define printx if (domsg>1) printf
+
 extern LLog *logptr;
 extern int ap_outtype;
 extern char *multcat();
@@ -22,7 +25,7 @@ extern char *strdup();
 extern char *ap_dmflip();
 extern Domain *dm_v2route();
 
-LOCFUN val2str();
+LOCFUN void val2str();
 
 char *
 ap_p2s (group, name, local, domain, route)
@@ -70,6 +73,7 @@ ap_p2s (group, name, local, domain, route)
     routp = strdup("");
 
     if (group != (AP_ptr) 0) {
+      printx("ap_p2s: group is '%s'\n", group -> ap_obvalue);
 #ifdef DEBUG
 	ll_log (logptr, LLOGFTR, "ap_p2s:  group is '%s'", group -> ap_obvalue);
 #endif
@@ -115,6 +119,7 @@ ap_p2s (group, name, local, domain, route)
     }
 
     if (name != (AP_ptr) 0) {
+      printx("ap_p2s: name is '%s'\n", name -> ap_obvalue);
 #ifdef DEBUG
 	ll_log (logptr, LLOGFTR, "ap_p2s:  name is '%s'", name -> ap_obvalue);
 #endif
@@ -157,6 +162,8 @@ ap_p2s (group, name, local, domain, route)
 	strp = cp;
     }
 
+    if (route != (AP_ptr) 0)
+      printx("ap_p2s: route is '%s'\n", route -> ap_obvalue);
 #ifdef HAVE_NOSRCROUTE
     if ((ap_outtype & AP_NOSRCRT) != AP_NOSRCRT)
 #endif
@@ -269,6 +276,7 @@ ap_p2s (group, name, local, domain, route)
 #endif
 
     if (local != (AP_ptr) 0) {
+      printx("ap_p2s: local is '%s'\n", local -> ap_obvalue);
 #ifdef DEBUG
 	ll_log (logptr, LLOGFTR, "ap_p2s:  local is '%s'", local -> ap_obvalue);
 #endif
@@ -308,6 +316,7 @@ ap_p2s (group, name, local, domain, route)
     }
 
     if (domain != (AP_ptr) 0) {
+      printx("ap_p2s: domain is '%s'\n", domain -> ap_obvalue);
 #ifdef DEBUG
 	ll_log (logptr, LLOGFTR, "ap_p2s:  domain is '%s'",
 		domain -> ap_obvalue);
@@ -316,7 +325,7 @@ ap_p2s (group, name, local, domain, route)
 	flipptr = stripptr = (char *) 0;
 	drefptr = tmpbuf;
 	if (((ap_outtype & AP_BIG) == AP_BIG) ||
-	   (((ap_outtype & AP_NODOTS) == AP_NODOTS)) && route == (AP_ptr) 0) {
+	   ((((ap_outtype & AP_NODOTS) == AP_NODOTS)) && route == (AP_ptr) 0)) {
 	    /* check domain ref in either case */
 	    Domain  *lrval = dm_v2route (tmpbuf, buf, &dmnroute);
 
@@ -356,6 +365,7 @@ ap_p2s (group, name, local, domain, route)
     }
     free (routp);
 
+    printx("==>%s<==\n\n", cp);
     if (inperson) {
 	cp = multcat(strp, ">", (char *)0);
 	free (strp);
@@ -382,7 +392,7 @@ ap_p2s (group, name, local, domain, route)
  *  SEK - have improved this somewhat by giving knowledge of
  *  the various object types.  Does not handle strings of spaces.
  */
-LOCFUN
+LOCFUN void
 	val2str (buf, value, obtype)      /* convert to canonical string */
     char *buf,
 	 *value,
