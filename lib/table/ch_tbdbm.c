@@ -146,7 +146,7 @@ int     pos;                    /* which position to get  (0 = first) */
           case TBT_FILE:
             if (tb_k2val (chanptr -> ch_table, TRUE, hostr, hostname) == OK)
             {                         /* the hostname IS in this table      */
-              if (lexequ (chanptr -> ch_name), ch_dflnam)
+              if (lexequ (chanptr -> ch_name, ch_dflnam))
               {
                 return ((Chan *) OK); /* local reference                */
               }
@@ -433,6 +433,7 @@ LOCVAR struct DBvalues *dp = (struct DBvalues *) 0;
           if (!tb_open (table, first))
             return (NOTOK);           /* not opened                         */
 
+          memset(host, 0, sizeof(host));
           while (tb_read (table, host, buf))
           {                             /* cycle through keys                 */
             if (lexequ (name, host))  /* does key match search name?        */
@@ -440,6 +441,7 @@ LOCVAR struct DBvalues *dp = (struct DBvalues *) 0;
               compress (buf, buf);  /* get rid of extra white space       */
               return (OK);
             }
+            memset(host, 0, sizeof(host));
           }
 
           (void) strcpy (buf, "(ERROR)");
