@@ -5,22 +5,118 @@ AC_PREFIX_DEFAULT('/usr')
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+MMDF_MAJOR_VERSION=2
+MMDF_MINOR_VERSION=45
+MMDF_PATCH_LEVEL=56
+VERSION_DATE="April 1998"
+MMDFLOGIN=mmdf
+ROOTLOGIN=root
+PGMPROT=755
+MMDFLIBS="\${top_srcdir}/lib/libmmdf.a"
+mmdf_prefix="\${prefix}/mmdf"
+libdir="\${mmdf_prefix}/lib"
+chandir="\${mmdf_prefix}/chans"
+tbldir="\${mmdf_prefix}/table"
+rcvdir="\${exec_prefix}/lib/mh"
+
+D_ADDID=yes
+D_ADDIPADDR=yes
+D_ADDIPNAME=yes
+D_NODOMLIT=yes
+D_LEFTDOT=no
+D_STATSORT=yes
+D_MAILIDS=yes
+D_DEBUG=0
+D_D_LOG=0
+D_D_DBLOG=0
+D_CITATION=0
+D_NUMCHANS=20
+D_NUMTABLES=30
+D_NUMDOMAINS=20
+D_LOCNAME=
+D_LOCDOMAIN=
+D_SIGNATURE="MMDF mail system"
+D_LOGIN=mmdf
+D_ADDR=Postmaster
+D_MMDF_PREFIX=/opt/mmdf
+D_MMDF_SPOOL=/var/spool/mmdf
+D_MMDFTAILOR=/opt/mmdf/mmdftailor
+D_CMDDFLDIR=/opt/mmdf
+D_LOGDFLDIR=/var/spool/mmdf/log
+D_PHSDFLDIR=/var/spool/mmdf/log/phase
+D_TBLDFLDIR=/opt/mmdf/table
+D_TBLDBM=/opt/mmdf/table/mmdfdbm
+D_QUEDFLDIR=/var/spool/mmdf/home
+D_CHNDFLDIR=/opt/mmdf/chans
+D_LCKDFLDIR=/var/spool/mmdf/lock
+D_WARNTIME=24
+D_FAILTIME=48
+D_MAXHOPS=20
+D_LNK_LISTSIZE=12
+D_MAXQUEUE=300
+D_MAILSLEEP=600
+D_LOCMACHINE=
+D_AUTHREQUEST=Postmaster
+D_AUTHFILE=/opt/mmdf/warning
+AC_SUBST(D_ADDID)
+AC_SUBST(D_ADDIPADDR)
+AC_SUBST(D_ADDIPNAME)
+AC_SUBST(D_NODOMLIT)
+AC_SUBST(D_LEFTDOT)
+AC_SUBST(D_STATSORT)
+AC_SUBST(D_MAILIDS)
+AC_SUBST(D_DEBUG)
+AC_SUBST(D_D_LOG)
+AC_SUBST(D_D_DBLOG)
+AC_SUBST(D_CITATION)
+AC_SUBST(D_NUMCHANS)
+AC_SUBST(D_NUMTABLES)
+AC_SUBST(D_NUMDOMAINS)
+AC_SUBST(D_LOCNAME)
+AC_SUBST(D_LOCDOMAIN)
+AC_SUBST(D_SIGNATURE)
+AC_SUBST(D_LOGIN)
+AC_SUBST(D_ADDR)
+AC_SUBST(D_MMDF_PREFIX)
+AC_SUBST(D_MMDF_SPOOL)
+AC_SUBST(D_MMDFTAILOR)
+AC_SUBST(D_CMDDFLDIR)
+AC_SUBST(D_LOGDFLDIR)
+AC_SUBST(D_PHSDFLDIR)
+AC_SUBST(D_TBLDFLDIR)
+AC_SUBST(D_TBLDBM)
+AC_SUBST(D_QUEDFLDIR)
+AC_SUBST(D_CHNDFLDIR)
+AC_SUBST(D_LCKDFLDIR)
+AC_SUBST(D_WARNTIME)
+AC_SUBST(D_FAILTIME)
+AC_SUBST(D_MAXHOPS)
+AC_SUBST(D_LNK_LISTSIZE)
+AC_SUBST(D_MAXQUEUE)
+AC_SUBST(D_MAILSLEEP)
+AC_SUBST(D_LOCMACHINE)
+AC_SUBST(D_AUTHREQUEST)
+AC_SUBST(D_AUTHFILE)
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl  AC_GET_BOOL(<Variable>, <Text>, <default> [,<d=allways define>])
 AC_DEFUN(AC_GET_BOOL,
 [
-  /bin/echo Enable $2 (y/n) "("$3") ? : \c"
+  /bin/echo "Enable $2 (y/n) ("$3") ? : \c"
   read ans
   if test "$ans" = ""; then
     ans=$3
   fi
-  if test "$ans" = "y"; then
-    ac_def_$3="yes"
+  if test "$ans" = "y" || test "$ans" = "yes"; then
+dnl    ac_def_$1="yes"
+    $1="yes"
     AC_DEFINE_UNQUOTED($1, 1)
   else
-    ac_def_$3="no"
-    if test "$4" = "d" then
-      AC_DEFINE_UNQUOTED($3, 0)
-    fi
+dnl    ac_def_$1="no"
+    $1="no"
+dnl    if test "$4" = "d" then
+dnl      AC_DEFINE_UNQUOTED($1, 0)
+dnl    fi
   fi
 ])
 AC_PROVIDE(AC_GET_BOOL)
@@ -127,6 +223,13 @@ AC_DEFUN(AC_LOAD_LOCAL_CONFIG,
     AC_MSG_RESULT(yes)
     echo "loading local configuration '"$1"'"
     . conf/sites/$1
+    for i in `set | grep CONFIG_SYS_`
+    do
+dnl      var=`echo $i | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'| sed s/config_sys_/enable_/`
+dnl      var=`echo $i | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'| sed s/CONFIG_SYS_//`
+      var=`echo $i | sed s/CONFIG_SYS_//`
+      eval D_$var
+    done
     for i in `set | grep CONFIG_CODE_`
     do
       var=`echo $i | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'| sed s/config_/enable_/`
@@ -155,31 +258,45 @@ AC_DEFUN(AC_LOAD_LOCAL_CONFIG,
 ])
 AC_PROVIDE(AC_LOAD_LOCAL_CONFIG)
 
+AC_DEFUN(AC_LOAD_INTERACTIVE_CONFIG,
+[
+  AC_MSG_CHECKING(for '$1')
+  if test -r $1; then
+    AC_MSG_RESULT(yes)
+    echo "loading local configuration '"$1"'"
+    . $1
+  else
+    AC_MSG_RESULT(no)
+  fi
+])
+AC_PROVIDE(AC_LOAD_INTERACTIVE_CONFIG)
+
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl Version business -- should be the same as in Singular subdir 
 dnl
-MMDF_MAJOR_VERSION=2
-MMDF_MINOR_VERSION=45
-MMDF_PATCH_LEVEL=56
-VERSION_DATE="March 1997"
-MMDFLOGIN=mmdf
-ROOTLOGIN=root
-PGMPROT=755
-MMDFLIBS="\${top_srcdir}/lib/libmmdf.a"
-mmdf_prefix="\${prefix}/mmdf"
-libdir="\${mmdf_prefix}/lib"
-chandir="\${mmdf_prefix}/chans"
-tbldir="\${mmdf_prefix}/table"
-rcvdir="\${exec_prefix}/lib/mh"
-
 AC_GET_UNAME
 MMDF_CONFIG=$UNAME_NODE.config
+AC_LOAD_INTERACTIVE_CONFIG(xConfcache)
 AC_LOAD_LOCAL_CONFIG($MMDF_CONFIG)
 AC_CANONICAL_HOST
 AC_PROG_CC
 AC_PROG_CPP
 dnl AC_PROG_CXX
+
+dnl check if conf/$target exists
+if test "$target" = "NONE"; then
+  target=$host
+fi
+AC_MSG_CHECKING(whether 'conf/$target' exists)
+if test -x conf/$target; then
+    AC_MSG_RESULT(good)
+else
+    AC_MSG_RESULT(no)
+    AC_MSG_WARN("directory conf/$target doesn\'t exists.")
+    AC_MSG_WARN(cannot finish configuration with 'sitesetup $target')
+fi
+
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -200,7 +317,9 @@ AC_ARG_ENABLE(nis, \
 AC_ARG_ENABLE(nn, \
   [     nn                   mailids and users configurable in mmdftailor])
 AC_ARG_ENABLE(nosrcroute, \
-  [     nosrcroute                   source-routing])
+  [     nosrcroute           remove source-routing])
+AC_ARG_ENABLE(8bit, \
+  [     8bit                 8bit clean])
 AC_ARG_ENABLE(dial, \
   [     dial                 dial code])
 AC_ARG_ENABLE(badusers, \
@@ -244,7 +363,7 @@ AC_ARG_ENABLE(ucbmail, \
 AC_ARG_ENABLE(unsupported, \
   [     unsupported          autores, cvmbox])
 AC_ARG_ENABLE(gcc, \
-  [     gcc                  use ggc as compiler])
+  [     gcc                  use gcc as compiler])
 
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -377,6 +496,7 @@ if test "$ac_cv_enable_code_dbm" != "no"; then
          ac_cv_lib_dbm="no"
       fi])
 fi
+dnl checking for libwrap
 if test "$ac_cv_enable_code_wrap" != "no"; then
    AC_CHECK_LIB(wrap, eval_client)
    if test "$ac_cv_lib_wrap_eval_client" = "yes"; then
@@ -388,6 +508,7 @@ if test "$ac_cv_enable_code_wrap" != "no"; then
       ])
    fi
 fi
+
 AC_CHECK_LIB(socket, socket)
 AC_CHECK_LIB(nsl, inet_ntoa)
 
@@ -705,6 +826,7 @@ fi
 
 echo
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 AC_ENABLE_DEFAULT_CODE(wrap, yes, lib, "tcp wrapper")
 AC_ENABLE_DEFAULT_CODE(nameserver, yes, code, "nameserver")
 AC_ENABLE_DEFAULT_CODE(dbm, yes, lib, "dbm")
@@ -712,12 +834,29 @@ AC_ENABLE_DEFAULT_CODE(nis, no , code, "tables can come via NIS")
 AC_ENABLE_DEFAULT_CODE(nn,  no , code,
 	"'mailids' and 'users' configurable in mmdftailor")
 AC_ENABLE_DEFAULT_CODE(nosrcroute,  no , code, "Source routing")
+AC_ENABLE_DEFAULT_CODE(8bit,        no , code, "8bit-clean transfer")
 
 if test "$ac_cv_enable_lib_dbm" = "yes"; then
    CH_TB="ch_tbdbm"
 else
    CH_TB="ch_tbseq"
 fi
+if test "$enable_8bit" = "yes"; then
+   AC_DEFINE(EIGHT_BIT_CLEAN)
+fi
+if test "$enable_nodomlit" = "yes"; then
+   ac_cv_enable_nodomlit=$enable_nodomlit
+   AC_DEFINE(NODOMLIT)
+fi
+if test "$enable_leftdots" = "yes"; then
+   ac_cv_enable_leftdot=$enable_leftdot
+   AC_DEFINE(LEFTDOTS)
+fi
+if test "$enable_statsort" = "yes"; then
+   ac_cv_enable_statsort=$enable_statsort
+   AC_DEFINE(STATSORT)
+fi
+
 dnl if test "$ac_cv_lib_gdbm_gdbm_open" = "yes" || \
 dnl 	test "$ac_cv_lib_ndbm" = "yes" || \
 dnl 	test "$ac_cv_lib_dbm" = "yes"; then
@@ -793,6 +932,14 @@ if test "$ac_cv_prog_gcc" = "yes"; then
   CFLAGS="$CFLAGS -pipe"
 fi
 
+AC_DEFINE_UNQUOTED(DEBUG, $D_DEBUG)
+AC_DEFINE_UNQUOTED(D_LOG, $D_D_LOG)
+AC_DEFINE_UNQUOTED(D_DBLOG, $D_D_DBLOG)
+AC_DEFINE_UNQUOTED(NODOMLIT, $D_NODOMLIT)
+AC_DEFINE_UNQUOTED(LEFTDOT, $D_LEFTDOT)
+AC_DEFINE_UNQUOTED(STATSORT, $D_STATSORT)
+AC_DEFINE_UNQUOTED(CITATION, $D_CITATION)
+
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 AC_SUBST(SUBDIRS)
 AC_SUBST(LIBSUBDIRS)
@@ -821,7 +968,18 @@ AC_SUBST(UNAME_SYSTEM)
 AC_SUBST(UNAME_VERSION)
 AC_SUBST(UNAME_NODE)
 
+echo "host  ="$host
+echo "cpu   ="$host_cpu
+echo "vendor="$host_vendor
+echo "os    ="$host_os
+echo "target="$target
+
 AC_OUTPUT(lib/Makefile src/Makefile uip/Makefile conf/common/Makefile.com \
-Makefile)
+Makefile conf/$target/conf.h conf/$target/conf.c)
+cd conf
+echo ./sitesetup $target
+./sitesetup $target
+cd ..
+
 rm -f Makefile.com
 ln -s conf/common/Makefile.com Makefile.com
