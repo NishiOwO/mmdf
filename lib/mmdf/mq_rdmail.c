@@ -252,6 +252,15 @@ mq_radr (theadr)	/* obtain next address in msg's queue */
 
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "mq_radr ()");
+    ll_log (logptr, LLOGBTR, "----> (pos=%d, cur=%ld, lseek=%ld)", 
+           mq_curpos, ftell(mq_rfp), lseek(mq_fd, 0, SEEK_CUR));
+#endif
+#ifdef LINUX
+    lseek(mq_fd, ftell(mq_rfp), SEEK_SET);
+#endif
+#ifdef DEBUG
+    ll_log (logptr, LLOGBTR, "----> (pos=%d, cur=%ld, lseek=%ld)", 
+	    mq_curpos, ftell(mq_rfp), lseek(mq_fd, 0, SEEK_CUR));
 #endif
 
     theadr -> adr_que = 0;	/* null it to indicate empty entry */
