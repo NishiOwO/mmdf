@@ -27,9 +27,8 @@ int tb_nis_init(tblptr)
 Table *tblptr;
 {
 #ifdef DEBUG
-  ll_log (logptr, LLOGBTR, "tb_nis_init (%p)", tblptr);
+  ll_log (logptr, LLOGBTR, "tb_nis_init (%p, %s)", tblptr, tblptr -> tb_name);
 #endif
-  printf( "tb_nis_init (%p, %s)\n", tblptr, tblptr -> tb_name);
 
   tblptr -> tb_tai   = &tb_nis_tai;
   /*tblptr -> tb_k2val = &tb_nis_k2val;*/
