@@ -62,6 +62,7 @@
 #include "msg.h"
 /*  msg_cite() is defined in adr_queue.h  */
 #include "adr_queue.h"
+#define OLD_WARN
 
 #ifndef EWOULDBLOCK
 #ifdef SYS5
