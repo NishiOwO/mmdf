@@ -603,6 +603,13 @@ datum value;
 check (tblptr)
 Table *tblptr;
 {
+  if(tblptr==NULL) return 0;
+  if( tblptr == (Table *) NOTOK) {
+    fprintf(stderr, "table not specified. Configuration error\n");
+    return 1;
+  }
+  
+    
   switch(tblptr -> tb_type) {
     
       case TBT_TEST:

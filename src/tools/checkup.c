@@ -165,7 +165,7 @@ main (argc, argv)
 
     chktai ();  /* is the tailoring file there ? */
 
-    mmdf_init (argv[0], 0);
+    mmdf_init (argv[0], mmdf_parse_args(argc, argv));
     if (errflg)
 	endit (NOTOK);
     ll_hdinit (&msglog, argv[0]);
@@ -352,15 +352,14 @@ main (argc, argv)
 	    qflush (LEVEL5);
 
 	    que (LEVEL5, "Queueing directories:\n");
-	    for (ind = 0; ch_tbsrch[ind] != (Chan *) 0; ind++)
-	    {
-	    	static char path[64];
+	    for (ind = 0; ch_tbsrch[ind] != (Chan *) 0; ind++) {
+          static char path[64];
 
-	    	(void) snprintf (path, sizeof(path), "%s%s",
-		    squepref, ch_tbsrch[ind] -> ch_queue);
-		que (LEVEL5, subhdrfmt, ch_tbsrch[ind] -> ch_show, path);
-		chkpath (FINAL, path, 0777, 0777, mmdfuid, mmdfgid, MMDFlogin);
-		qflush (LEVEL5);
+          (void) snprintf (path, sizeof(path), "%s%s",
+                           squepref, ch_tbsrch[ind] -> ch_queue);
+          que (LEVEL5, subhdrfmt, ch_tbsrch[ind] -> ch_show, path);
+          chkpath (FINAL, path, 0777, 0777, mmdfuid, mmdfgid, MMDFlogin);
+          qflush (LEVEL5);
 	    }
 	}
     }
@@ -545,84 +544,80 @@ chktab ()
     }
 
     que (LEVEL4, "\nChannel name tables & associated system entries:\n");
-    for (ind = 0; ch_tbsrch[ind] != (Chan *) 0; ind++)
-    {
-	if (ind > 0)
+    for (ind = 0; ch_tbsrch[ind] != (Chan *) 0; ind++) {
+      if (ind > 0)
 	    que (LEVEL5, "\n");
-	que (LEVEL5, subhdrfmt, ch_tbsrch[ind] -> ch_show,
-			ch_tbsrch[ind] -> ch_name);
-	que (LEVEL6, subhdrfmt, "Queue name", ch_tbsrch[ind] -> ch_queue);
-	qflush (LEVEL6);
+      que (LEVEL5, subhdrfmt, ch_tbsrch[ind] -> ch_show,
+           ch_tbsrch[ind] -> ch_name);
+      que (LEVEL6, subhdrfmt, "Queue name", ch_tbsrch[ind] -> ch_queue);
+      qflush (LEVEL6);
 
-	/*  verify that ch_name is legal, ie, less than 8 chars
-	 *  long, and containing only alphanumerics or -.
-	 */
-	for (n = 0;  ch_tbsrch[ind] -> ch_name[n] != '\0';  n++)
+      /*  verify that ch_name is legal, ie, less than 8 chars
+       *  long, and containing only alphanumerics or -.
+       */
+      for (n = 0;  ch_tbsrch[ind] -> ch_name[n] != '\0';  n++)
 	    if( ((isalnum (ch_tbsrch[ind] -> ch_name[n]) == 0) &&
-		 (ch_tbsrch[ind] -> ch_name[n] != '-'      )   ) ||
-		(n > 8                                          )   )
-		break;
-	/*  make sure the loop terminated normally  */
-	if (n > 8)
+             (ch_tbsrch[ind] -> ch_name[n] != '-'      )   ) ||
+            (n > 8                                          )   )
+          break;
+      /*  make sure the loop terminated normally  */
+      if (n > 8)
 	    que (LEVEL1, "Long name         : '%s' should be 8 or fewer characters\n",
-			ch_tbsrch[ind] -> ch_name);
-	else
+             ch_tbsrch[ind] -> ch_name);
+      else
 	    if (ch_tbsrch[ind] -> ch_name[n] != '\0')
-		que (LEVEL1, "Illegal char      : (%c) in '%s'\n",
-		    ch_tbsrch[ind] -> ch_name[n], ch_tbsrch[ind] -> ch_name);
+          que (LEVEL1, "Illegal char      : (%c) in '%s'\n",
+               ch_tbsrch[ind] -> ch_name[n], ch_tbsrch[ind] -> ch_name);
 
-	que (LEVEL6, subhdrfmt, "  Local host name",
-				    ch_tbsrch[ind] -> ch_lname);
-	que (LEVEL6, subhdrfmt, "  Local domain name",
-				    ch_tbsrch[ind] -> ch_ldomain);
-	if( ch_tbsrch[ind] -> ch_warntime > 0 )
-      que (LEVEL6, "    %-20s: %d\n", "  warntime", ch_tbsrch[ind] -> ch_warntime);
-	if( ch_tbsrch[ind] -> ch_failtime > 0 )
-      que (LEVEL6, "    %-20s: %d\n", "  failtime", ch_tbsrch[ind] -> ch_failtime);
-	qflush (LEVEL6);
+      que (LEVEL6, subhdrfmt, "  Local host name",
+           ch_tbsrch[ind] -> ch_lname);
+      que (LEVEL6, subhdrfmt, "  Local domain name",
+           ch_tbsrch[ind] -> ch_ldomain);
+      if( ch_tbsrch[ind] -> ch_warntime > 0 )
+        que (LEVEL6, "    %-20s: %d\n", "  warntime", ch_tbsrch[ind] -> ch_warntime);
+      if( ch_tbsrch[ind] -> ch_failtime > 0 )
+        que (LEVEL6, "    %-20s: %d\n", "  failtime", ch_tbsrch[ind] -> ch_failtime);
+      qflush (LEVEL6);
 
-	cktable (ch_tbsrch[ind] -> ch_table, "Channel table");
+      cktable (ch_tbsrch[ind] -> ch_table, "Channel table");
 
-	if (ch_tbsrch[ind] -> ch_indest != (Table *) 0)
+      if (ch_tbsrch[ind] -> ch_indest != (Table *) 0)
 	    cktable (ch_tbsrch[ind] -> ch_indest, "Destination filter");
 
-	if (ch_tbsrch[ind] -> ch_outdest != (Table *) 0)
+      if (ch_tbsrch[ind] -> ch_outdest != (Table *) 0)
 	    cktable (ch_tbsrch[ind] -> ch_outdest, "Destination filter");
 
-	if (ch_tbsrch[ind] -> ch_insource != (Table *) 0)
+      if (ch_tbsrch[ind] -> ch_insource != (Table *) 0)
 	    cktable (ch_tbsrch[ind] -> ch_insource, "Source filter");
 
-	if (ch_tbsrch[ind] -> ch_outsource != (Table *) 0)
+      if (ch_tbsrch[ind] -> ch_outsource != (Table *) 0)
 	    cktable (ch_tbsrch[ind] -> ch_outsource, "Source filter");
 
-	if (ch_tbsrch[ind] -> ch_known != (Table *) 0)
+      if (ch_tbsrch[ind] -> ch_known != (Table *) 0)
 	    cktable (ch_tbsrch[ind] -> ch_known, "Table of known hosts");
 
-	if (ch_tbsrch[ind] -> ch_script != 0)
-	{
+      if (ch_tbsrch[ind] -> ch_script != 0) {
 	    que (LEVEL6, subhdrfmt, "Dialing script",
 				    ch_tbsrch[ind] -> ch_script);
 	    if (stat (ch_tbsrch[ind] -> ch_script, &statbuf) < OK)
-		que (LEVEL1, probfmt, "cannot stat", xerrstr());
+          que (LEVEL1, probfmt, "cannot stat", xerrstr());
 	    qflush (LEVEL6);
 	}
 
-	if (ch_tbsrch[ind] -> ch_trans != (char *) DEFTRANS)
-	{
-	    que (LEVEL6, subhdrfmt, "Phone transcript",
-				ch_tbsrch[ind] -> ch_trans );
-	    qflush (LEVEL6);
+	if (ch_tbsrch[ind] -> ch_trans != (char *) DEFTRANS) {
+      que (LEVEL6, subhdrfmt, "Phone transcript",
+           ch_tbsrch[ind] -> ch_trans );
+      qflush (LEVEL6);
 	}
 	if (ch_tbsrch[ind] -> ch_login != NOLOGIN)
-	    chklogin (ch_tbsrch[ind]);
+      chklogin (ch_tbsrch[ind]);
 	qflush (LEVEL5);
     }
     qflush (LEVEL4);
 
     que (LEVEL4, hdrfmt, "Domain tables", "");
-    for (didone = FALSE, ind = 0; dm_list[ind] != (Domain *) 0; ind++)
-    {
-	if (dm_list[ind] -> dm_table -> tb_fp == (FILE *) NOTOK)
+    for (didone = FALSE, ind = 0; dm_list[ind] != (Domain *) 0; ind++) {
+      if (dm_list[ind] -> dm_table -> tb_fp == (FILE *) NOTOK)
 	    continue;
 	didone = TRUE;
 	que (LEVEL5, subhdrfmt,
@@ -652,23 +647,27 @@ chktab ()
     }
 
     que (LEVEL4, hdrfmt, "Additional tables", "");
-    for (didone = FALSE, ind = 0; tb_list[ind] != (Table *) 0; ind++)
-    {
-	if (tb_list[ind] -> tb_fp == (FILE *) NOTOK)
+    for (didone = FALSE, ind = 0; tb_list[ind] != (Table *) 0; ind++) {
+      if( tb_list[ind] == (Table *) NOTOK) {
+        que(LEVEL1, "table not specified. Configuration error\n");
+        continue;
+      }
+
+      if (tb_list[ind] -> tb_fp == (FILE *) NOTOK)
 	    continue;           /* already done */
 
-	didone = TRUE;
-	que (LEVEL5, subhdrfmt, tb_list[ind] -> tb_show,
-				tb_list[ind] -> tb_name);
+      didone = TRUE;
+      que (LEVEL5, subhdrfmt, tb_list[ind] -> tb_show,
+           tb_list[ind] -> tb_name);
 
-	/*  verify that spec is legal, ie, less than 8 chars
-	 *  long, and containing only alphanumerics or -.
-	 */
-	for (n = 0;  tb_list[ind] -> tb_name[n] != '\0';  n++)
+      /*  verify that spec is legal, ie, less than 8 chars
+       *  long, and containing only alphanumerics or -.
+       */
+      for (n = 0;  tb_list[ind] -> tb_name[n] != '\0';  n++)
 	    if( ((isalnum (tb_list[ind] -> tb_name[n]) == 0) &&
-		 (tb_list[ind] -> tb_name[n] != '-'      )   &&
-		 (tb_list[ind] -> tb_name[n] != '.'      )   ) )
-		break;
+             (tb_list[ind] -> tb_name[n] != '-'      )   &&
+             (tb_list[ind] -> tb_name[n] != '.'      )   ) )
+          break;
 
 	/*  make sure the loop terminated normally  */
 	if (tb_list[ind] -> tb_name[n] != '\0')
@@ -691,9 +690,15 @@ cktable(tb, title)
 register Table *tb;
 register char *title;
 {
-    struct stat statbuf;
+  struct stat statbuf;
 
-    tb -> tb_fp = (FILE *) NOTOK;	/* flag this table as processed */
+  if( tb == (Table *) NOTOK) {
+    que (LEVEL1, subhdrfmt, "not specified");
+    qflush (LEVEL6);
+    endit(NOTOK);
+  }
+    
+  tb -> tb_fp = (FILE *) NOTOK;	/* flag this table as processed */
 #if 0
     switch(tb -> tb_type) {
         case TBT_NS:
