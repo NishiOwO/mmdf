@@ -10,7 +10,7 @@ MODULES =	tty_io ll_err ll_log tai_packages cmdsrch \
 		zero blt expand sstr2arg nexec \
 		tai_file tai_noop \
 		gwdir gwdir.4.2 lk_lock mydbm getllog \
-		getllog.v7 getllog.bsd getllog.fak
+		getllog.v7 getllog.bsd getllog.fak rbl_match
 
 STANDARD =	tty_io.o ll_err.o ll_log.o tai_packages.o cmdsrch.o \
 		cmdbsrch.o cnvtdate.o creatdir.o getfpath.o getwho.o \
@@ -19,7 +19,7 @@ STANDARD =	tty_io.o ll_err.o ll_log.o tai_packages.o cmdsrch.o \
 		prefix.o strequ.o lexequ.o chrcnv.o getutmp.o getgroup.o \
 		compress.o multcpy.o multcat.o strdup.o gcread.o gettys.o \
 		zero.o blt.o expand.o sstr2arg.o nexec.o lk_lock.o \
-		mydbm.o getllog.o
+		mydbm.o getllog.o rbl_match.o
 
 STDSRCS =	tty_io.c ll_err.c ll_log.c tai_packages.c cmdsrch.c \
 		cmdbsrch.o cnvtdate.c creatdir.c getfpath.c getwho.c \
@@ -28,7 +28,7 @@ STDSRCS =	tty_io.c ll_err.c ll_log.c tai_packages.c cmdsrch.c \
 		prefix.c strequ.c lexequ.c chrcnv.c getutmp.c getgroup.c \
 		compress.c multcpy.c multcat.c strdup.c gcread.c gettys.c \
 		zero.c blt.c expand.c sstr2arg.c nexec.c lk_lock.c \
-		mydbm.c getllog.c
+		mydbm.c getllog.c rbl_match.c
 
 v7objs =	gwdir.o
 v7srcs =	gwdir.c
@@ -47,27 +47,27 @@ v7srcs =	gwdir.c
 
 real-default: ../util-made
 ../util-made:	${STANDARD} ${LOCALUTIL} ../${SYSTEM}-made
-	ar r ../libmmdf.a ${STANDARD} ${LOCALUTIL}
+	$(AR) r ../libmmdf.a ${STANDARD} ${LOCALUTIL}
 	-touch ../util-made
 
 ../v7-made:	${v7objs}
-	ar r ../libmmdf.a ${v7objs}
+	$(AR) r ../libmmdf.a ${v7objs}
 	-touch ../v7-made
 
 ../5.2-made:	${5.2objs}
-	ar r ../libmmdf.a ${5.2objs}
+	$(AR) r ../libmmdf.a ${5.2objs}
 	-touch ../5.2-made
 
 ../4.1-made:	${4.1objs}
-	ar r ../libmmdf.a ${4.1objs}
+	$(AR) r ../libmmdf.a ${4.1objs}
 	-touch ../4.1-made
 
 ../4.2-made:	${4.2objs}
-	ar r ../libmmdf.a ${4.2objs}
+	$(AR) r ../libmmdf.a ${4.2objs}
 	-touch ../4.2-made
 
 ../4.3-made:	${4.3objs}
-	ar r ../libmmdf.a ${4.3objs}
+	$(AR) r ../libmmdf.a ${4.3objs}
 	-touch ../4.3-made
 
 lint:	std-lint ${SYSTEM}-lint

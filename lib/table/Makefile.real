@@ -14,7 +14,7 @@ COBJECTS =  dm_struct.c dm_table.c $(CH_TB).c \
 
 real-default: ../table-made
 ../table-made:	$(OBJECTS)
-	-ar r ../libmmdf.a $(OBJECTS)
+	-$(AR) r ../libmmdf.a $(OBJECTS)
 	-touch ../table-made
 	-@echo "table routines built normally"
 
