@@ -1,8 +1,8 @@
 
 README -- MMDFII, Patch Level 44 (alpha), June 1998
 
-	This is the current source tree of the MMDF II 2.44 alpha release.
-Patches up to patch-a7 have been applied. (last change August 19th 1998)
+	This is the current source tree of the MMDF II 2.45 devellopment version.
+It is based on MMDF II 2.44 patchlevel a8.
 
 CHANGES:
     This release mainly consists of cleanups. But there are also some
