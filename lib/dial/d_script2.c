@@ -29,7 +29,6 @@ d_scopen (scriptfile, nfields, fields)
   int nfields;
   char scriptfile[], *fields[];
     {
-    char *calloc();
     register int index, i;
 
     /*  Don't let them open so many files that they overrun my array  */

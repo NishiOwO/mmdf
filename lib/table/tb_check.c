@@ -1,5 +1,5 @@
 /*
- * $Id: tb_check.c,v 1.2 2001/07/15 15:40:14 krueger Exp $
+ * $Id: tb_check.c,v 1.3 2001/10/26 13:41:42 krueger Exp $
  */
 
 #include "util.h"
@@ -23,17 +23,17 @@ extern	char	*sys_errlist[];
 */
 #define         MAXPATH         15
 
+struct S_prtque  {
+    int q_level;
+    char q_text[126];
+};
+
 int verbosity = BACKGROUND;
 
 struct stat statbuf;
 
 int prtmax;
-struct prtque prtque[QUESIZ];
-
-struct prtque  {
-    int q_level;
-    char q_text[126];
-};
+struct S_prtque prtque[QUESIZ];
 
 static char probfmt[] = "%-18s: %s\n";
 
