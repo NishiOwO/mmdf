@@ -261,29 +261,11 @@ Non-JNT systems will leave JNTMAIL, BOTHEND
 and VIATRACE undefined.
 .PP
 The next section of conf.h contains the #include lines necessary to include
-the file time.h and dir.h (as is used with the libndir package).
+the file time.h .
 The former is typically /usr/include/time.h or /usr/include/sys/time.h
 (a.k.a. <time.h> or <sys/time.h>).
-The latter
-may be called ndir.h on some systems.  This is typically
-/usr/include/dir.h, /usr/include/dirent.h or /usr/include/ndir.h
-(a.k.a. <dir.h>, <dirent.h> or <ndir.h>).
-There are two #define lines here, define one.
-One is for systems which use the ``struct dirent'' style espoused by the
-standards organizations and currently in use in SysVr3,
-this is S5DIRENT.
-The other is for systems using the ``struct direct'' style espoused
-by the BSD distribution,
-this is BSDDIRECT.
-These #defines select for differences in both name and meaning
-of the two styles.
-To tell the difference, 
-S5DIRECT uses ``(struct dirent *)->d_reclen''
-as the length of the directory entry,
-and BSDDIRECT uses ``(struct direct *)->d_namlen''
-as the length of the name-string.
 .XX
-Check where your time.h and dir.h are and fix the #includes, if necessary.
+Check where your time.h are and fix the #includes, if necessary.
 .PP
 The final section of conf.h is used to define a macro that will identify
 privileged UIDs that are likely to be submitting mail on behalf of other.

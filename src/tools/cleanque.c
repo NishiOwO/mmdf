@@ -1,4 +1,4 @@
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.6 1985/04/05 13:42:13 long Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.7 1997/12/30 14:46:33 krueger Exp $ */
 /*
  *     MULTI-CHANNEL MEMO DISTRIBUTION FACILITY  (MMDF)
  *     
@@ -261,12 +261,7 @@ LOCFUN
 
 /*  valid message:  entry allocated & name begins with "msg." */
 
-    return ((
-#ifdef BSDDIRECT
-	theentry -> d_namlen < MSGNSIZE
-#else
-	(strlen(theentry->d_name) < MSGNSIZE)
-#endif
+    return (( (NAMLEN(theentry) <= MSGNSIZE)
 		&& equal (theentry -> d_name, "msg.", 4)) ? TRUE : FALSE);
 }
 

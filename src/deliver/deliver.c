@@ -1056,12 +1056,7 @@ LOCFUN
     ll_log (logptr, LLOGFTR, "ovr_ismsg (name='%s')",
 			entry -> d_name);
 #endif
-    return ((
-#ifdef BSDDIRECT
-	entry -> d_namlen <= MSGNSIZE
-#else
-	(strlen(entry -> d_name) <= MSGNSIZE)
-#endif
+    return (( (NAMLEN(entry) <= MSGNSIZE)
 	     && equal (entry -> d_name, "msg.", 4)) ? TRUE : FALSE);
 }
 

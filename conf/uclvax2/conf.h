@@ -34,17 +34,6 @@
 
 #include <sys/time.h>
 
-/* fine S5DIRENT	/* Use <dirent.h> && struct dirent */
-#define BSDDIRECT	/* Use <sys/dir.h> && struct direct */
-#ifdef S5DIRENT
-#include <dirent.h>
-#define dirtype dirent
-#else
-#include <sys/dir.h>
-#define dirtype direct
-#endif
-
-
 /********************* Privileged UIDs *************************/
 
 /*

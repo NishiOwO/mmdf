@@ -266,12 +266,7 @@ LOCFUN
 ovr_ismsg(entry)	/* a processable message?		*/
 register struct dirtype *entry;
 {
-	return((
-#ifdef BSDDIRECT
-	entry->d_namlen < MSGNSIZE
-#else
-	(strlen(entry->d_name) < MSGNSIZE)
-#endif
+	return(( (NAMLEN(entry) <= MSGNSIZE)
 	    && equal(entry->d_name, "msg.", 4)) ? TRUE : FALSE );
 }
 
