@@ -262,7 +262,7 @@ AP_ptr
 				/* SEK this might need beefing up to cope    */
 				/* with unknown subdomains              */
 
-	irval = tb_k2val(exorchan->ch_known, TRUE, route.dm_argv[0], official);
+	irval = tb_wk2val(exorchan->ch_known, TRUE, route.dm_argv[0], official);
 	if(irval == MAYBE)
 	    return( (AP_ptr)MAYBE);
 	else if(irval == NOTOK) {

@@ -79,6 +79,8 @@ Dmn_route *dmnroute;              /* where to put routing information   */
 
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "dm_k2val (%s, %s)", dmntbl -> dm_name, subdmn);
+    ll_log (logptr, LLOGBTR, "dm_k2val: subdmn=%s", subdmn);
+    ll_log (logptr, LLOGBTR, "dm_k2val: dm_domain=%s", dmntbl->dm_domain);
 #endif
 
     if (((dmntbl->dm_table->tb_flags & TB_SRC) == TB_NS) &&
@@ -87,7 +89,7 @@ Dmn_route *dmnroute;              /* where to put routing information   */
 	retval = tb_k2val (dmntbl->dm_table, TRUE, sdbuf, dmnroute->dm_buf);
     }  
     else
-	retval = tb_k2val (dmntbl->dm_table, TRUE, subdmn, dmnroute->dm_buf);
+	retval = tb_wk2val (dmntbl->dm_table, TRUE, subdmn, dmnroute->dm_buf);
 
     switch(retval) {
     case MAYBE:

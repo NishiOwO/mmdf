@@ -311,6 +311,39 @@ DBMValues dbm;                      /* put the entry here           */
     return (TRUE);
 }
 
+int tb_wk2val(table, first, name, buf)
+register Table  *table;
+int     first;                    /* start at beginning of list?        */
+register char  name[];            /* name of ch "member" / key          */
+char   *buf;                      /* put value int this buffer          */
+{
+  int retval;
+  Dmn_route tmpdmn;           /* hold parsed domain string            */
+  char *q, *p;
+  int sublen;                 /* length of right-hand to look up      */
+  int ind; 
+
+#ifdef DEBUG
+    ll_log (logptr, LLOGBTR, "tb_wk2val (%s, first=%d, %s)",
+			table -> tb_name, first, name);
+#endif
+  strcpy (tmpdmn.dm_buf, name);
+  tmpdmn.dm_argc = cstr2arg (tmpdmn.dm_buf, DM_NFIELD, tmpdmn.dm_argv, '.');
+#ifdef DEBUG
+  ll_log(logptr, LLOGBTR, "tb_wk2val: dm_argc=%d", tmpdmn.dm_argc);
+#endif
+  for (ind = sublen = 0; ind < tmpdmn.dm_argc; ind++) {
+#ifdef DEBUG
+    ll_log(logptr, LLOGBTR, "tb_wk2val: %s", &name[sublen]);
+#endif
+    retval = tb_k2val(table, first, &name[sublen], buf);
+    if(retval == OK) return(retval);
+    sublen += strlen (tmpdmn.dm_argv[ind]);
+    if (ind != tmpdmn.dm_argc && ind>0) sublen++;
+  }
+  return(retval);
+}
+
 /* *******  FIND VALUE (address), GIVEN ITS KEY (hostname)  ********* */
 
 
