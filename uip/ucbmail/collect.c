@@ -7,12 +7,12 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.4 $
+ *  $Revision: 1.5 $
  *
  *  $Log: collect.c,v $
- *  Revision 1.4  1985/12/18 13:20:12  galvin
- *  Add another argument to send to indicate whether or not this
- *  message should be delimited by MMDF message delimiters.
+ *  Revision 1.5  1986/01/14 14:22:45  galvin
+ *  Add extract() and detract() calls to parse the lines entered by the
+ *  user when attempting to add to the To, Cc and Bcc address lists.
  *
  * Revision 1.5  86/01/14  14:22:45  galvin
  * Add extract() and detract() calls to parse the lines entered by the
