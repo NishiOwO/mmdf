@@ -179,7 +179,7 @@ AC_LOAD_LOCAL_CONFIG($MMDF_CONFIG)
 AC_CANONICAL_HOST
 AC_PROG_CC
 AC_PROG_CPP
-AC_PROG_CXX
+dnl AC_PROG_CXX
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
