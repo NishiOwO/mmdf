@@ -35,6 +35,7 @@ struct tb_struct
 #define TB_PARTIAL	001000	/* enable trying partial domain matches */
 #define TB_ABORT        002000 /* don't look at other domains upon NS timeout */
 #define TB_ROUTE        004000 /* enable routing via subdomain matches */
+#define TB_REJECT       010000
 
 #define TBT_FILE  0      /* sequencial file access */
 #define TBT_DBM   1      /* DBM,GDBM               */

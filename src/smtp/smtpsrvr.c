@@ -1,4 +1,4 @@
-static char Id[] = "$Id: smtpsrvr.c,v 1.31 2000/01/09 12:54:56 krueger Exp $";
+static char Id[] = "$Id: smtpsrvr.c,v 1.32 2000/01/18 06:50:39 krueger Exp $";
 /*
  *                      S M T P S R V R . C
  *
@@ -62,6 +62,9 @@ extern int  accept_8bitmime;
 extern int  dsn;
 #   endif /* HAVE_ESMTP_DSN */
 #endif /* HAVE_ESMTP */
+#if defined(HAVE_RBL)
+char reject_on_rbl = 0;
+#endif /* HAVE_RBL */
 
 smtp_protocol smtp_proto = PRK_UNKNOWN;
 int input_source = 0;
@@ -123,6 +126,9 @@ void tell_esmtp_options();
 
 int helo(), mail(), quit(), help(), rcpt(), confirm();
 int data(), rset(), reject(), expn(), vrfy();
+
+void rbl_reject();
+
 
 #define CMDNOOP 0
 #define CMDHELO 1
@@ -355,6 +361,12 @@ char **argv;
 		netreply (replybuf);
 		exit (-1);
 	}
+#if defined(HAVE_RBL)
+    /* hier muesste reject hin bei RBL-support */
+    if( (curchan->ch_table->tb_flags & TB_REJECT) == TB_REJECT)
+      reject_on_rbl=1;
+#endif /* HAVE_RBL */
+
 	ch_llinit (chanptr);
 	ll_log( logptr, LLOGGEN, "OPEN: %s %.19s (%s)",
 			them, ctime(&atime), channel);
@@ -390,7 +402,13 @@ nextcomm:
                   (comp->cmdmode &&
                    ((chanptr->ch_access&CH_ESMTP)==CH_ESMTP))) {
 #endif
-                (*comp->cmdfunc)(comp->cmdnr);     /* call comm proc */
+#if defined(HAVE_RBL)
+                if(reject_on_rbl && comp->cmdnr != CMDHELO &&
+                   comp->cmdnr != CMDEHLO && comp->cmdnr != CMDQUIT)
+                  rbl_reject(curchan->ch_table, them);
+                else
+#endif
+                  (*comp->cmdfunc)(comp->cmdnr);     /* call comm proc */
                 goto nextcomm;          /* back for more */
 #ifdef HAVE_ESMTP
               }
@@ -1883,3 +1901,20 @@ void tell_esmtp_options()
 }
 
 #endif /* HAVE_ESMTP */
+
+
+#if defined(HAVE_NAMESERVER) && defined(HAVE_RBL)
+/*************************************************************/
+extern void reject_message();
+
+void rbl_reject(tblptr, them)
+Table *tblptr;
+char *them;
+{
+  char replybuf[LINESIZE];
+  
+  reject_message(tblptr, them, replybuf, sizeof(replybuf));
+  netreply(replybuf);
+  
+}
+#endif /* not HAVE_NAMESERVER and HAVE_RBL */

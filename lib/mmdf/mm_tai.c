@@ -16,22 +16,25 @@ extern int tb_nis_init();
 #else /* HAVE_NIS */
 #  define tb_nis_init tb_noop
 #endif /* HAVE_NIS */
+
 #ifdef HAVE_REGEXEC
 extern int tb_regexp_init();
 #else /* HAVE_REGEXEC */
 #  define tb_regexp_init tb_noop
 #endif /* HAVE_REGEXEC */
 
-#ifdef HAVE_RBLSUPPORT
+#ifdef HAVE_RBL
 extern int tb_rbl_init();
-#else /* HAVE_RBLSUPPORT */
+#else /* HAVE_RBL */
 #  define tb_rbl_init tb_noop
-#endif /* HAVE_RBLSUPPORT */
+#endif /* HAVE_RBL */
+
 #ifdef HAVE_LDAPSUPPORT
 extern int tb_ldap_init();
 #else /* HAVE_LDAPSUPPORT */
 #  define tb_ldap_init tb_noop
 #endif /* HAVE_LDAPSUPPORT */
+
 #ifdef HAVE_SQLSUPPORT
 extern int tb_sql_init();
 #else /* HAVE_SQLSUPPORT */
@@ -555,8 +558,9 @@ LOCVAR Cmd
 #define CMDTFPARTIAL    7
 #define CMDTFABORT      8
 #define CMDTFROUTE      9
+#define CMDTFREJECT    10
 #ifdef HAVE_NIS
-#  define CMDTFNIS     10
+#  define CMDTFNIS     11
 #endif /* HAVE_NIS */
 
 LOCVAR Cmd
@@ -572,6 +576,7 @@ LOCVAR Cmd
 #endif /* HAVE_NIS */
     {"ns",  	 CMDTFNS,	0},
     {"partial",  CMDTFPARTIAL,   0},
+    {"reject",   CMDTFREJECT,    0},
     {"route",    CMDTFROUTE,     0},
     {0,          0,              0}
 };
@@ -583,10 +588,10 @@ LOCVAR Cmd
 #define CMDTFTNS     3
 #define CMDTFTNIS    4
 #define CMDTFTREGEXP 5
-#define CMDTFTRBL    5
-#define CMDTFTLDAP   6
-#define CMDTFTSQL    7
-#define CMDTFTTEST   8
+#define CMDTFTRBL    6
+#define CMDTFTLDAP   7
+#define CMDTFTSQL    8
+#define CMDTFTTEST   9
 
 LOCVAR Cmd
 	tbtype [] =
@@ -600,9 +605,9 @@ LOCVAR Cmd
   { "nis",   CMDTFTNIS,     0 },
 #endif /* HAVE_NIS */
   { "ns",    CMDTFTNS,      0 },
-#ifdef HAVE_RBLSUPPORT
+#ifdef HAVE_RBL
   { "rbl",   CMDTFTRBL,     0 },
-#endif /* HAVE_RBLSUPPORT */
+#endif /* HAVE_RBL */
 #ifdef HAVE_REGEXEC
   { "regexp",CMDTFTREGEXP,  0 },
 #endif /* HAVE_REGEXEC */
@@ -811,6 +816,10 @@ int tb_tai (argc, argv)
 
                   case CMDTFROUTE:
                     tbptr -> tb_flags |= TB_ROUTE;
+                    break;
+                
+                  case CMDTFREJECT:
+                    tbptr -> tb_flags |= TB_REJECT;
                     break;
                 
                   default:
