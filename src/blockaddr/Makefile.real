@@ -21,6 +21,7 @@ $(CHANDIR)/blockaddr  :   xblockaddr
 	-@echo "blockaddr channel installed normally"; echo ""
 
 blockaddr:   xblockaddr
+	-@echo
 xblockaddr:  $(OBJECTS) $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(MMDFLIBS) $(SYSLIBS)
 

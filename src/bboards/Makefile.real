@@ -29,6 +29,7 @@ $(CHANDIR)/$(MMPREF)bboards:	xbboards
 	-@echo "BBoards installed normally"; echo ""
 
 bboards:	xbboards
+	-@echo
 xbboards:	$(OBJECTS) $(MMDFLIBS) $(ZOTLIBS)
 		$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(ZOTLIBS) \
 			$(MMDFLIBS) $(SYSLIBS) 

@@ -9,6 +9,7 @@ SOURCES =	deliver.c ch_wtmail.c ch_io.c ch_poll.c
 
 real-default:	deliver
 deliver:	xdeliver
+	-@echo
 xdeliver:	$(OBJECTS) $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(MMDFLIBS) $(SYSLIBS)
 

@@ -21,6 +21,7 @@ $(CHANDIR)/delay  :   xdelay
 	-@echo "delay channel installed normally"; echo ""
 
 delay:	xdelay
+	-@echo
 xdelay:	$(OBJECTS) $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(MMDFLIBS) $(SYSLIBS)
 
