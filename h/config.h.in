@@ -1,6 +1,6 @@
 /* h/config.h.in.  Generated automatically from configure.in by autoheader.  */
 /*
- * $Id: config.h.in,v 1.48 2001/04/26 22:02:13 krueger Exp $
+ * $Id: config.h.in,v 1.49 2001/05/02 21:07:12 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -156,6 +156,18 @@
 
 /* Define if you have the gdbm library (-lgdbm).  */
 #undef HAVE_LIBGDBM  /* new */
+
+/*             Enables code that is specific for 4.3  BSD  .
+ *             e.g. setpgrp(void) versus setpgrp(int, int)
+ */
+#undef __SYSTYPE_BSD /* BSD specific code */
+
+/*             Enables  code  that does Bell System V tricks
+ *             (probably also useful for System III  instal-
+ *             lations).  Note: if you are running System V,
+ *             e.g. setpgrp(void) versus setpgrp(int, int)
+ */
+#undef __SYSTYPE_SYS5 /* System V specific code */
 
 /*****************************************************************************/
 /*             Enable 8bit-clean mode when getting messages over smtp.

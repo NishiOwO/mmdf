@@ -277,7 +277,6 @@ AC_ARG_ENABLE(virtal-domains, \
   [     virtal-domains     support for virtual domains/hosts]       \
                                        (developpment) \
  (disabled))
-
 AC_ARG_ENABLE(nosrcroute, \
   [     nosrcroute         remove source-routing]                    \
  (enabled))
@@ -696,6 +695,7 @@ if test "$ac_cv_header_varargs_h" != "yes"; then
     AC_MSG_WARN(          lib/util/multcpy.c will not compile)
 fi
 AC_STRUCT_TIMEZONE
+AC_FIND_SYSTEM_TYPE
 
 AC_CHECK_FUNCS(bcopy dbmcachedump dup2 fcntl ftime getcwd getdtablesize \
  gethostname gettimeofday getwd index initgroups \

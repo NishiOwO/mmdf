@@ -1201,7 +1201,11 @@ LOCFUN setupenv()
 	setpgid (0, getpid());
 #else    
 #  ifdef HAVE_SETPGRP
+#    ifdef __SYSTYPE_BSD
+    setpgrp(0, getpid());
+#    else /* __SYSTYPE_BSD */
     setpgrp();
+#    endif /* __SYSTYPE_BSD */
 #  endif /* HAVE_SETPGRP */
 #endif /* HAVE_SETPGID */
 	snprintf (homestr, sizeof(homestr), "HOME=%s", lo_pw->pw_dir);

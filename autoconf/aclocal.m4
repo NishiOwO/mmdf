@@ -1,5 +1,5 @@
 dnl
-dnl $Id: aclocal.m4,v 1.8 2000/04/04 14:30:51 krueger Exp $
+dnl $Id: aclocal.m4,v 1.9 2001/05/02 21:07:12 krueger Exp $
 dnl
 dnl
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -347,6 +347,28 @@ dnl  AC_SUBST($2)
 ])
 AC_PROVIDE(AC_C_SUBST)
 
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+AC_DEFUN(AC_FIND_SYSTEM_TYPE,
+[AC_CACHE_CHECK([for system type BSD], ac_cv_systype_bsd,
+[AC_TRY_RUN([#include <unistd.h>
+main() { setpgrp(0,0); exit(0); } ],
+  ac_cv_systype_bsd=yes, ac_cv_systype_bsd=no, ac_cv_systype_bsd=3)])
+if test "$ac_cv_systype_bsd" = yes; then
+  AC_DEFINE(__SYSTYPE_BSD)
+fi
+
+AC_CACHE_CHECK([for system type SYS5], ac_cv_systype_sys5,
+[AC_TRY_RUN([#include <unistd.h>
+main() { setpgrp(); exit(0); } ],
+  ac_cv_systype_sys5=yes, ac_cv_systype_sys5=no, ac_cv_systype_sys5=3)])
+if test "$ac_cv_systype_sys5" = yes; then
+  AC_DEFINE(__SYSTYPE_SYS5)
+fi
+])
+AC_PROVIDE(AC_FIND_SYSTEM_TYPE)
+
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl AC_DEFUN(AC_VAR_TIMEZONE,
@@ -377,7 +399,7 @@ AC_DEFUN(AC_VAR_TIMEZONE,
 #include <time.h>
 # endif
 #endif
-main() { long my_tz = timezone; exit(0);} ],
+main() { long my_tz = timezone/1; exit(0);} ],
   ac_cv_long_timezone=yes, ac_cv_long_timezone=no, ac_cv_long_timezone=3)])
 
 echo "### ac_cv_long_timezone: $ac_cv_long_timezone"

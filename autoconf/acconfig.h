@@ -15,7 +15,7 @@
 
 
 /*
- * $Id: acconfig.h,v 1.12 2001/04/26 22:02:12 krueger Exp $
+ * $Id: acconfig.h,v 1.13 2001/05/02 21:07:12 krueger Exp $
  *
  */
 
@@ -288,6 +288,22 @@
 
 /* Define if you have the gdbm library (-lgdbm).  */
 #undef HAVE_LIBGDBM  /* new */
+
+/************************************************************************/
+/*
+ */
+
+/*             Enables code that is specific for 4.3  BSD  .
+ *             e.g. setpgrp(void) versus setpgrp(int, int)
+ */
+#undef __SYSTYPE_BSD /* BSD specific code */
+
+/*             Enables  code  that does Bell System V tricks
+ *             (probably also useful for System III  instal-
+ *             lations).  Note: if you are running System V,
+ *             e.g. setpgrp(void) versus setpgrp(int, int)
+ */
+#undef __SYSTYPE_SYS5 /* System V specific code */
 
 /*****************************************************************************/
 /*             Enable 8bit-clean mode when getting messages over smtp.

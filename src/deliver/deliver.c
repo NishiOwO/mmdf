@@ -517,17 +517,24 @@ prm_end ()                        /* cleanup vals after user settings   */
 	    freopen ("/dev/null", "w", stdout);
 	freopen ("/dev/null", "w", stderr);
 				  /*  stderr null always                */
-#ifdef HAVE_SETPGRP
-	setpgrp();                /* detach from terminal               */
-#else /* HAVE_SETPGRP */
-#ifdef TIOCNOTTY
+#ifdef HAVE_SETPGID
+	setpgid (0, getpid()); /* detach from terminal               */
+#else    
+#  ifdef HAVE_SETPGRP
+#    ifdef __SYSTYPE_BSD
+    setpgrp(0, getpid());  /* detach from terminal               */
+#    else /* __SYSTYPE_BSD */
+    setpgrp();             /* detach from terminal               */
+#    endif /* __SYSTYPE_BSD */
+#  endif /* HAVE_SETPGRP */
+#endif /* HAVE_SETPGID */
+#ifdef TIOCNOTTY_IGNORE
 	fd = open ("/dev/tty", 2);
 	if (fd >= 0) {
 	    ioctl (fd, TIOCNOTTY, 0);
 	    close(fd);
 	}
 #endif TIOCNOTTY
-#endif /* HAVE_SETPGRP */
     }
     if (!ovr_pickup && !domsg)
 	(void) signal (SIGHUP, SIG_IGN); /* Ignore hangups               */
@@ -1851,9 +1858,17 @@ int daemonize()
 
   /* now running in background, disconnect from tty */
       
-#ifdef HAVE_SETPGRP
-  setpgrp();		  /* detach from terminal */
-#endif /* HAVE_SETPGRP */
+#ifdef HAVE_SETPGID
+	setpgid (0, getpid()); /* detach from terminal               */
+#else    
+#  ifdef HAVE_SETPGRP
+#    ifdef __SYSTYPE_BSD
+    setpgrp(0, getpid());  /* detach from terminal               */
+#    else /* __SYSTYPE_BSD */
+    setpgrp();             /* detach from terminal               */
+#    endif /* __SYSTYPE_BSD */
+#  endif /* HAVE_SETPGRP */
+#endif /* HAVE_SETPGID */
   pid=setsid();
 
   /* close all open files */
