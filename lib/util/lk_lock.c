@@ -19,6 +19,9 @@ extern	char *lckdfldir;
 LOCVAR	int breaktime = 120;   /* amount to sleep after breaking lock */
 LOCVAR	char *NIL = "NIL";
 
+LOCFUN lk_unlock ();
+LOCFUN lk_name ();
+LOCFUN lk_test ();
 /**/
 
 LOCFUN

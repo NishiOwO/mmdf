@@ -25,6 +25,11 @@
 extern char *strncpy();
 extern int   h_errno;
 
+LOCFUN ns_getcn();
+LOCFUN ns_getmx();
+LOCFUN ns_error();
+LOCFUN char *ns_skiphdr();
+
 /* T_UNSPEC was defined only in more recent versions of BIND */
 
 #ifdef T_UNSPEC
@@ -223,7 +228,6 @@ int namelen;
     union querybuf qbuf;
     union ansbuf abuf;
     HEADER *hp;
-    extern char *ns_skiphdr();
 
 #ifdef DEBUG
     ll_log(logptr, LLOGFTR, "ns_getcn(%s)",key);
@@ -360,7 +364,6 @@ int tsize;
 	char *mxname;
 	u_short mxpref;
     } mx_list[MAXMX];
-    extern char *ns_skiphdr();
 
 #ifdef DEBUG
     ll_log(logptr, LLOGFTR, "ns_getmx(%s, %x, %x, %d)",key,max,mxtab,tsize);
