@@ -48,7 +48,7 @@ CONFIGDEFS	= @DEFS@
 SYSLIBS		= @LIBS@
 CFLAGS          = @CFLAGS@ $(CONFIGDEFS)
 CPPFLAGS        = -I${srcdir} @CPPFLAGS@ 
-LDFLAGS         = @LDFLAGS@ -L/usr/local/lib # -static
+LDFLAGS         = @LDFLAGS@ # -static
 STATIC_LDFLAGS  = @STATIC_LDFLAGS@ # -static
 MMDFLIBS        = @MMDFLIBS@
 

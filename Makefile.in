@@ -53,19 +53,19 @@ MMDFLIBS	= @MMDFLIBS@
 
 all:
 	for dir in ${SUBDIR}; do \
-		(cd $${dir}; make ${MFLAGS} -${MAKEFLAGS}); done
+		(cd $${dir}; make ${MFLAGS} ${MAKEFLAGS}); done
 
 depend:
 	for dir in ${SUBDIR}; do \
-		(cd $${dir}; make ${MFLAGS} -${MAKEFLAGS} depend); done
+		(cd $${dir}; make ${MFLAGS} ${MAKEFLAGS} depend); done
 
 lint:
 	for dir in ${SUBDIR}; do \
-		(cd $${dir}; make ${MFLAGS} -${MAKEFLAGS} lint); done
+		(cd $${dir}; make ${MFLAGS} ${MAKEFLAGS} lint); done
 
 install:
 	for dir in ${SUBDIR}; do \
-		(cd $${dir}; make ${MFLAGS} -${MAKEFLAGS} install); done
+		(cd $${dir}; make ${MFLAGS} ${MAKEFLAGS} install); done
 
 clean:
 	rm -f make.out

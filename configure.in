@@ -1,3 +1,6 @@
+dnl : test fuer sys_errlist[]
+dnl   test auf xstr, when nicht bauen
+dnl
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(h/ap.h)
 AC_CONFIG_HEADER(h/config.h)
@@ -14,10 +17,11 @@ ROOTLOGIN=root
 PGMPROT=755
 MMDFLIBS="\${top_srcdir}/lib/libmmdf.a"
 mmdf_prefix="\${prefix}/mmdf"
+exec_prefix="\${prefix}/local"
 libexecdir="\${mmdf_prefix}/lib"
 chandir="\${mmdf_prefix}/chans"
 tbldir="\${mmdf_prefix}/table"
-rcvdir="\${exec_prefix}/lib/mh"
+rcvdir="\${mmdf_prefix}/lib"
 
 D_DEBUG=0
 D_D_LOG=0
@@ -385,8 +389,10 @@ if test "$enable_gcc" = "no"; then
   GCC=
   CC=cc
   echo "using ${CC-cc}"
-  echo $CFLAGS
+else
+  AC_PATH_PROG(PATH_GCC, gcc)
 fi
+  echo $CFLAGS
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl checking for architectures
@@ -446,36 +452,41 @@ dnl Checking for libraries.
 dnl
 dnl and add to -I to CPPFLAGS and and -Lto LDFLAGS, just to be sure
 if test "$libdir" = '${exec_prefix}/lib'; then
-  if test "x$exec_prefix" = xNONE; then
-    if test "x$prefix" = xNONE; then
+  if test "x$prefix" = xNONE; then
+    if test "x$exec_prefix" = xNONE; then
+      LDFLAGS="-L${exec_prefix}/lib ${LDFLAGS}"
+      ac_configure_args="$ac_configure_args --libdir=${exec_prefix}/lib"
+    else
       LDFLAGS="-L${ac_default_prefix}/lib ${LDFLAGS}"
       ac_configure_args="$ac_configure_args --libdir=${ac_default_prefix}/lib"
-    else
-      LDFLAGS="-L${prefix}/lib ${LDFLAGS}"
-      ac_configure_args="$ac_configure_args --libdir=${prefix}/lib"
     fi
   else
-    LDFLAGS="-L${exec_prefix}/lib ${LDFLAGS}"
-    ac_configure_args="$ac_configure_args --libdir=${exec_prefix}/lib"
+    LDFLAGS="-L${prefix}/lib ${LDFLAGS}"
+    ac_configure_args="$ac_configure_args --libdir=${prefix}/lib"
   fi
 else
   LDFLAGS="-L${libdir} ${LDFLAGS}"
 fi
 
+echo $PATH_GCC
+echo "==>${CFLAGS}"
+echo "==>${CPPFLAGS}"
 if test "$includedir" = '${prefix}/include'; then
-  if test "x$prefix" = xNONE; then
-    CPPFLAGS="-I${ac_default_prefix}/include ${CPPFLAGS}"
-    CFLAGS="-I${ac_default_prefix}/include ${CPPFLAGS}"
-    ac_configure_args="$ac_configure_args --includedir=${ac_default_prefix}/include"
-  else
+  if test "x$prefix" != xNONE; then
     CPPFLAGS="-I${prefix}/include ${CPPFLAGS}"
-    CFLAGS="-I${prefix}/include ${CPPFLAGS}"
+    CFLAGS="-I${prefix}/include ${CFLAGS}"
     ac_configure_args="$ac_configure_args --includedir=${prefix}/include"
+dnl  else
+dnl    CPPFLAGS="-I${ac_default_prefix}/include ${CPPFLAGS}"
+dnl    CFLAGS="-I${ac_default_prefix}/include ${CFLAGS}"
+dnl    ac_configure_args="$ac_configure_args --includedir=${ac_default_prefix}/include"
   fi
 else
   CPPFLAGS="-I${includedir} ${CPPFLAGS}"
-  CFLAGS="-I${includedir} ${CPPFLAGS}"
+  CFLAGS="-I${includedir} ${CFLAGS}"
 fi
+echo "==>${CFLAGS}"
+echo "==>${CPPFLAGS}"
 
 dnl pass default prefix on to subdirs, if not explicitely given as an option
 if test "x$prefix" = xNONE; then
@@ -1006,10 +1017,11 @@ AC_ENABLE_DEFAULT(ucbmail,     no , UIPSUBDIRS)
 AC_ENABLE_DEFAULT(unsupported, no,  UIPSUBDIRS)
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
-CFLAGS="$CFLAGS -I\${top_srcdir}/h"
+CFLAGS="-I\${top_srcdir}/h $CFLAGS"
 if test "$ac_cv_prog_gcc" = "yes"; then
   CFLAGS="$CFLAGS -pipe"
 fi
+echo $CFLAGS
 
 if test "$D_DEBUG" != "0"; then
    AC_DEFINE_UNQUOTED(DEBUG, $D_DEBUG)
