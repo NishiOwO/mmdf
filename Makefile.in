@@ -40,8 +40,8 @@ PGMPROT		= @PGMPROT@
 ##
 ## compiler and linker options
 ##
-CFLAGS          = @CFLAGS@ -pipe 
-CXXFLAGS        = @CXXFLAGS@ -pipe 
+CFLAGS          = @CFLAGS@
+CXXFLAGS        = @CXXFLAGS@
 CXXTEMPLFLAGS   = @CXXTEMPLFLAGS@
 CPPFLAGS        = -I${srcdir} @CPPFLAGS@ 
 DEFS            = @DEFS@ -DNDEBUG

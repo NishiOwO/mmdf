@@ -23,6 +23,8 @@ RCVDIR          = @rcvdir@
 #
 #  Defines used during installation
 #
+CC              = @CC@
+CXX             = @CXX@
 INSTALL		= sh ${top_srcdir}/installit
 CHOWN           = @CHOWN@
 AR		= @AR@
@@ -39,11 +41,11 @@ PGMPROT         = @PGMPROT@
 #
 CONFIGDEFS	= @DEFS@
 SYSLIBS		= @LIBS@
-CFLAGS          = @CFLAGS@ -pipe $(CONFIGDEFS)
-CXXFLAGS        = @CXXFLAGS@ -pipe 
+CFLAGS          = @CFLAGS@ $(CONFIGDEFS)
+CXXFLAGS        = @CXXFLAGS@
 CXXTEMPLFLAGS   = @CXXTEMPLFLAGS@
 CPPFLAGS        = -I${srcdir} @CPPFLAGS@ 
-LDFLAGS         = @LDFLAGS@ # -static
+LDFLAGS         = @LDFLAGS@ -L/usr/local/lib # -static
 STATIC_LDFLAGS  = @STATIC_LDFLAGS@ # -static
 MMDFLIBS        = @MMDFLIBS@
 

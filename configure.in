@@ -44,24 +44,28 @@ AC_DEFUN(AC_CHECK_FILE,
 [
   AC_MSG_CHECKING(for file $2)
 
-  if test -e "$2"; then
+  if test -f "$2"; then
     AC_MSG_RESULT(yes)
     AC_DEFINE_UNQUOTED(HAVE_$1, 1)
   else
     AC_MSG_RESULT(no)
-    AC_DEFINE_UNQUOTED(HAVE_$1, 0)
+    dnl AC_DEFINE_UNQUOTED(HAVE_$1, 0)
   fi
 ])
 AC_PROVIDE(AC_CHECK_FILE)
 
-dnl  AC_ENABLE_DEFAULT(<Variable>, <deafult: yes/no>, <subdirs>)
-dnl AC_CACHE_VAL()
+dnl  AC_ENABLE_DEFAULT(<Variable>, <default: yes/no>, <subdirs>)
+dnl
 AC_DEFUN(AC_ENABLE_DEFAULT,
 [
   AC_MSG_CHECKING(whether compiling $1)
   if test "$enable_$1" != "yes" && test "$enable_$1" != "no"; then
-      enable_$1="$2"
+    AC_CACHE_VAL(ac_cv_enable_$1, ac_cv_enable_$1="$2")
+    enable_$1=$ac_cv_enable_$1
+  else
+    ac_cv_enable_$1=$enable_$1
   fi
+  
   if test "$enable_$1" != yes; then
     AC_MSG_RESULT(no)
   else
@@ -71,13 +75,42 @@ AC_DEFUN(AC_ENABLE_DEFAULT,
 ])
 AC_PROVIDE(AC_ENABLE_DEFAULT)
 
+dnl  AC_ENABLE_DEFAULT_CODE(<Variable>, <default: yes/no>, <pref>, <string>)
+dnl
+AC_DEFUN(AC_ENABLE_DEFAULT_CODE,
+[
+  AC_MSG_CHECKING(whether using $4)
+  if test "$enable_$1" != "yes" && test "$enable_$1" != "no"; then
+    AC_CACHE_VAL(ac_cv_enable_$3_$1, ac_cv_enable_$3_$1="$2")
+    enable_$1=$ac_cv_enable_$3_$1
+  else
+    ac_cv_enable_$3_$1=$enable_$1
+  fi
+  if test "$enable_$1" != yes; then
+    AC_MSG_RESULT(no)
+  else
+    AC_MSG_RESULT(yes)
+    if test "$3" != "lib"; then
+      var=`echo $1 | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
+      AC_DEFINE_UNQUOTED(HAVE_$var, 1)
+    else
+      if test "$ac_cv_enable_$3_$1" != "yes"; then
+        AC_MSG_WARN("cannot enable $4: library $3$1 not found. disabling");
+        enable_$1="no"
+        ac_cv_enable_$3_$1=no
+      fi
+    fi
+  fi
+])
+AC_PROVIDE(AC_ENABLE_DEFAULT_CODE)
+
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl Version business -- should be the same as in Singular subdir 
 dnl
 MMDF_MAJOR_VERSION=2
-MMDF_MINOR_VERSION=43
-VERSION_DATE="December 1997"
+MMDF_MINOR_VERSION=45
+VERSION_DATE="January 1997"
 MMDFLOGIN=mmdf
 ROOTLOGIN=root
 PGMPROT=755
@@ -105,6 +138,14 @@ AC_ARG_ENABLE(nameserver, \
      nameserver              nameserver-code])
 AC_ARG_ENABLE(dbm, \
   [     dbm                  tables via dbm, sequential otherwise])
+AC_ARG_ENABLE(wrap, \
+  [     wrap                 tcpwrapper])
+AC_ARG_ENABLE(nis, \
+  [     nis                  nis support for tables])
+AC_ARG_ENABLE(nn, \
+  [     nn                   mailids and users configurable in mmdftailor])
+AC_ARG_ENABLE(sr, \
+  [     sr                   source-routing])
 AC_ARG_ENABLE(dial, \
   [     dial                 dial code])
 AC_ARG_ENABLE(badusers, \
@@ -147,7 +188,19 @@ AC_ARG_ENABLE(ucbmail, \
   [     ucbmail              ucbmail 'Mail' program])
 AC_ARG_ENABLE(unsupported, \
   [     unsupported          autores, cvmbox])
+AC_ARG_ENABLE(gcc, \
+  [     gcc                  use ggc as compiler])
 
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+if test "$enable_gcc" = "no"; then
+  ac_cv_prog_CC=cc
+  ac_cv_prog_gcc=no
+  GCC=
+  CC=cc
+  echo "using ${CC-cc}"
+  echo $CFLAGS
+fi
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -174,6 +227,7 @@ dnl AC_SCO_INTL	AC_FUNC_STRFTIME
 dnl AC_XENIX_DIR	AC_HEADER_DIRENT
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl those are needed to check for libs and headers, later on
 dnl Checking for programs.
 dnl
@@ -199,6 +253,7 @@ dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl Checking for files.
 dnl
 AC_CHECK_FILE(SECURETTY, /etc/securetty)
+AC_CHECK_FILE(TSECURETTY, /etc/securetty-test)
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl Checking for libraries.
@@ -250,14 +305,20 @@ dnl
 dnl Checks for libraries.
 dnl AC_CHECK_LIB(BSD, atof)
 dnl AC_CHECK_LIB(bsd, atof)
-if test "$enable_dbm" != "no"; then
-   AC_CHECK_LIB(gdbm, gdbm_open)
-   if test "$ac_cv_lib_gdbm_gdbm_open" = "no"; then
-      AC_CHECK_LIB(ndbm, dbm_open)
-      dnl AC_CHECK_LIB(dbm, atof)
+AC_CHECK_LIB(gdbm, gdbm_open)
+if test "$ac_cv_lib_gdbm_gdbm_open" = "no"; then
+   AC_CHECK_LIB(ndbm, dbm_open)
+   if test "$ac_cv_lib_ndbm_gdbm_open" = "no"; then
+     AC_CHECK_LIB(dbm, dbm_open)
    fi
 fi
-
+if test "$ac_cv_lib_gdbm_gdbm_open" = "yes" || 
+	test "$ac_cv_lib_ndbm_dbm_open" = "yes" ||
+	test "$ac_cv_lib_dbm_dbm_open" = "yes"; then
+   ac_cv_lib_dbm="yes"
+else
+   ac_cv_lib_dbm="no"
+fi
 AC_CHECK_LIB(wrap, eval_client)
 dnl AC_CHECK_LIB(socket, atof)
 dnl AC_CHECK_LIB(inet, atof)
@@ -277,7 +338,7 @@ AC_HEADER_TIME
 AC_STRUCT_TM
 AC_STRUCT_TIMEZONE
 
-AC_CHECK_HEADERS(fcntl.h libio.h memory.h termio.h sgtty.h syslog.h)
+AC_CHECK_HEADERS(fcntl.h lastlog.h libio.h memory.h termio.h sgtty.h syslog.h)
 AC_CHECK_HEADERS(sys/file.h sys/ioctl.h sys/time.h)
 AC_CHECK_HEADERS(varargs.h)
 if test "$ac_cv_header_varargs_h" != "yes"; then
@@ -307,7 +368,6 @@ AC_MSG_CHECKING(whether using nameservercode)
 if test "$enable_nameserver" != no; then
   if test $ac_cv_func_res_mkquery = yes; then
     AC_MSG_RESULT(yes)
-    AC_DEFINE(HAVE_NAMESERVER)
   else
     AC_CHECK_LIB(resolv, res_mkquery)
     AC_MSG_RESULT(no)
@@ -316,19 +376,13 @@ else
     AC_MSG_WARN(no)
 fi
 
-if test "$ac_cv_lib_gdbm_gdbm_open" = "yes" || \
-	test "$ac_cv_lib_ndbm" = "yes" || \
-	test "$ac_cv_lib_dbm" = "yes"; then
-   CH_TB="ch_tbdbm"
-else
-   CH_TB="ch_tbseq"
-fi
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl sprintf returns number of printed chars
 AC_MSG_CHECKING(whether vsprintf returns number of printed chars)
 AC_CACHE_VAL(ac_cv_returns_n_of_chars, AC_TRY_RUN( 
  [#include <stdio.h> 
- main() { char *str=(char*)malloc(20); if (((int) sprintf(str,"123456789")) == 9) exit(0); else exit(1); }],
+ main() { char *str=(char*)malloc(20);
+ if (((int) sprintf(str,"123456789")) == 9) exit(0); else exit(1); }],
    ac_cv_returns_n_of_chars=yes,
    ac_cv_returns_n_of_chars=no,
    ac_cv_returns_n_of_chars=no))
@@ -355,25 +409,26 @@ else
 fi
 
 dnl check if we have struct state
-AC_MSG_CHECKING(whether have struct state)
+AC_MSG_CHECKING(whether have struct __res_state)
 AC_CACHE_VAL(ac_cv_have_STATE, AC_TRY_RUN( 
  [#include <resolv.h> 
- main() { struct state res; exit(0); }],
+ main() { struct __res_state res; exit(0); }],
    ac_cv_have_STATE=yes,
    ac_cv_have_STATE=no,
    ac_cv_have_STATE=no))
 if test "$ac_cv_have_STATE" = yes; then
   AC_MSG_RESULT(yes)
+  AC_DEFINE(HAVE_RES_STATE)
 else
   AC_MSG_RESULT(no)
-  AC_DEFINE(HAVE_RES_STATE)
 fi
 
 dnl check if we have _NFILE
 AC_MSG_CHECKING(whether have _NFILE)
-AC_CACHE_VAL(ac_cv_have_STATE, AC_TRY_RUN( 
+AC_CACHE_VAL(ac_cv_have_NFILE, AC_TRY_RUN( 
  [#include <stdio.h>
- main() { #ifdef _NFILE
+ main() { 
+#ifdef _NFILE
 exit(0);
 #else
 exit(1);
@@ -393,7 +448,7 @@ dnl check arguments of mkdir()
 if test "$ac_cv_func_mkdir" = "yes"; then
   AC_MSG_CHECKING(what argument mkdir() takes a second argument)
   AC_CACHE_VAL(ac_cv_have_MKDIR_LNX, AC_TRY_RUN( 
-   [ #include <sys/stat.h>
+   [#include <sys/stat.h>
      main() { 
 	mkdir("dummy", 777);
 	exit(0);
@@ -414,7 +469,7 @@ dnl check whether fcntl(2, F_DUPFD, fd); works
 if test "$ac_cv_header_fcntl_h" = "yes"; then
   AC_MSG_CHECKING(whether fcntl(2, F_DUPFD, fd) works)
   AC_CACHE_VAL(ac_cv_have_FCNTL_F_DUPFD, AC_TRY_RUN( 
-   [ #include <fcntl.h>
+   [#include <fcntl.h>
      main() { 
 	int fd, fd2;
   	fd2 = fcntl(2, F_DUPFD, fd);
@@ -435,7 +490,7 @@ dnl check arguments of ioctl(1, TIOCSBRK, 0)
 if test "$ac_cv_header_sys_ioctl_h" = "yes"; then
   AC_MSG_CHECKING(whether ioctl(1, TIOCSBRK, 0) works)
   AC_CACHE_VAL(ac_cv_have_TIOCSBRK, AC_TRY_RUN( 
-   [ #include <sys/ioctl.h>
+   [#include <sys/ioctl.h>
      main() { 
 	ioctl(1, TIOCSBRK, 0)
 	exit(0);
@@ -450,6 +505,70 @@ if test "$ac_cv_header_sys_ioctl_h" = "yes"; then
     AC_MSG_RESULT(no)
   fi
   ac_cv_header_sys_ioctl_h=$ac_cv_have_TIOCSBRK
+fi
+
+dnl check some defines on HP machine
+if test "$ac_cv_header_sgtty_h" = "yes"; then
+  AC_MSG_CHECKING(whether CBREAK is defined in <sgtty.h>)
+  AC_CACHE_VAL(ac_cv_have_CBREAK, AC_TRY_RUN( 
+   [#include <sgtty.h>
+     main() { 
+#ifdef CBREAK
+	exit(0);
+#else
+	exit(1);
+#endif
+   }],
+     ac_cv_have_CBREAK=yes,
+     ac_cv_have_CBREAK=no,
+     ac_cv_have_CBREAK=no))
+  if test "$ac_cv_have_CBREAK" = yes; then
+    AC_MSG_RESULT(yes)
+    AC_DEFINE(HAVE_SGTTY_CBREAK)
+  else
+    AC_MSG_RESULT(no)
+  fi
+  AC_MSG_CHECKING(whether TIOCSETN is defined in <sgtty.h>)
+  AC_CACHE_VAL(ac_cv_have_TIOCSETN, AC_TRY_RUN( 
+   [#include <sgtty.h>
+     main() { 
+#ifdef TIOCSETN
+	exit(0);
+#else
+	exit(1);
+#endif
+   }],
+     ac_cv_have_TIOCSETN=yes,
+     ac_cv_have_TIOCSETN=no,
+     ac_cv_have_TIOCSETN=no))
+  if test "$ac_cv_have_TIOCSETN" = yes; then
+    AC_MSG_RESULT(yes)
+    AC_DEFINE(HAVE_SGTTY_TIOCSETN)
+  else
+    AC_MSG_RESULT(no)
+    AC_CHECK_HEADERS(sys/strtio.h)
+    if test "$ac_cv_header_sys_strtio_h" = "yes"; then
+      AC_MSG_CHECKING(whether TIOCSETN is defined in <sys/strtio.h>)
+      AC_TRY_RUN([#include <sgtty.h>
+#include <sys/strtio.h>
+       main() { 
+#ifdef TIOCSETN
+	  exit(0);
+#else
+	  exit(1);
+#endif
+       }],
+       ac_cv_have_TIOCSETN=yes,
+       ac_cv_have_TIOCSETN=no,
+       ac_cv_have_TIOCSETN=no)
+      if test "$ac_cv_have_TIOCSETN" = yes; then
+        AC_MSG_RESULT(yes)
+        AC_DEFINE(HAVE_SGTTY_TIOCSETN)
+      else
+        AC_MSG_RESULT(no)
+      fi
+    fi
+  fi
 fi
 
 dnl check if compiler supports variable number of arguments 
@@ -485,7 +604,31 @@ dnl  AC_TRY_RUN(
   fi
 fi
 
+echo
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+AC_ENABLE_DEFAULT_CODE(wrap, yes, lib, "tcp wrapper")
+AC_ENABLE_DEFAULT_CODE(nameserver, yes, code, "nameserver")
+AC_ENABLE_DEFAULT_CODE(dbm, yes, lib, "dbm")
+AC_ENABLE_DEFAULT_CODE(nis, no , code, "tables can come via NIS")
+AC_ENABLE_DEFAULT_CODE(nn,  no , code,
+	"'mailids' and 'users' configurable in mmdftailor")
+AC_ENABLE_DEFAULT_CODE(sr,  no , code, "Source routing")
+
+if test "$ac_cv_enable_lib_dbm" = "yes"; then
+   CH_TB="ch_tbdbm"
+else
+   CH_TB="ch_tbseq"
+fi
+dnl if test "$ac_cv_lib_gdbm_gdbm_open" = "yes" || \
+dnl 	test "$ac_cv_lib_ndbm" = "yes" || \
+dnl 	test "$ac_cv_lib_dbm" = "yes"; then
+dnl    CH_TB="ch_tbdbm"
+dnl else
+dnl    CH_TB="ch_tbseq"
+dnl fi
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+echo
 if test -d lib; then
   SUBDIRS="$SUBDIRS lib"
 fi
@@ -501,27 +644,29 @@ AC_ENABLE_DEFAULT(dial, no, LIBSUBDIRS)
 SRCSUBDIRS="deliver local submit tools"
 AC_ENABLE_DEFAULT(badusers, yes, SRCSUBDIRS)
 AC_ENABLE_DEFAULT(bboards,  no,  SRCSUBDIRS)
-AC_ENABLE_DEFAULT(blockaddr,yes,SRCSUBDIRS)
+AC_ENABLE_DEFAULT(blockaddr,yes, SRCSUBDIRS)
 AC_ENABLE_DEFAULT(delay,    yes, SRCSUBDIRS)
 AC_ENABLE_DEFAULT(ean,      no,  SRCSUBDIRS)
 AC_ENABLE_DEFAULT(list,     yes, SRCSUBDIRS)
 AC_ENABLE_DEFAULT(niftp,    no,  SRCSUBDIRS)
-AC_ENABLE_DEFAULT(phone,    no,  SRCSUBDIRS)
+AC_ENABLE_DEFAULT(phone,    no , SRCSUBDIRS)
 AC_ENABLE_DEFAULT(pobox,    yes, SRCSUBDIRS)
-AC_ENABLE_DEFAULT(pop,      no,  SRCSUBDIRS)
+AC_ENABLE_DEFAULT(pop,      no , SRCSUBDIRS)
 AC_ENABLE_DEFAULT(prog,     yes, SRCSUBDIRS)
-AC_ENABLE_DEFAULT(smphone,  no,  SRCSUBDIRS)
+AC_ENABLE_DEFAULT(smphone,  no , SRCSUBDIRS)
 AC_ENABLE_DEFAULT(smtp,     yes, SRCSUBDIRS)
 AC_ENABLE_DEFAULT(uucp,     yes, SRCSUBDIRS)
 
 if test "$enable_phone" = "yes" && test "$enable_dial" = "no"; then
     AC_MSG_WARN(need lib/dial for phone-channel...enabled)
     enable_dial="yes"
+    ac_cv_enable_dial="yes"
     LIBSUBDIRS=$LIBSUBDIRS" dial"
 fi
 if test "$enable_smphone" = "yes" && test "$enable_dial" = "no"; then
     AC_MSG_WARN(need lib/dial for smphone-channel...enabled)
     enable_dial="yes"
+    ac_cv_enable_dial="yes"
     LIBSUBDIRS=$LIBSUBDIRS" dial"
 fi
 if test "$enable_dial" = "yes"; then
@@ -540,11 +685,14 @@ AC_ENABLE_DEFAULT(msg,         yes, UIPSUBDIRS)
 AC_ENABLE_DEFAULT(other,       yes, UIPSUBDIRS)
 AC_ENABLE_DEFAULT(send,        yes, UIPSUBDIRS)
 AC_ENABLE_DEFAULT(snd,         yes, UIPSUBDIRS)
-AC_ENABLE_DEFAULT(ucbmail,     no,  UIPSUBDIRS)
+AC_ENABLE_DEFAULT(ucbmail,     no , UIPSUBDIRS)
 AC_ENABLE_DEFAULT(unsupported, no,  UIPSUBDIRS)
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 CFLAGS="$CFLAGS -I\${top_srcdir}/h"
+if test "$ac_cv_prog_gcc" = "yes"; then
+  CFLAGS="$CFLAGS -pipe"
+fi
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 AC_SUBST(SUBDIRS)

@@ -1,3 +1,4 @@
+#include "util.h"
 #ifdef HAVE_VARARGS_H
 #include <varargs.h>
 

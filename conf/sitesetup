@@ -32,6 +32,8 @@ then
 	ln $1/s_tailor.h ../uip/snd/s_tailor.h 
 	ln $1/s_tailor.c ../uip/send/s_tailor.c
 	ln $1/s_tailor.c ../uip/snd/s_tailor.c
+	cd ..
+	chmod a+rx lib/libfix*
 	exit 0
 fi
 echo '*** Please check that you supplied a valid host.'

@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.4 1998/01/01 13:43:29 krueger Exp $
+ * $Id: config.h,v 1.5 1998/01/11 18:38:54 krueger Exp $
  *
  * please set every configuration-switch here
  *
@@ -47,7 +47,7 @@
  *             kind if you want the space and the very minor
  *             performance increase.
  */
-#define DEBUG 1
+/* #define DEBUG 1 */
 
 /*             The  same  caution  applies  for D_LOG as for
  *             DEBUG.  This variable controls logging in the
@@ -55,7 +55,7 @@
  *             if you don't use the dial package  (no  phone
  *             or pobox channels) you may safely omit D_LOG.
  */
-#define D_LOG
+/* #define D_LOG */
 
 /*             This controls more debug logging for the dial
  *             package.  Again, if you have the space and if
@@ -63,7 +63,7 @@
  *             it  to  allow  extensive  tracing if problems
  *             arise later.
  */
-#define D_DBGLOG
+/* #define D_DBGLOG */
 
 /*            This makes the channel programs operate inde-
  *             pendently  from deliver.  It hasn't been used
@@ -112,14 +112,14 @@
  *             add  -I/usr/netinclude to CFLAGS and -lnet to
  *             NETLIBS.
  */
-#define SYS5r3
+/* #define SYS5r3 */
 
 /*             Define this variable  if  you  don't  have  a
  *             dup2() system call or subroutine.
  *    renamed to HAVE_DUP2
  *    set by configure in config.h.in
  */
-#define NODUP2
+/* #define NODUP2 */
 
 /*             If  you  defined NODUP2, then you should also
  *             define NOFCNTL if you don't have the fcntl(x,

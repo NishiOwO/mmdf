@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.12 1998/01/01 13:43:30 krueger Exp $
+ * $Id: config.h.in,v 1.13 1998/01/11 18:38:54 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -132,11 +132,23 @@
 /* Define if you have the <fcntl.h> header file.  */
 #undef HAVE_FCNTL_H
 
+/* Define if you have the <lastlog.h> header file.  */
+#undef HAVE_LASTLOG_H
+
 /* Define if you have the <memory.h> header file.  */
 #undef HAVE_MEMORY_H
 
 /* Define if you have the <sgtty.h> header file.  */
 #undef HAVE_SGTTY_H
+
+/* Define if you have CBREAK in <sgtty.h> header file.  */
+#undef HAVE_SGTTY_CBREAK
+
+/* Define if you have the <sys/strtio.h> header file.  */
+#undef HAVE_SYS_STRTIO_H
+
+/* Define if you have TIOCSETN in <sgtty.h> header file.  */
+#undef HAVE_SGTTY_TIOCSETN
 
 /* Define if you have the <termio.h> header file.  */
 #undef HAVE_TERMIO_H
@@ -257,7 +269,7 @@
  *             you must  also  append  -Drindex=strrchr  and
  *             -Dindex=strchr to CFLAGS.
  */
-#define SYS5
+/* #define SYS5 */
 
 /*             Enables  code  specific to System Vr3.  Note:
  *             if you have the WIN/TCP code you may need  to
@@ -349,7 +361,7 @@
 /**********************************************************************/
 /*             Enable site depend code
  */
-#define LINUX
+/* #undef LINUX */
 
 /*             Enable a small fix to slowdown submitm such that the parent
  *             could finish readring the pipe when submit exits. This is
@@ -372,7 +384,9 @@
 /*             Enable the yp_match lookup code for accessing tables over
  *             NIS.
  */
-#define HAVE_NIS
+#undef HAVE_NIS
+#undef HAVE_NN
+#undef HAVE_SR
 
 /*****************************************************************************/
 #if HAVE_DIRENT_H
@@ -422,6 +436,15 @@ char *strchr (), *strrchr ();
 #  include <time.h>
 # endif
 #endif
+
+#ifdef HAVE_SGTTY_H
+#  ifndef HAVE_SGTTY_CBREAK
+#    define CBREAK 64
+#  endif
+#  ifndef HAVE_SGTTY_TIOCSETN
+#    define TIOCSETN
+#  endif
+#endif HAVE_SGTTY_H
 
 /*****************************************************************************/
 /* for compatability, until erverything is working with configure on         *
