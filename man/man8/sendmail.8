@@ -116,11 +116,11 @@ uses single character names only.
 
 .TP
 .B \-B\fP\fItype\fP
-(unsupported) Set the body type to \fItype\fP. Current legal values 7BIT or 8BITMIME.
+(ignored) Set the body type to \fItype\fP. Current legal values 7BIT or 8BITMIME.
 
 .TP
 .B \-N \fP\fIdsn\fP
-(unsupported) Set delivery status notification conditions to \fIdsn\fP, which can
+(ignored) Set delivery status notification conditions to \fIdsn\fP, which can
 be `never' for no notifications or a comma separated list of the
 values `failure' to be notified if delivery failed, `delay' to be
 notified if delivery is delayed, and `success' to be notified when the
@@ -128,27 +128,27 @@ message is successfully delivered.
 
 .TP
 .B \-p\fP\fIprotocol\fP
-(unsupported) Set the name of the protocol used to receive the
+(ignored) Set the name of the protocol used to receive the
 message. This can be a simple protocol name such as ``UUCP'' or a
 protocol and hostname, such as ``UUCP:ucbvax''.
 
 .TP
 .B \-U
-(unsupported) Initial (user) submission.  This should \fIalways\fP be
+(ignored) Initial (user) submission.  This should \fIalways\fP be
 set when called from a user agent such as \fBMail\fP or \fBexmh\fP and
 \fInever\fP be set when called by a network delivery agent such as
 \fBrmail\fP.
 
 .TP
 .B \-V \fP\fIenvid\fP
-(unsupported) Set the original envelope id. This is propogated across
+(ignored) Set the original envelope id. This is propogated across
 SMTP to servers that support DSNs and is returned in DSN-compliant
 error messages.
 
 .SH FILES
 /usr/lib/sendmail
 .br
-@sbindir@/sendmail
+@SBINDIR@/sendmail
 .br
 
 .SH "SEE ALSO"
