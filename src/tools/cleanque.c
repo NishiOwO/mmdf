@@ -1,4 +1,4 @@
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.9 1998/05/25 20:11:22 krueger Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.10 1998/05/31 15:43:49 krueger Exp $ */
 /*
  *     MULTI-CHANNEL MEMO DISTRIBUTION FACILITY  (MMDF)
  *     
@@ -387,6 +387,7 @@ LOCFUN
 }
 /**/
 
+#ifdef NEW_CLEAN
 dowarn (themsg, theadr, retadr, curfailtime)
 	Msg *themsg;
     struct adr_struct *theadr;
@@ -420,6 +421,38 @@ dowarn (themsg, theadr, retadr, curfailtime)
 
     mq_rwarn (theadr);
 }
+#else NEW_CLEAN
+dowarn (themsg, retadr)
+        Msg *themsg;
+        char retadr[];
+{
+#ifdef DEBUG
+    ll_log (logptr, LLOGBTR, "dowarn (%s, %s)", themsg -> mg_mname, retadr);
+#endif
+
+    printx ("%s:  delivery overdue; ", themsg -> mg_mname);
+    (void) fflush (stdout);
+
+    if (msg_nowarn (themsg -> mg_stat)) {
+        printx ("warning not wanted\n");
+    }
+    else if (rtn_warn (themsg, retadr) == OK)
+    {                     /* flag as already warned               */
+        printx ("warning sent\n");
+        ll_log (logptr, LLOGGEN, "warn *** Time warning (%s, %s)",
+                    themsg -> mg_mname, retadr);
+    }
+    else
+    {
+        printx ("couldn't send warning\n");
+        ll_err (logptr, LLOGTMP, "warn *** Couldn't time warn (%s, %s)",
+                    themsg -> mg_mname, retadr);
+    }
+    (void) fflush (stdout);
+
+    mq_rwarn ();
+}
+#endif NEW_CLEAN
 
 doreturn (themsg, theadr, retadr)
     Msg *themsg;
