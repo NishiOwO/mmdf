@@ -14,16 +14,26 @@ extern struct ll_struct   *logptr;
 /* *******************  SOFTWARE INTERRUPT TRAPS  ********************* */
 
 #ifndef DEBUG
+#ifndef	__STDC__
 RETSIGTYPE
 sig10 ()			  /* signal 10 interrupts to here       */
+#else
+RETSIGTYPE
+sig10 (int i)			  /* signal 10 interrupts to here       */
+#endif
 {
     signal (SIGBUS, SIG_DFL);
     ll_err (logptr, LLOGFAT, "Dying on sig10: bus error");
     sigabort ("sig10");
 }
 
+#ifndef	__STDC__
 RETSIGTYPE
 sig12 ()			  /* signal 12 interrupts to here       */
+#else
+RETSIGTYPE
+sig12 (int i)			  /* signal 12 interrupts to here       */
+#endif
 {
     signal (SIGSYS, SIG_DFL);
     ll_err (logptr, LLOGFAT, "Dying on sig12: bad sys call arg");
@@ -31,8 +41,13 @@ sig12 ()			  /* signal 12 interrupts to here       */
 }
 #endif /* DEBUG */
 
+#ifndef	__STDC__
 RETSIGTYPE
 sig13 ()			  /* signal 13 interrupts to here       */
+#else
+RETSIGTYPE
+sig13 (int i)			  /* signal 13 interrupts to here       */
+#endif
 {
     signal (SIGPIPE, SIG_DFL);
     ll_err (logptr, LLOGFAT, "Dying on sig13: pipe write w/no reader");
@@ -60,8 +75,13 @@ jmp_buf timerest;                 /* where to restore to, from timeout  */
 				  /* otherwise, set by return routine   */
 int     flgtrest;                 /* TRUE, if timerest has been set     */
 
+#ifndef	__STDC__
 RETSIGTYPE
 timeout ()			  /* alarm timeouts/interrupts to here  */
+#else
+RETSIGTYPE
+timeout (int i)			  /* alarm timeouts/interrupts to here  */
+#endif
 {
     extern int errno;
 
@@ -80,7 +100,7 @@ timeout ()			  /* alarm timeouts/interrupts to here  */
 s_alarm(n)
 unsigned int n;
 {
-    extern RETSIGTYPE timeout();
+/*  extern RETSIGTYPE timeout(); */
 
     flgtrest = ((n == 0) ? 0 : 1);
 /* for masscomp til bugfix */

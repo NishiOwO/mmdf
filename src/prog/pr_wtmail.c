@@ -131,9 +131,12 @@ pr_wtadr (host, adr, from)
     if (!isstr(chan->ch_confstr)) {
 	confstr = hostadr;
     } else {
-	confstr = chan->ch_confstr;
+      confstr = (char *)malloc(strlen(chan->ch_confstr+1));
+      memset(confstr, '\0', strlen(chan->ch_confstr+1));
+      memcpy(confstr, chan->ch_confstr, strlen(chan->ch_confstr));
 	set_var ("to.address", hostadr);
     }
+/*    n = sstr2arg (confstr, sizeof(argv[])/sizeof(argv[0]), argv, " \t");*/
     n = sstr2arg (confstr, 30, argv, " \t");
     argv[n] = NULL;
     expand_vars (argv);

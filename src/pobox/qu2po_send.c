@@ -45,10 +45,14 @@ extern struct ll_struct    *logptr;
 extern char *mmdflogin;
 extern char *supportaddr;
 
-extern char *strdup();
 extern char *ap_p2s();
 
 extern int ap_outtype;
+
+LOCFUN q2p_admng ();
+LOCFUN q2p_txmng ();
+LOCFUN q2p_gcinfo ();
+LOCFUN q2p_mayadr ();
 
 LOCVAR char *sender = (char *)NULL;    /* return address for message         */
 LOCVAR char *adr    = (char *)NULL;    /* recipient address                  */
@@ -82,7 +86,6 @@ char po_state = SND_RINIT;/* state of processing current msg    */
 qu2po_send (chname)               /* overall mngmt for batch of msgs    */
     char chname[];                /* name of channel we are             */
 {
-    extern char *strdup ();
     short     result;
     char    info[LINESIZE],
 	    sendbuf[ADDRSIZE];

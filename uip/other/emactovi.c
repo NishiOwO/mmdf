@@ -28,7 +28,8 @@ int argc;
 char **argv;
 {
 	register	FILE	*fpi, *fpo;
-	register	char	*p, buf[BUFSIZ];
+	register	char	*p;
+	char buf[BUFSIZ];
 	FILE			*fopen();
 	char			*program;
 

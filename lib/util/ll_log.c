@@ -34,7 +34,6 @@
 #define LONGTIM   1		  /* Long time format                   */
 #define _LLDIDC 0200		  /* Already did cycle, this opening    */
 
-extern char *strdup ();
 extern time_t time();
 extern int errno;
 
@@ -99,7 +98,7 @@ register struct ll_struct *loginfo;
 	loginfo -> ll_stat &= ~_LLDIDC;
     }                             /* clear cycled flag                  */
 
-    return ((fd > 0) ? fclose (loginfo -> ll_fp) : NULL);
+    return ((fd > 0) ? fclose (loginfo -> ll_fp) : 0);
 				  /* -1 or 0 => nothing was open        */
 }
 /* *********************  LOG INITIALIZATION  *********************** */

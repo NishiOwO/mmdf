@@ -49,7 +49,6 @@
 
 extern struct ll_struct  *logptr;
 extern Chan *curchan;
-extern char *strdup();
 extern char *ap_p2s();
 extern int  ap_outtype;
 extern char *supportaddr;

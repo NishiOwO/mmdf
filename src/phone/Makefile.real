@@ -19,26 +19,26 @@ CSOURCES =	ph2mm_send.c ph_rdmail.c \
 
 real-default:	phone slave
 
-install:	$(CHANDIR)/phone $(LIBDIR)/slave
+install:	$(MCHNDIR)/phone $(LIBDIR)/slave
 
-$(CHANDIR)/phone  :   xphone
-	$(INSTALL) -c -m 04$(PGMPROT) -o $(MMDFLOGIN) xphone $(CHANDIR)/phone
-#	cp xphone $(CHANDIR)/phone
-#	-$(CHOWN) $(MMDFLOGIN) $(CHANDIR)/phone
-#	-chmod 04$(PGMPROT) $(CHANDIR)/phone
-	-@ls -ls $(CHANDIR)/phone
+$(MCHNDIR)/phone  :   xphone
+	$(INSTALL) -c -m 04$(PGMPROT) -o $(MMDFLOGIN) xphone $(MCHNDIR)/phone
+#	cp xphone $(MCHNDIR)/phone
+#	-$(CHOWN) $(MMDFLOGIN) $(MCHNDIR)/phone
+#	-chmod 04$(PGMPROT) $(MCHNDIR)/phone
+	-@ls -ls $(MCHNDIR)/phone
 	-@echo "PhoneNet outbound channel installed normally"; echo ""
 
 phone:	xphone
 xphone:	$(POBJECTS) $(MMDFLIBS)
 	    $(CC) $(LDFLAGS) -o $@ $(POBJECTS) $(MMDFLIBS) $(SYSLIBS)
 
-$(LIBDIR)/slave  :   xslave
-	$(INSTALL) -c -m 0$(PGMPROT) -o $(MMDFLOGIN) xslave $(LIBDIR)/slave 
-#	cp xslave $(LIBDIR)/slave
-#	-$(CHOWN) $(MMDFLOGIN) $(LIBDIR)/slave
-#	-chmod 0$(PGMPROT) $(LIBDIR)/slave
-	-@ls -ls $(LIBDIR)/slave
+$(MCMDDIR)/slave  :   xslave
+	$(INSTALL) -c -m 0$(PGMPROT) -o $(MMDFLOGIN) xslave $(MCMDDIR)/slave 
+#	cp xslave $(MCMDDIR)/slave
+#	-$(CHOWN) $(MMDFLOGIN) $(MCMDDIR)/slave
+#	-chmod 0$(PGMPROT) $(MCMDDIR)/slave
+	-@ls -ls $(MCMDDIR)/slave
 	-@echo "PhoneNet slave installed normally"; echo ""
 
 slave:	xslave

@@ -1,3 +1,4 @@
+static char Id[] = "$Id: smtpsrvr.c,v 1.19 1999/08/12 13:15:41 krueger Exp $";
 /*
  *                      S M T P S R V R . C
  *
@@ -65,6 +66,7 @@ Chan *chanptr;                          /* pointer to incoming channel */
 #define BUFL 600                /* length of buf */
 char    buf[BUFL];              /* general usage */
 char    netbuf[BUFL];           /* the place that has the valid characters */
+char    lastbyte;
 char	saveaddr[BUFL];         /* save previous address in expn_save */
 int     savecode;               /* save previous result code in expn_save */
 int     expn_count;             /* number of expn expansions */
@@ -500,7 +502,7 @@ getline()
 			/* do case mapping (UPPER -> lower) */
 				c += 'a' - 'A';
 		}
-		*outp++ = c;
+		lastbyte = *outp++ = c;
 	} while( c != '\n' && outp < &buf[BUFL] );
 
 	if( dont_mung == 0 )
@@ -561,6 +563,7 @@ helo(int cmdnr)
         netreply(replybuf);
       } else {
         helostr = strdup(arg);
+        /*ll_log( logptr, LLOGFTR, "helostr \"%s\" #1\n", helostr );*//*is ok -u*/
 #ifdef HAVE_ESMTP
         if(cmdnr==CMDEHLO) {
           smtp_proto = PRK_ESMTP;
@@ -596,14 +599,14 @@ extern int ap_outtype;
 #endif
 mail(int cmdnr)
 {
-	char    replybuf[256];
-	char    info[512];
+	static char    replybuf[256];
+	static char    info[1024];
 	char    *lastdmn;
 	struct rp_bufstruct thereply;
 #ifdef HAVE_NOSRCROUTE
         int     ap_outtype_save;
 #endif
-	int	len;
+	int	len, infolen=0, infoboo=0;
 	AP_ptr  domain, route, mbox, themap, ap_sender;
 
 	if (arg == 0 || *arg == 0) {
@@ -690,24 +693,44 @@ mail(int cmdnr)
 		sender = arg;
 	}
 
+#define STRCAP(STRCAP_STRINGX)        STRCAP_STRINGX[sizeof(STRCAP_STRINGX)-1]='\0'
+#define INFOBOO       if(infoboo<0) STRCAP(info); else infolen+=infoboo
+
 	/* Supply necessary flags, "tiCHANNEL" will be supplied by winit */
 	if (*sender == '\0') {
-		/* No return mail */
-/*  until mailing list fix is done -- er.. *WHAT* mailing list fix -- [DSH]
-		sprintf( info, "mvqdh%s*k%d*", them, NS_NETTIME ); */
-		sprintf( info, "mvqh%s*k%d*", them, NS_NETTIME );
-		sender = "Orphanage";           /* Placeholder */
-	} else
-/*  until mailing list fix is done 
-		sprintf( info, "mvdh%s*k%d*", them, NS_NETTIME ); */
-		sprintf( info, "mvh%s*k%d*", them, NS_NETTIME );
-	if(helostr != 0 ) 
-	        sprintf( info, "%sH%s*", info, helostr );
-	if(from_host[0] != 0 ) 
-	        sprintf( info, "%sF%s*", info, from_host );
+      /* No return mail */
+      /*  until mailing list fix is done -- er.. *WHAT* mailing list fix -- [DSH]
+          snprintf( info, sizeof(info), "mvqdh%s*k%d*", them, NS_NETTIME );
+       */
+      infoboo=snprintf( info, sizeof(info), "mvqh%s*k%d*", them, NS_NETTIME );
+      INFOBOO;
+      sender = "Orphanage";           /* Placeholder */
+    } else {
+      /*  until mailing list fix is done 
+          snprintf( info, sizeof(info), "mvdh%s*k%d*", them, NS_NETTIME ); */
+      infoboo=snprintf( info, sizeof(info), "mvh%s*k%d*", them, NS_NETTIME );
+      INFOBOO;
+    }
+    /*ll_log( logptr, LLOGFTR, "helostr \"%s\" #2\n", helostr );*//*is ok -u*/
+
+    /* info must have correct string in it already at this point -u@q.net */
+    if(helostr) {
+      infoboo=snprintf( info+infolen, sizeof(info)-infolen, "H%s*", helostr );
+      INFOBOO;
+    }
+    if(from_host[0]) {
+      infoboo=snprintf( info+infolen, sizeof(info)-infolen, "F%s*", from_host );
+      INFOBOO;
+    }
 #ifdef HAVE_ESMTP
-    sprintf( info, "%sp%d*", info, smtp_proto);
+    infoboo=snprintf( info+infolen, sizeof(info)-infolen, "%sp%d*",
+                      info, smtp_proto);
 #endif
+    INFOBOO;
+  
+    /* bug found: snprintf glibc2.1.1 clobbers destination before copy source.
+       was recent addition (no wonder!) -u@q.net */
+    /*ll_log( logptr, LLOGFTR, "calling mm_winit(%s, %s, %s)\n", channel, info, sender);*/
     
 	if( rp_isbad( mm_winit(channel, info, sender))) {
 		netreply("451 Temporary problem initializing\r\n");
@@ -723,26 +746,26 @@ mail(int cmdnr)
       switch (rp_gval(thereply.rp_val))
       {
           case RP_BADR:
-            sprintf (replybuf, "550 %s\r\n", thereply.rp_line);
+            snprintf (replybuf, sizeof(replybuf), "550 %s\r\n", thereply.rp_line);
             break;
           case RP_BCHN:
-            sprintf (replybuf, "550 %s\r\n", thereply.rp_line);
+            snprintf (replybuf, sizeof(replybuf), "550 %s\r\n", thereply.rp_line);
             break;
           default:
-            sprintf (replybuf, "501 %s (%o)\r\n", thereply.rp_line, thereply.rp_val&0xff);
+            snprintf (replybuf, sizeof(replybuf), "501 %s (%o)\r\n", thereply.rp_line, thereply.rp_val&0xff);
       }
       netreply (replybuf);
       sender = (char *) 0;
       mm_end( NOTOK );
       mmdfstart();
 	} else if( rp_gbval( thereply.rp_val ) == RP_BTNO) {
-		sprintf (replybuf, "451 %s\r\n", thereply.rp_line);
+		snprintf (replybuf, sizeof(replybuf), "451 %s\r\n", thereply.rp_line);
 		netreply (replybuf);
 		sender = (char *) 0;
 		mm_end( NOTOK );
 		mmdfstart();
 	} else {
-      sprintf(replybuf, "250 %s... Sender ok\r\n", sender);
+      snprintf(replybuf, sizeof(replybuf), "250 %s... Sender ok\r\n", sender);
       netreply (replybuf);
     }
 	numrecipients = 0;
@@ -804,22 +827,22 @@ rcpt(int cmdnr)
 		if( rp_isbad( mm_rrply( &thereply, &len )))
 			netreply( "451 Mail system problem\r\n" );
 		else {
-			sprintf (replybuf, "451 %s\r\n", thereply.rp_line);
+			snprintf (replybuf, sizeof(replybuf), "451 %s\r\n", thereply.rp_line);
 			netreply (replybuf);
 		}
 	} else {
 		if( rp_isbad( mm_rrply( &thereply, &len )))
 			netreply("451 Mail system problem\r\n");
 		else if( rp_gbval( thereply.rp_val ) == RP_BNO) {
-			sprintf (replybuf, "550 %s\r\n", thereply.rp_line);
+			snprintf (replybuf, sizeof(replybuf), "550 %s\r\n", thereply.rp_line);
 			netreply (replybuf);
 		}
 		else if( rp_gbval( thereply.rp_val ) == RP_BTNO) {
-			sprintf (replybuf, "451 %s\r\n", thereply.rp_line);
+			snprintf (replybuf, sizeof(replybuf), "451 %s\r\n", thereply.rp_line);
 			netreply (replybuf);
 		}
 		else {
-			sprintf (replybuf, "250 %s... Recipient ok\r\n", p);
+			snprintf (replybuf, sizeof(replybuf), "250 %s... Recipient ok\r\n", p);
 			netreply (replybuf);
 			numrecipients++;
 		}
@@ -857,6 +880,7 @@ char *addrp;
  */
 data(int cmdnr)
 {
+	static char prevbyte = '\n';
 	register char *p, *bufptr;
 	time_t  tyme;
 	int     errflg, werrflg;
@@ -903,13 +927,17 @@ data(int cmdnr)
 		}
 
 		/* are we done? */
-		if (buf[0] == '.')
+		if (prevbyte == '\n' && buf[0] == '.')
 			if (buf[1] == '\n')
 				break;          /* yep */
 			else
 				bufptr = &buf[1];       /* skip leading . */
 		else
 			bufptr = &buf[0];
+
+		prevbyte = lastbyte;		/* lastbyte is terminating byte
+						   of previous getline() */
+
 		/* If write error occurs, stop writing but keep reading. */
 		if (!werrflg) {
 			if (setjmp(timerest)) {
@@ -1035,11 +1063,11 @@ help(int cmdnr)
                            (chanptr->ch_access&CH_ESMTP)==CH_ESMTP))
 #endif
       {
-        sprintf (replybuf, "%s%s", p->cmdname, ((i%10)?" ":"\r\n214-") );
+        snprintf (replybuf, sizeof(replybuf), "%s%s", p->cmdname, ((i%10)?" ":"\r\n214-") );
 		netreply (replybuf);
       }
 	}
-	sprintf (replybuf, "\r\n214 Send complaints/bugs to:  %s\r\n", supportaddr);
+	snprintf (replybuf, sizeof(replybuf), "\r\n214 Send complaints/bugs to:  %s\r\n", supportaddr);
 	netreply (replybuf);
 }
 
@@ -1398,7 +1426,7 @@ char *p;
 			      "Error in vrfy child reading reply from submit.");
 		       exit(1);
 		} else {
-			sprintf (replybuf, "550 %s\r\n", thereply.rp_line);
+			snprintf (replybuf, sizeof(replybuf), "550 %s\r\n", thereply.rp_line);
 			vrfyreply (replybuf);
 		}
 	} else {
@@ -1407,7 +1435,7 @@ char *p;
 			     "Error in vrfy child reading reply from submit.");
 			exit(1);
 		} else if (rp_isbad(thereply.rp_val)) {
-			sprintf (replybuf, "550 %s\r\n", thereply.rp_line);
+			snprintf (replybuf, sizeof(replybuf), "550 %s\r\n", thereply.rp_line);
 			vrfyreply (replybuf);
 		} else {
 			if ((l=strchr(thereply.rp_line, '"')) &&
@@ -1419,10 +1447,10 @@ char *p;
 			if (l && r && !strchr(l,'@')) {
 			    *l++ = '\0';
 			    *r++ = '\0';
-			    sprintf (replybuf, "250 %s<%s@%s>%s\r\n",
+			    snprintf (replybuf, sizeof(replybuf), "250 %s<%s@%s>%s\r\n",
  				   thereply.rp_line, l, us, r);
 			} else
-			    sprintf (replybuf, "250 %s\r\n", thereply.rp_line);
+			    snprintf (replybuf, sizeof(replybuf), "250 %s\r\n", thereply.rp_line);
 			vrfyreply (replybuf);
 		}
 	}

@@ -19,14 +19,15 @@ CSOURCES =	ph2mm_send.c \
 
 real-default:	smphone smslave
 
-install:	$(CHANDIR)/smphone $(LIBDIR)/smslave
+install:	$(MCHNDIR)/smphone $(MCMDDIR)/smslave
 
-$(CHANDIR)/smphone  :   xsmphone
-	$(INSTALL) -c -m 04$(PGMPROT)  -o $(MMDFLOGIN)  xsmphone $(CHANDIR)/smphone
-#	cp xsmphone $(CHANDIR)/smphone
-#	-$(CHOWN) $(MMDFLOGIN) $(CHANDIR)/smphone
-#	-chmod 04$(PGMPROT) $(CHANDIR)/smphone
-	-@ls -ls $(CHANDIR)/smphone
+$(MCHNDIR)/smphone  :   xsmphone
+	$(INSTALL) -c -m 04$(PGMPROT)  -o $(MMDFLOGIN)  xsmphone \
+		$(MCHNDIR)/smphone
+#	cp xsmphone $(MCHNDIR)/smphone
+#	-$(CHOWN) $(MMDFLOGIN) $(MCHNDIR)/smphone
+#	-chmod 04$(PGMPROT) $(MCHNDIR)/smphone
+	-@ls -ls $(MCHNDIR)/smphone
 	-@echo "SMTP over PhoneNet outbound channel installed normally"; echo ""
 
 smphone:  xsmphone
@@ -34,12 +35,13 @@ smphone:  xsmphone
 xsmphone: $(POBJECTS) $(MMDFLIBS)
 	    $(CC) $(LDFLAGS) -o $@ $(POBJECTS) $(MMDFLIBS) $(SYSLIBS)
 
-$(LIBDIR)/smslave  :   xsmslave
-	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xsmslave $(CHANDIR)/smslave
-#	cp xsmslave $(LIBDIR)/smslave
-#	-$(CHOWN) $(MMDFLOGIN) $(LIBDIR)/smslave
-#	-chmod 0$(PGMPROT) $(LIBDIR)/smslave
-	-@ls -ls $(LIBDIR)/smslave
+$(MCMDDIR)/smslave  :   xsmslave
+	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xsmslave \
+		$(MCMDDIR)/smslave
+#	cp xsmslave $(MCMDDIR)/smslave
+#	-$(CHOWN) $(MMDFLOGIN) $(MCMDDIR)/smslave
+#	-chmod 0$(PGMPROT) $(MCMDDIR)/smslave
+	-@ls -ls $(MCMDDIR)/smslave
 	-@echo "SMTP over PhoneNet slave installed normally"; echo ""
 
 smslave:  xsmslave

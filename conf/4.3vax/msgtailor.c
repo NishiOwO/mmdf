@@ -13,7 +13,7 @@
 #endif pdp11
 
 char    *savmsgfn = "mbox";
-char	*resendprog = RESENDPROG;
+char	*resendprog = RESNDNAME;
 char	*sndname = SENDPROG; /* Overridden by .msgrc sendprog */
 
 char	*dflshell = "sh";	/* Overridden by getenv("SHELL"); */

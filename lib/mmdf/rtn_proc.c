@@ -64,6 +64,11 @@ extern char     *delim1;
 extern char     *delim2;
 
 LOCFUN rtn_intro(), rtn_mlinit(), rtn_list(), rtn_all();
+#ifdef __STDC__
+LOCFUN rtn_heading (int dowarn, Msg *themsg);    /* print failure intro                */
+#else /* __STDC__ */
+LOCFUN rtn_heading ();    /* print failure intro                */
+#endif /* __STDC__ */
 
 LOCVAR char rtn_nosnd[] = "Failed mail",
 	    rtn_yetsnd[] = "Waiting mail";

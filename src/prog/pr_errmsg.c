@@ -96,7 +96,7 @@ errmsg_open ()
 	fseek (stdin, msg_pos, 0);
     }
 
-    sprintf (buf, "/tmp/rcvprg.eXXXXXX");
+    snprintf (buf, sizeof(buf), "/tmp/rcvprg.eXXXXXX");
     mktemp(buf);
     errmsg_file = fopen (buf, "w+");
     if (errmsg_file == NULL) {
@@ -161,7 +161,7 @@ rewindable_msg ()
 
     if (fseek (stdin, msg_start, 0) != -1) return; /* rewindable! */
 
-    sprintf (buf, "/tmp/rcvprg.mXXXXXX");
+    snprintf (buf, sizeof(buf), "/tmp/rcvprg.mXXXXXX");
     mktemp(buf);
     if ((f = open (buf, O_RDWR|O_CREAT|O_EXCL, 0640)) < 0) {
 	printf ("%cfailed to open message file %s\n", PR_ERR, buf);

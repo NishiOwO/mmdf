@@ -21,14 +21,15 @@ lint:	l-amp l-checkup l-cleanque l-checkque l-dbmbuild l-dbmedit l-dbmlist \
 #
 #   amp:       test address-mapping code (coerce to RFC733 or RFC822)
 #
-inst-amp:	$(LIBDIR)/$(MMPREF)amp
+inst-amp:	$(MCMDDIR)/$(MMPREF)amp
 
-$(LIBDIR)/$(MMPREF)amp  :  xamp
-	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xamp $(LIBDIR)/$(MMPREF)amp
-#	cp xamp $(LIBDIR)/$(MMPREF)amp
-#	-$(CHOWN) $(MMDFLOGIN) $(LIBDIR)/$(MMPREF)amp
-#	-chmod 0$(PGMPROT) $(LIBDIR)/$(MMPREF)amp
-	-@ls -ls $(LIBDIR)/$(MMPREF)amp
+$(MCMDDIR)/$(MMPREF)amp  :  xamp
+	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xamp \
+		$(MCMDDIR)/$(MMPREF)amp
+#	cp xamp $(MCMDDIR)/$(MMPREF)amp
+#	-$(CHOWN) $(MMDFLOGIN) $(MCMDDIR)/$(MMPREF)amp
+#	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)amp
+	-@ls -ls $(MCMDDIR)/$(MMPREF)amp
 	-@echo "amp installed normally"; echo ""
 
 amp:	xamp
@@ -42,14 +43,15 @@ l-amp:
 #
 #   checkup:     verify mmdf directory and file setup
 #
-inst-checkup  :   $(LIBDIR)/$(MMPREF)checkup
+inst-checkup  :   $(MCMDDIR)/$(MMPREF)checkup
 
-$(LIBDIR)/$(MMPREF)checkup  :   xcheckup
-	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xcheckup $(LIBDIR)/$(MMPREF)checkup
-#	cp xcheckup $(LIBDIR)/$(MMPREF)checkup
-#	-$(CHOWN) $(MMDFLOGIN) $(LIBDIR)/$(MMPREF)checkup
-#	-chmod 0$(PGMPROT) $(LIBDIR)/$(MMPREF)checkup
-	-@ls -ls $(LIBDIR)/$(MMPREF)checkup
+$(MCMDDIR)/$(MMPREF)checkup  :   xcheckup
+	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xcheckup \
+		$(MCMDDIR)/$(MMPREF)checkup
+#	cp xcheckup $(MCMDDIR)/$(MMPREF)checkup
+#	-$(CHOWN) $(MMDFLOGIN) $(MCMDDIR)/$(MMPREF)checkup
+#	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)checkup
+	-@ls -ls $(MCMDDIR)/$(MMPREF)checkup
 	-@echo "checkup installed normally"; echo ""
 
 checkup:	xcheckup
@@ -63,14 +65,15 @@ l-checkup:
 #
 #   checkque:     summarize status of mail queue
 #
-inst-checkque:	$(LIBDIR)/$(MMPREF)checkque
+inst-checkque:	$(MCMDDIR)/$(MMPREF)checkque
 
-$(LIBDIR)/$(MMPREF)checkque:	xcheckque
-	$(INSTALL) -c -m 04$(PGMPROT)  -o $(MMDFLOGIN)  xcheckque $(LIBDIR)/$(MMPREF)checkque
-#	cp xcheckque $(LIBDIR)/$(MMPREF)checkque
-#	-$(CHOWN) $(MMDFLOGIN) $(LIBDIR)/$(MMPREF)checkque
-#	-chmod 04$(PGMPROT) $(LIBDIR)/$(MMPREF)checkque
-	-@ls -ls $(LIBDIR)/$(MMPREF)checkque
+$(MCMDDIR)/$(MMPREF)checkque:	xcheckque
+	$(INSTALL) -c -m 04$(PGMPROT)  -o $(MMDFLOGIN)  xcheckque \
+		$(MCMDDIR)/$(MMPREF)checkque
+#	cp xcheckque $(MCMDDIR)/$(MMPREF)checkque
+#	-$(CHOWN) $(MMDFLOGIN) $(MCMDDIR)/$(MMPREF)checkque
+#	-chmod 04$(PGMPROT) $(MCMDDIR)/$(MMPREF)checkque
+	-@ls -ls $(MCMDDIR)/$(MMPREF)checkque
 	-@echo "checkque installed normally"; echo ""
 
 checkque:	xcheckque
@@ -84,14 +87,15 @@ l-checkque:
 #
 #   dbmbuild:     build the MMDF dbm database
 #
-inst-dbmbuild  :   $(LIBDIR)/$(MMPREF)dbmbuild
+inst-dbmbuild  :   $(MCMDDIR)/$(MMPREF)dbmbuild
 
-$(LIBDIR)/$(MMPREF)dbmbuild  :   xdbmbuild
-	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xdbmbuild $(LIBDIR)/$(MMPREF)dbmbuild
-#	cp xdbmbuild $(LIBDIR)/$(MMPREF)dbmbuild
-#	-$(CHOWN) $(MMDFLOGIN) $(LIBDIR)/$(MMPREF)dbmbuild
-#	-chmod 0$(PGMPROT) $(LIBDIR)/$(MMPREF)dbmbuild
-	-@ls -ls $(LIBDIR)/$(MMPREF)dbmbuild
+$(MCMDDIR)/$(MMPREF)dbmbuild  :   xdbmbuild
+	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xdbmbuild \
+		$(MCMDDIR)/$(MMPREF)dbmbuild
+#	cp xdbmbuild $(MCMDDIR)/$(MMPREF)dbmbuild
+#	-$(CHOWN) $(MMDFLOGIN) $(MCMDDIR)/$(MMPREF)dbmbuild
+#	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)dbmbuild
+	-@ls -ls $(MCMDDIR)/$(MMPREF)dbmbuild
 	-@echo "dbmbuild installed normally"; echo ""
 
 dbmbuild:	xdbmbuild
@@ -105,14 +109,15 @@ l-dbmbuild:
 #
 #   dbmedit:     incrementally change contents of MMDF database
 #
-inst-dbmedit  :   $(LIBDIR)/$(MMPREF)dbmedit
+inst-dbmedit  :   $(MCMDDIR)/$(MMPREF)dbmedit
 
-$(LIBDIR)/$(MMPREF)dbmedit  :   xdbmedit
-	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xdbmedit $(LIBDIR)/$(MMPREF)dbmedit
-#	cp xdbmedit $(LIBDIR)/$(MMPREF)dbmedit
-#	-$(CHOWN) $(MMDFLOGIN) $(LIBDIR)/$(MMPREF)dbmedit
-#	-chmod 0$(PGMPROT) $(LIBDIR)/$(MMPREF)dbmedit
-	-@ls -ls $(LIBDIR)/$(MMPREF)dbmedit
+$(MCMDDIR)/$(MMPREF)dbmedit  :   xdbmedit
+	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xdbmedit \
+		$(MCMDDIR)/$(MMPREF)dbmedit
+#	cp xdbmedit $(MCMDDIR)/$(MMPREF)dbmedit
+#	-$(CHOWN) $(MMDFLOGIN) $(MCMDDIR)/$(MMPREF)dbmedit
+#	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)dbmedit
+	-@ls -ls $(MCMDDIR)/$(MMPREF)dbmedit
 	-@echo "dbmedit installed normally"; echo ""
 
 dbmedit:	xdbmedit
@@ -126,14 +131,15 @@ l-dbmedit:
 #
 #   dbmlist:     dump the contents of the DBM based mail database
 #
-inst-dbmlist:	$(LIBDIR)/$(MMPREF)dbmlist
+inst-dbmlist:	$(MCMDDIR)/$(MMPREF)dbmlist
 
-$(LIBDIR)/$(MMPREF)dbmlist:	xdbmlist
-	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xdbmlist $(LIBDIR)/$(MMPREF)dbmlist
-#	cp xdbmlist $(LIBDIR)/$(MMPREF)dbmlist
-#	-$(CHOWN) $(MMDFLOGIN) $(LIBDIR)/$(MMPREF)dbmlist
-#	-chmod 0$(PGMPROT) $(LIBDIR)/$(MMPREF)dbmlist
-	-@ls -ls $(LIBDIR)/$(MMPREF)dbmlist
+$(MCMDDIR)/$(MMPREF)dbmlist:	xdbmlist
+	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xdbmlist \
+		$(MCMDDIR)/$(MMPREF)dbmlist
+#	cp xdbmlist $(MCMDDIR)/$(MMPREF)dbmlist
+#	-$(CHOWN) $(MMDFLOGIN) $(MCMDDIR)/$(MMPREF)dbmlist
+#	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)dbmlist
+	-@ls -ls $(MCMDDIR)/$(MMPREF)dbmlist
 	-@echo "dbmlist installed normally"; echo ""
 
 dbmlist:	xdbmlist
@@ -147,14 +153,15 @@ l-dbmlist:
 #
 #   nictable:     summarize status of mail queue
 #
-inst-nictable  :   $(LIBDIR)/$(MMPREF)nictable
+inst-nictable  :   $(MCMDDIR)/$(MMPREF)nictable
 
-$(LIBDIR)/$(MMPREF)nictable  :   xnictable
-	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xnictable $(LIBDIR)/$(MMPREF)nictable
-#	cp xnictable $(LIBDIR)/$(MMPREF)nictable
-#	-$(CHOWN) $(MMDFLOGIN) $(LIBDIR)/$(MMPREF)nictable
-#	-chmod 0$(PGMPROT) $(LIBDIR)/$(MMPREF)nictable
-	-@ls -ls $(LIBDIR)/$(MMPREF)nictable
+$(MCMDDIR)/$(MMPREF)nictable  :   xnictable
+	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xnictable \
+		$(MCMDDIR)/$(MMPREF)nictable
+#	cp xnictable $(MCMDDIR)/$(MMPREF)nictable
+#	-$(CHOWN) $(MMDFLOGIN) $(MCMDDIR)/$(MMPREF)nictable
+#	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)nictable
+	-@ls -ls $(MCMDDIR)/$(MMPREF)nictable
 	-@echo "nictable installed normally"; echo ""
 
 nictable:	xnictable
@@ -168,14 +175,15 @@ l-nictable:
 #
 #   checkaddr:	Check addresses from lists or as arguments
 #
-inst-checkaddr:	$(LIBDIR)/$(MMPREF)checkaddr
+inst-checkaddr:	$(MCMDDIR)/$(MMPREF)checkaddr
 
-$(LIBDIR)/$(MMPREF)checkaddr  :   xcheckaddr
-	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xcheckaddr $(LIBDIR)/$(MMPREF)checkaddr
-#	cp xcheckaddr $(LIBDIR)/$(MMPREF)checkaddr
-#	-$(CHOWN) $(MMDFLOGIN) $(LIBDIR)/$(MMPREF)checkaddr
-#	-chmod 0$(PGMPROT) $(LIBDIR)/$(MMPREF)checkaddr
-	-@ls -ls $(LIBDIR)/$(MMPREF)checkaddr
+$(MCMDDIR)/$(MMPREF)checkaddr  :   xcheckaddr
+	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xcheckaddr \
+		$(MCMDDIR)/$(MMPREF)checkaddr
+#	cp xcheckaddr $(MCMDDIR)/$(MMPREF)checkaddr
+#	-$(CHOWN) $(MMDFLOGIN) $(MCMDDIR)/$(MMPREF)checkaddr
+#	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)checkaddr
+	-@ls -ls $(MCMDDIR)/$(MMPREF)checkaddr
 	-@echo "checkaddr installed normally"; echo ""
 
 checkaddr:	xcheckaddr
@@ -189,14 +197,15 @@ l-checkaddr:
 #
 #   mailid:	Program to return mailid of invoker or specified userid
 #
-inst-mailid:	$(LIBDIR)/$(MMPREF)mailid
+inst-mailid:	$(MCMDDIR)/$(MMPREF)mailid
 
-$(LIBDIR)/$(MMPREF)mailid  :   xmailid
-	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xmailid $(LIBDIR)/$(MMPREF)mailid
-#	cp xmailid $(LIBDIR)/$(MMPREF)mailid
-#	-$(CHOWN) $(MMDFLOGIN) $(LIBDIR)/$(MMPREF)mailid
-#	-chmod 0$(PGMPROT) $(LIBDIR)/$(MMPREF)mailid
-	-@ls -ls $(LIBDIR)/$(MMPREF)mailid
+$(MCMDDIR)/$(MMPREF)mailid  :   xmailid
+	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xmailid \
+		$(MCMDDIR)/$(MMPREF)mailid
+#	cp xmailid $(MCMDDIR)/$(MMPREF)mailid
+#	-$(CHOWN) $(MMDFLOGIN) $(MCMDDIR)/$(MMPREF)mailid
+#	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)mailid
+	-@ls -ls $(MCMDDIR)/$(MMPREF)mailid
 	-@echo "mailid installed normally"; echo ""
 
 mailid:	xmailid
@@ -210,15 +219,16 @@ l-mailid:
 #
 #   cleanque:   Remove old/dangling files from message queue directories
 #
-inst-cleanque    :   $(LIBDIR)/$(MMPREF)cleanque
+inst-cleanque    :   $(MCMDDIR)/$(MMPREF)cleanque
 
-$(LIBDIR)/$(MMPREF)cleanque  :   xcleanque
-	$(INSTALL) -c -m 04$(PGMPROT)  -o root  xcleanque $(LIBDIR)/$(MMPREF)cleanque
-#	cp xcleanque $(LIBDIR)/$(MMPREF)cleanque
-#	-$(CHOWN) root $(LIBDIR)/$(MMPREF)cleanque
-#	-chmod 04$(PGMPROT) $(LIBDIR)/$(MMPREF)cleanque
+$(MCMDDIR)/$(MMPREF)cleanque  :   xcleanque
+	$(INSTALL) -c -m 04$(PGMPROT)  -o root  xcleanque \
+		$(MCMDDIR)/$(MMPREF)cleanque
+#	cp xcleanque $(MCMDDIR)/$(MMPREF)cleanque
+#	-$(CHOWN) root $(MCMDDIR)/$(MMPREF)cleanque
+#	-chmod 04$(PGMPROT) $(MCMDDIR)/$(MMPREF)cleanque
 	-@echo "***  make sure /etc/rc & overnight cron run this program"
-	-@ls -ls $(LIBDIR)/$(MMPREF)cleanque
+	-@ls -ls $(MCMDDIR)/$(MMPREF)cleanque
 	-@echo "cleanque installed normally"; echo ""
 
 cleanque:	xcleanque
@@ -233,14 +243,15 @@ l-cleanque:
 #   fixtai:   Extract the fixed part of an mmdf tailor file
 #
 
-inst-fixtai    :   $(LIBDIR)/$(MMPREF)fixtai
+inst-fixtai    :   $(MCMDDIR)/$(MMPREF)fixtai
 
-$(LIBDIR)/$(MMPREF)fixtai  :   xfixtai
-	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xfixtai $(LIBDIR)/$(MMPREF)fixtai
-#	    cp xfixtai $(LIBDIR)/$(MMPREF)fixtai
-#	    -$(CHOWN) $(MMDFLOGIN) $(LIBDIR)/$(MMPREF)fixtai
-#	    -chmod 0$(PGMPROT) $(LIBDIR)/$(MMPREF)fixtai
-	    -@ls -ls $(LIBDIR)/$(MMPREF)fixtai
+$(MCMDDIR)/$(MMPREF)fixtai  :   xfixtai
+	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xfixtai \
+		$(MCMDDIR)/$(MMPREF)fixtai
+#	    cp xfixtai $(MCMDDIR)/$(MMPREF)fixtai
+#	    -$(CHOWN) $(MMDFLOGIN) $(MCMDDIR)/$(MMPREF)fixtai
+#	    -chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)fixtai
+	    -@ls -ls $(MCMDDIR)/$(MMPREF)fixtai
 	    -@echo "fixtai installed normally"; echo ""
 
 fixtai:   xfixtai
@@ -255,14 +266,15 @@ l-fixtai:
 #
 #   rem_chans:   Comment out the channel defs from an mmdf tailor file
 #
-inst-rem_chans    :   $(LIBDIR)/$(MMPREF)rem_chans
+inst-rem_chans    :   $(MCMDDIR)/$(MMPREF)rem_chans
 
-$(LIBDIR)/$(MMPREF)rem_chans  :   xrem_chans
-	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xrem_chans $(LIBDIR)/$(MMPREF)rem_chans
-#	    cp xrem_chans $(LIBDIR)/$(MMPREF)rem_chans
-#	    -$(CHOWN) $(MMDFLOGIN) $(LIBDIR)/$(MMPREF)rem_chans
-#	    -chmod 0$(PGMPROT) $(LIBDIR)/$(MMPREF)rem_chans
-	    -@ls -ls $(LIBDIR)/$(MMPREF)rem_chans
+$(MCMDDIR)/$(MMPREF)rem_chans  :   xrem_chans
+	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xrem_chans \
+		$(MCMDDIR)/$(MMPREF)rem_chans
+#	    cp xrem_chans $(MCMDDIR)/$(MMPREF)rem_chans
+#	    -$(CHOWN) $(MMDFLOGIN) $(MCMDDIR)/$(MMPREF)rem_chans
+#	    -chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)rem_chans
+	    -@ls -ls $(MCMDDIR)/$(MMPREF)rem_chans
 	    -@echo "rem_chans installed normally"; echo ""
 
 rem_chans:   xrem_chans
@@ -276,14 +288,15 @@ l-rem_chans:
 #
 #   setup:     build mmdf directories
 #
-inst-setup  :   $(LIBDIR)/$(MMPREF)setup
+inst-setup  :   $(MCMDDIR)/$(MMPREF)setup
 
-$(LIBDIR)/$(MMPREF)setup  :   xsetup
-	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xsetup $(LIBDIR)/$(MMPREF)setup
-#	cp xsetup $(LIBDIR)/$(MMPREF)setup
-#	-$(CHOWN) $(MMDFLOGIN) $(LIBDIR)/$(MMPREF)setup
-#	-chmod 0$(PGMPROT) $(LIBDIR)/$(MMPREF)setup
-	-@ls -ls $(LIBDIR)/$(MMPREF)setup
+$(MCMDDIR)/$(MMPREF)setup  :   xsetup
+	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xsetup \
+		$(MCMDDIR)/$(MMPREF)setup
+#	cp xsetup $(MCMDDIR)/$(MMPREF)setup
+#	-$(CHOWN) $(MMDFLOGIN) $(MCMDDIR)/$(MMPREF)setup
+#	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)setup
+	-@ls -ls $(MCMDDIR)/$(MMPREF)setup
 	-@echo "setup installed normally"; echo ""
 
 setup:	xsetup
@@ -299,14 +312,15 @@ l-setup:
 #                   Written by David Herron.
 #
 
-inst-process-uucp    :   $(LIBDIR)/$(MMPREF)process-uucp
+inst-process-uucp    :   $(MCMDDIR)/$(MMPREF)process-uucp
 
-$(LIBDIR)/$(MMPREF)process-uucp  :   xprocess-uucp
-	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xprocess-uucp $(LIBDIR)/$(MMPREF)process-uucp
-#	    cp xprocess-uucp $(LIBDIR)/$(MMPREF)process-uucp
-#	    -$(CHOWN) $(MMDFLOGIN) $(LIBDIR)/$(MMPREF)process-uucp
-#	    -chmod 0$(PGMPROT) $(LIBDIR)/$(MMPREF)process-uucp
-	    -@ls -ls $(LIBDIR)/$(MMPREF)process-uucp
+$(MCMDDIR)/$(MMPREF)process-uucp  :   xprocess-uucp
+	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xprocess-uucp \
+		$(MCMDDIR)/$(MMPREF)process-uucp
+#	    cp xprocess-uucp $(MCMDDIR)/$(MMPREF)process-uucp
+#	    -$(CHOWN) $(MMDFLOGIN) $(MCMDDIR)/$(MMPREF)process-uucp
+#	    -chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)process-uucp
+	    -@ls -ls $(MCMDDIR)/$(MMPREF)process-uucp
 	    -@echo "process-uucp installed normally"; echo ""
 
 process-uucp:   xprocess-uucp
@@ -320,14 +334,15 @@ l-process-uucp:
 #
 #   tablelist:     List tables used by a tailorfile
 #
-inst-tablelist  :   $(LIBDIR)/$(MMPREF)tablelist
+inst-tablelist  :   $(MCMDDIR)/$(MMPREF)tablelist
 
-$(LIBDIR)/$(MMPREF)tablelist  :   xtablelist
-	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xtablelist $(LIBDIR)/$(MMPREF)tablelist
-#	cp xtablelist $(LIBDIR)/$(MMPREF)tablelist
-#	-$(CHOWN) $(MMDFLOGIN) $(LIBDIR)/$(MMPREF)tablelist
-#	-chmod 0$(PGMPROT) $(LIBDIR)/$(MMPREF)tablelist
-	-@ls -ls $(LIBDIR)/$(MMPREF)tablelist
+$(MCMDDIR)/$(MMPREF)tablelist  :   xtablelist
+	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xtablelist \
+		$(MCMDDIR)/$(MMPREF)tablelist
+#	cp xtablelist $(MCMDDIR)/$(MMPREF)tablelist
+#	-$(CHOWN) $(MMDFLOGIN) $(MCMDDIR)/$(MMPREF)tablelist
+#	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)tablelist
+	-@ls -ls $(MCMDDIR)/$(MMPREF)tablelist
 	-@echo "tablelist installed normally"; echo ""
 
 tablelist:	 xtablelist

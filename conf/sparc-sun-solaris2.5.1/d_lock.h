@@ -5,7 +5,7 @@
  * of those files, and how a lock is verified.
  */
 
-#define	UUCPLOCK	"/var/spool/uucp"	/* directory for locking
+/* #define UUCPLOCK	"/var/spool/uucp"	/* directory for locking
 						compatible with tip/cu/
 						uugetty/uucp */
 

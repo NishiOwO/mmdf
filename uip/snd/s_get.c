@@ -77,8 +77,8 @@ int ded = 0;
 struct passwd *pw;
 char *midp;
 char *d_subargs = "vm";
-char tmp_tmplt[] = "tmpdrft.XXXXXX";
-char drft_tmplt[] = "drft.XXXXXX";
+char tmp_tmplt[15];
+char drft_tmplt[12];
 char linebuf[128];
 char tmpline[128];
 
@@ -94,6 +94,8 @@ getuinfo() {
 
 	/* build a draft file name */
 
+	strncpy(tmp_tmplt,"tmpdrft.XXXXXX",15);
+    strncpy(drft_tmplt,"drft.XXXXXX",12);
 	mktemp(drft_tmplt);
 	mktemp(tmp_tmplt);
 

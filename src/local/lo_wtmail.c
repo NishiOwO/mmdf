@@ -1191,8 +1191,13 @@ LOCFUN setupenv()
 	envp[2] = userstr;
 }
 
+#ifndef	__STDC__
 RETSIGTYPE
 onpipe()
+#else
+RETSIGTYPE
+onpipe(int i)
+#endif
 {
 	signal(SIGPIPE, onpipe);
 	sigpipe = TRUE;

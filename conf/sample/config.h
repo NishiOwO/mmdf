@@ -1,7 +1,9 @@
 /*
- * $Id: config.h,v 1.1 1998/06/02 13:23:01 krueger Exp $
+ * $Id: config.h,v 1.2 1999/08/12 13:15:34 krueger Exp $
  *
- * please set every configuration-switch here
+ * most of the define-switches can be set by running configure.
+ * some old defines are still in use
+ * please set these configuration-switch here
  *
  */
 
@@ -55,12 +57,6 @@
  *             and niftp will return the first 500 lines.
  */
 /* #undef CITATION=n */
-
-/*             Define  DBMCACHE  if  your  version of dbm(3)
- *             builds databases in core and then dumps  them
- *             to disk with dbmcachedump().
- */
-/* #undef DBMCACHE */
 
 /**********************************************************************/
 /*             Enable site depend code

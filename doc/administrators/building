@@ -920,9 +920,9 @@ Define CITATION=n to limit (to n) the number of lines of text included in error
 returns by \fIrmail\fR and \fIniftp\fR.  n should be at least
 six, if CITATION is defined at all.  If not defined, \fIrmail\fR will return
 the entire message and \fIniftp\fR will return the first 500 lines.
-.IP DBMCACHE 15
-Define DBMCACHE if your version of dbm(3) builds databases in core and then
-dumps them to disk with dbmcachedump().
+.IP HAVE_DBMCACHEDUMP 15
+Define HAVE_DBMCACHEDUMP if your version of dbm(3) builds databases in
+core and then dumps them to disk with dbmcachedump().
 .IP STATSORT 15
 Define STATSORT if you want \fIdeliver\fR to sort the mail queue based on
 a stat(2) of the message text file instead of reading the timestamp that is

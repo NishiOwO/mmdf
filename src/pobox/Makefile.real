@@ -10,14 +10,14 @@ SOURCES =	ch_pobox.c qu2po_send.c po_wtmail.c po_io.c
 
 real-default:	pobox
 
-install:	$(CHANDIR)/pobox
+install:	$(MCHNDIR)/pobox
 
-$(CHANDIR)/pobox  :   xpobox
-	$(INSTALL) -c -m 0$(PGMPROT) -o $(MMDFLOGIN) xpobox $(CHANDIR)/pobox
-#	cp xpobox $(CHANDIR)/pobox
-#	-$(CHOWN) $(MMDFLOGIN) $(CHANDIR)/pobox
-#	-chmod 0$(PGMPROT) $(CHANDIR)/pobox
-	-@ls -ls $(CHANDIR)/pobox
+$(MCHNDIR)/pobox  :   xpobox
+	$(INSTALL) -c -m 0$(PGMPROT) -o $(MMDFLOGIN) xpobox $(MCHNDIR)/pobox
+#	cp xpobox $(MCHNDIR)/pobox
+#	-$(CHOWN) $(MMDFLOGIN) $(MCHNDIR)/pobox
+#	-chmod 0$(PGMPROT) $(MCHNDIR)/pobox
+	-@ls -ls $(MCHNDIR)/pobox
 	-@echo "pobox channel installed normally"; echo ""
 
 pobox:	xpobox

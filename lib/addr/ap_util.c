@@ -82,8 +82,6 @@ register AP_ptr ap;
 char   obtype;
 register char  *obvalue;
 {
-    extern char *strdup ();
-
     ap -> ap_obtype = obtype;
     ap -> ap_obvalue = (obvalue == 0) ? (char *)0 : strdup (obvalue);
 
@@ -431,8 +429,6 @@ void ap_pfill (obtype, obvalue)        /* add data to node at end of chain     *
 char   obtype;
 register char  *obvalue;
 {
-    extern char *strdup ();
-
     ap_pcur -> ap_obtype = obtype;
     ap_pcur -> ap_obvalue =
 		(obvalue == (char *) 0) ? (char *) 0 : strdup (obvalue);

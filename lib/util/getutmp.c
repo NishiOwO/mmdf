@@ -1,4 +1,7 @@
 #include "util.h"
+#ifdef HAVE_UTMPX_H
+#  include <utmpx.h>
+#endif /* HAVE_UTMPX_H */
 #include <utmp.h>
 
 /* get informtion about who is logged in */
@@ -30,7 +33,7 @@ endutmp()
 }
 
 struct utmp *
-getutmp()
+_getutmp()
 {
 	if (utmpfp == NULL) {
 		if( (utmpfp = fopen( UTPATH, "r" )) == NULL )
@@ -51,7 +54,7 @@ char name[];
 	 * Both Dynix and Ultrix has the '8' hardwired into <utmp.h>.
 	 * Hope this never breaks ;-) -- DSH
 	 */
-	while( (p = getutmp()) && !equal(name, p->ut_name, 8))
+	while( (p = _getutmp()) && !equal(name, p->ut_name, 8))
 			;
 
 	return(p);

@@ -70,7 +70,6 @@ ph_wadr (host, adr)               /* send one address spec to local     */
 char	*host;			  /* not used on phone channel */
 char	*adr;			  /* "next" location part of address    */
 {
-    extern char *strdup ();
     short     retval;
     register char  *adrstr;
 

@@ -1,3 +1,77 @@
+Mon, 19 Jul 1999 21:38:33 EDT Ulmo
+	rmail.c datecvt
+    /* What this routine needs is a table of time zones for sources,
+       and to figure out which part of the time zone (daylight
+       saving's time, etc.) from the time in the date. This needs the
+       following additions: source host, table of which time zone each
+       host is in (fixed list and/or UUCP Map data compiled), and
+       table of time zones for locations, which is a part of most Unix
+       distributions.  This is on my TODO list -u@q.net */
+
+
+Mon, 19 Jul 1999 00:33:38 EDT	Brad Allen <Ulmo@Q.Net>
+	* Whoa!  Make configure variables deterministic, the same,
+	  and options for them all.  Right now, there's one name as
+	  option to ./configure, a second name between ./configure and
+	  Makefile.in, a third name from Makefile.in to
+	  conf/<system>/*.[ch], and a fourth name inside of
+	  conf/<system>/*.[ch], all different and seemingly random!
+	  Oh, lest I forget, there's a fifth name space for the
+	  mmdftailor file.  Very hard to update from old install given
+	  diffs.  Just try to find how to put the table directory into
+	  "/etc/mmdf" and the tailor file into "/etc/mmdf/tailor".  A
+	  dozen windows open for one stupid update?  Give me a break!
+	  (I had to update both ./configure and Makefile.in for this
+	  local configuration, but someone here who knows GNU autoconf
+	  should go through, make all the names exactly the same from
+	  command line option all the way down to the variables used
+	  in the code, and beyond to the mmdftailor file: this is
+	  easy, go backwards from the mmdftailor file to the the conf
+	  files to the sed code that is in Makefile.in to the
+	  variables assigned by configure to the options to configure;
+	  where changes must be made (e.g., case) the changes should
+	  be deterministic: convert all lowercase to upper case, vice
+	  versa, etc.: that's it!  No other ``well, I'll put a `_'
+	  here, an `s' there, and let's throw in an `r' and a `d' for
+	  good measure, but wait, let's insert "_MMDF" between "MM"
+	  and the rest of the variable!'' crap!!!.)
+
+	  If someone makes any changes to the FHS2.0 pathname
+	  configurations I put together here for Linux (it's a bit
+	  interdependent to the non-system dependent configuration
+	  files like "configure" and "Makefile.in" as of yet since I
+	  haven't fixed the above), let me know; that is, let me know
+	  if there are any changes to Makefile.in or configure, so I
+	  can update conf/linux*.  (This wouldn't be necessary without
+	  configure and Makefile.in.)  The GNU autoconf stuff is great
+	  if it's fully integrated, but it's half integrated so it
+	  instead gets in the way and breaks stuff.  I'd be happy to
+	  work on it if someone told me what to do: is Makefile.in and
+	  "configure" the right place to start, or are those object
+	  files of yet more source files?  Then, I can clean up the
+	  mess with the names, set some decent defaults for systems
+	  (like FHS2.0 for Linux systems), and do away with half (not
+	  all) of the stuff under conf/ (keep them, but one set, not
+	  many, as a simple back end to configure) -- have to keep
+	  some of conf/ for stuff that isn't ./configure-able (like
+	  hard-coded tailor files (I want to use this when I get the
+	  time) and phone character bitmaps, functons, etc.)
+
+Sun Jul 18 00:08:25 MEST 1999	Kai Krueger <krueger@mathematik.uni-kl.de>
+	* set load-level for incoming calls.
+
+Sun Apr 25 15:32:50 MEST 1999	Kai Krueger <krueger@mathematik.uni-kl.de>
+	* move list of channel for smtpd/smtpsrvr to mmdftailor
+	* possibility of binding smtpd to an specific interface with a 
+	  list of channel for each interface
+	* better address checking/authorization in smtpsrvr
+	* channel-depend cleanque
+	* rbl-support (blacklisted mail-host)
+	* ESMTP implementation (the development-tree recognizes the
+	  command, but has no further implementation behind)
+	* wild-cards
+	* ldap support
+
 Wed Dec 31 13:14:34 MET 1997	Kai Krueger <krueger@mathematik.uni-kl.de>
 
 	* Don't know how to set the value of LOCALUTIL in Makefile.com

@@ -154,7 +154,6 @@ LLog *logptr = &msglog;
 
 extern char *blt ();
 extern time_t time ();
-extern char *strdup();
 extern struct passwd *getpwuid();
 
 

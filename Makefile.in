@@ -6,7 +6,7 @@ MMDF_MINOR_VERSION  = @MMDF_MINOR_VERSION@
 
 SHELL           = /bin/sh
 
-BUILD_SUBDIRS	= @CONFIG_SUBDIRS@
+#BUILD_SUBDIRS	= @CONFIG_SUBDIRS@
 SUBDIR		= @SUBDIRS@
 
 install_prefix	=
@@ -21,19 +21,28 @@ datadir		= @datadir@
 sharedstatedir	= @sharedstatedir@
 localstatedir	= @localstatedir@
 mmdfprefix	= @mmdfprefix@
-mmdflibdir	= @mmdflibdir@
-chandir		= @chandir@
-tbldir		= @tbldir@
 sysconfdir	= @sysconfdir@
 srcdir          = @srcdir@
 varprefix       = @varprefix@
-mmdflogdir      = @mmdflogdir@
-mmdfphasedir    = @mmdfphasedir@
-mmdfspooldir    = @mmdfspooldir@
-mmdfdiallog	= @mmdfdiallog@
+
+mcmddir		= @mcmddir@
+mchndir		= @mchndir@
+mtbldir		= @mtbldir@
+mlogdir		= @mlogdir@
+mphsdir    	= @mphsdir@
+mquedir    	= @mquedir@
+d_calllog	= @d_calllog@
+
+mmtailor	= @mmtailor@
+tbldbm		= @tbldbm@
+lckdfldir	= @lckdfldir@
+authfile	= @authfile@
+uucplock	= @uucplock@
+resendprog	= @resendprog@
+sendprog	= @sendprog@
+
 PATHNAMES	= h/pathnames.h
 
-HOST		= @HOST@
 HOST		= @host@
 HOST_CPU	= @host_cpu@
 HOST_VENDOR	= @host_vendor@
@@ -46,14 +55,13 @@ SYSTEM		= @system@
 ## various programs
 ##
 CC              = @CC@
-CXX             = @CXX@
-INSTALL         = ./install-sh -c
+INSTALL         = ./install-sh -s -c
 INSTALL_PROGRAM = ${INSTALL}
 CHOWN		= @CHOWN@
 MMDFLOGIN	= @MMDFLOGIN@
 ROOTLOGIN	= @ROOTLOGIN@
 PGMPROT		= @PGMPROT@
-DIALPROG	= @DIAL@
+D_DIALPROG	= @D_DIALPROG@
 
 ##
 ## compiler and linker options
@@ -63,26 +71,26 @@ CPPFLAGS        = -I${srcdir} @CPPFLAGS@
 DEFS            = @DEFS@ -DNDEBUG
 LDFLAGS         = @LDFLAGS@
 STATIC_LDFLAGS  = @STATIC_LDFLAGS@
-LIBS            = @NEED_LIBS@
+LIBS            = @LIBS@
 MMDFLIBS	= @MMDFLIBS@
 
 all: pathnames binary
 
 binary: pathnames
 	for dir in ${SUBDIR}; do \
-		(cd $${dir}; make ${MFLAGS} ${MAKEFLAGS}); done
+		(cd $${dir}; make ${MFLAGS}); done
 
 depend:
 	for dir in ${SUBDIR}; do \
-		(cd $${dir}; make ${MFLAGS} ${MAKEFLAGS} depend); done
+		(cd $${dir}; make ${MFLAGS} depend); done
 
 lint:
 	for dir in ${SUBDIR}; do \
-		(cd $${dir}; make ${MFLAGS} ${MAKEFLAGS} lint); done
+		(cd $${dir}; make ${MFLAGS} lint); done
 
 install: dirs
 	for dir in ${SUBDIR}; do \
-		(cd $${dir}; make ${MFLAGS} ${MAKEFLAGS} install); done
+		(cd $${dir}; make ${MFLAGS} install); done
 
 clean:
 	rm -f make.out ${PATHNAMES}
@@ -94,7 +102,7 @@ distclean:
 	for dir in ${SUBDIR}; do \
 		(cd $${dir}; make $@); done
 	rm -f config.cache config.log config.status
-	rm -f TAGS* *.gz *.tar h/config.h *~ #*#
+	rm -f TAGS TAGS* *.gz *.tar h/config.h *~ #*#
 	(cd conf; ./cleanup )
 	rm -f Makefile.com conf/common/Makefile.com
 	rm -f Makefile
@@ -115,22 +123,27 @@ ${PATHNAMES}: Makefile
 	-@echo "#define LIBEXECDIR  \"${libexecdir}\"" >> ${PATHNAMES}
 	-@echo >> ${PATHNAMES}
 	-@echo "#define MMDFPREFIX   \"${mmdfprefix}\"" >> ${PATHNAMES}
-	-@echo "#define MMDFLIBDIR   \"${mmdflibdir}\"" >> ${PATHNAMES}
-	-@echo "#define MMDFCHANDIR  \"${chandir}\"" >> ${PATHNAMES}
-	-@echo "#define MMDFTABLEDIR \"${tbldir}\"" >> ${PATHNAMES}
 	-@echo "#define MMDFCFGDIR   \"${sysconfdir}\"" >> ${PATHNAMES}
 	-@echo >> ${PATHNAMES}
-	-@echo "#define MMDFPSOOLDIR \"${mmdfspooldir}\"" >> ${PATHNAMES}
-	-@echo "#define MMDFLOGDIR   \"${mmdflogdir}\"" >> ${PATHNAMES}
-	-@echo "#define MM_PHASEDIR  \"${mmdfphasedir}\"" >> ${PATHNAMES}
+	-@echo "#define MCMDDIR      \"${mcmddir}\"" >> ${PATHNAMES}
+	-@echo "#define MCHNDIR      \"${mchndir}\"" >> ${PATHNAMES}
+	-@echo "#define MTBLDIR      \"${mtbldir}\"" >> ${PATHNAMES}
 	-@echo >> ${PATHNAMES}
-	-@echo "#define MM_MMDFTAILOR \"${sysconfdir}/mmdftailor\"" >> ${PATHNAMES}
-	-@echo "#define MM_TBLDBM    \"${tbldir}/mmdfdbm\"" >> ${PATHNAMES}
-	-@echo "#define MM_AUTHFILE  \"${sysconfdir}/warning\"" >> ${PATHNAMES}
-	-@echo "#define MM_DIALLOG   \"${mmdfdiallog}\"" >> ${PATHNAMES}
-	-@echo "#define RESENDPROG   \"|${bindir}/resend \"" >> ${PATHNAMES}
-	-@echo "#define SENDPROG     \"${bindir}/send\"" >> ${PATHNAMES}
-	-@echo "#define DIALPROG     \"${DIALPROG}\"" >> ${PATHNAMES}
+	-@echo "#define MQUEDIR      \"${mquedir}\"" >> ${PATHNAMES}
+	-@echo "#define MLOGDIR      \"${mlogdir}\"" >> ${PATHNAMES}
+	-@echo "#define MPHSDIR      \"${mphsdir}\"" >> ${PATHNAMES}
+	-@echo >> ${PATHNAMES}
+	-@echo "#define MMTAILOR     \"${mmtailor}\"" >> ${PATHNAMES}
+	-@echo "#define TBLDBM       \"${tbldbm}\"" >> ${PATHNAMES}
+	-@echo "#define AUTHFILE     \"${authfile}\"" >> ${PATHNAMES}
+	-@echo "#define LCKDFLDIR    \"${lckdfldir}\"" >> ${PATHNAMES}
+	-@echo >> ${PATHNAMES}
+	-@echo "#define D_CALLLOG    \"${d_calllog}\"" >> ${PATHNAMES}
+	-@echo "#define D_DIALPROG   \"/usr/bin/dial\"" >> ${PATHNAMES}
+	-@echo "#define UUCPLOCK     \"${uucplock}\"" >> ${PATHNAMES}
+	-@echo "#define RESENDPROG   \"|${resendprog} \"" >> ${PATHNAMES}
+	-@echo "#define SENDPROG     \"${sendprog}\"" >> ${PATHNAMES}
+	-@echo "#define DIALPROG     \"${D_DIALPROG}\"" >> ${PATHNAMES}
 
 ########################
 #
@@ -147,22 +160,22 @@ dirs:
 		mkdir -p ${install_prefix}${sbindir}; fi
 	-if test ! -x ${install_prefix}${libexecdir}; then \
 		mkdir -p ${install_prefix}${libexecdir}; fi
-	-if test ! -x ${install_prefix}${mmdfspooldir}; then \
-		mkdir -p ${install_prefix}${mmdfspooldir}; fi
-	-if test ! -x ${install_prefix}${mmdflogdir}; then \
-		mkdir -p ${install_prefix}${mmdflogdir}; fi
-	-if test ! -x ${install_prefix}${mmdfphasedir}; then \
-		mkdir -p ${install_prefix}${mmdfphasedir}; fi
+	-if test ! -x ${install_prefix}${mquedir}; then \
+		mkdir -p ${install_prefix}${mquedir}; fi
+	-if test ! -x ${install_prefix}${mlogdir}; then \
+		mkdir -p ${install_prefix}${mlogdir}; fi
+	-if test ! -x ${install_prefix}${mphsdir}; then \
+		mkdir -p ${install_prefix}${mphsdir}; fi
 #	-if test ! -x ${install_prefix}${sharedstatedir}; then mkdir -p ${install_prefix}${sharedstatedir}; fi
 #	-if test ! -x ${install_prefix}${localstatedir}; then mkdir -p ${install_prefix}${localstatedir}; fi
 	-if test ! -x ${install_prefix}${mmdfprefix}; then \
 		mkdir -p ${install_prefix}${mmdfprefix}; fi
-	-if test ! -x ${install_prefix}${mmdflibdir}; then \
-		mkdir -p ${install_prefix}${mmdflibdir}; fi
-	-if test ! -x ${install_prefix}${chandir}; then \
-		mkdir -p ${install_prefix}${chandir}; fi
-	-if test ! -x ${install_prefix}${tbldir}; then \
-		mkdir -p ${install_prefix}${tbldir}; fi
+	-if test ! -x ${install_prefix}${mcmddir}; then \
+		mkdir -p ${install_prefix}${mcmddir}; fi
+	-if test ! -x ${install_prefix}${mchndir}; then \
+		mkdir -p ${install_prefix}${mchndir}; fi
+	-if test ! -x ${install_prefix}${mtbldir}; then \
+		mkdir -p ${install_prefix}${mtbldir}; fi
 	-if test ! -x ${install_prefix}${sysconfdir}; then \
 		mkdir -p ${install_prefix}${sysconfdir}; fi
 	-if test ! -x ${install_prefix}${rcvdir}; then \

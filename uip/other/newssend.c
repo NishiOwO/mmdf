@@ -14,7 +14,6 @@ extern char     *locname;
 extern char     *locdomain;
 
 char	*logdir;
-char    *strdup();
 
 char    noret;                    /* no return address                  */
 char    watchit;                  /* user wants to watch delivery       */

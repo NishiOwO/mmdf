@@ -67,9 +67,9 @@ l-emactovi:
 #
 #   malias: alias checkup routine
 #
-inst-xmalias: $(LIBDIR)/$(PREF)malias
+inst-xmalias: $(MCMDDIR)/$(PREF)malias
 
-$(LIBDIR)/$(PREF)malias: xmalias
+$(MCMDDIR)/$(PREF)malias: xmalias
 	cp xmalias $@
 	-chmod $(PGMPROT) $@
 
@@ -118,9 +118,9 @@ l-newmail:
 #   v6mail:   v6mail command replacement
 #
 
-inst-xv6mail:  $(LIBDIR)/$(PREF)v6mail
+inst-xv6mail:  $(BINDIR)/$(PREF)v6mail
 
-$(LIBDIR)/$(PREF)v6mail:  xv6mail
+$(BINDIR)/$(PREF)v6mail:  xv6mail
 	cp xv6mail $@
 	-$(CHOWN) mmdf $@
 	-chmod $(PGMPROT) $@
@@ -191,9 +191,9 @@ l-resend:
 #	       into an RFC822 mail world.  (based on resend)
 #
 
-inst-xnewssend:  $(LIBDIR)/$(PREF)newssend
+inst-xnewssend:  $(MCMDDIR)/$(PREF)newssend
 
-$(LIBDIR)/$(PREF)newssend: xnewssend
+$(MCMDDIR)/$(PREF)newssend: xnewssend
 	cp xnewssend $@
 	-$(CHOWN) mmdf $@
 	-chmod 04$(PGMPROT) $@
@@ -247,15 +247,27 @@ l-rcvtrip:
 inst-xsendmail:  ${SBINDIR}/sendmail
 
 ${SBINDIR}/sendmail:  xsendmail
-	-if test ! -f $@.orig; then cp $@ $@.orig; fi
+	if test ! -f $@.orig; then \
+		if test -f $@; then cp $@ $@.orig; fi; fi
 	cp xsendmail $@
-	-if test ! -f ${install_prefix}/usr/lib/sendmail.orig; then \
-		cp ${install_prefix}/usr/lib/sendmail \
-			${install_prefix}/usr/lib/sendmail.orig;\
-	fi
-	ln -s ${sbindir}/sendmail ${install_prefix}/usr/lib/sendmail
-	-$(CHOWN) mmdf $@
-	-chmod 04$(PGMPROT) $@
+	$(CHOWN) mmdf $@
+	chmod 04$(PGMPROT) $@
+	if test -f /usr/lib/sendmail; then cp /usr/lib/sendmail /usr/lib/sendmail.orig; fi
+	rm -f /usr/lib/sendmail
+	ln -s ${sbindir}/sendmail /usr/lib/sendmail
+	#-if test ! -f ${sbindir}/sendmail.orig; then \
+	#	mv ${sbindir}/sendmail \
+	#		 ${sbindir}/sendmail.orig;\
+	#else \
+	#	mv ${sbindir}/sendmail \
+	#		 ${sbindir}/sendmail.orig$$;\
+	#fi
+	###-if test ! -f ${sbindir}/sendmail; then \
+	###     -@echo "***** Please install sendmail by hand in /usr/lib. e.g."
+	###     -@echo "ln -s ${sbindir}/sendmail /usr/sbin/sendmail"
+	###else
+	###     ln -s ${sbindir}/sendmail ${sbindir}/sendmail
+	###fi
 
 xsendmail :   sendmail.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ sendmail.o $(MMDFLIBS) $(SYSLIBS)

@@ -26,7 +26,11 @@ char *datbuf;
 	register	struct	tm	*i;
 			time_t		tsec;
 
-	time(&tsec);
+	int tz_num = timezone/36;
+
+    if (tz_num < 0) tz_num = -tz_num;
+
+    time(&tsec);
 	i = localtime(&tsec);
 
 	switch (flag) {
@@ -44,9 +48,10 @@ char *datbuf;
 
 	case TIMREG:		/* RFC 822 standard time string		*/
 	default:		/* "Wed, 21 Jan 1976 14:30 PDT"		*/
-		sprintf(datbuf, "%s, %d %s %04d %02d:%02d:%02d %s",
+		sprintf(datbuf, "%s, %d %s %04d %02d:%02d:%02d %c%04d (%s)",
 			day[i->tm_wday], i->tm_mday, month[i->tm_mon],
 			i->tm_year+1900, i->tm_hour, i->tm_min, i->tm_sec,
+                (timezone>0) ?  '-' : '+', tz_num,
 #ifdef HAVE_TZNAME
 			tzname[i->tm_isdst]
 #else /* HAVE_TZNAME */
@@ -56,15 +61,10 @@ char *datbuf;
 		break;
 
 	case TIMSHRT:		/* w/out day of week			*/
-		sprintf(datbuf, "%d %s %04d %02d:%02d %s",
+		sprintf(datbuf, "%d %s %04d %02d:%02d %c%04d",
 			i->tm_mday, month[i->tm_mon], i->tm_year+1900,
 			i->tm_hour, i->tm_min,
-#ifdef HAVE_TZNAME
-			tzname[i->tm_isdst]
-#else /* HAVE_TZNAME */
-			i->tm_zone
-#endif /* HAVE_TZNAME */
-			);
+                (timezone>0) ?  '-' : '+', tz_num);
 		break;
 	}
 	return(datbuf);

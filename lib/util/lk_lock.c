@@ -701,7 +701,7 @@ char	*lockfile;		/* --Ignored-- */
 		lockdir ? lockdir : NIL, lockfile ? lockfile : NIL);
 #endif
 
-	if (fp==EOF || fp==NULL) {
+	if (fp==(FILE *)EOF || fp==(FILE *)NULL) {
 		return (OK);
 	}
 	retval = fclose (fp);

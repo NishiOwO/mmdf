@@ -22,25 +22,32 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 /*#include <stdarg.h>*/
-/*#include <stdio.h>*/
+#include <stdio.h>
 
-/* Write formatted output into S, according to the format
-   string FORMAT, writing no more than MAXLEN characters.  */
-/* VARARGS3 */
-int snprintf (s, maxlen, format)
-      char *s;
-      size_t maxlen;
-      const char *format;
+int
+snprintf
+#ifdef __STDC__
+  (char *string, /*_IO_*/size_t maxlen, const char *format, ...)
+#else
+(string, maxlen, format, va_alist)
+     char *string;
+/*     _IO_size_t maxlen;*/
+     size_t maxlen;
+     char *format;
+     va_dcl
+#endif
 {
-  va_list arg;
-  int done;
-
-  va_start (arg, format);
-  /*done = __vsnprintf (s, maxlen, format, arg);*/
-  done = vsprintf (s, format, arg);
-  va_end (arg);
-
-  return done;
+  int ret;
+  va_list args;
+/*  _IO_va_start(args, format);*/
+  va_start(args);
+#ifdef HAVE_VSNPRINTF
+  ret = vsnprintf(string, maxlen, format, args);
+#else
+  ret = vsprintf(string, format, args);
+#endif
+  va_end(args);
+  return ret;
 }
 #  endif/* HAVE_VARARGS_H */
 #endif /* HAVE_SNPRINTF */

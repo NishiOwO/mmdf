@@ -71,7 +71,7 @@ something that indicates a message agent was responsible.
 .B MLOGIN
 .I <mmdf-loginname>
 default:
-.I mmdf
+.I @MMDFLOGIN@
 .RS
 MLOGIN is the user that owns the MMDF transport system.
 .RE
@@ -122,7 +122,7 @@ Directory Tailoring
 .B MLOGDIR
 .I <directory>
 default:
-.I @MMDFLOGDIR@
+.I @MLOGDIR@
 .RS
 MLOGDIR  is the default directory in which the log files are
 kept.
@@ -131,7 +131,7 @@ kept.
 .B MPHSDIR
 .I <directory>
 default:
-.I @MM_PHASEDIR@
+.I @MPHSDIR@
 .RS
 MPHSDIR is the directory in which  the  timestamps  for  the
 channels  are  made, showing what state of activity they are
@@ -141,7 +141,7 @@ in.
 .B MTBLDIR
 .I <directory>
 default:
-.I @MM_TBLDBM@
+.I @MTBLDIR@
 .RS
 MTBLDIR is the default directory for the table files.
 .RE
@@ -149,7 +149,7 @@ MTBLDIR is the default directory for the table files.
 .B MQUEDIR
 .I <directory>
 default:
-.I @MMDFPSOOLDIR@
+.I @MQUEDIR@
 .RS
 MQUEDIR is the parent directory for the various  queues  and
 address directories.
@@ -158,7 +158,7 @@ address directories.
 .B MLCKDIR
 .I <directory>
 default:
-.I /tmp/mmdf
+.I @LCKDFLDIR@
 .RS
 MLCKDIR  is  the  directory where the locking of files takes
 place. It's use depends on what style of  locking  you  are
@@ -196,7 +196,7 @@ MMSGQ as above, used for the message texts.
 .B MCMDDIR
 .I <directory>
 default:
-.I @MMDFPREFIX@
+.I @MCMDDIR@
 .RS
 MCMDDIR is the default commands directory where the  various
 \*M commands  live;  any command that does not have a full path-
@@ -206,7 +206,7 @@ name is taken relative to this directory.
 .B MCHNDIR
 .I <directory>
 default:
-.I @MMDFCHANDIR@
+.I @MCHNDIR@
 .RS
 MCHNDIR is where the channel programs are to be found.
 .RE
@@ -226,7 +226,7 @@ Database Files
 .B MDBM
 .I <dbmfile>
 default:
-.I @MM_TBLDBM@
+.I @TBLDBM@
 .RS
 The  MDBM  line  tells  MMDF where to find the database
 file containing the associative store.  Dbm style  databases
@@ -930,7 +930,7 @@ causes the daemon to sleep 10 minutes between passes.
 .B MDELIVER
 "\fIpath to deliver\fR"
 default:
-.I @MMDFLIBDIR@/deliver
+.I @MCMDDIR@/deliver
 .RS
 is where the \fIdeliver\fR program lives, and
 .RE
@@ -938,7 +938,7 @@ is where the \fIdeliver\fR program lives, and
 .B MPKUP
 "\fIpath to pickup\fR"
 default:
-.I @MMDFLIBDIR@/pickup
+.I @MCMDDIR@/pickup
 .RS
 is the post box pickup program.
 .RE
@@ -947,7 +947,7 @@ is the post box pickup program.
 "\fIpath to submit\fR
 "
 default:
-.I @MMDFLIBDIR@/submit
+.I @MCMDDIR@/submit
 .RS
 tells MMDF where the \fIsubmit\fR program lives.
 .RE
@@ -955,7 +955,7 @@ tells MMDF where the \fIsubmit\fR program lives.
 .B MV6MAIL
 "\fIpath to v6mail\fR"
 default:
-.I @MMDFLIBDIR@/v6mail
+.I @MCMDDIR@/v6mail
 .RS
 is the mail program MMDF should use to return
 undeliverable messages and to send diagnostics.
@@ -1074,7 +1074,7 @@ UUXSTR  ``uux - -r -gA''
 .sp
 
 .SH FILES
-@MM_MMDFTAILOR@
+@MMTAILOR@
 .br
 config/<site>/conf.c
 

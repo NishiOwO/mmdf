@@ -65,7 +65,9 @@ int    bccflag;
 char	sign_cmd[128] = "pgps --armor -f -t";
 char	encrypt_cmd[128] = "pgpe --armor -f -t";
 
+#ifndef STDC_HEADERS
 extern char	*malloc();
+#endif /* STDC_HEADERS */
 
 input ()
 {
@@ -983,7 +985,7 @@ long length;
 
 	if ((fd1 = open(path, 0)) < 0)
 		return -1;
-	strcpy(tmpf, tmp_file);
+	strncpy(tmpf, sizeof(tmpf), tmp_file);
 	mktemp(tmpf);
 	if ((fd2 = creat(tmpf, 0600)) < 0) {
 		close(fd1);
@@ -1161,7 +1163,6 @@ char	*str;
 	char		buf[ADDRSIZE];
 	char		*cp;
 	char		*bp;
-	extern char	*strdup();
 
 	for( adrptr = str;; )  {
 		switch( next_address(buf) )  {

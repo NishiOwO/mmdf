@@ -271,13 +271,13 @@ main (argc, argv)
 
     /*  standard directories */
     que (LEVEL4, subhdrfmt, "Logging directory", logdfldir);
-    if (chkfile (logdfldir, 0711, 0755, mmdfuid, mmdfgid, MMDFlogin) >= OK)
+    if (chkfile (logdfldir, 0511, 0755, mmdfuid, mmdfgid, MMDFlogin) >= OK)
 	chklog ();
     qflush (LEVEL4);
 
     que (LEVEL4, "\n");
     que (LEVEL4, subhdrfmt, "Phase (timestamps)", phsdfldir);
-    chkfile (phsdfldir, 0711, 0755, mmdfuid, mmdfgid, MMDFlogin);
+    chkfile (phsdfldir, 0511, 0755, mmdfuid, mmdfgid, MMDFlogin);
     qflush (LEVEL4);
 
 #ifdef HAVE_LOCKDIR
@@ -290,18 +290,18 @@ main (argc, argv)
 #ifdef JNTMAIL
     que (LEVEL4, "\n");
     que (LEVEL4, subhdrfmt, "NIFTP spool directory", pn_quedir);
-    chkfile (pn_quedir, 0700, 0700, daemonuid, daemongid, daemonname);
+    chkfile (pn_quedir, 0500, 0700, daemonuid, daemongid, daemonname);
     qflush (LEVEL4);
 #endif
 
     que (LEVEL4, "\n");
     que (LEVEL4, subhdrfmt, "Tables & scripts", tbldfldir);
-    if (chkfile (tbldfldir, 0711, 0755, mmdfuid, mmdfgid, MMDFlogin) >= OK)
+    if (chkfile (tbldfldir, 0511, 0755, mmdfuid, mmdfgid, MMDFlogin) >= OK)
 	chktab ();
     qflush (LEVEL4);
 
     que (LEVEL4, hdrfmt, "MMDF Commands", cmddfldir);
-    if (chkfile (cmddfldir, 0711, 0755, mmdfuid, mmdfgid, MMDFlogin) >= OK)
+    if (chkfile (cmddfldir, 0511, 0755, mmdfuid, mmdfgid, MMDFlogin) >= OK)
 	chkcmd ();
     qflush (LEVEL4);
 
@@ -581,10 +581,10 @@ chktab ()
 				    ch_tbsrch[ind] -> ch_lname);
 	que (LEVEL6, subhdrfmt, "  Local domain name",
 				    ch_tbsrch[ind] -> ch_ldomain);
-	que (LEVEL6, "    %-20s: %d\n", "  warntime",
-	     ch_tbsrch[ind] -> ch_warntime);
-	que (LEVEL6, "    %-20s: %d\n", "  failtime",
-	     ch_tbsrch[ind] -> ch_failtime);
+	if( ch_tbsrch[ind] -> ch_warntime > 0 )
+      que (LEVEL6, "    %-20s: %d\n", "  warntime", ch_tbsrch[ind] -> ch_warntime);
+	if( ch_tbsrch[ind] -> ch_failtime > 0 )
+      que (LEVEL6, "    %-20s: %d\n", "  failtime", ch_tbsrch[ind] -> ch_failtime);
 	qflush (LEVEL6);
 
 	cktable (ch_tbsrch[ind] -> ch_table, "Channel table");
@@ -815,35 +815,35 @@ chkcmd ()
     }
 
     que (LEVEL6, subhdrfmt, "Posting/submission", pathsubmit);
-    chkfile (pathsubmit, 04711, 04755, mmdfuid, mmdfgid, MMDFlogin);
+    chkfile (pathsubmit, 04511, 04755, mmdfuid, mmdfgid, MMDFlogin);
     qflush (LEVEL6);
 
     que (LEVEL6, subhdrfmt, "Delivery management", pathdeliver);
-    chkfile (pathdeliver, 04711, 04755, 0, rootgid, "root");
+    chkfile (pathdeliver, 04511, 04755, 0, rootgid, "root");
     qflush (LEVEL6);
 
     if (strcmp (pathdeliver, pathpkup) != 0)
     {
 	que (LEVEL6, subhdrfmt, "P.O. Box retrieval", pathpkup);
-	chkfile (pathpkup, 04711, 04755, 0, rootgid, "root");
+	chkfile (pathpkup, 04511, 04755, 0, rootgid, "root");
 	qflush (LEVEL6);
     }
 
     que (LEVEL6, subhdrfmt, "V6Mail (for notices)",
 		pathmail);
-    chkfile (pathmail, 0711, 0755, mmdfuid, mmdfgid, MMDFlogin);
+    chkfile (pathmail, 0511, 0755, mmdfuid, mmdfgid, MMDFlogin);
     qflush (LEVEL6);
 
     que (LEVEL6, subhdrfmt, "cleanque", "Queue garbage cleaner");
-    chkfile ("cleanque", 04711, 04755, 0, rootgid, "root");
+    chkfile ("cleanque", 04511, 04755, 0, rootgid, "root");
     qflush (LEVEL6);
 
     que (LEVEL6, subhdrfmt, "checkque", "Queue status checker");
-    chkfile ("checkque", 04711, 04755, mmdfuid, mmdfgid, MMDFlogin);
+    chkfile ("checkque", 04511, 04755, mmdfuid, mmdfgid, MMDFlogin);
     qflush (LEVEL6);
 
     que (LEVEL6, subhdrfmt, "setlogs", "Log cleanup shellfile");
-    chkfile ("setlogs", 0700, 0755, mmdfuid, mmdfgid, MMDFlogin);
+    chkfile ("setlogs", 0500, 0755, mmdfuid, mmdfgid, MMDFlogin);
     qflush (LEVEL6);
 }
 /**/

@@ -56,29 +56,33 @@ char **argv;
 	register	int		skt;
 			struct	servent	*sp;
 			struct	hostent	*hp;
-			char		thishost[64];
-			char		workarea[32];
+			static char		thishost[1024];
+			static char		workarea[512];
 			int		i, pid;
 
+	thishost[sizeof(thishost)-1]='\0';
+	workarea[sizeof(workarea)-1]='\0';
 	setbuf(stderr, errbuf);
 	sprintf(programid, "smtpd(%5.5d): ", getpid());
 	getwho (&callerid, &effecid); /* who am I and who is running me?    */
 	mmdf_init (argv[0]);
-	gethostname(thishost, sizeof(thishost));	/* current hostname */
+	gethostname(thishost, sizeof(thishost)-1);	/* current hostname */
 	if ((sp = getservbyname("smtp", "tcp")) == NULL) {
 		fprintf(stderr, "Cannot find service smtp/tcp\n");
 		exit(-1);
 	}
 #ifdef HAVE_NAMESERVER
 	/* don't wait forever! */
-	ns_settimeo(NS_NETTIME);
+	if(ns_settimeo(NS_NETTIME)) {
+      exit(154);
+    }
 #endif /* HAVE_NAMESERVER */
 
 	/*
 	 * try to get full name for thishost
 	 */
 	hp = gethostbyname(thishost);
-	if (hp != NULL)	strcpy(thishost, hp->h_name);
+	if (hp != NULL)	strncpy(thishost, hp->h_name, sizeof(thishost)-1);
 
 	/* Parse args; args will override configuration file... */
 	arginit(argc, argv);
@@ -97,7 +101,7 @@ char **argv;
 	  hp = gethostbyaddr ( (char *)&rmtaddr.sin_addr,
 			       sizeof(rmtaddr.sin_addr), AF_INET );
 	  if ((hp == NULL) || !isstr(hp->h_name)) {
-	    strcpy(workarea, (char *)inet_ntoa(rmtaddr.sin_addr));
+	    strncpy(workarea, (char *)inet_ntoa(rmtaddr.sin_addr),sizeof(workarea)-1);
 	    rmthost = workarea;
 	  } else
 	    rmthost = hp->h_name;
@@ -181,7 +185,7 @@ char **argv;
 			hp = gethostbyaddr((char *)&rmtaddr.sin_addr,
 					sizeof(rmtaddr.sin_addr), AF_INET);
 			if ((hp == NULL) || !isstr(hp->h_name)) {
-				strcpy(workarea, inet_ntoa(rmtaddr.sin_addr));
+				strncpy(workarea, inet_ntoa(rmtaddr.sin_addr),sizeof(workarea)-1);
 				rmt = workarea;
 			}
 			else

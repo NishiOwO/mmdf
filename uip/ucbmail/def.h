@@ -261,6 +261,8 @@ struct ignore {
 #ifndef HAVE_SIGSET
 #  define	sigset(s, a)	signal(s, a)
 #  define	sigsys(s, a)	signal(s, a)
+#else
+/* ERROR*/
 #endif
 
 /*
@@ -299,9 +301,11 @@ char	*rpair();
 char	*salloc();
 char	*savestr();
 char	*snarf();
+#ifndef __STDC__
 char	*strcat();
 char	*strcpy();
 char    *strncpy();
+#endif /* __STDC__ */
 char	*value();
 char	*vcopy();
 off_t	fsize();

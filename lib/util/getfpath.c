@@ -17,7 +17,6 @@ char *
     char fnam[],
 	 dflpth[];
 {
-    extern char *strdup ();
     char temppath[128];
 
     getfpath (fnam, dflpth, temppath);

@@ -55,11 +55,13 @@ main (argc, argv)
     printf ("Welcome to the mailing list program\n");
     FOREVER
     {
+       int foundnull=0;
 	printf ("\nType 'h' for list of lists, 'c' to create a list,\n");      printf ("'q' to quit, or the name of the list you wish to adjust");
 	printf ("\n\n>> ");
 	fflush (stdout);
-	if (fgets (buf, sizeof (buf), stdin) == NULL)
-		exit(OK);
+	if (fgets (buf, sizeof (buf), stdin) == NULL) foundnull=1;
+       if (buf[strlen(buf)-1]=='\n') buf[strlen(buf)-1]='\0';
+       if (foundnull) exit(OK);
 	compress (buf, buf);
 	if (strlen (buf) == 0)
 	    continue;
@@ -173,34 +175,28 @@ do_help ()
 
 do_create ()
 {
+    int foundnull=0;
+#define do_create_get_line(x) \
+    printf (x); \
+    fflush(stdout); \
+    if (fgets (buf,sizeof(buf),stdin) == NULL) foundnull=1; \
+    if (buf[strlen(buf)-1]=='\n') buf[strlen(buf)-1]='\0';  \
+    if (foundnull) exit(OK)
 
     ml_1adr (TRUE, FALSE, (char *) 0, "Mailing list creation request",
 		supportaddr);
     ml_txt ("Name of list\n");
-    printf ("Give name of list: ");
-    fflush (stdout);
-    if (fgets (buf, sizeof (buf), stdin) == NULL)
-	exit(OK);
+    do_create_get_line("Give name of list: ");
     ml_txt (buf);
     ml_txt ("\n\nFunction:\n");
-    printf ("Give a one line description of the list\n: ");
-    fflush (stdout);
-    if (fgets (buf, sizeof (buf), stdin) == NULL)
-	exit(OK);
+    do_create_get_line("Give a one line description of the list\n: ");
     ml_txt (buf);
     ml_txt ("\n\nDistributed from:\n");
-    printf ("Where is the list currently distributed from?\n: ");
-    fflush (stdout);
-    if (fgets (buf, sizeof (buf), stdin) == NULL)
-	exit(OK);
+    do_create_get_line("Where is the list currently distributed from?\n: ");
     ml_txt (buf);
     ml_txt ("\n\nMaintainers\n");
-    printf ("Who will be responible for the list?\n");
-    printf ("You can give multiple addresses, but one must be a local ");
-    printf ("login\n: ");
-    fflush (stdout);
-    if (fgets (buf, sizeof (buf), stdin) == NULL)
-	exit(OK);
+    do_create_get_line("Who will be responible for the list?\nYou can give \
+multiple addresses, but one must be a local login\n: ");
     ml_txt (buf);
     printf ("processing message....\n");
     fflush (stdout);
@@ -477,15 +473,19 @@ char ch;
     printf ("You are in list manager mode\n");
     FOREVER
     {
+	int foundnull=0;
+
+#define master_adj_get_line() \
+	fflush (stdout); \
+	if (fgets (tmpbuf,sizeof(tmpbuf),stdin) == NULL) foundnull=1; \
+	if(tmpbuf[strlen(tmpbuf)-1]=='\n') tmpbuf[strlen(tmpbuf)-1]='\0'; \
+	if(foundnull){ v_end (); exit(OK); } \
+	compress (tmpbuf, tmpbuf)
+
 	printf ("print list (p), verify list (v), add user (a), remove ");
 	printf ("user (r), quit (q)?\n");
 	printf ("default is assumed to be user name to be added\n\n>>> ");
-	fflush (stdout);
-	if (fgets (tmpbuf, sizeof (tmpbuf), stdin) == NULL){
-		v_end ();
-		exit(OK);
-	}
-	compress (tmpbuf, tmpbuf);
+	master_adj_get_line();
 	if(strlen(tmpbuf) > 1)
 		ch = 'A';
 	else
@@ -513,11 +513,7 @@ char ch;
 		break;
 	    case 'a':
 		printf ("give username to be added: ");
-		if (fgets (tmpbuf, sizeof (tmpbuf), stdin) == NULL){
-			v_end ();
-			exit(OK);
-		}
-		compress (tmpbuf, tmpbuf);
+               master_adj_get_line();
 		if (u_inlist (tmpbuf))
 		    printf ("User '%s' already in list\n", tmpbuf);
 		else
@@ -529,11 +525,7 @@ char ch;
 
 	    case 'r':
 		printf ("give username to be removed: ");
-		if (fgets (tmpbuf, sizeof (tmpbuf), stdin) == NULL){
-			v_end ();
-			exit(OK);
-		}
-		compress (tmpbuf, tmpbuf);
+               master_adj_get_line();
 		if (!u_inlist (tmpbuf))
 		    printf ("User '%s' not in list\n", tmpbuf);
 		else
@@ -611,9 +603,14 @@ char *user;
 	fpath [0] = '\0';
     else
 	*cp = '\0';
-    strcat (fpath, template);
+    strncat (fpath, template, sizeof(fpath));
+#ifdef HAVE_MKSTEMP
+    fd = mkstemp (fpath);
+#else
     mktemp (fpath);
-    if ((fd = creat (fpath, curmode)) < 0)
+    fd = creat (fpath, curmode);
+#endif
+    if (fd < 0)
     {
 	printf ("Can't create temp file '%s'\n", fpath);
 	return;

@@ -25,7 +25,8 @@ char   *argv[];
     char *cp;
     register short curarg;
 
-    strcpy (host, locname);       /* setup default host reference       */
+    /* setup default host reference       */
+    snprintf(host, HOSTSIZE, "%s.%s", LocFirst, LocLast);
 
 /*  if an argument is not a switch, assume that it is an address.
  *  several of the switches merely change which header addresses are

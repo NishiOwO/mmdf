@@ -28,7 +28,7 @@ int     target = 0;
 #define T_CHANNEL       2
 #define T_TOP           3
 
-FILE    *infp = stdin;
+FILE    *infp;
 
 char    entry[1000],            /* fully-assembled entry (multi-line) */
 	linebuf[1000];          /* current line */
@@ -37,6 +37,7 @@ main (argc, argv)
     int argc;
     char *argv[];
 {
+    infp = stdin;
     mmdf_init (argv[0]);
     arg_init (argc, argv);
 

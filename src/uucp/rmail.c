@@ -59,7 +59,7 @@
 
 #define	VERSION		"4.0"
 
-#define	CITATION	6	/* Added Peter C March 1987 */
+/*#define	CITATION	6	/* Added Peter C March 1987 */
 				/* when bouncing only bounce part of */
 				/* a message */
 
@@ -127,7 +127,7 @@ extern	int	optind;
 
 FILE	*rm_msgf;		/* temporary out for message text */
 Chan	*chanptr;
-char	Msgtmp[] = "/tmp/rmail.XXXXXX";
+char	Msgtmp[18];
 char	*next = NULL;		/* Where nextchar() gets the next char from */
 char	rm_date[LINESIZE];	/* date of origination from uucp header */
 char	rm_from[LINESIZE];	/* accumulated path of sender */
@@ -146,6 +146,11 @@ int	e_s_count;
 int	e_s_other;
 int	debug;
 
+#ifdef __STDC__
+char *get_official(char *, int *);
+#else /* __STDC__ */
+char *get_official();
+#endif /* __STDC__ */
 
 main(argc, argv)
 char **argv;
@@ -156,7 +161,22 @@ char **argv;
 	char		sys[NAMESZ];	/* an element in the uucp path */
 	int		fd;
 
+	*fromwhom='\0', *sys='\0';
 	mmdf_init(argv[0]);
+
+#if 0  /* Used to find the environment variable that has the remote uucp host
+          in it.  In the case of GNU's uucp-1.06.1, UU_MACHINE has it. -u@q.net */
+       {
+           FILE *fp; char **envpp; char tmpf[15];
+           strcpy(tmpf,"/tmp/de.XXXXXX");
+           mkstemp(tmpf);
+           fp=fopen(tmpf,"a");
+           for(envpp=envp;*envpp;++envpp) {
+               fputs(*envpp,fp); fputc((int)'\0',fp);
+           }
+           fclose(fp);
+       }
+#endif
 
 	while ((fd = getopt(argc, argv, "df:")) != EOF) {
 		switch (fd) {
@@ -206,8 +226,15 @@ char **argv;
 	/*
 	 * Create temp file for body of message
 	 */
+	strncpy(Msgtmp, "/tmp/rmail.XXXXXX", sizeof(Msgtmp));
+#ifdef HAVE_MKSTEMP
+	/* Note: mkstemp f/glibc 2.0.6 & earlier opens with mode 0666 (so get 2.1.1+) */
+	fd=mkstemp(Msgtmp);
+#else /* HAVE_MKSTEMP */
 	mktemp(Msgtmp);
-	if ((fd = creat(Msgtmp, Tmpmode)) < 0)
+	fd = creat(Msgtmp, Tmpmode);
+#endif /* HAVE_MKSTEMP */
+	if (fd < 0)
 		bomb("Can't create %s\n", Msgtmp);
 	close(fd);
 
@@ -225,8 +252,12 @@ char **argv;
 	 * info given.
 	 */
 	for (;;) {
-		if (fgets(linebuf, sizeof(linebuf), stdin) == NULL)
-			break;
+		int wasnull=0;
+
+		if (fgets(linebuf,LINESIZE-1,stdin) == NULL) wasnull=1;
+		if (linebuf[strlen(linebuf)-1]=='\n') linebuf[strlen(linebuf)-1]='\0';
+		if (debug) printf("while search \"From \" got line linebuf \"%s\"\n", linebuf);
+		if (wasnull) break;
 		if (strncmp(linebuf, "From ", 5) &&
 		    strncmp(linebuf, ">From ", 6))
 			break;
@@ -264,11 +295,16 @@ char **argv;
 				}
 				/*
 				 * Nothing coherent found - so look in
-				 * environment for ACCTSYS
+				 * environment for ACCTSYS (UU_MACHINE in RedHat Linux)
 				 */
-				if ((cp = getenv("ACCTSYS")) && *cp) {
+				if ((cp = getenv("UU_MACHINE" /*"ACCTSYS"*/)) && *cp) {
+				        int adduucp=0;	/* Turn local names into proper names;
+							   gets MMDF-canonicalized later -u@q.net */
+					if(!(index(cp,'.'))) adduucp=1;
 					(void) strcpy(origsys, cp);
+					if(adduucp) strcat(origsys,".UUCP");
 					(void) strcat(rm_from, cp);
+					if(adduucp) strcat(rm_from,".UUCP");
 					(void) strcat(rm_from, "!");
 					goto out;
 				}
@@ -287,12 +323,14 @@ out:
 	if (fromwhom[0] == '\0')		/* No from line, illegal */
 		bomb("No from lines in message\n");
 
-	ungetline(linebuf);
+	/*ungetline(linebuf);*//* This was bug!! -u@q.net */
+
+	if (debug) printf("rmail: fromwhom \"%s\", rm_from \"%s\"\n", fromwhom, rm_from);
 
 	/*
 	 * Complete the from field
 	 */
-	(void) strcat(rm_from, fromwhom);
+	(void) strncat(rm_from, fromwhom, LINESIZE-1);
 	
 	/*
 	 * A uk special - see if the first two components of the constructed
@@ -306,7 +344,10 @@ out:
 	 * This is all the the path we were given - the user name after
 	 * the last !. NOTE: We keep the trailing !, hence the +1.
 	 */
-	(void) strcpy(origpath, rm_from);
+	(void) strncpy(origpath, rm_from, sizeof(origpath)-1);
+	if(debug) 
+	    printf("rmail: path save copy: rm_from \"%s\"; sizeofs: origpath %d, rm_from %d\n",
+		   origpath, sizeof(origpath), sizeof(rm_from));
 	*(strrchr(origpath, '!') + 1) = '\0';
 
 	/*
@@ -433,6 +474,7 @@ char *from, *date;
 	/*
 	 * Loop through all the headers
 	 */
+	if(debug) printf("Loop through all the headers\n");
 	while (1) {
 	
 		if (debug)
@@ -446,33 +488,41 @@ char *from, *date;
 		/*
 		 * Is this the end of the header?
 		 */
-		if (*s == '\0' || feof(stdin))
+		if (*s == '\0' || feof(stdin)) {
+		    if(debug)
+			printf("end of header\n");
 			break;
+		}
 
 
 		/*
 		 * Is this a continuation line?
 		 */
 		if (haveheader && isspace(*s)) {
+		        if(debug)printf("is continuation line\n");
 			/* Note: Address munged headers handled specially */
 			fprintf(rm_msgf, "%s\n", s);
 		}
 		else {
+		        if(debug)printf("is not continuation line\n");
 			/*
 			 * Grab the header name from the line
 			 */
-			if ((rest = grabheader(s, name)) == NULL)
-				/* Not a header therefore all headers done */
+			if ((rest = grabheader(s, name)) == NULL) {
+			    if(debug)printf("/* Not a header therefore all headers done */\n");
 				break;
+			}
 
 			haveheader = 1;
 
+			if(debug)printf("Should I address munge this?\n");
 			/*
 			 * Should I address munge this?
 			 */
 			if (headertoken = shouldmunge(name)) {
 				char *finalstr;
 				finalstr = "\n";
+				if(debug)printf("shouldmunge this header: %s\n", name);
 				fprintf(rm_msgf, "%s: ", name);
 				/*
 				 * deal specially with From lines
@@ -510,6 +560,7 @@ char *from, *date;
 				fputs(finalstr, rm_msgf);
 			}
 			else
+			    if(debug)printf("do not munge.\n");
 				fprintf(rm_msgf, "%s\n", s);
 		}
 	}
@@ -566,6 +617,7 @@ grabline()
 	}
 	else
 		fgets(linebuf, sizeof(linebuf), stdin);
+		if(linebuf[strlen(linebuf)-1]=='\n') linebuf[strlen(linebuf)-1]='\0';
 
 	/* Anything wrong? */
 	if (ferror(stdin))
@@ -815,6 +867,7 @@ AP_ptr the_addr;
 datecvt (date, newdate)
 char *date;
 char *newdate;
+/*char *source;	/* source host */
 {
 	/*
 	 * LMCL: Changed the default timezone, when none given, to be GMT
@@ -828,14 +881,24 @@ char *newdate;
 	 *	Mon Apr 23 16:50 BST 1984	Unix
 	 */
 
+    /* What this routine needs is a table of time zones for sources,
+       and to figure out which part of the time zone (daylight
+       saving's time, etc.) from the time in the date. This needs the
+       following additions: source host, table of which time zone each
+       host is in (fixed list and/or UUCP Map data compiled), and
+       table of time zones for locations, which is a part of most Unix
+       distributions.  This is on my TODO list -u@q.net */
+
+	char *zone="PDT";	/* For now right now my peer is in PDT */
+
 	if (isdigit(date[0]) || date[3] == ',' || isdigit(date[5]))
 		(void) strcpy(newdate, date);	/* Probably already ARPA */
 	else if (isdigit(date[20]))
-		(void) sprintf(newdate, "%.3s, %.2s %.3s %.2s %.2s:%.2s:%.2s GMT",
-		    date, date+8, date+4, date+22, date+11, date+14, date+17);
+		(void) sprintf(newdate, "%.3s, %.2s %.3s %.2s %.2s:%.2s:%.2s %s",
+		    date, date+8, date+4, date+22, date+11, date+14, date+17, zone);
 	else if (isalpha(date[17]))		/* LMCL. Bum Unix format */
-		(void) sprintf(newdate, "%.3s, %.2s %.3s %.2s %.2s:%.2s:00 GMT",
-		    date, date+8, date+4, date+23, date+11, date+14);
+		(void) sprintf(newdate, "%.3s, %.2s %.3s %.2s %.2s:%.2s:00 %s",
+		    date, date+8, date+4, date+23, date+11, date+14, zone);
 	else
 		(void) sprintf(newdate, "%.3s, %.2s %.3s %.2s %.2s:%.2s:%.2s %.3s",
 		    date, date+8, date+4, date+26,
@@ -1025,8 +1088,14 @@ int argc;
 
 	if (rp_isbad(mm_winit((char *)NULL, subargs, from)))
 		bomb("mm_winit(%s, %s) failed", subargs, from);
-	if (rp_isbad(mm_rrply(&thereply, &len)))
-		bomb("Failed to read address reply");
+	if(debug) fprintf(stdout, "asking mm_rrply\n");
+	if (rp_isbad(mm_rrply(&thereply, &len))) {
+#if (DEBUG > 1)
+		fprintf(stdout, "thereply.rp_val $%02X, thereply.rp_line \"%s\", len %d",
+			rp_gval(thereply.rp_val), thereply.rp_line, len);
+#endif
+		bomb("Failed to read address reply #1");
+	}
 	if (rp_isbad(thereply.rp_val))
 		bomb("Initialization failure '%s'", thereply.rp_line);
 
@@ -1038,7 +1107,7 @@ int argc;
 			bomb("failed to write address '%s'", name);
 
 		if (rp_isbad(mm_rrply(&thereply, &len)))
-			bomb("Failed to read address reply");
+			bomb("Failed to read address reply #2");
 
 		switch (rp_gval(thereply.rp_val)) {
 		case RP_DOK:
@@ -1087,6 +1156,7 @@ char *fmt, *a, *b, *c;
 {
 	if (e_s_count)
 		msg_return();
+	ll_log(logptr, LLOGFAT, "rmail bomb:");
 	ll_log(logptr, LLOGFAT, fmt, a, b, c);
 	ll_close(logptr);
 	fputs("rmail: ", stderr);
@@ -1107,6 +1177,7 @@ char *from, *newfrom;
 			char	*at, *atoff;
 			char	atstore[LINESIZE], buf[LINESIZE];
 			char	*get_official();
+			char	*get_official_uu();
 			int	saveit;
 	
 	if (debug)
@@ -1128,6 +1199,7 @@ char *from, *newfrom;
 			 at = NULL;
 		else {
 			/* look up the official name of the at site */
+			/* get_official_uu not used here -u@q.net */
 			atoff = get_official(at+1, &saveit);
 			if (atoff) {
 				if (saveit) {
@@ -1143,7 +1215,7 @@ char *from, *newfrom;
 		 * scan the path backwards looking for hosts that we
 		 * know about
 		 */
-		if (off = get_official(sp+1, &saveit)) {
+		if (off = get_official_uu(sp+1, &saveit)) {
 			if (atoff && lexequ(atoff, off))
 				(void) strcpy(newfrom, cp+1);
 			else
@@ -1158,7 +1230,7 @@ char *from, *newfrom;
 		cp = sp;
 		*cp = 0;
 	}
-	if (off = get_official(buf, (int *)NULL))
+	if (off = get_official_uu(buf, (int *)NULL))
 		(void) sprintf(newfrom, "%s@%s", cp+1, off);
 	else
 		(void) sprintf(newfrom, "%s@%s", cp+1, buf);
@@ -1179,9 +1251,7 @@ char *nxt;
 	Table	*tb_rmchans;
 	char	tuchan[LINESIZE];
 
-#ifdef DEBUG
-	ll_log(logptr, LLOGBTR, "set_channel(%s)", nxt);
-#endif
+	if(debug) printf( "set_channel(%s)\n", nxt);
 	/*
 	 * set default
 	 */
@@ -1275,6 +1345,37 @@ char *n1, *n2;
 
 /*  */
 
+/* I'm not sure if this is right.  I'm concerned that only UUCP channel do this.  -u@q.net */
+#ifdef __STDC__
+char* get_official_uu(char *host, int *saveit)
+#else /* __STDC__ */
+char* get_official_uu(host, saveit)
+char *host;
+int *saveit;
+#endif /* __STDC__ */
+{
+#if 0
+	char* get_official(char *host, int *saveit);
+	long int random(void);
+	long int serial;
+
+	static char hostuucp[LINESIZE];
+	char *result;
+
+	serial=random();
+	hostuucp[LINESIZE-1]='\0';
+	strncpy(hostuucp,host,LINESIZE-1);
+	strcat(hostuucp,".UUCP");
+	if(debug) printf( "get_official_uu serial %ld: host \"%s\"\n", serial, host);
+	if(result=get_official(hostuucp,saveit)) {
+	    if(debug) fprintf(stdout, "get_official_uu serial %ld: result \"%s\"\n", serial, result);
+	    return (result);
+	}
+	if(debug) printf("get_official_uu serial %ld: failed, trying \"%s\"\n", serial, host);
+#endif /* # */
+	return (get_official(host, saveit));
+}
+
 /*
  *	These routines perform some caching on the host name/official
  *	name pair in and attempt to reduce overheads
@@ -1301,8 +1402,7 @@ int *saveit;				/* set if the cache is not working */
 			Dmn_route	rbuf, *route = &rbuf;
 			int		sadummy;
 
-	if (debug)
-		printf("get_official called for %s\n", host);
+	if (debug) printf("get_official called for %s\n", host);
 
 	if (saveit == (int *)NULL)
 		saveit = &sadummy;

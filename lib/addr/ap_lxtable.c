@@ -2,11 +2,30 @@
 #include "util.h"
 #include "conf.h"
 
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/ap_lxtable.c,v 1.3 1984/09/05 21:31:52 dpk Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/ap_lxtable.c,v 1.4 1999/08/12 13:15:36 krueger Exp $ */
 /* $Log: ap_lxtable.c,v $
-/* Revision 1.3  1984/09/05 21:31:52  dpk
-/* Added #include of util.h
+/* Revision 1.4  1999/08/12 13:15:36  krueger
+/* Added patch 2.44b3 and 2.44b4
 /*
+/* Revision 1.3.2.2  1999/08/06 07:21:50  krueger
+/* fixed some compiler warnings
+/*
+ * Revision 1.3.2.1  1999/08/04 12:16:00  krueger
+ *
+ *  	Makefile.in addr/ap_1adr.c addr/ap_lxtable.c addr/parse.c
+ *  	mmdf/ml_send.c mmdf/mm_tai.c mmdf/qu_io.c mmdf/rtn_proc.c
+ *  	table/tb_ns.c util/cnvtdate.c util/ll_log.c
+ * 	* Changes by Brad Allen <Ulmo@Q.Net>
+ * 	* Bug fixes (Various)
+ * 	* Debugging Code (Scattered hunting)
+ * 	* Local Modifications (Must determine what this is)
+ * 	* Architecture Modifications (Linux/GLIBC/FHS)
+ * 	* General Modifications (Enhancements)
+ * 	* Stupid Modifications (Bug creation)
+ *
+ * Revision 1.3  1984/09/05 21:31:52  dpk
+ * Added #include of util.h
+ *
  * Revision 1.3  84/09/05  21:31:52  dpk
  * Added #include of util.h
  * 

@@ -42,7 +42,6 @@
  */
 extern struct ll_struct *logptr;
 extern Chan **ch_tbsrch;         /* for sorting addrs by channel       */
-extern char *strdup ();
 extern char *mgt_return;         /* sender's return address            */
 extern short tracing;
 extern int  lnk_listsize;
@@ -68,12 +67,28 @@ LOCVAR struct lnk_struct    lnk_strt;
 
 char *lnk_getaddr()
 {
-  char buf[256];
   struct lnk_struct *cur = lnk_strt.lnk_nxt;
-  if(cur!=NULL)
-    sprintf(buf, "%s", cur->lnk_mbox);
+  char *buf;
+  int bsize=0;
+
+  if( cur == NULL) {
+    buf = (char *)malloc(1);
+    memset(buf, '\0', 1);
+  }
   else
-    strcpy(buf, "");
+    if( cur->lnk_nxt == NULL) {
+      bsize = strlen(cur->lnk_mbox);
+      buf = (char *)malloc(bsize+1);
+      memset(buf, '\0', bsize+1);
+      strncpy(buf, cur->lnk_mbox, bsize);
+    }
+    else {
+      bsize = strlen(cur->lnk_nxt->lnk_mbox);
+      buf = (char *)malloc(bsize+1);
+      memset(buf, '\0', bsize+1);
+      strncpy(buf, cur->lnk_nxt->lnk_mbox, bsize);
+    }
+  
   return(buf);
 }
 

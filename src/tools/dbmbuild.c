@@ -338,9 +338,9 @@ int new;
     char fromfile[100];
     char tofile[100];
 
-#ifdef DBMCACHE
+#ifdef HAVE_DBMCACHEDUMP
     dbmcachedump();
-#endif
+#endif /* HAVE_DBMCACHEDUMP */
 
     dbfclose();
 

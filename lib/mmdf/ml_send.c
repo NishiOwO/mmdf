@@ -80,8 +80,11 @@
 #include <signal.h>
 
 extern struct ll_struct   *logptr;
-extern char *strdup ();
 extern char *locfullname;
+#ifndef __STDC__
+extern struct passwd *getpwuid ();
+#endif
+extern char *getmailid ();
 
 int ml_state = ML_FRESH;
 
@@ -100,8 +103,6 @@ char    *sub,                     /* subject line                       */
     static first_ml = TRUE;
     char linebuf[LINESIZE];
     char datbuf[64];
-    extern struct passwd *getpwuid ();
-    extern char *getmailid ();
     struct passwd  *pwdptr;
     int     realid,
 	    effecid;
@@ -239,7 +240,7 @@ char    cmpnt[],
 	    	char *cp;
 
 		sigtxt[sigsiz - 1] = '\0';
-	    	if (cp = strchr(sigtxt, '\n'))
+	    	if ((cp = strchr(sigtxt, '\n')))
 	    	    *cp = '\0';
 	    	if (sigtxt[0])
 		    gotsig = TRUE;

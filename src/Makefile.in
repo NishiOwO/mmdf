@@ -16,11 +16,11 @@ ALLSUBDIRS=	tools submit deliver local list \
 
 all:
 	for dir in ${SUBDIR}; do \
-		(cd $${dir}; ./gen ${MFLAGS} -${MAKEFLAGS}); done
+		(cd $${dir}; ./gen ${MFLAGS} ); done
 
 install:
 	for dir in ${SUBDIR}; do \
-		(cd $${dir}; ./gen ${MFLAGS} -${MAKEFLAGS} install); done
+		(cd $${dir}; ./gen ${MFLAGS} install); done
 
 dist:
 	-touch `ls */x*|grep -v '\.'`
@@ -28,18 +28,18 @@ dist:
 	for dir in ${SUBDIR}; do \
 		echo cd $${dir} >> install.sh; \
 		( cd $${dir}; \
-		  ./gen -n ${MFLAGS} -${MAKEFLAGS} install) >> install.sh; \
+		  ./gen -n ${MFLAGS} install) >> install.sh; \
 		echo cd .. >> install.sh; \
 	done
 	tar cvf mmdfdist.tar install.sh */x*
 
 depend:
 	for dir in ${SUBDIR}; do \
-		(cd $${dir}; ./gen ${MFLAGS} -${MAKEFLAGS} depend); done
+		(cd $${dir}; ./gen ${MFLAGS} depend); done
 
 lint:
 	for dir in ${SUBDIR}; do \
-		(cd $${dir}; ./gen ${MFLAGS} -${MAKEFLAGS} lint); done
+		(cd $${dir}; ./gen ${MFLAGS} lint); done
 
 clean:
 	-rm -f make.out core

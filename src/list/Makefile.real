@@ -10,14 +10,14 @@ SOURCES =	ch_list.c qu2ls_send.c
 
 real-default:	list
 
-install:	$(CHANDIR)/list
+install:	$(MCHNDIR)/list
 
-$(CHANDIR)/list  :   xlist
-	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN) xlist $(CHANDIR)/list
-#	     cp xlist $(CHANDIR)/list
-#	    -$(CHOWN) $(MMDFLOGIN) $(CHANDIR)/list
-#	    -chmod 0$(PGMPROT) $(CHANDIR)/list
-	    -@ls -ls $(CHANDIR)/list
+$(MCHNDIR)/list  :   xlist
+	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN) xlist $(MCHNDIR)/list
+#	     cp xlist $(MCHNDIR)/list
+#	    -$(CHOWN) $(MMDFLOGIN) $(MCHNDIR)/list
+#	    -chmod 0$(PGMPROT) $(MCHNDIR)/list
+	    -@ls -ls $(MCHNDIR)/list
 	    -@echo "list channel installed normally"; echo ""
 
 list:	xlist

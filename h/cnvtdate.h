@@ -1,8 +1,8 @@
 #
 /* parameters for cnvdate() */
 
-#undef	TIMJUL	1	/* unique id string */
-#undef	TIMID	1
+#undef	TIMJUL	/* 1	*//* unique id string */
+#undef	TIMID	/* 1	*/
 #define	TIMCOM	1	/* compact date (yymmddhhmm) */
 #define TIMSECS	2	/* full time, down to the second */
 #define TIMREG	3	/* rfc 733 standard format */

@@ -1,4 +1,8 @@
 #include "util.h"
+#ifdef HAVE_UTMPX_H
+#  include <utmpx.h>
+#endif /* HAVE_UTMPX_H */
+
 #ifdef HAVE_UTMP_H
 #  include <pwd.h>
 #  include <utmp.h>

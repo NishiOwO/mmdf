@@ -23,14 +23,15 @@ EANLIBS = ${FOOLIB} ${UAOBJ} ${MTAOBJ} \
 
 real-default:   ean2mmdf ean
 
-install:        $(LIBDIR)/$(MMPREF)ean2mmdf $(CHANDIR)/$(MMPREF)ean
+install:        $(MCMDDIR)/$(MMPREF)ean2mmdf $(CHANDIR)/$(MMPREF)ean
 
-$(LIBDIR)/$(MMPREF)ean2mmdf:      xean2mmdf
-	$(INSTALL) -c -m 04$(PGMPROT) -o root xean2mmdf $(LIBDIR)/$(MMPREF)ean2mmdf
-#	cp xean2mmdf $(LIBDIR)/$(MMPREF)ean2mmdf
-#	-$(CHOWN) root $(LIBDIR)/$(MMPREF)ean2mmdf
-#	-chmod 04$(PGMPROT) $(LIBDIR)/$(MMPREF)ean2mmdf
-	-@ls -ls $(LIBDIR)/$(MMPREF)ean2mmdf
+$(MCMDDIR)/$(MMPREF)ean2mmdf:      xean2mmdf
+	$(INSTALL) -c -m 04$(PGMPROT) -o root xean2mmdf \
+		$(MCMDDIR)/$(MMPREF)ean2mmdf
+#	cp xean2mmdf $(MCMDDIR)/$(MMPREF)ean2mmdf
+#	-$(CHOWN) root $(MCMDDIR)/$(MMPREF)ean2mmdf
+#	-chmod 04$(PGMPROT) $(MCMDDIR)/$(MMPREF)ean2mmdf
+	-@ls -ls $(MCMDDIR)/$(MMPREF)ean2mmdf
 	-@echo "ean2mmdf installed normally"; echo ""
 
 ean2mmdf:  xean2mmdf

@@ -18,8 +18,6 @@ extern Table **tb_list;
 extern int tb_numtables;
 extern int tb_maxtables;
 
-extern char *strdup();
-
 static	char	version[] = "$@(#)MMDFII, Release B, Update 37";
 
 #define MAXARG 100
@@ -62,6 +60,9 @@ char *pgmname;
 #if UWE
     unsetenv ("TZ");
 #endif
+#ifdef HAVE_TZSET
+	tzset();
+#endif /* HAVE_TZSET */
     pgmname = (pgmname ? pgmname : "???");	/* Paranoid */
     ll_log (logptr, LLOGPTR, "mmdf_init (%s)", pgmname);
 

@@ -43,8 +43,16 @@ extern char *compress ();
 
 /* mmdf globals */
 
-extern char *locname;
+extern char *locname, *locdomain;
 extern char *delim1;
 extern char *delim2;
+
+#ifdef JNTMAIL
+#define LocFirst (locdomain)
+#define LocLast (locname)
+#else
+#define LocFirst (locname)
+#define LocLast (locdomain)
+#endif JNTMAIL
 
 /* end of mmdf globals */

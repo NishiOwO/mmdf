@@ -17,14 +17,15 @@ submit:	xsubmit
 xsubmit:	$(OBJECTS) $(MMDFLIBS)
 	    $(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(MMDFLIBS) $(SYSLIBS)
 
-install:	$(LIBDIR)/$(MMPREF)submit
+install:	$(MCMDDIR)/$(MMPREF)submit
 
-$(LIBDIR)/$(MMPREF)submit:	xsubmit
-	$(INSTALL) -c -m 04$(PGMPROT)  -o $(MMDFLOGIN)  xsubmit $(LIBDIR)/$(MMPREF)submit
-#	cp xsubmit $(LIBDIR)/$(MMPREF)submit
-#	-$(CHOWN) $(MMDFLOGIN) $(LIBDIR)/$(MMPREF)submit
-#	-chmod 04$(PGMPROT) $(LIBDIR)/$(MMPREF)submit
-	-@ls -ls $(LIBDIR)/$(MMPREF)submit
+$(MCMDDIR)/$(MMPREF)submit:	xsubmit
+	$(INSTALL) -c -m 04$(PGMPROT)  -o $(MMDFLOGIN)  xsubmit \
+		$(MCMDDIR)/$(MMPREF)submit
+#	cp xsubmit $(MCMDDIR)/$(MMPREF)submit
+#	-$(CHOWN) $(MMDFLOGIN) $(MCMDDIR)/$(MMPREF)submit
+#	-chmod 04$(PGMPROT) $(MCMDDIR)/$(MMPREF)submit
+	-@ls -ls $(MCMDDIR)/$(MMPREF)submit
 	-@echo "submit installed normally"; echo ""
 
 lint:

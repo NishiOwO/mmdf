@@ -86,7 +86,6 @@ extern	short	lnk_nadrs;	/* number of addressees for message   */
 
 extern char *mq_munique,          /* name of the message                */
 	    *prm_dupval (),
-	    *strdup (),
 	    *locfullmachine,
 	    *locmachine,
 	    *locfullname,
@@ -263,7 +262,9 @@ register char *theparm;
 	case 'k':
 	    theparm = prm_dupval (++theparm, &ptr);
 #ifdef HAVE_NAMESERVER
-	    ns_settimeo(atoi(ptr));
+	    if(ns_settimeo(atoi(ptr))) {
+          exit(154);
+        }
 #endif /* HAVE_NAMESERVER */
 	    free(ptr);
 	    break;
@@ -914,6 +915,7 @@ LOCFUN
 {
     extern char *cnvtdate ();
     char    thedate[LINESIZE];
+    char *xcp;
     int len;
 #ifdef VIATRACE
     char    *p;
@@ -934,8 +936,10 @@ LOCFUN
     if (adr_orgspec != (char *) 0)
       len = mgt_rcv (len, "for %s", adr_orgspec);
     len = mgt_rcv (len, "id %s", &mq_munique[4]);
-    if(lnk_nadrs==1)
-      len = mgt_rcv (len, "for <%s>;", lnk_getaddr());
+    if(lnk_nadrs==1) {
+      len = mgt_rcv (len, "for <%s>;", (xcp = lnk_getaddr()));
+      free(xcp);
+    }
     else len = mgt_rcv (len, ";");
     (void) mgt_rcv (len, "%s\n", thedate);
 }
@@ -951,10 +955,12 @@ LOCFUN
 #ifdef VIATRACE
     char    *p;
 #endif
+    char for_buf[256];
 
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "mgt_via ()");
 #endif
+    memset(for_buf, '\0', 256);
 
 /* Received: by hostname.net; date                                      */
 /*  e.g.:                                                               */
@@ -1051,7 +1057,7 @@ LOCFUN
 			/* skip the "msg." preface */
 #  endif /* UCL */
     if(lnk_nadrs==1)
-      len = mgt_rcv (len, "for <%s>;", lnk_getaddr());
+      len = mgt_rcv (len, "for <%s>;", lnk_getaddr(for_buf));
     else len = mgt_rcv (len, ";");
 #endif /* VIATRACE */
     (void) mgt_rcv (len, "%s\n", thedate);

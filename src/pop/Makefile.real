@@ -16,16 +16,16 @@ ZOTLIBS	=	getbbent.o dropsbr.o lock.o r1bindex.o strindex.o uprf.o \
 
 real-default:	pop
 
-install: $(CHANDIR)/$(MMPREF)pop
+install: $(MCHNDIR)/$(MMPREF)pop
 
-$(CHANDIR)/$(MMPREF)pop:	xpop
-	-cp $(CHANDIR)/$(MMPREF)pop zxpop
+$(MCHNDIR)/$(MMPREF)pop:	xpop
+	-cp $(MCHNDIR)/$(MMPREF)pop zxpop
 	-chmod 0$(PGMPROT) zxpop
-	$(INSTALL) -c -m 04$(PGMPROT)  -o root xpop $(CHANDIR)/$(MMPREF)pop
-#	cp xpop $(CHANDIR)/$(MMPREF)pop
-#	-$(CHOWN) root $(CHANDIR)/$(MMPREF)pop
-#	-chmod 04$(PGMPROT) $(CHANDIR)/$(MMPREF)pop
-	-@ls -ls $(CHANDIR)/$(MMPREF)pop
+	$(INSTALL) -c -m 04$(PGMPROT)  -o root xpop $(MCHNDIR)/$(MMPREF)pop
+#	cp xpop $(MCHNDIR)/$(MMPREF)pop
+#	-$(CHOWN) root $(MCHNDIR)/$(MMPREF)pop
+#	-chmod 04$(PGMPROT) $(MCHNDIR)/$(MMPREF)pop
+	-@ls -ls $(MCHNDIR)/$(MMPREF)pop
 	-@echo "POP installed normally"; echo ""
 
 pop:	xpop

@@ -35,6 +35,9 @@
 **	03/18/85  DPK	Fixed usage of parsadr function so that after parsing
 **		  VAK	we now use the components instead of original string.
 **
+**	07/16/99  BWA   Changed address format from ``user@host'' to
+**			``user@host.domain'' --Ulmo@Q.Net
+**
 */
 
 
@@ -43,7 +46,6 @@
 #include "./s_externs.h"
 
 extern char *getmailid();
-extern char *strdup();
 extern struct passwd *getpwuid();
 extern char *getenv();
 
@@ -78,7 +80,7 @@ int picko();
 struct passwd *pw;
 char *midp;
 char *d_subargs = "vm";
-char drft_tmplt[] = "drft.XXXXXX";
+char drft_tmplt[12];
 char linebuf[128];
 char tmpline[128];
 
@@ -97,6 +99,7 @@ getuinfo() {
 
 	/* build a draft file name */
 
+	strncpy(drft_tmplt,"drft.XXXXXX",12);
 	mktemp(drft_tmplt);
 	/* Who are we this time */
 
@@ -118,15 +121,15 @@ getuinfo() {
 		if (p = strchr(pw->pw_gecos, '&')) {
 			/* Deal with Berkeley folly */
 			*p = 0;
-			sprintf(from, "%s%c%s%s <%s@%s>", pw->pw_gecos,
+			sprintf(from, "%s%c%s%s <%s@%s.%s>", pw->pw_gecos,
 				 lowtoup(pw->pw_name[0]),
-				 pw->pw_name+1, p+1, midp, locname);
+				 pw->pw_name+1, p+1, midp, LocFirst, LocLast);
 		} else
-			sprintf(from, "%s <%s@%s>", pw->pw_gecos, midp, locname);
+			sprintf(from, "%s <%s@%s.%s>", pw->pw_gecos, midp, LocFirst, LocLast);
 	} else
 #endif
-	sprintf(from, "%c%s@%s",	/* default from text */
-		lowtoup(midp[0]), &(midp[1]), locname);
+	sprintf(from, "%c%s@%s.%s",	/* default from text */
+		lowtoup(midp[0]), &(midp[1]), LocFirst, LocLast);
 	/* Set default values for those options that need defaults */
 
 	strcpy(editor, ((p = getenv("EDITOR")) && *p) ? p : dfleditor);

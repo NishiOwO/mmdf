@@ -10,14 +10,15 @@ SOURCES =	ch_blockaddr.c qu2ba_send.c
 
 real-default:	blockaddr
 
-install:	$(CHANDIR)/blockaddr
+install:	$(MCHNDIR)/blockaddr
 
-$(CHANDIR)/blockaddr  :   xblockaddr
-	$(INSTALL) -c -m 0$(PGMPROT)  -o  $(MMDFLOGIN) xblockaddr $(CHANDIR)/blockaddr
-#	cp xblockaddr $(CHANDIR)/blockaddr
-#	-$(CHOWN) $(MMDFLOGIN) $(CHANDIR)/blockaddr
-#	-chmod 0$(PGMPROT) $(CHANDIR)/blockaddr
-	-@ls -ls $(CHANDIR)/blockaddr
+$(MCHNDIR)/blockaddr  :   xblockaddr
+	$(INSTALL) -c -m 0$(PGMPROT)  -o  $(MMDFLOGIN) \
+		xblockaddr $(MCHNDIR)/blockaddr
+#	cp xblockaddr $(MCHNDIR)/blockaddr
+#	-$(CHOWN) $(MMDFLOGIN) $(MCHNDIR)/blockaddr
+#	-chmod 0$(PGMPROT) $(MCHNDIR)/blockaddr
+	-@ls -ls $(MCHNDIR)/blockaddr
 	-@echo "blockaddr channel installed normally"; echo ""
 
 blockaddr:   xblockaddr

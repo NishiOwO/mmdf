@@ -13,14 +13,15 @@ deliver:	xdeliver
 xdeliver:	$(OBJECTS) $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(MMDFLIBS) $(SYSLIBS)
 
-install:	$(LIBDIR)/$(MMPREF)deliver
+install:	$(MCMDDIR)/$(MMPREF)deliver
 
-$(LIBDIR)/$(MMPREF)deliver:	xdeliver
-	$(INSTALL) -c -m 04$(PGMPROT) -o root xdeliver $(LIBDIR)/$(MMPREF)deliver
-#	cp xdeliver $(LIBDIR)/$(MMPREF)deliver
-#	-$(CHOWN) root $(LIBDIR)/$(MMPREF)deliver
-#	-chmod 04$(PGMPROT) $(LIBDIR)/$(MMPREF)deliver
-	-@ls -ls $(LIBDIR)/$(MMPREF)deliver
+$(MCMDDIR)/$(MMPREF)deliver:	xdeliver
+	$(INSTALL) -c -m 04$(PGMPROT) -o root xdeliver \
+		$(MCMDDIR)/$(MMPREF)deliver
+#	cp xdeliver $(MCMDDIR)/$(MMPREF)deliver
+#	-$(CHOWN) root $(MCMDDIR)/$(MMPREF)deliver
+#	-chmod 04$(PGMPROT) $(MCMDDIR)/$(MMPREF)deliver
+	-@ls -ls $(MCMDDIR)/$(MMPREF)deliver
 	-@echo "deliver installed normally"; echo ""
 
 

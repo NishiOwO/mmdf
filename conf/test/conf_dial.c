@@ -43,7 +43,7 @@ struct directlines  *d_lines = thelines;
  *     ports and autodialer devices.
  */
 
-char  *d_calllog  =  MM_DIALLOG;
+char  *d_calllog  =  D_CALLLOG;
 
 /*
  *	this is the name of the programs will actually do dialing
@@ -51,7 +51,7 @@ char  *d_calllog  =  MM_DIALLOG;
  *	acus are attached to which lines.
  */
 
-char	*d_dialprog = "/usr/bin/dial";
+char	*d_dialprog = D_DIALPROG;
 
 /* ***************  ILLEGAL CHARACTER TAILORING  ************************* */
 

@@ -21,6 +21,8 @@
 #include "cnvtdate.h"
 #include "./s_tailor.h"
 
+#define HOSTSIZE    64
+
 #define DREND           2
 #define DRBEGIN         0
 

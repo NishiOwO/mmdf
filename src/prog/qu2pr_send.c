@@ -30,7 +30,6 @@
 #include "ap.h"
 #include "phs.h"
 
-extern	char	*strdup();
 extern	char	*ap_p2s();
 extern	char	*multcat();
 

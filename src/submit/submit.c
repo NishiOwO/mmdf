@@ -85,10 +85,8 @@ short   earlyret,                 /* caller already got return status   */
 
 extern char *mgt_parm();
 extern char *dupfpath();
-extern char *strdup();
 extern char *multcat();
 extern char *getmailid();
-extern char *strdup();
 extern struct passwd *getpwuid();
 extern ap_flget();
 
@@ -228,7 +226,9 @@ char   *argv[];
     umask(0);
     mmdf_init (argv[0]);
 #ifdef HAVE_NAMESERVER
-    ns_settimeo(NS_UIPTIME);	/* set an initial timeout */
+    if(ns_settimeo(NS_UIPTIME)) {	/* set an initial timeout */
+      exit(154);
+    }
 #endif /* HAVE_NAMESERVER */
     mn_usinit ();                 /* initial info on who is running us  */
     mn_init (argc, argv);         /* parse args, alloc buffers.         */
@@ -662,7 +662,7 @@ char   *fmt,
        *c,
        *d;
 {
-    register char  *errchar;
+    register const char  *errchar;
 
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "pro_reply(%s)", rp_valstr (code));

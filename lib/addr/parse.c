@@ -1,8 +1,24 @@
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/parse.c,v 1.4 1998/03/17 19:35:20 krueger Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/parse.c,v 1.5 1999/08/12 13:15:37 krueger Exp $ */
 /* $Log: parse.c,v $
-/* Revision 1.4  1998/03/17 19:35:20  krueger
-/* Added changes to disable source-route for sender in smtpsrvr
+/* Revision 1.5  1999/08/12 13:15:37  krueger
+/* Added patch 2.44b3 and 2.44b4
 /*
+/* Revision 1.4.2.1  1999/08/04 12:16:00  krueger
+/*
+/*  	Makefile.in addr/ap_1adr.c addr/ap_lxtable.c addr/parse.c
+/*  	mmdf/ml_send.c mmdf/mm_tai.c mmdf/qu_io.c mmdf/rtn_proc.c
+/*  	table/tb_ns.c util/cnvtdate.c util/ll_log.c
+/* 	* Changes by Brad Allen <Ulmo@Q.Net>
+/* 	* Bug fixes (Various)
+/* 	* Debugging Code (Scattered hunting)
+/* 	* Local Modifications (Must determine what this is)
+/* 	* Architecture Modifications (Linux/GLIBC/FHS)
+/* 	* General Modifications (Enhancements)
+/* 	* Stupid Modifications (Bug creation)
+/*
+ * Revision 1.4  1998/03/17 19:35:20  krueger
+ * Added changes to disable source-route for sender in smtpsrvr
+ *
  * Revision 1.3  1985/01/17 23:07:11  dpk
  * Reworked, it now works
  *

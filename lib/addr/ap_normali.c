@@ -19,7 +19,6 @@ extern char *locdomain;
 extern char *locfullname;
 extern char *locfullmachine;
 
-extern char *strdup ();
 extern char *multcat ();
 Domain *dm_v2route();
 

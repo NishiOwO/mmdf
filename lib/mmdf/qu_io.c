@@ -338,13 +338,13 @@ int qu_wbrply (valstr, len, addr, ba_adr)  /* pass a reply to local process */
       fp = fopen(qu_msgfile, "r");
       ml_1adr( YES, YES, (char *) 0, "Failed mail: Bad address", addr);
       ml_txt("\nThis is an automatic-reply from the mail-system.\n\n");
-      ml_txt("! ! Don't answer to that message! !\n\n");
-      ml_txt("Your message could not be delivered to `");
+      ml_txt("! ! Don't answer to this message! !\n\n");
+      ml_txt("Your message could not be delivered to ``");
       ml_txt(ba_adr);
-      ml_txt("` because there is no reciepient for that address.\n");
+      ml_txt("'' because there is no reciepient for that address.\n");
       ml_txt(" Your message will be forwarded to the postmaster for ");
       ml_txt("further tries to find out the reciepient.\n");
-      ml_txt("\n You wouln'd get any information about the outcome of your message.\n");
+      ml_txt("\n You wouldn't get any information about the outcome of your message.\n");
       ml_txt("\n\tYour message follows:\n\n");
       ml_file( fp);
       ml_txt("\n\n\t----- End of forwarded message -----\n\n");

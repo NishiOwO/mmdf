@@ -2,6 +2,9 @@
 #include <pwd.h>
 #include <sys/stat.h>
 #include <utmp.h>
+#ifdef HAVE_UTMPX_H
+#  include <utmpx.h>
+#endif /* HAVE_UTMPX_H */
 
 extern int errno;
 extern jmp_buf timerest;

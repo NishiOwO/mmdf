@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.31 1998/10/07 13:13:28 krueger Exp $
+ * $Id: config.h.in,v 1.32 1999/08/12 13:15:35 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -15,12 +15,54 @@
 #undef _ALL_SOURCE
 #endif
 
+/* Define to empty if the keyword does not work.  */
+#undef const
+
+/* Define if you have alloca, as a function or macro.  */
+#undef HAVE_ALLOCA
+
+/* Define if you have <alloca.h> and it should be used (not on Ultrix).  */
+#undef HAVE_ALLOCA_H
+
+/* Define if you don't have vprintf but do have _doprnt.  */
+#undef HAVE_DOPRNT
+
+/* Define if your system has its own `getloadavg' function.  */
+#undef HAVE_GETLOADAVG
+
+/* Define if you have the getmntent function.  */
+#undef HAVE_GETMNTENT
+
+/* Define if the `long double' type works.  */
+#undef HAVE_LONG_DOUBLE
+
+/* Define if you support file names longer than 14 characters.  */
+#undef HAVE_LONG_FILE_NAMES
+
+/* Define if you have a working `mmap' system call.  */
+#undef HAVE_MMAP
+
+/* Define if system calls automatically restart after interruption
+   by a signal.  */
+#undef HAVE_RESTARTABLE_SYSCALLS
+
+/* Define if your struct stat has st_blksize.  */
+#undef HAVE_ST_BLKSIZE
+
+/* Define if your struct stat has st_blocks.  */
+#undef HAVE_ST_BLOCKS
+
+/* Define if you have the strcoll function and it is properly defined.  */
+#undef HAVE_STRCOLL
+
+/* Define if your struct stat has st_rdev.  */
+#undef HAVE_ST_RDEV
+
+/* Define if you have the strftime function.  */
+#undef HAVE_STRFTIME
+
 /* Define if you have <sys/wait.h> that is POSIX.1 compatible.  */
 #undef HAVE_SYS_WAIT_H
-#undef HAVE_UNION_WAIT
-
-/* Define if you have the <sys/time.h> header file.  */
-#undef HAVE_SYS_TIME_H
 
 /* Define if your struct tm has tm_zone.  */
 #undef HAVE_TM_ZONE
@@ -29,23 +71,17 @@
    tzname.  */
 #undef HAVE_TZNAME
 
-/* Define if you can safely include both <sys/time.h> and <time.h>.  */
-#undef TIME_WITH_SYS_TIME
-
-/* Define if your <sys/time.h> declares struct tm.  */
-#undef TM_IN_SYS_TIME
-
-/* Define if you have the ftime function.  */
-#undef HAVE_FTIME
-
-/* Define if you have the gettimeofday function.  */
-#undef HAVE_GETTIMEOFDAY
+/* Define if you have <unistd.h>.  */
+#undef HAVE_UNISTD_H
 
 /* Define if utime(file, NULL) sets file's timestamp to the present.  */
 #undef HAVE_UTIME_NULL
 
 /* Define if you have <vfork.h>.  */
 #undef HAVE_VFORK_H
+
+/* Define if you have the vprintf function.  */
+#undef HAVE_VPRINTF
 
 /* Define if you have the wait3 system call.  */
 #undef HAVE_WAIT3
@@ -69,75 +105,20 @@
 /* Define as the return type of signal handlers (int or void).  */
 #undef RETSIGTYPE
 
-/* Define if `sys_siglist' is declared by <signal.h>.  */
-#undef SYS_SIGLIST_DECLARED
-
-/* Define if your system has sys_errlist[] declared */
-#undef HAVE_SYS_ERRLIST_DECL
-
-/* Define if your system has the define SIGSYS */
-#undef HAVE_DEF_SIGSYS
-#undef HAVE_SIGSETMASK
-
-/* Define if you have the sigchild function.  */
-#undef HAVE_SIGCHILD
-
-/* Define if you have the sigset function.  */
-#undef HAVE_SIGSET
-
 /* Define if you have the ANSI C header files.  */
 #undef STDC_HEADERS
 
+/* Define if `sys_siglist' is declared by <signal.h>.  */
+#undef SYS_SIGLIST_DECLARED
+
+/* Define if you can safely include both <sys/time.h> and <time.h>.  */
+#undef TIME_WITH_SYS_TIME
+
+/* Define if your <sys/time.h> declares struct tm.  */
+#undef TM_IN_SYS_TIME
+
 /* Define vfork as fork if vfork does not work.  */
 #undef vfork
-
-/* Define if you have the bcopy function.  */
-#undef HAVE_BCOPY
-
-/* Define if you have the getcwd function.  */
-#undef HAVE_GETCWD
-
-/* Define if you have the gethostname function.  */
-#undef HAVE_GETHOSTNAME
-
-/* Define if you have the getwd function.  */
-#undef HAVE_GETWD
-
-/* Define if you have the initgroups function.  */
-#undef INITGROUPS
-
-/* Define if you have the killpg function.  */
-#undef HAVE_KILLPG
-
-/* Define if you have the memcpy function.  */
-#undef HAVE_MEMCPY
-
-/* Define if you have the mkdir function.  */
-#undef HAVE_MKDIR
-#undef MKDIR_HAVE_SECOND_ARG
-
-/* Define if you have the socket function.  */
-#undef HAVE_SOCKET
-
-/* Define if you have the strchr function.  */
-#undef HAVE_STRCHR
-
-/* Define if you have the index function.  */
-#undef HAVE_INDEX
-
-/* Define if you have the setpgrp function.  */
-#undef HAVE_SETPGRP
-
-/* Define if you have the setpgid function.  */
-#undef HAVE_SETPGID
-
-/* Define if you have the setreuid function.  */
-#undef HAVE_SETREUID
-
-/* Define if you have the strdup function.  */
-#undef HAVE_STRDUP
-
-#undef HAVE_TRUNCATE
 
 /* Define if sprintf does not return number of printed chars */
 #undef BSD_SPRINTF
@@ -147,110 +128,20 @@
 #undef HAVE_F_SETLK
 #undef HAVE_LOCK_FILES
 
-/* Define if you have the <netinet/in.h> header file.  */
-#undef HAVE_NETINET_IN_H
-
-/* Define if you have the <netdb.h> header file.  */
-#undef HAVE_NETDB_H
-
-/* Define if you have the <sys/socket.h> header file.  */
-#undef HAVE_SYS_SOCKET_H
-
-/* Define if you have the <arpa/nameser.h> header file.  */
-#undef HAVE_ARPA_NAMESER_H
-
-/* Define if you have the <resolv.h> header file.  */
-#undef HAVE_RESOLV_H
-
-/* Define if you have the <dirent.h> header file.  */
-#undef HAVE_DIRENT_H
-
-/* Define if you have the <ndir.h> header file.  */
-#undef HAVE_NDIR_H
-
-/* Define if you have the <sys/dir.h> header file.  */
-#undef HAVE_SYS_DIR_H
-
-/* Define if you have the <sys/ndir.h> header file.  */
-#undef HAVE_SYS_NDIR_H
-
-/* Define if you have the <fcntl.h> header file.  */
-#undef HAVE_FCNTL_H
-
-/* Define if you have the <lastlog.h> header file.  */
-#undef HAVE_LASTLOG_H
-
-/* Define if you have the <utmp.h> header file.  */
-#undef HAVE_UTMP_H
-
-/* Define if you have the <malloc.h> header file.  */
-#undef HAVE_MALLOC_H
-
-/* Define if you have the <memory.h> header file.  */
-#undef HAVE_MEMORY_H
-
-/* Define if you have the <sgtty.h> header file.  */
-#undef HAVE_SGTTY_H
-
-/* Define if you have CBREAK in <sgtty.h> header file.  */
-#undef HAVE_SGTTY_CBREAK
-
-/* Define if you have the <sys/strtio.h> header file.  */
-#undef HAVE_SYS_STRTIO_H
-
-/* Define if you have TIOCSETN in <sgtty.h> header file.  */
-#undef HAVE_SGTTY_TIOCSETN
-
-/* Define if you have the <termio.h> header file.  */
-#undef HAVE_TERMIO_H
-
-/* Define if you have the <sys/termio.h> header file.  */
-#undef HAVE_SYS_TERMIO_H
-
-/* Define if you have the <sys/termios.h> header file.  */
-#undef HAVE_SYS_TERMIOS_H
-
-/* Define if you have TIOCSETN in <termio.h> header file.  */
-#undef HAVE_TERMIO_TIOCSETN
-
-/* Define if you have the <sys/file.h> header file.  */
-#undef HAVE_SYS_FILE_H
-
-/* Define if you have the <sys/ioctl.h> header file.  */
-#undef HAVE_SYS_IOCTL_H
-
-/* Define if you have the <sys/unistd.h> header file.  */
-#undef HAVE_SYS_UNISTD_H
-
-/* Define if you have the <unistd.h> header file.  */
-#undef HAVE_UNISTD_H
-
-/* Define if ioctl(1, TIOCSBRK, 0) works */
-#undef HAVE_IOCTL_TIOCSBRK
-
-/* Define if you have the <string.h> header file.  */
-#undef HAVE_STRING_H
-
-/* Define if you have the <strings.h> header file.  */
-#undef HAVE_STRINGS_H
-
-/* Define if you have the <syslog.h> header file.  */
-#undef HAVE_SYSLOG_H
-
-/* Define if you have the <libio.h> header file.  */
-#undef HAVE_LIBIO_H
-
 /* Define if you have struct __res_state instead of struct state */
 #undef HAVE_RES_STATE
 
 /* Define if you have _NFILE */
 #undef HAVE_NFILE
-#undef HAVE_GETDTABLESIZE
 
 /* Define if you have the gdbm library (-lgdbm).  */
 #undef HAVE_LIBGDBM  /* new */
 
 /*****************************************************************************/
+/*             Enable 8bit-clean mode when getting messages over smtp.
+ */
+#undef HAVE_8BIT
+
 /*             Enables  the  d_assign code in the dial pack-
  *             age.  This code calls the program /bin/assign
  *             to  gain exclusive access to a file.  It does
@@ -303,24 +194,6 @@
  */
 #undef D_DBGLOG
 
-/*            This makes the channel programs operate inde-
- *             pendently  from deliver.  It hasn't been used
- *             for years and requires reading  the  code  to
- *             understand   its   effect.    Do  NOT  define
- *             RUNALONE! (it is used for debugging)
- */
-#undef RUNALON
-
-/*             Enables code that is specific for 4.2  BSD  .
- *             All  4.2 BSD sites must define this variable.
- *             This should be used by 4.3 BSD sites as well.
- *             4.3   BSD   sites  will  also  want  the  new
- *             src/smtp/smtpd.4.3.c  for  use  with   INETD.
- *             They  will  have to compile this manually for
- *             now (or copy it to smtpd.4.2.c).
- */
-#undef V4_2BSD
-
 /*             Prevents the dial package (PhoneNet protocol)
  *             from  being  compiled.   This  saves  a  fair
  *             amount  of  space  and  compile time.  Define
@@ -329,26 +202,6 @@
  *             take `dial' out of Makefile.lib, see  below.)
  */
 #undef HAVE_DIAL
-
-/*             Enables  code  that does Bell System V tricks
- *             (probably also useful for System III  instal-
- *             lations).  Note: if you are running System V,
- *             you must  also  append  -Drindex=strrchr  and
- *             -Dindex=strchr to CFLAGS.
- */
-#undef SYS5
-
-/*             Enables  code  specific to System Vr3.  Note:
- *             if you have the WIN/TCP code you may need  to
- *             add  -I/usr/netinclude to CFLAGS and -lnet to
- *             NETLIBS.
- */
-#undef SYS5r3
-
-/*             Define this variable  if  you  don't  have  a
- *             dup2() system call or subroutine.
- */
-#undef HAVE_DUP2
 
 /*             If  you  defined NODUP2, then you should also
  *             define NOFCNTL if you don't have the fcntl(x,
@@ -365,6 +218,8 @@
  *             networking.  See TB_NS below.
  */
 #undef HAVE_NAMESERVER
+#undef HAVE__GETSHORT
+#undef HAVE_GETSHORT
 
 /*             Prevents    Domain    Literals    (such    as
  *             [10.0.0.59])  from  appearing  in  addresses.
@@ -375,17 +230,14 @@
 #undef NODOMLIT
 
 /*             Enables intpretation of dots as delimiters on
- *             the  LHS  of an @ in addresses.  For example,
- *             "user.host@yourdomain".  Since % or 822-rout-
- *             ing  is  preferred here, only enable LEFTDOTS
- *             if you have historical need to. 
+ *             the  LHS  of an 
+ in addresses.  For  example,
+ *             "user.host\
+yourdomain".  Since % or
+ *             822-routing  is  preferred  here, only enable
+ *             LEFTDOTS if you have historical need to. 
  */
 #undef LEFTDOTS
-
-/*             Define this translation if  your  C  compiler
- *             doesn't understand voids (e.g. V7).
- */
-/* #undef -Dvoid=int */
 
 /*             Define  this variable if your machine doesn't
  *             allow variable numbers  of  arguments  to  be
@@ -405,11 +257,11 @@
  */
 #undef CITATION
 
-/*             Define  DBMCACHE  if  your  version of dbm(3)
- *             builds databases in core and then dumps  them
- *             to disk with dbmcachedump().
+/*             Define HAVE_DBMCACHEDUMP if your  version  of
+ *             dbm(3)  builds  databases  in  core  and then
+ *             dumps them to disk with dbmcachedump().
  */
-#undef DBMCACHE
+#undef HAVE_DBMCACHEDUMP
 
 /*             Define  STATSORT  if you want deliver to sort
  *             the mail queue based on a stat(2) of the mes-
@@ -425,33 +277,13 @@
  */
 #undef STATSORT
 
-/**********************************************************************/
-/*             Enable site depend code
- */
-#undef LINUX
-
-/*             Enable a small fix to slowdown submitm such that the parent
- *             could finish readring the pipe when submit exits. This is
- *             needed on RISC-machines like HP9000s700 an newer.
- */
-#undef SUBMIT_TOO_FAST
-
-/*             Enable 8bit-clean mode when getting messages over smtp.
- */
-#undef HAVE_8BIT
-
-/* Define if you have the wrap library (-lwrap).  */
-/*             Enable tcp_wrapper implementation in smtpsrvr. With the 
- *             tcp_wrapper package you can monitor and filter incoming request
- *             to the smtp server. Over the ident-protocol (RFC931) you can 
- *             get the calling username.
- */
-#undef HAVE_LIBWRAP
-
 /*             Enable the yp_match lookup code for accessing tables over
  *             NIS.
  */
 #undef HAVE_NIS
+
+/*
+ */
 #undef HAVE_NN
 
 /*             Enable code to disable source-routing of addresses
@@ -460,6 +292,248 @@
  *             spam-mails.
  */
 #undef HAVE_NOSRCROUTE
+
+/* Define if your system has the define SIGSYS */
+#undef HAVE_DEF_SIGSYS
+
+/* Define if you have the <fcntl.h> header file.  */
+#undef HAVE_FCNTL_H
+
+/* Define if you have the <sgtty.h> header file.  */
+#undef HAVE_SGTTY_H
+
+/* Define if you have CBREAK in <sgtty.h> header file.  */
+#undef HAVE_SGTTY_CBREAK
+
+/* Define if you have TIOCSETN in <sgtty.h> header file.  */
+#undef HAVE_SGTTY_TIOCSETN
+
+/* Define if ioctl(1, TIOCSBRK, 0) works */
+#undef HAVE_IOCTL_TIOCSBRK
+
+/* Define if you have TIOCSETN in <termio.h> header file.  */
+#undef HAVE_TERMIO_TIOCSETN
+
+#undef HAVE_TSECURETTY
+
+/* Define if your system has sys_errlist[] declared */
+#undef HAVE_SYS_ERRLIST_DECL
+
+#undef HAVE_UNION_WAIT
+#undef LINUX
+#undef HPUX
+#undef MKDIR_HAVE_SECOND_ARG
+
+/* Define if you have the bcopy function.  */
+#undef HAVE_BCOPY
+
+/* Define if you have the dbmcachedump function.  */
+#undef HAVE_DBMCACHEDUMP
+
+/* Define if you have the dup2 function.  */
+#undef HAVE_DUP2
+
+/* Define if you have the fcntl function.  */
+#undef HAVE_FCNTL
+
+/* Define if you have the ftime function.  */
+#undef HAVE_FTIME
+
+/* Define if you have the getcwd function.  */
+#undef HAVE_GETCWD
+
+/* Define if you have the getdtablesize function.  */
+#undef HAVE_GETDTABLESIZE
+
+/* Define if you have the gethostname function.  */
+#undef HAVE_GETHOSTNAME
+
+/* Define if you have the gettimeofday function.  */
+#undef HAVE_GETTIMEOFDAY
+
+/* Define if you have the getwd function.  */
+#undef HAVE_GETWD
+
+/* Define if you have the index function.  */
+#undef HAVE_INDEX
+
+/* Define if you have the initgroups function.  */
+#undef HAVE_INITGROUPS
+
+/* Define if you have the killpg function.  */
+#undef HAVE_KILLPG
+
+/* Define if you have the memcpy function.  */
+#undef HAVE_MEMCPY
+
+/* Define if you have the mkdir function.  */
+#undef HAVE_MKDIR
+
+/* Define if you have the mkstemp function.  */
+#undef HAVE_MKSTEMP
+
+/* Define if you have the res_mkquery function.  */
+#undef HAVE_RES_MKQUERY
+
+/* Define if you have the setpgid function.  */
+#undef HAVE_SETPGID
+
+/* Define if you have the setpgrp function.  */
+#undef HAVE_SETPGRP
+
+/* Define if you have the setreuid function.  */
+#undef HAVE_SETREUID
+
+/* Define if you have the sigchild function.  */
+#undef HAVE_SIGCHILD
+
+/* Define if you have the sigset function.  */
+#undef HAVE_SIGSET
+
+/* Define if you have the sigsetmask function.  */
+#undef HAVE_SIGSETMASK
+
+/* Define if you have the snprintf function.  */
+#undef HAVE_SNPRINTF
+
+/* Define if you have the socket function.  */
+#undef HAVE_SOCKET
+
+/* Define if you have the strchr function.  */
+#undef HAVE_STRCHR
+
+/* Define if you have the strdup function.  */
+#undef HAVE_STRDUP
+
+/* Define if you have the strncat function.  */
+#undef HAVE_STRNCAT
+
+/* Define if you have the strncpy function.  */
+#undef HAVE_STRNCPY
+
+/* Define if you have the truncate function.  */
+#undef HAVE_TRUNCATE
+
+/* Define if you have the tzset function.  */
+#undef HAVE_TZSET
+
+/* Define if you have the <arpa/nameser.h> header file.  */
+#undef HAVE_ARPA_NAMESER_H
+
+/* Define if you have the <dirent.h> header file.  */
+#undef HAVE_DIRENT_H
+
+/* Define if you have the <lastlog.h> header file.  */
+#undef HAVE_LASTLOG_H
+
+/* Define if you have the <libio.h> header file.  */
+#undef HAVE_LIBIO_H
+
+/* Define if you have the <malloc.h> header file.  */
+#undef HAVE_MALLOC_H
+
+/* Define if you have the <memory.h> header file.  */
+#undef HAVE_MEMORY_H
+
+/* Define if you have the <ndir.h> header file.  */
+#undef HAVE_NDIR_H
+
+/* Define if you have the <netdb.h> header file.  */
+#undef HAVE_NETDB_H
+
+/* Define if you have the <netinet/in.h> header file.  */
+#undef HAVE_NETINET_IN_H
+
+/* Define if you have the <resolv.h> header file.  */
+#undef HAVE_RESOLV_H
+
+/* Define if you have the <string.h> header file.  */
+#undef HAVE_STRING_H
+
+/* Define if you have the <strings.h> header file.  */
+#undef HAVE_STRINGS_H
+
+/* Define if you have the <sys/dir.h> header file.  */
+#undef HAVE_SYS_DIR_H
+
+/* Define if you have the <sys/file.h> header file.  */
+#undef HAVE_SYS_FILE_H
+
+/* Define if you have the <sys/ioctl.h> header file.  */
+#undef HAVE_SYS_IOCTL_H
+
+/* Define if you have the <sys/ndir.h> header file.  */
+#undef HAVE_SYS_NDIR_H
+
+/* Define if you have the <sys/socket.h> header file.  */
+#undef HAVE_SYS_SOCKET_H
+
+/* Define if you have the <sys/strtio.h> header file.  */
+#undef HAVE_SYS_STRTIO_H
+
+/* Define if you have the <sys/termio.h> header file.  */
+#undef HAVE_SYS_TERMIO_H
+
+/* Define if you have the <sys/termios.h> header file.  */
+#undef HAVE_SYS_TERMIOS_H
+
+/* Define if you have the <sys/time.h> header file.  */
+#undef HAVE_SYS_TIME_H
+
+/* Define if you have the <sys/unistd.h> header file.  */
+#undef HAVE_SYS_UNISTD_H
+
+/* Define if you have the <syslog.h> header file.  */
+#undef HAVE_SYSLOG_H
+
+/* Define if you have the <termio.h> header file.  */
+#undef HAVE_TERMIO_H
+
+/* Define if you have the <unistd.h> header file.  */
+#undef HAVE_UNISTD_H
+
+/* Define if you have the <utmp.h> header file.  */
+#undef HAVE_UTMP_H
+
+/* Define if you have the <utmpx.h> header file.  */
+#undef HAVE_UTMPX_H
+
+/* Define if you have the <varargs.h> header file.  */
+#undef HAVE_VARARGS_H
+
+/* Define if you have the dbm library (-ldbm).  */
+#undef HAVE_LIBDBM
+
+/* Define if you have the gdbm library (-lgdbm).  */
+#undef HAVE_LIBGDBM
+
+/* Define if you have the ndbm library (-lndbm).  */
+#undef HAVE_LIBNDBM
+
+/* Define if you have the nsl library (-lnsl).  */
+#undef HAVE_LIBNSL
+
+/* Define if you have the resolv library (-lresolv).  */
+#undef HAVE_LIBRESOLV
+
+/* Define if you have the socket library (-lsocket).  */
+#undef HAVE_LIBSOCKET
+
+/* Define if you have the termcap library (-ltermcap).  */
+#undef HAVE_LIBTERMCAP
+
+/* Define if you have the wrap library (-lwrap).  */
+#undef HAVE_LIBWRAP
+
+/*****************************************************************************/
+/* Old defines */
+
+#undef RUNALON
+#undef SUBMIT_TOO_FAST
+#undef SYS5
+#undef SYS5r3
+#undef V4_2BSD
+/* #undef -Dvoid=int */
 
 /*****************************************************************************/
 #if STDC_HEADERS
@@ -515,5 +589,9 @@ extern char * malloc(), *calloc();
 #include <defs.h>
 #include <config.old.h>
 #include <funcs.h>
+
+#ifndef HAVE_STRDUP
+extern char *strdup();
+#endif /* HAVE_STRDUP */
 
 #endif /* CONFIG_H */

@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.1 1998/01/11 18:36:43 krueger Exp $
+ * $Id: config.h,v 1.2 1999/08/12 13:15:32 krueger Exp $
  *
  * please set every configuration-switch here
  *
@@ -178,12 +178,6 @@
  */
 /* #undef CITATION=n */
 
-/*             Define  DBMCACHE  if  your  version of dbm(3)
- *             builds databases in core and then dumps  them
- *             to disk with dbmcachedump().
- */
-/* #undef DBMCACHE */
-
 /*             Define  STATSORT  if you want deliver to sort
  *             the mail queue based on a stat(2) of the mes-
  *             sage  text file instead of reading the times-
@@ -216,23 +210,5 @@
  *             needed on RISC-machines like HP9000s700 an newer.
  */
 /* #define SUBMIT_TOO_FAST
-
-/*             Enable 8bit-clean mode when getting messages over smtp.
- */
-#define EIGHT_BIT_CLEAN
-
-/*             Enable tcp_wrapper implementation in smtpsrvr. With the 
- *             tcp_wrapper package you can monitor and filter incoming request
- *             to the smtp server. Over the ident-protocol (RFC931) you can 
- *             get the calling username.
- *    renamed to HAVE_LIBWRAP
- *    set by configure in config.h.in
- */
-/* #undef HAVE_TCP_WRAPPER */
-
-/*             Enable the yp_match lookup code for accessing tables over
- *             NIS.
- */
-/* #undef HAVE_NIS */
 
 #endif /* CONFIG_OLD_H */

@@ -2,6 +2,9 @@
 #include <pwd.h>
 #include <utmp.h>
 #include <lastlog.h>
+#ifdef HAVE_UTMPX_H
+#  include <utmpx.h>
+#endif /* HAVE_UTMPX_H */
 
 /* get informtion about who is logged in */
 

@@ -15,7 +15,7 @@
 
 
 /*
- * $Id: acconfig.h,v 1.4 1999/08/10 09:29:44 krueger Exp $
+ * $Id: acconfig.h,v 1.5 1999/08/12 13:15:31 krueger Exp $
  *
  */
 
@@ -361,6 +361,16 @@
 #undef HAVE_NAMESERVER
 #undef HAVE__GETSHORT
 #undef HAVE_GETSHORT
+
+/*             Enables   the   nameserver  lookup  code  for
+ *             accessing domain servers.The  HAVE_NAMESERVER
+ *             support   is   new.  If  turned  on  it  will
+ *             automatically compile the support for  4.2BSD
+ *             otherwise the 'fake' code  will  be  compiled
+ *             Currently  there  is  only support for 4.2BSD
+ *             networking.  See TB_NS below.
+ */
+#undef HAVE_NAMESERVER
 
 /*             Prevents    Domain    Literals    (such    as
  *             [10.0.0.59])  from  appearing  in  addresses.

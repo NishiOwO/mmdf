@@ -9,7 +9,7 @@
  *   the message system needs to have.
  */
 
-char *mmtailor = MM_MMDFTAILOR;
+char *mmtailor = MMTAILOR;
 				/* location of external tailoring file  */
 
 /* ************************  PUBLIC NAMES  ****************************** */
@@ -32,27 +32,27 @@ char
  *  The following pathnames must be anchored.
  */
 
-char	*cmddfldir = MMDFLIBDIR;
+char	*cmddfldir = MCMDDIR;
 			      /* contains MMDF commands, such as      */
 			      /* submit, deliver, and queclean        */
-char	*logdfldir = MMDFLOGDIR;
+char	*logdfldir = MLOGDIR;
 			      /* contains highly volatile files, such */
 			      /* as logs and check-point markers      */
-char	*phsdfldir = MM_PHASEDIR;
+char	*phsdfldir = MPHSDIR;
 			      /* contains timestamp files             */
-char	*tbldfldir = MMDFTABLEDIR;
+char	*tbldfldir = MTBLDIR;
 			      /* contains sticky files, such as       */
 			      /* name tables & dialing scripts        */
-char	*tbldbm = MM_TBLDBM;
+char	*tbldbm = TBLDBM;
 			      /* dbm() hash of name tables      */
-char	*quedfldir = MMDFPSOOLDIR;
+char	*quedfldir = MQUEDIR;
 			      /* contains queued mail files, in       */
 			      /* subordinate directories              */
 			      /* (also see below)                     */
-char	*chndfldir = MMDFCHANDIR;
+char	*chndfldir = MCHNDIR;
 				/* contains the channel programs        */
 				/* (ch_*) called by deliver             */
-char	*lckdfldir = "/tmp";
+char	*lckdfldir = LCKDFLDIR;
 				/* Directory for lock files SEK           */
 
 
@@ -239,6 +239,6 @@ char	*locmachine = { 0 };
 /******************* AUTHORIZATION TAILORING **************************/
 char	*authrequest = "mmdf@CSNET-DEV";
 				/* authorisation request address        */
-char	*authfile = MM_AUTHFILE;
+char	*authfile = AUTHFILE;
 				/* warning letter - full pathname       */
 

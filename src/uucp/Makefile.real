@@ -12,13 +12,14 @@ real-default:	xuucp xrmail
 
 install:	inst-uucp inst-rmail
 
-inst-uucp:	$(CHANDIR)/$(MMPREF)uucp
-$(CHANDIR)/$(MMPREF)uucp:	xuucp
-	$(INSTALL) -c -m 04$(PGMPROT)  -o $(MMDFLOGIN)  xuucp $(CHANDIR)/$(MMPREF)uucp
-#	cp xuucp $(CHANDIR)/$(MMPREF)uucp
-#	-$(CHOWN) $(MMDFLOGIN) $(CHANDIR)/$(MMPREF)uucp
-#	-chmod 04$(PGMPROT) $(CHANDIR)/$(MMPREF)uucp
-	-@ls -ls $(CHANDIR)/$(MMPREF)uucp
+inst-uucp:	$(MCHNDIR)/$(MMPREF)uucp
+$(MCHNDIR)/$(MMPREF)uucp:	xuucp
+	$(INSTALL) -c -m 04$(PGMPROT)  -o $(MMDFLOGIN)  xuucp \
+		$(MCHNDIR)/$(MMPREF)uucp
+#	cp xuucp $(MCHNDIR)/$(MMPREF)uucp
+#	-$(CHOWN) $(MMDFLOGIN) $(MCHNDIR)/$(MMPREF)uucp
+#	-chmod 04$(PGMPROT) $(MCHNDIR)/$(MMPREF)uucp
+	-@ls -ls $(MCHNDIR)/$(MMPREF)uucp
 	-@echo "uucp installed normally"; echo ""
 
 uucp:	xuucp
@@ -28,17 +29,15 @@ xuucp:	$(OBJECTS) $(MMDFLIBS)
 
 popen.o: popen.c
 
+#	-@echo "***** Please install rmail by hand in /bin or /usr/bin."
 # The ownership should probably be $(MMDFLOGIN), but that other tag
 # says "root"..  It works fine on our system as `mmdf' -- DSH
-inst-rmail: /bin/rmail
-/bin/rmail: xrmail
-	-@echo "***** Please install rmail by hand in /bin or /usr/bin."
-#	$(INSTALL) -c -m 04$(PGMPROT)  -o $(MMDFLOGIN)  xrmail /bin/rmail
-#	cp xrmail /bin/rmail
-#	-$(CHOWN) $(MMDFLOGIN) /bin/rmail
-#	-chmod 04$(PGMPROT) /bin/rmail
-#	-@ls -ls /bin/rmail
-#	-@echo "rmail installed normally"; echo ""
+inst-rmail: ${install_prefix}/bin/rmail
+${install_prefix}/bin/rmail: xrmail
+	$(INSTALL) -c -m 04$(PGMPROT)  -o $(MMDFLOGIN)  \
+		xrmail ${install_prefix}/bin/rmail
+	-@ls -ls ${install_prefix}/bin/rmail
+	-@echo "rmail installed normally"; echo ""
 
 # inst-rmail:	/usr/bin/rmail
 # /usr/bin/rmail:	xrmail

@@ -5,7 +5,6 @@
 /* cache some information */
 
 extern	Llog	*logptr;
-extern	char	*strdup();
 
 int ca_add (cachep, hostid, value, ttl)	/* add entry to cache */
 Cache	**cachep;

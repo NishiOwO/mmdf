@@ -45,6 +45,7 @@
 #define SIZESUBJ	40		/* */
 #define SIZETO		32
 
+#define OUTFILESIZE 256
 #define	MSG_BSIZE	2048		/* temp line buffer size */
 
 #define SPSIGS		0400007

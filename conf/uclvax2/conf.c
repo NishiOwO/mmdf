@@ -9,7 +9,7 @@
 #include "ap_norm.h"
 #include "pathnames.h"
 
-char *mmtailor = MM_MMDFTAILOR;
+char *mmtailor = MMTAILOR;
 				/* location of external tailoring file  */
 
 /* ************************  PUBLIC NAMES  ****************************** */
@@ -34,27 +34,27 @@ char
  */
 
 char
-	*cmddfldir = MMDFLIBDIR,
+	*cmddfldir = MCMDDIR,
 			      /* contains MMDF commands, such as      */
 			      /* submit, deliver, and queclean        */
-	*logdfldir = MMDFLOGDIR,
+	*logdfldir = MLOGDIR,
 			      /* contains highly volatile files, such */
 			      /* as logs and check-point markers      */
-	*phsdfldir = MM_PHASEDIR,
+	*phsdfldir = MPHSDIR,
 			      /* contains timestamp files             */
-	*tbldfldir = MMDFTABLEDIR,
+	*tbldfldir = MTBLDIR,
 			      /* contains sticky files, such as       */
 			      /* name tables & dialing scripts        */
-	*tbldbm = MM_TBLDBM,
+	*tbldbm = TBLDBM,
 			      /* dbm() hash of name tables      */
-	*quedfldir = MMDFPSOOLDIR,
+	*quedfldir = MQUEDIR,
 			      /* contains queued mail files, in       */
 			      /* subordinate directories              */
 			      /* (also see below)                     */
-	*chndfldir = MMDFCHANDIR,
+	*chndfldir = MCHNDIR,
 				  /* contains the channel programs        */
 				  /* (ch_*) called by deliver             */
-	*lckdfldir = "/tmp/mmdf";
+	*lckdfldir = LCKDFLDIR;
 				/* Directory for lock files SEK           */
 
 
@@ -237,6 +237,6 @@ char	*locmachine = "Ucl-Cs";
 /******************* AUTHORIZATION TAILORING **************************/
 char  *authrequest = "authorisation@Ucl-Cs";
 				/* authorisation request address        */
-char *authfile = MM_AUTHFILE;
+char *authfile = AUTHFILE;
 				/* warning letter - full pathname       */
 

@@ -94,8 +94,7 @@ char    host[],			  /* "next" location part of address    */
         adr[];			  /* rest of address                    */
 struct rp_bufstruct *thereply;     
 {
-    extern char *strdup (),
-		*multcat ();
+    extern char *multcat ();
     short     retval;
     register char  *adrstr;
     char linebuf[LINESIZE];

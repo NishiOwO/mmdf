@@ -24,10 +24,12 @@ extern int sprintf ();
 #else
 extern char *sprintf ();
 #endif
-#ifndef LINUX
+#ifndef __STDC__
 extern struct passwd *getpwnam(), *getpwuid();
 #else
+#  ifdef HAVE_LIBIO_H
 #  include <libio.h>
+#  endif /* HAVE_LIBIO_H */
 #endif /* not LINUX */
 
 #if !defined(HAVE_DEF_SIGSYS) || defined(LINUX)

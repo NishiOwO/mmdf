@@ -11,13 +11,13 @@ install: inst-smtp inst-smtpd inst-smtpsrvr
 
 lint:	l-smtp l-smtpd l-smtpsrvr
 
-inst-smtp:	$(CHANDIR)/smtp
-$(CHANDIR)/smtp:	xsmtp
-	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xsmtp $(CHANDIR)/smtp
-#	cp xsmtp $(CHANDIR)/smtp
-#	-$(CHOWN) $(MMDFLOGIN) $(CHANDIR)/smtp
-#	-chmod 0$(PGMPROT) $(CHANDIR)/smtp
-	-@ls -ls $(CHANDIR)/smtp
+inst-smtp:	$(MCHNDIR)/smtp
+$(MCHNDIR)/smtp:	xsmtp
+	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xsmtp $(MCHNDIR)/smtp
+#	cp xsmtp $(MCHNDIR)/smtp
+#	-$(CHOWN) $(MMDFLOGIN) $(MCHNDIR)/smtp
+#	-chmod 0$(PGMPROT) $(MCHNDIR)/smtp
+	-@ls -ls $(MCHNDIR)/smtp
 	-@echo "smtp channel installed normally"; echo ""
 
 # On some systems the tcp.xxx.c file you use will need to be different
@@ -36,14 +36,14 @@ l-smtp:
 	$(LINT) $(LFLAGS) $(TCPINCL) \
 		ch_smtp.c qu2sm_send.c sm_wtmail.c tcp.c $(LLIBS)
 
-inst-smtpsrvr: $(CHANDIR)/smtpsrvr
+inst-smtpsrvr: $(MCHNDIR)/smtpsrvr
 
-$(CHANDIR)/smtpsrvr:  xsmtpsrvr
-	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xsmtpsrvr $(CHANDIR)/smtpsrvr
-#	cp xsmtpsrvr $(CHANDIR)/smtpsrvr
-#	-$(CHOWN) $(MMDFLOGIN) $(CHANDIR)/smtpsrvr
-#	-chmod 0$(PGMPROT) $(CHANDIR)/smtpsrvr
-	-@ls -ls $(CHANDIR)/smtpsrvr
+$(MCHNDIR)/smtpsrvr:  xsmtpsrvr
+	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xsmtpsrvr $(MCHNDIR)/smtpsrvr
+#	cp xsmtpsrvr $(MCHNDIR)/smtpsrvr
+#	-$(CHOWN) $(MMDFLOGIN) $(MCHNDIR)/smtpsrvr
+#	-chmod 0$(PGMPROT) $(MCHNDIR)/smtpsrvr
+	-@ls -ls $(MCHNDIR)/smtpsrvr
 	-@echo "smtp server installed normally"; echo " "
 
 
@@ -57,14 +57,14 @@ l-smtpsrvr:
 	$(LINT) $(LFLAGS) smtpsrvr.c $(LLIBS)
 
 
-inst-smtpd: $(CHANDIR)/smtpd
+inst-smtpd: $(MCHNDIR)/smtpd
 
-$(CHANDIR)/smtpd:  xsmtpd
-	$(INSTALL) -c -m 06$(PGMPROT)  -o root  xsmtpd $(CHANDIR)/smtpd
-#	cp xsmtpd $(CHANDIR)/smtpd
-#	-$(CHOWN) root $(CHANDIR)/smtpd
-#	-chmod 6$(PGMPROT) $(CHANDIR)/smtpd
-	-@ls -ls $(CHANDIR)/smtpd
+$(MCHNDIR)/smtpd:  xsmtpd
+	$(INSTALL) -c -m 06$(PGMPROT)  -o root  xsmtpd $(MCHNDIR)/smtpd
+#	cp xsmtpd $(MCHNDIR)/smtpd
+#	-$(CHOWN) root $(MCHNDIR)/smtpd
+#	-chmod 6$(PGMPROT) $(MCHNDIR)/smtpd
+	-@ls -ls $(MCHNDIR)/smtpd
 	-@echo "smtp daemon installed normally"; echo " "
 		
 smtpd: xsmtpd

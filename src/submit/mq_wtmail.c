@@ -97,10 +97,10 @@ mq_creat ()                      /* initialize for new message         */
     if (*mq_munique == '\0') {                             
 
 	/* get pid */
-	sprintf(template,"msg.aa%05.5d",getpid());
+	snprintf(template, sizeof(template), "msg.aa%05.5d",getpid());
 
 	/* append template to standard part of name */
-	strcpy (mq_munique, template);
+	strncpy (mq_munique, template, sizeof(mq_munique));
     }
 
     while (access(mq_mfname,0) == 0) {

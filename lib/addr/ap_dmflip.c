@@ -4,7 +4,6 @@
 #include "dm.h"
 #include "ll_log.h"
 
-extern char *strdup();
 extern struct ll_struct *logptr;
 
 char *

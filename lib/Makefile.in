@@ -20,7 +20,7 @@ default: remake reorder
 remake:
 	for dir in $(SUBDIRS); \
 	  do (cd $${dir}; echo "Running make in $${dir}"; \
-	      ./gen ${MFLAGS} -${MAKEFLAGS}); \
+	      ./gen ${MFLAGS}); \
 	  done
 
 install: default
@@ -34,11 +34,11 @@ reorder-done: libmmdf.a
 
 depend:
 	for dir in $(SUBDIRS); \
-	  do (cd $${dir}; ./gen ${MFLAGS} -${MAKEFLAGS} depend); done
+	  do (cd $${dir}; ./gen ${MFLAGS} depend); done
 
 lint:
 	for dir in $(SUBDIRS); \
-	  do (cd $${dir}; ./gen ${MFLAGS} -${MAKEFLAGS} lint); done
+	  do (cd $${dir}; ./gen ${MFLAGS} lint); done
 	cat */llib-l*.ln > llib-lmmdf.ln
 
 clean:

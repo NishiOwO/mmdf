@@ -171,6 +171,14 @@ char    addr[];
     char    address[ADDRSIZE];
     char    hostname[FILNSIZE];
     int     len;
+    static char hosttmp[81];
+
+    if(!*hosttmp) {
+       hosttmp[80]='\0';
+       strncat(hosttmp,LocFirst,80);
+       strncat(hosttmp,".",80-strlen(hosttmp));
+       strncat(hosttmp,LocLast,80-strlen(hosttmp));
+    }
 
     name[0] =
 	address[0]=

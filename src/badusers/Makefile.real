@@ -9,14 +9,12 @@ SOURCES =     ch_local.c qu2lo_send.c lo_wtmail.c
 
 real-default: badusers
 
-install:      $(CHANDIR)/$(MMPREF)badusers
+install:      $(MCHNDIR)/$(MMPREF)badusers
 
-$(CHANDIR)/$(MMPREF)badusers: xbadusers
-	$(INSTALL) -c -m 04$(PGMPROT) -o root xbadusers $(CHANDIR)/$(MMPREF)badusers
-#     cp xlocal $(CHANDIR)/$(MMPREF)local
-#     -$(CHOWN) root $(CHANDIR)/$(MMPREF)local
-#     -chmod 04$(PGMPROT) $(CHANDIR)/$(MMPREF)local
-	-@ls -ls $(CHANDIR)/$(MMPREF)badusers
+$(MCHNDIR)/$(MMPREF)badusers: xbadusers
+	$(INSTALL) -c -m 04$(PGMPROT) -o root xbadusers \
+		$(MCHNDIR)/$(MMPREF)badusers
+	-@ls -ls $(MCHNDIR)/$(MMPREF)badusers
 	-@echo "badusers installed normally"; echo ""
 
 badusers:     xbadusers

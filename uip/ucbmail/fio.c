@@ -8,9 +8,12 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.8 $
+ *  $Revision: 1.9 $
  *
  *  $Log: fio.c,v $
+ *  Revision 1.9  1999/08/12 13:15:44  krueger
+ *  Added patch 2.44b3 and 2.44b4
+ *
  *  Revision 1.8  1998/10/07 13:13:41  krueger
  *  Added changes from v44a8 to v44a9
  *
@@ -439,7 +442,7 @@ edstop()
 		goto done;
 	ibuf = NULL;
 	if (stat(editfile, &statb) >= 0 && statb.st_size > mailsize) {
-		strcpy(tempname, "/tmp/mboxXXXXXX");
+		strncpy(tempname, sizeof(tempname), "/tmp/mboxXXXXXX");
 		mktemp(tempname);
 		if ((obuf = fopen(tempname, "w")) == NULL) {
 			perror(tempname);

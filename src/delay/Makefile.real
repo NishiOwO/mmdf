@@ -10,14 +10,14 @@ SOURCES =	ch_delay.c qu2ds_send.c
 
 real-default:	delay
 
-install:	$(CHANDIR)/delay
+install:	$(MCHNDIR)/delay
 
-$(CHANDIR)/delay  :   xdelay
-	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xdelay $(CHANDIR)/delay
-#	cp xdelay $(CHANDIR)/delay
-#	-$(CHOWN) $(MMDFLOGIN) $(CHANDIR)/delay
-#	-chmod 0$(PGMPROT) $(CHANDIR)/delay
-	-@ls -ls $(CHANDIR)/delay
+$(MCHNDIR)/delay  :   xdelay
+	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xdelay $(MCHNDIR)/delay
+#	cp xdelay $(MCHNDIR)/delay
+#	-$(CHOWN) $(MMDFLOGIN) $(MCHNDIR)/delay
+#	-chmod 0$(PGMPROT) $(MCHNDIR)/delay
+	-@ls -ls $(MCHNDIR)/delay
 	-@echo "delay channel installed normally"; echo ""
 
 delay:	xdelay

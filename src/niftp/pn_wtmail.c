@@ -110,7 +110,6 @@ char    chname[],                 /* what channel coming in from        */
 	sender[],                 /* return address for error msgs      */
 	msgfile[];                /* name of file with msg text         */
 {
-    extern char *strdup ();
     AP_ptr ap;
     AP_ptr local,
 	domain,

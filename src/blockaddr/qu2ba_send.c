@@ -51,6 +51,16 @@ extern char *supportaddr;
 extern char *multcat();
 extern char *blt();
 
+LOCFUN qu2ba_each ();            /* send one copy of text per message */
+LOCFUN sendnotification();
+#ifdef __STDC__
+LOCFUN qu2ba_txtcpy (RP_Buf *rp); /* copy the text of the message       */
+LOCFUN submitaddr(char *adrp);    /* pass adr to submit */
+#else /* __STDC__ */
+LOCFUN qu2ba_txtcpy ();         /* copy the text of the message       */
+LOCFUN submitaddr();    /* pass adr to submit */
+#endif /* __STDC__ */
+
 extern int ml_state;              /* to fake ml_send(3) out */
 
 LOCVAR int  nadrs, ndone, notify;

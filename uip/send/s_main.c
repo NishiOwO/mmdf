@@ -75,8 +75,8 @@ RETSIGTYPE (*orig) ();               /* to save old signal values */
 char   *adrptr;                   /* field currently getting addresses  */
 char    bigbuf[BBSIZE],              /* buffer for text of msg */
 	signature[S_BSIZE],            /* hold the signature */
-	host[64],                 /* default hostname */
-	from[64],
+	host[HOSTSIZE],                 /* default hostname */
+	from[HOSTSIZE],
 	to[S_BSIZE],          /* primary recipients                 */
 	bcc[S_BSIZE],         /* blind carbon copy addresses        */
 	cc[S_BSIZE],          /* secondary recipients               */

@@ -1,3 +1,12 @@
+Changes beta 3
+	* Small bug in ap_lex.c hip@a.cs.okstate.edu
+	* jromine@ics.uci.edu some changes for Solaris 2.5, Sun Pro
+	  4.2 Compiler
+	* linux 2.2.7, glibc2.1, egcs 2.91 (redhat 6.0)
+	* sco (first attempt)
+	* jromine@ics.uci.edu, boundary fix smtpsrvr
+	* Small bug in submit/lnk_getaddr.c krueger@mathematik.uni-kl.de
+
 Wed Dec 31 13:14:34 MET 1997	Kai Krueger <krueger@mathematik.uni-kl.de>
 
 	* create file h/config.h.in and moved every define to it.

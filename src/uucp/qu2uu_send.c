@@ -38,6 +38,11 @@ extern char *qu_msgfile;          /* name of file containing msg text   */
 extern Chan      *curchan;  /* Who we are */
 
 LOCFUN qu2uu_each();
+#ifdef __STDC__
+LOCFUN void ScanUucpFrom(char *new, char *adr);
+#else /* __STDC__ */
+LOCFUN void ScanUucpFrom();
+#endif /* __STDC__ */
 
 
 int pbroke;             /* Set if SIGPIPE occurs (in qu2uu_each) */
@@ -270,7 +275,7 @@ char *sender;
 	AP_ptr  local,
 		domain,
 		route;
-	char    *MakeUucpFrom();
+	static char    *MakeUucpFrom();
 
 /* SEK have axed looking at top of file.  */
 /* This may not be wise - but very much neater */
@@ -361,7 +366,7 @@ char *adr;
   	return(new);
 }
 
-static
+static void
 ScanUucpFrom(new, adr)
 register char *new;
 register char *adr;

@@ -14,18 +14,20 @@ lint:		l-sendprog l-recvprog
 sendprog:	xsendprog
 	-@echo
 xsendprog:	ch_prog.o qu2pr_send.o pr_wtmail.o $(MMDFLIBS)
-	$(CC) $(LDFLAGS) -o $@ ch_prog.o qu2pr_send.o pr_wtmail.o $(MMDFLIBS) $(SYSLIBS)
+	$(CC) $(LDFLAGS) -o $@ ch_prog.o qu2pr_send.o pr_wtmail.o \
+		$(MMDFLIBS) $(SYSLIBS)
 
 l-sendprog:
 	$(LINT) $(LFLAGS) ch_prog.c qu2pr_send.c pr_wtmail.c $(LLIBS)
 
-inst-sendprog:	$(CHANDIR)/sendprog
-$(CHANDIR)/sendprog:	xsendprog
-	$(INSTALL) -c -m $(PGMPROT)  -o $(MMDFLOGIN)  xsendprog $(CHANDIR)/sendprog
-#	cp xsendprog $(CHANDIR)/sendprog
-#	-$(CHOWN) $(MMDFLOGIN) $(CHANDIR)/sendprog
-#	-chmod $(PGMPROT) $(CHANDIR)/sendprog
-	-@ls -ls $(CHANDIR)/sendprog
+inst-sendprog:	$(MCHNDIR)/sendprog
+$(MCHNDIR)/sendprog:	xsendprog
+	$(INSTALL) -c -m $(PGMPROT)  -o $(MMDFLOGIN)  xsendprog \
+		$(MCHNDIR)/sendprog
+#	cp xsendprog $(MCHNDIR)/sendprog
+#	-$(CHOWN) $(MMDFLOGIN) $(MCHNDIR)/sendprog
+#	-chmod $(PGMPROT) $(MCHNDIR)/sendprog
+	-@ls -ls $(MCHNDIR)/sendprog
 	-@echo "sendprog installed normally"; echo ""
 
 recvprog:	xrecvprog
@@ -37,13 +39,14 @@ xrecvprog:	pr2mm_send.o pr_errmsg.o
 l-recvprog:
 	$(LINT) $(LFLAGS) pr2mm_send.c pr_errmsg.c $(LLIBS)
 
-inst-recvprog:	$(CHANDIR)/recvprog
-$(CHANDIR)/recvprog:	xrecvprog
-	$(INSTALL) -c -m $(PGMPROT)  -o $(MMDFLOGIN)  xrecvprog $(CHANDIR)/recvprog
-#	cp xrecvprog $(CHANDIR)/recvprog
-#	-$(CHOWN) $(MMDFLOGIN) $(CHANDIR)/recvprog
-#	-chmod $(PGMPROT) $(CHANDIR)/recvprog
-	-@ls -ls $(CHANDIR)/recvprog
+inst-recvprog:	$(MCHNDIR)/recvprog
+$(MCHNDIR)/recvprog:	xrecvprog
+	$(INSTALL) -c -m $(PGMPROT)  -o $(MMDFLOGIN)  xrecvprog \
+		$(MCHNDIR)/recvprog
+#	cp xrecvprog $(MCHNDIR)/recvprog
+#	-$(CHOWN) $(MMDFLOGIN) $(MCHNDIR)/recvprog
+#	-chmod $(PGMPROT) $(MCHNDIR)/recvprog
+	-@ls -ls $(MCHNDIR)/recvprog
 	-@echo "recvprog installed normally"; echo ""
 
 clean:

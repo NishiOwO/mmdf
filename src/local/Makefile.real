@@ -9,14 +9,14 @@ SOURCES =	ch_local.c qu2lo_send.c lo_wtmail.c
 
 real-default:	local
 
-install:	$(CHANDIR)/$(MMPREF)local
+install:	$(MCHNDIR)/$(MMPREF)local
 
-$(CHANDIR)/$(MMPREF)local:	xlocal
-	$(INSTALL) -c -m 04$(PGMPROT) -o root xlocal $(CHANDIR)/$(MMPREF)local
-#	cp xlocal $(CHANDIR)/$(MMPREF)local
-#	-$(CHOWN) root $(CHANDIR)/$(MMPREF)local
-#	-chmod 04$(PGMPROT) $(CHANDIR)/$(MMPREF)local
-	-@ls -ls $(CHANDIR)/$(MMPREF)local
+$(MCHNDIR)/$(MMPREF)local:	xlocal
+	$(INSTALL) -c -m 04$(PGMPROT) -o root xlocal $(MCHNDIR)/$(MMPREF)local
+#	cp xlocal $(MCHNDIR)/$(MMPREF)local
+#	-$(CHOWN) root $(MCHNDIR)/$(MMPREF)local
+#	-chmod 04$(PGMPROT) $(MCHNDIR)/$(MMPREF)local
+	-@ls -ls $(MCHNDIR)/$(MMPREF)local
 	-@echo "local installed normally"; echo ""
 
 local:	xlocal

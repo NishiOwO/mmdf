@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.2 1998/04/03 19:25:57 mmdf Exp $
+ * $Id: config.h,v 1.3 1999/08/12 13:15:34 krueger Exp $
  *
  * please set every configuration-switch here
  *
@@ -178,12 +178,6 @@
  */
 /* #undef CITATION=n */
 
-/*             Define  DBMCACHE  if  your  version of dbm(3)
- *             builds databases in core and then dumps  them
- *             to disk with dbmcachedump().
- */
-/* #undef DBMCACHE */
-
 /*             Define  STATSORT  if you want deliver to sort
  *             the mail queue based on a stat(2) of the mes-
  *             sage  text file instead of reading the times-
@@ -210,29 +204,5 @@
  */
 /* #undef SUBMIT_TOO_FAST */
 
-/*             Enable 8bit-clean mode when getting messages over smtp.
- */
-#define EIGHT_BIT_CLEAN
-
-/*             Enable tcp_wrapper implementation in smtpsrvr. With the 
- *             tcp_wrapper package you can monitor and filter incoming request
- *             to the smtp server. Over the ident-protocol (RFC931) you can 
- *             get the calling username.
- *    renamed to HAVE_LIBWRAP
- *    set by configure in config.h.in
- */
-/* #undef HAVE_TCP_WRAPPER */
-
-/*             Enable the yp_match lookup code for accessing tables over
- *             NIS.
- */
-/* #undef HAVE_NIS */
-
-/*             Enable code to disable source-routing of addresses
- *             Should not be done according to RFC 1123, but needed for 
- *             sendmail-host that don't accept source-routes to avoid
- *             spam-mails.
- */
-/* #define HAVE_NOSRCROUTE */
-
 #endif /* CONFIG_OLD_H */
+ 

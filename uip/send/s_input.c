@@ -57,11 +57,19 @@ input ()
 {
     int     infile;
     int     stat;
-    char    tempbuf[80];
+    static char    tempbuf[LINESIZE];
     RETSIGTYPE (*old1) (),
 	    (*old2) (),
 	    (*old3) ();
     register int    i;
+    static char hosttmp[LINESIZE];
+ 
+    if(!*hosttmp) {
+       hosttmp[LINESIZE-1]='\0';
+       strncat(hosttmp,LocFirst,LINESIZE-1);
+       strncat(hosttmp,".",(LINESIZE-1)-strlen(hosttmp));
+       strncat(hosttmp,LocLast,(LINESIZE-1)-strlen(hosttmp));
+    }
 
     printf ("SEND  (%s)\n", verdate);
 
@@ -296,10 +304,12 @@ doincl:
 
 	if (prefix ("program run", bigbuf))
 	{
+           int foundnull=0;
 	    printf ("Program: ");
 	    fflush (stdout);
-	    if (fgets (tempbuf, sizeof (tempbuf), stdin) == NULL)
-		continue;
+	    if (fgets (tempbuf,LINESIZE+1,stdin) == NULL) foundnull=1;
+	    if (tempbuf[strlen(tempbuf)-1]=='\n') tempbuf[strlen(tempbuf)-1]='\0';
+	    if (foundnull) continue;
 	    drclose ();
 
 	    /* ignore signals intended for subprocess */

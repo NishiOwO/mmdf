@@ -9,7 +9,7 @@
 #include "cnvtdate.h"
 #include "mm_io.h"
 
-extern	char	*locname;
+extern	char	*locname, *locdomain;
 extern	char	*chndfldir;
 
 extern struct passwd *getpwuid ();
@@ -226,7 +226,7 @@ char **argv;
 	}
 
 	if (*av == NULL && !extract) {
-		syserr("Usage: /usr/lib/sendmail [flags] addr...");
+		syserr("Usage: /usr/sbin/sendmail [flags] addr...");
 	}
 	if (!extract) {
 		while (*av)
@@ -370,13 +370,19 @@ dobody()
 smtp()
 {
 	char	*smtpd = dupfpath(SMTPSRVR, chndfldir);
+	static char fqdn[512];
+ 
+	fqdn[511]='\0';
+	strncpy(fqdn,locname,511);
+	strncat(fqdn,".",511-strlen(fqdn));
+	strncat(fqdn,locdomain,511-strlen(fqdn));
 
 #ifdef HAVE_SETREUID
 	setreuid(geteuid(),geteuid());
 #else /* HAVE_SETREUID */
 	setuid(geteuid());	/* Must become "mmdf" for real */
 #endif /* HAVE_SETREUID */
-	execl (smtpd, "sendmail-smtp", from, locname, "local", (char *)0);
+	execl (smtpd, "sendmail-smtp", from, fqdn, "local", (char *)0);
 	perror(smtpd);
 	exit(9);
 }

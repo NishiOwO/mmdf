@@ -21,7 +21,6 @@ extern   int     domsg;
 extern LLog *logptr;
 extern int ap_outtype;
 extern char *multcat();
-extern char *strdup();
 extern char *ap_dmflip();
 extern Domain *dm_v2route();
 

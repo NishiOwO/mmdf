@@ -476,7 +476,7 @@ doid ()
     if (idflag)
 	{
 	    cnvtdate (TIMCOM, datbuf);
-	    sprintf (linebuf, "<%s.%d@%s.%s>", datbuf, getpid(),
+	    snprintf (linebuf, sizeof(linebuf), "<%s.%d@%s.%s>", datbuf, getpid(),
 			locname, locdomain);
 	    sndhdr ("Message-Id:  ", linebuf);
 	}
@@ -556,10 +556,10 @@ int     fancy;          /* make address fancy? */
     {
 	for (ptr = locname; *ptr != 0; ptr++)
 	    *ptr = uptolow (*ptr);      /* Screw locname */
-	sprintf (linebuf, "%s <%s@%s>", sigtxt, username, locname);
+	sprintf (linebuf, "%s <%s@%s.%s>", sigtxt, username, locname, locdomain);
     }
     else                          /* just the mailbox info              */
-	sprintf (linebuf, "%s@%s", username, locname);
+	sprintf (linebuf, "%s@%s.%s", username, locname, locdomain);
 
     sndhdr (cmpnt, linebuf);
 }

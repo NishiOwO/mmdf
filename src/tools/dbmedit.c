@@ -180,7 +180,6 @@ register char   *str;
 {
 	register struct db      *dp;
 	static  char    ti[512];
-	char    *strcpy();
 
 	ndbents = 0;
 	str = strcpy(ti, str);
@@ -292,9 +291,9 @@ delall:		if ((lckfd = lk_open(dblock, 0, (char *)0, (char *)0, 10)) < 0) {
 		if(delete(dcons(argv[1])) < 0)
 			fprintf(stderr, "Delete failed\n");
 
-#ifdef DBMCACHE
+#ifdef HAVE_DBMCACHEDUMP
 		dbmcachedump();
-#endif /* DBMCACHE */
+#endif /* HAVE_DBMCACHEDUMP */
 
 		lk_close (lckfd, dblock, (char *)0, (char *)0);
 		return(0);
@@ -407,9 +406,9 @@ dscons()
 		fprintf(stderr, "dbmedit: cannot store new value for '%s'\n", argv[1]);
 	}
 
-#ifdef DBMCACHE
+#ifdef HAVE_DBMCACHEDUMP
 	dbmcachedump();
-#endif /* DBMCACHE */
+#endif /* HAVE_DBMCACHEDUMP */
 
 	lk_close (lckfd, dblock, (char *) 0, (char *)0);
 	return(0);

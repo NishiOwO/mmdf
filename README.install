@@ -13,14 +13,15 @@ You may adjust most of your pathnames with the following switches:
 
 MMDF programs an tables will be installed in
 	${prefix}	= /usr
-	${mmdfprefix}	= ${prefix}/mmdf
-	${mmdflibdir}	= ${mmdfprefix}/lib
-	${chandir}	= ${mmdfprefix}/chans
-	${tbldir}	= ${mmdfsprefix}/table
+	${mmdfprefix}	= ${prefix}/lib/mmdf
+	${mcmddir}	= ${mmdfprefix}/lib
+	${mchndir}	= ${mmdfprefix}/chans
 may be changed by: --prefix=
 		   --mmdf-prefix=
+		   --mcmddir=
+		   --mchndir=
 
-	$exec_prefix	= ${prefix}/local
+	$exec_prefix	= ${prefix}
 may be changed by: --exec_prefix=
 
 	${bindir}	= ${exec_prefix}/bin
@@ -33,27 +34,34 @@ may be changed by: --sbindir=
 	${libexecdir}	= ${exec_prefix}/lib/mh
 may be changed by: --libexecdir=
 
-	${varprefix}     = ${prefix}/var
+	${varprefix}     = /var
 may be changed by: --varprefix=
 
-	${mmdfspooldir}  = ${varprefix}/mmdf/home
-may be changed by: --mmdf-spooldir=
+	${mquedir}	= ${varprefix}/spool/mmdf
+may be changed by: --mquedir=
+		   (old) --mmdf-spooldir=
 		   (old) --sharedstatedir=
 
-	${mmdflogdir}    = ${varprefix}/mmdf/log
-may be changed by: --mmdf-logdir=
+	${mlogdir}	= ${varprefix}/log/mmdf
+may be changed by: --mlogdir=
+		   (old) --mmdf-logdir=
 		   (old) --localstatedir=
 
-	${mmdfphasedir} = ${varprefix}/mmdf/log/phase
-may be changed by: --mmdf-phasedir=
+	${mphsdir}	= ${varprefix}/state/mmdf
+may be changed by: --mphsdir=
+		   (old) --mmdf-phasedir=
 		   (old) --localstatedir=
 
-	${mmdfdiallog}  = ${logdir}/dial_log
-may be changed by: --mmdf-diallog=
+	${d_calllog}  = ${mlogdir}/dial_log
+may be changed by: --d_calllog=
+		   (old) --mmdf-diallog=
 		   (old) --localstatedir=
 
-	${sysconfdir}	= ${mmdfprefix}
+	${sysconfdir}	= /etc/mmdf
 may be changed by: --sysconfdir=
+
+	${mtbldir}	= ${sysconfdir}/table
+may be changed by: --mtbldir=
 
 Those of the configuration options marked as (old) will be ignored as
 soon as the corresponding new one is given.
@@ -96,45 +104,45 @@ Hardcode paths:
 /usr/lib/Mail.help
 
 Configurable paths:
-${chandir}/badusers
-${chandir}/bboards
-${chandir}/blockaddr
-${chandir}/delay
-${chandir}/ean
-${chandir}/list
-${chandir}/local
-${chandir}/niftp
-${chandir}/phone
-${chandir}/pobox
-${chandir}/pop
-${chandir}/sendprog
-${chandir}/recvprog
-${chandir}/smphone
-${chandir}/smtp
-${chandir}/smtpsrvr
-${chandir}/smtpd
-${chandir}/uucp
-${mmdflibdir}/deliver
-${mmdflibdir}/ean2mmdf
-${mmdflibdir}/ni_niftp
-${mmdflibdir}/slave
-${mmdflibdir}/smslave
-${mmdflibdir}/submit
-${mmdflibdir}/amp
-${mmdflibdir}/checkup
-${mmdflibdir}/checkque
-${mmdflibdir}/dbmbuild
-${mmdflibdir}/dbmedit
-${mmdflibdir}/dbmlist
-${mmdflibdir}/nictable
-${mmdflibdir}/checkaddr
-${mmdflibdir}/mailid
-${mmdflibdir}/cleanque
-${mmdflibdir}/fixtai
-${mmdflibdir}/rem_chans
-${mmdflibdir}/setup
-${mmdflibdir}/process-uucp
-${mmdflibdir}/tablelist
+${mchndir}/badusers
+${mchndir}/bboards
+${mchndir}/blockaddr
+${mchndir}/delay
+${mchndir}/ean
+${mchndir}/list
+${mchndir}/local
+${mchndir}/niftp
+${mchndir}/phone
+${mchndir}/pobox
+${mchndir}/pop
+${mchndir}/sendprog
+${mchndir}/recvprog
+${mchndir}/smphone
+${mchndir}/smtp
+${mchndir}/smtpsrvr
+${mchndir}/smtpd
+${mchndir}/uucp
+${mcmddir}/deliver
+${mcmddir}/ean2mmdf
+${mcmddir}/ni_niftp
+${mcmddir}/slave
+${mcmddir}/smslave
+${mcmddir}/submit
+${mcmddir}/amp
+${mcmddir}/checkup
+${mcmddir}/checkque
+${mcmddir}/dbmbuild
+${mcmddir}/dbmedit
+${mcmddir}/dbmlist
+${mcmddir}/nictable
+${mcmddir}/checkaddr
+${mcmddir}/mailid
+${mcmddir}/cleanque
+${mcmddir}/fixtai
+${mcmddir}/rem_chans
+${mcmddir}/setup
+${mcmddir}/process-uucp
+${mcmddir}/tablelist
 ${bindir}/msg
 ${bindir}/checkmail
 ${bindir}/emactovi
@@ -144,35 +152,35 @@ ${bindir}/resend
 ${bindir}/send
 ${bindir}/snd
 ${sbindir}/sendmail
-${mmdflibdir}/malias
-${mmdflibdir}/v6mail
-${mmdflibdir}/newssend
+${mcmddir}/malias
+${mcmddir}/v6mail
+${mcmddir}/newssend
 ${rcvdir}/rcvalert
 ${rcvdir}/rcvfile
 ${rcvdir}/rcvprint
 ${rcvdir}/rcvtrip
 
 config: ${sysconfdir}/mmdftailor
-dir   : ${mmdflogdir}
-	${mmdfphasedir}
-	${tbldir}
-	${mmdfspooldir}
+dir   : ${mlogdir}
+	${mphsdir}
+	${mtbldir}
+	${mquedir}
 	/tmp/mmdf
 	
 Compiledin pathnames of conf.c, conf_dial.c, msgtailor.c are set
 in h/pathnames.h as follows:
 
 	char *mmtailor	= "${sysconfdir}/mmdftailor"
-	char *cmddfldir	= "${mmdflibdir}"
-	char *logdfldir	= "${mmdflogdir}"
-	char *phsdfldir	= "${mmdfsphasedir}"
-	char *tbldfldir	= "${tbldir}"
-	char *tbldbm	= "${tbldir}/mmdfdbm"
-	char *quedfldir	= "${mmdfspooldir}"
-	char *chndfldir	= "${chandir}"
+	char *cmddfldir	= "${mcmddir}"
+	char *logdfldir	= "${mlogdir}"
+	char *phsdfldir	= "${msphsdir}"
+	char *tbldfldir	= "${mtbldir}"
+	char *tbldbm	= "${mtbldir}/mmdfdbm"
+	char *quedfldir	= "${mquedir}"
+	char *chndfldir	= "${mchndir}"
 	char *lckdfldir	= "/tmp/mmdf"
 	char *authfile	= "${sysconfdir}/warning"
-	char *d_calllog	= "${mmdfdiallog}"
+	char *d_calllog	= "${d_calllog}"
 	char *resendprog= "|${bindir}/resend"
 	char *sndname	= "${bindir}/send"
 

@@ -27,7 +27,7 @@ char    key[80];
 char	*gc;
 
 char    filename[64];
-char	outfile[256];
+char	outfile[OUTFILESIZE];
 char	defmbox[60];
 char	oldfile[60];
 char	*homedir;		/* Full path to home directory */

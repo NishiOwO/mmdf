@@ -168,7 +168,7 @@ char	*def;		/* optional default */
 
 	strcpy( oldfile, f);
 
-	if( fgets( tmpbuf, sizeof(tmpbuf), stdin) == NULL || strlen(tmpbuf) <= 1 )  {
+	if( xfgets( tmpbuf, sizeof(tmpbuf), stdin) == NULL || strlen(tmpbuf) <= 1 )  {
 		if( def == (char *)0)
 			error( "no filename specified\r\n");
 		else  {
@@ -736,7 +736,7 @@ fwditer()
 
 	doiter( prhdr);
 
-	strcpy( outfile, "/tmp/send.XXXXXX");
+	strncpy( outfile, "/tmp/send.XXXXXX", OUTFILESIZE);
 	mktemp( outfile);
 
 	autoconfirm = TRUE;

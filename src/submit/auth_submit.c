@@ -42,7 +42,6 @@ char *user_string = "username";
 
 extern long atol();
 extern char *dupfpath();
-extern char *strdup();
 extern char *multcat();
 
 char *get_route();

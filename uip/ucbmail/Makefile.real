@@ -8,8 +8,8 @@
 # Berkeley Mail
 #
 
-DESTDIR=
-VPRINT=	/usr/ucb/print
+DESTDIR	= ${install_prefix}
+VPRINT	= ${VPRINT}
 LIBES=
 AS=	-as
 RM=	-rm

@@ -50,7 +50,8 @@ dnl MMDF_PATCH_LEVEL=9
 dnl VERSION_DATE="September 1998"
 MMDFLOGIN=mmdf
 ROOTLOGIN=root
-PGMPROT=755
+dnl PGMPROT=755
+PGMPROT=511
 MMDFLIBS="\${top_srcdir}/lib/libmmdf.a"
 MMDF_TARGET=no
 rcvdir="${libexecdir}"
@@ -63,8 +64,17 @@ AC_GET_UNAME
 MMDF_CONFIG=$UNAME_NODE.config
 AC_LOAD_LOCAL_CONFIG($MMDF_CONFIG)
 AC_CANONICAL_HOST
+
+dnl we do not want to have "-g -O" for CFLAGS  
+if test "${CFLAGS+set}" != set; then
+  CFLAGS="-O"
+  ac_cflags_set=no
+fi
 AC_PROG_CC
 AC_PROG_CPP
+AC_AIX
+AC_ISC_POSIX
+AC_MINIX	
 dnl AC_PROG_CXX
 
 dnl check if conf/$target exists
@@ -89,6 +99,29 @@ else
       AC_MSG_ERROR(Cannot continue with configure until target exits)
     fi
 fi
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl compiler stuff
+dnl is needed to check for libs and headers, later on
+dnl
+# check whether the compiler accepts -pipe
+AC_DEFUN(AC_CHECK_PIPE,[
+AC_MSG_CHECKING(whether compiler accepts -pipe)
+temp_cflags=${CFLAGS}
+CFLAGS="${CFLAGS} -pipe"
+
+  AC_CACHE_VAL(ac_cv_cc_have_pipe,[
+    AC_TRY_COMPILE(,,ac_cv_cc_have_pipe=yes,ac_cv_cc_have_pipe=no)])
+AC_MSG_RESULT(${ac_cv_cc_have_pipe})
+CFLAGS=${temp_cflags}
+if test "${ac_cv_cc_have_pipe}" != yes; then
+  PIPE=
+else
+  PIPE="-pipe"
+fi
+])
+AC_PROVIDE(AC_CHECK_PIPE)
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl AC_TRY_MY_COMPILE(INCLUDES, FUNCTION-BODY,
@@ -193,7 +226,7 @@ AC_ARG_ENABLE(nis, \
   [     nis                nis support for tables]                   \
 (disabled))
 AC_ARG_ENABLE(nn, \
-  [     nn                 table mailids and users will be                \
+  [     nn                 table mailids and users will be 
                                  configurable in mmdftailor]               \
 (disabled))
 AC_ARG_ENABLE(nosrcroute, \
@@ -271,6 +304,13 @@ AC_ARG_ENABLE(unsupported, \
 AC_ARG_ENABLE(gcc, \
   [     gcc                use gcc as compiler]                      \
  (enabled))
+AC_ARG_ENABLE(fhs, \
+  [     fhs                set pathnames according to fhs-2.0 
+                           (disable it for old pathnames)]          \
+ (enabled))
+AC_ARG_ENABLE(elf, \
+  [     elf                produce elf code, (only on sco)]          \
+ (enabled))
 
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -280,14 +320,56 @@ if test "$enable_gcc" = "no"; then
   GCC=
   CC=cc
   echo "using ${CC-cc}"
+  PIPE=""
 else
   AC_PATH_PROG(PATH_GCC, gcc)
+  AC_CHECK_PIPE
 fi
-  echo $CFLAGS
+  AC_SUBST(PIPE)
+
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+echo "OS=$host_os"
+case $host_os in
+   sco*)
+      if test "$enable_elf" != no; then
+         # check whether the compiler accepts -b elf or -m elf
+         AC_MSG_CHECKING(whether compiler compiler flags for elf)
+         temp_cflags=${CFLAGS}
+       CFLAGS="${CFLAGS} -m elf"
+         AC_CACHE_VAL(ac_cv_elf_flag,
+       AC_TRY_COMPILE(,,ac_cv_elf_flag="-m elf",
+       [AC_TRY_COMPILE(,,ac_cv_elf_flag="-b elf",ac_cv_elf_flag="")])
+       )
+       CFLAGS=${temp_cflags}
+       if test "${ac_cv_elf_flag}" != ""; then
+          AC_MSG_RESULT(${ac_cv_elf_flag})
+          ELF="${ac_cv_elf_flag=}"
+       else
+          AC_MSG_RESULT(not set)
+          ELF=
+       fi
+       AC_SUBST(ELF)
+      fi
+   ;;
+   hpux9.*)
+      MYDEFS="${MYDEFS} -D_BSD"
+      AC_DEFINE_UNQUOTED(HPUX, 1)
+   ;;
+   hpux10.*)
+      MYDEFS="${MYDEFS} -D_BSD"
+      AC_DEFINE_UNQUOTED(HPUX, 1)
+   ;;
+   linux*)
+      AC_DEFINE_UNQUOTED(LINUX,1)
+   ;;
+esac
+AC_SUBST(MYDEFS)
+echo "CFLAGS="$CFLAGS
+
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl checking for architectures
-AC_AIX
 AC_MSG_CHECKING(whether _AIX is defined)
 AC_CACHE_VAL(ac_cv_is_aix,
 AC_EGREP_CPP(yes,
@@ -301,12 +383,13 @@ else
   AC_MSG_RESULT(no)
 fi
 
-dnl AC_DYNIX_SEQ	AC_FUNC_GETMNTENT
-dnl AC_IRIX_SUN	AC_FUNC_GETMNTENT, AC_CHECK_LIB(sun, getpwnam)
-AC_ISC_POSIX
-AC_MINIX	
-dnl AC_SCO_INTL	AC_FUNC_STRFTIME
-dnl AC_XENIX_DIR	AC_HEADER_DIRENT
+dnl AC_DYNIX_SEQ
+dnl AC_IRIX_SUN, AC_CHECK_LIB(sun, getpwnam)
+dnl AC_XENIX_DIR
+
+AC_FUNC_GETMNTENT
+AC_FUNC_STRFTIME
+AC_HEADER_DIRENT
 
 AC_FIND_DEPEND
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -321,7 +404,7 @@ AC_PROG_MAKE_SET
 AC_PATH_PROG(AR, ar)
 AC_PATH_PROG(XSTR, xstr)
 AC_PATH_PROG(CTAGS, ctags)
-AC_PATH_PROG(DIAL, dial)
+AC_PATH_PROG(D_DIALPROG, dial)
 AC_CHECK_PROG(ASSIGN, assign, assign)
 if test "$ac_cv_prog_ASSIGN" != ""; then
     AC_DEFINE(HAVE_ASSIGN)
@@ -364,9 +447,6 @@ else
   fi
 fi
 
-echo $PATH_GCC
-echo "==>${CFLAGS}"
-echo "==>${CPPFLAGS}"
 if test "$includedir" = '${prefix}/include'; then
   if test "x$prefix" != xNONE && test "x$prefix" != "x/usr"; then
     CPPFLAGS="-I${prefix}/include ${CPPFLAGS}"
@@ -381,14 +461,12 @@ else
   CPPFLAGS="-I${includedir} ${CPPFLAGS}"
   CFLAGS="-I${includedir} ${CFLAGS}"
 fi
-echo "==>${CFLAGS}"
-echo "==>${CPPFLAGS}"
+echo "===========>$oldincludedir"
 
 dnl pass default prefix on to subdirs, if not explicitely given as an option
 if test "x$prefix" = xNONE; then
   ac_configure_args="$ac_configure_args --prefix=$ac_default_prefix"
 fi
-echo "===========>$oldincludedir"
 
 dnl we prefer using gcc for compiling C++ files, provided the user did
 dnl not overwrite it explicitely
@@ -402,11 +480,25 @@ dnl
 dnl Checks for libraries.
 dnl AC_CHECK_LIB(BSD, atof)
 dnl AC_CHECK_LIB(bsd, atof)
+AC_CHECK_LIB(termcap, tgetent)
 AC_CHECK_LIB(socket, socket)
 AC_CHECK_LIB(nsl, inet_ntoa)
 
 if test "$ac_cv_enable_code_dbm" != "no"; then
-   AC_CHECK_FUNC(dbminit,ac_cv_lib_dbm="yes",[
+   AC_CHECK_FUNC(dbminit,[
+      AC_CHECK_HEADER(ndbm.h,ac_cv_lib_dbm="yes",[
+      AC_MSG_WARN(Grrr. you have libndbm. But no ndbm.h file. courious)
+      AC_CHECK_LIB(dbm, dbminit)
+      if test "$ac_cv_lib_dbm_dbminit" = "no"; then
+	 AC_CHECK_LIB(gdbm, gdbm_open)
+         if test "$ac_cv_lib_gdbm_gdbm_open" = "no"; then
+            AC_CHECK_LIB(ndbm, dbm_open)
+            if test "$ac_cv_lib_ndbm_gdbm_open" = "no"; then
+               AC_CHECK_LIB(dbm, dbminit)
+            fi
+         fi
+      fi
+      ])],[
       AC_CHECK_LIB(dbm, dbminit)
       if test "$ac_cv_lib_dbm_dbminit" = "no"; then
 	 AC_CHECK_LIB(gdbm, gdbm_open)
@@ -421,6 +513,11 @@ if test "$ac_cv_enable_code_dbm" != "no"; then
          if test "$ac_cv_lib_dbm_gdbm_open" = "yes"; then
 	   AC_DEFINE(HAVE_LIBGDBM)
 	   AC_MSG_WARN(*** your libdbm is linked to libgdbm!)
+         else
+	   AC_MSG_RESULT(libdbm is not linked to libgdbm. Good!)
+dnl	   AC_CHECK_LIB(gdbm, gdbm_open)
+dnl	   AC_DEFINE(HAVE_LIBGDBM)
+dnl	   AC_MSG_WARN(*** your libndbm is linked to 2 libgdbm!)
          fi
       fi
       if test "$ac_cv_lib_gdbm_gdbm_open" = "yes" || 
@@ -506,18 +603,21 @@ AC_CHECK_HEADER(sgtty.h,ac_cv_header_sgtty_h="yes")
 AC_CHECK_HEADERS(string.h strings.h syslog.h)
 AC_CHECK_HEADERS(sys/file.h sys/ioctl.h sys/socket.h sys/time.h sys/termio.h)
 AC_CHECK_HEADERS(sys/termios.h sys/unistd.h)
-AC_CHECK_HEADERS(unistd.h utmp.h varargs.h)
+AC_CHECK_HEADERS(unistd.h utmp.h utmpx.h varargs.h)
 if test "$ac_cv_header_varargs_h" != "yes"; then
     AC_MSG_WARN(you don't have varargs.h)
     AC_MSG_WARN(          lib/util/multcat.c will not compile)
     AC_MSG_WARN(          lib/util/multcpy.c will not compile)
 fi
 
-AC_CHECK_FUNCS(bcopy dup2 fcntl ftime getcwd getdtablesize gethostname)
-AC_CHECK_FUNCS(gettimeofday getwd index initgroups killpg memcpy)
-AC_CHECK_FUNCS(mkdir res_mkquery)
-AC_CHECK_FUNCS(setpgrp setreuid sigchild sigset sigsetmask socket)
-AC_CHECK_FUNCS(strchr strdup truncate)
+
+AC_CHECK_FUNCS(bcopy dbmcachedump dup2 fcntl ftime getcwd)
+AC_CHECK_FUNCS(getdtablesize gethostname)
+AC_CHECK_FUNCS(gettimeofday getwd)
+AC_CHECK_FUNCS(index initgroups killpg memcpy)
+AC_CHECK_FUNCS(mkdir mkstemp res_mkquery)
+AC_CHECK_FUNCS(setpgrp setpgid setreuid sigchild sigset sigsetmask snprintf)
+AC_CHECK_FUNCS(socket strchr strdup strncat strncpy truncate tzset)
 
 AC_FUNC_UTIME_NULL
 AC_FUNC_VFORK
@@ -539,6 +639,10 @@ if test "$enable_nameserver" != no; then
   else
     AC_CHECK_LIB(resolv, dn_expand)
   fi
+  AC_CHECK_FUNC(_getshort,AC_DEFINE_UNQUOTED(HAVE__GETSHORT),[
+  AC_CHECK_FUNC(getshort,AC_DEFINE_UNQUOTED(HAVE_GETSHORT),
+  AC_MSG_WARN(Cannot find _getshort() nor getshort())
+  )])
 else
     AC_MSG_WARN(no)
 fi
@@ -612,7 +716,10 @@ AC_CACHE_VAL(ac_cv_have_STATE, AC_TRY_RUN(
  main() { struct __res_state res; exit(0); }],
    ac_cv_have_STATE=yes,
    ac_cv_have_STATE=no,
-   ac_cv_have_STATE=no))
+   ac_cv_have_STATE=no)
+  if test "$ac_cv_have_STATE" != "yes"; then
+    AC_EGREP_HEADER(__res_state, resolv.h, ac_cv_have_STATE=yes,)
+  fi)
 if test "$ac_cv_have_STATE" = "yes"; then
   AC_MSG_RESULT(yes)
   AC_DEFINE(HAVE_RES_STATE)
@@ -659,7 +766,10 @@ if test "$ac_cv_func_mkdir" = "yes"; then
   else
     AC_MSG_RESULT(no)
   fi
-  rmdir dummy
+  if [ -x dummy ]
+  then
+    rmdir dummy
+  fi
 fi
 
 dnl check whether fcntl(2, F_DUPFD, fd); works
@@ -843,10 +953,16 @@ else
   AC_MSG_RESULT(no)
 fi
 
-echo
-if test "$host_os" = "linux"; then
-  AC_DEFINE_UNQUOTED(LINUX,1)
+if test "$ac_cv_enable_ucbmail" = "yes" -o \
+	"$enable_ucbmail" = "yes"; then
+  if test "$XSTR" = ""; then
+    AC_MSG_WARN(Disable ucbMail. xstr not found. Cannot compile ucbMail)
+    enable_ucbmail="no"
+    ac_cv_enable_ucbmail="no"
+  fi
 fi
+
+echo
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 AC_SET_DEFINE(DEBUG, $mmdfdebug)
@@ -872,7 +988,7 @@ else
    CH_TB="ch_tbseq"
 fi
 if test "$enable_8bit" = "yes"; then
-   AC_DEFINE(EIGHT_BIT_CLEAN)
+   AC_DEFINE(HAVE_8BIT)
 fi
 dnl if test "$enable_nodomlit" = "yes"; then
 dnl    ac_cv_enable_nodomlit=$enable_nodomlit
@@ -963,58 +1079,15 @@ AC_ENABLE_DEFAULT(snd,         yes, UIPSUBDIRS)
 AC_ENABLE_DEFAULT(ucbmail,     no,  UIPSUBDIRS)
 AC_ENABLE_DEFAULT(unsupported, no,  UIPSUBDIRS)
 
-dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
-CFLAGS="-I\${top_srcdir}/h $CFLAGS"
-if test "$ac_cv_prog_gcc" = "yes"; then
-  CFLAGS="$CFLAGS -pipe"
-fi
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
-if test "x$prefix" = "xNONE"; then
-   prefix=$ac_default_prefix
-fi
-dnl mmdfprefix="\${prefix}/mmdf"
-mmdflibdir="\${mmdfprefix}/lib"
-chandir="\${mmdfprefix}/chans"
-tbldir="\${mmdfprefix}/table"
-if test "x$exec_prefix" = "xNONE"; then
-   exec_prefix="\${prefix}/local"
-fi
-if test "$bindir" = "\${exec_prefix}/bin"; then
-   bindir="\${exec_prefix}/bin"
-fi
-if test "$sbindir" = "\${exec_prefix}/sbin"; then
-   sbindir="\${exec_prefix}/sbin"
-fi
-if test "$libexecdir" = "\${exec_prefix}/libexec"; then
-   libexecdir="\${exec_prefix}/lib/mh"
-fi
-if test "$datadir" = "\${prefix}/share"; then
-   datadir="\${mmdfprefix}/table"
-fi
-if test "$sharedstatedir" != "\${prefix}/com"; then
-   dnl sharedstatedir="\${prefix}/spool/mmdf/home"
-   echo "used old syntax --sharedstatedir="
-   if test "$used_mmdfspooldir" = 0; then
-      mmdfspooldir=$sharedstatedir
+CFLAGS="-I\${top_srcdir}/h $CFLAGS"
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+if test "$enable_fhs" != no; then
+  AC_SET_FHS_PATHNAME
    else
-      AC_MSG_WARN("Ignoring option 'sharedstatedir='")
-   fi
-fi
-if test "$localstatedir" != "\${prefix}/var"; then
-   dnl localstatedir="\${prefix}/spool/mmdf/log"
-   echo "used old syntax --localstatedir="
-   if test "$used_mmdflogdir" = 0 && test "$used_mmdfphasedir" = 0 && \
-	test "$used_mmdfdiallog" = 0 ; then
-      mmdflogdir=$localstatedir
-      mmdfphasedir=$localstatedir/phase
-      mmdfdiallog=$localstatedir/dial_log
-   else
-      AC_MSG_WARN("Ignoring option 'localstatedir'")
-   fi
-fi
-if test "$sysconfdir" = "\${prefix}/etc"; then
-   sysconfdir="\${mmdfprefix}"
+  AC_SET_OLD_PATHNAME
 fi
 
 AC_SUBST(SUBDIRS)
@@ -1037,11 +1110,30 @@ AC_SUBST(UNAME_RELEASE)
 AC_SUBST(UNAME_SYSTEM)
 AC_SUBST(UNAME_VERSION)
 AC_SUBST(UNAME_NODE)
-AC_SUBST(mmdflibdir)
-AC_SUBST(chandir)
-AC_SUBST(tbldir)
 AC_SUBST(rcvdir)
-dnl AC_SUBST(mmdf_prefix)
+
+AC_SUBST(mmtailor)
+AC_SUBST(tbldbm)
+AC_SUBST(lckdfldir)
+AC_SUBST(authfile)
+AC_SUBST(uucplock)
+AC_SUBST(resendprog)
+AC_SUBST(sendprog)
+dnl AC_C_SUBST(mcmddir)
+dnl AC_C_SUBST(mchndir)
+dnl AC_C_SUBST(mlogdir)
+dnl AC_C_SUBST(mquedir)
+dnl AC_C_SUBST(mphsdir)
+dnl AC_C_SUBST(mtbldir)
+dnl AC_C_SUBST(tbldbm)
+dnl AC_C_SUBST(lckdfldir)
+dnl AC_C_SUBST(mmtailor)
+dnl AC_C_SUBST(authfile)
+dnl AC_C_SUBST(d_calllog)
+dnl AC_C_SUBST(D_DIALPROG)
+dnl AC_C_SUBST(uucplock)
+dnl AC_C_SUBST(resendprog)
+dnl AC_C_SUBST(sendprog)
 
 echo "host  ="$host
 echo "cpu   ="$host_cpu
@@ -1049,10 +1141,18 @@ echo "vendor="$host_vendor
 echo "os    ="$host_os
 echo "target="$target
 
-
 cp confdefs.h Xconfdefs.h
+dnl OUTPUT_C_FILES="conf/sample/chan.c"
+dnl OUTPUT_C_FILES=$OUTPUT_C_FILES" conf/sample/conf.c"
+dnl OUTPUT_C_FILES=$OUTPUT_C_FILES" conf/sample/conf.h"
+dnl OUTPUT_C_FILES=$OUTPUT_C_FILES" conf/sample/conf_dial.c"
+dnl OUTPUT_C_FILES=$OUTPUT_C_FILES" conf/sample/d_lock.h"
+dnl OUTPUT_C_FILES=$OUTPUT_C_FILES" conf/sample/msgtailor.c"
+dnl OUTPUT_C_FILES=$OUTPUT_C_FILES" conf/sample/s_tailor.c"
+dnl OUTPUT_C_FILES=$OUTPUT_C_FILES" conf/sample/s_tailor.h"
 OUTPUT_FILES=$OUTPUT_FILES" "$OUTPUT_C_FILES
 AC_OUTPUT(${OUTPUT_FILES})
+
 if test "$MMDF_TARGET" = "yes"; then
    cd conf
    echo running ./sitesetup $target
@@ -1072,7 +1172,7 @@ MMDF version                   : $MMDF_MAJOR_VERSION.$MMDF_MINOR_VERSION
    Patchlevel                  : $MMDF_PATCH_LEVEL
    Date                        : $VERSION_DATE
 compiler                       : ${CC}
-compiler flags                 : ${CFLAGS}
+compiler flags                 : ${CFLAGS} ${PIPE}
 linker flags                   : ${LDFLAGS}
 source code location           : ${srcdir}
 
@@ -1083,17 +1183,26 @@ varprefix                      = $varprefix
 bindir                         = $bindir
 sbindir                        = $sbindir
 libexecdir                     = $libexecdir
+sysconfdir                     = $sysconfdir
 
 mmdfprefix                     = $mmdfprefix
-mmdflibdir                     = $mmdflibdir
-chandir                        = $chandir
-tbldir                         = $tbldir
+mcmddir                        = $mcmddir
+mchndir                        = $mchndir
+mtbldir                        = $mtbldir
 datadir                        = $datadir
 configdir                      = $sysconfdir
+tbldbm                         = $tbldbm
+authfile                       = $authfile
 
-mmdfspooldir                   = $mmdfspooldir
-mmdfphosedir                   = $mmdfphasedir
-mmdflogdir                     = $mmdflogdir
-mmdfdiallog                    = $mmdfdiallog"
+mquedir                        = $mquedir
+mphsdir                        = $mphsdir
+mlogdir                        = $mlogdir
+uucplock                       = $uucplock
+lckdfldir                      = $lckdfldir
+d_calllog                      = $d_calllog
+
+resendprog                     = $resendprog
+sendprog                       = $sendprog"
+
 dnl echo "sharedstatedir= $sharedstatedir"
 dnl echo "localstatedir = $localstatedir"

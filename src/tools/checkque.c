@@ -50,6 +50,9 @@
 #include "mmdf.h"
 #include <sys/stat.h>
 #include <utmp.h>
+#ifdef HAVE_UTMPX_H
+#  include <utmpx.h>
+#endif /* HAVE_UTMPX_H */
 #include "ch.h"
 #include "msg.h"
 #include "adr_queue.h"
@@ -90,7 +93,6 @@ extern	char	*quedfldir,	/* home directory for mmdf		*/
 		*mquedir,	/* subordinate message directory	*/
 		*squepref,	/* subordinate queue prefix		*/
 		*aquedir;	/* subordinate address directory	*/
-extern	char	*strdup();
 
 extern	Chan	**ch_tbsrch;	/* full list of channels		*/
 

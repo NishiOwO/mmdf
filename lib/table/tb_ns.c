@@ -32,9 +32,9 @@ LOCFUN char *ns_skiphdr();
 
 /* T_UNSPEC was defined only in more recent versions of BIND */
 
-#ifdef T_UNSPEC
+#ifdef HAVE__GETSHORT
 #define	getshort _getshort
-#endif T_UNSPEC
+#endif /* HAVE__GETSHORT */
 
 /*
  * there turn out to be some servers that return FORMERR to MX queries!?
@@ -248,10 +248,20 @@ int namelen;
 
 
 #ifdef ROBUST
-    n = res_mkquery(QUERY, key, C_IN, T_CNAME, (char *)0, 0, (char *)0,
+    n = res_mkquery(QUERY, key, C_IN, T_CNAME, (char *)0, 0,
+#ifdef LINUX
+	(struct rrec *)0,
+#else
+	(char *)0,
+#endif
 	(char *)&qbuf, sizeof(qbuf));
 #else
-    n = res_mkquery(QUERY, key, C_IN, T_MX, (char *)0, 0, (char *)0,
+    n = res_mkquery(QUERY, key, C_IN, T_MX, (char *)0, 0,
+#ifdef LINUX
+	(struct rrec *)0,
+#else
+	(char *)0,
+#endif
 	(char *)&qbuf, sizeof(qbuf));
 #endif
 
@@ -382,7 +392,12 @@ restart:
     _res.options &= ~((int) RES_DEFNAMES);
 #endif
 
-    n = res_mkquery(QUERY, key, C_IN, T_MX, (char *)0, 0, (char *)0,
+    n = res_mkquery(QUERY, key, C_IN, T_MX, (char *)0, 0,
+#ifdef LINUX
+	(struct rrec *)0,
+#else
+	(char *)0,
+#endif
 	(char *)&qbuf, sizeof(qbuf));
 
     /* what else can we do? */
@@ -681,7 +696,7 @@ register char *eom;
  * takes maximum number of seconds you are willing to wait
  */
 
-ns_settimeo(ns_time)
+int ns_settimeo(ns_time)
 int     ns_time;
 {
     static int called = 0;
@@ -695,6 +710,12 @@ int     ns_time;
 	    res_init ();
 
     /* always start afresh */
+    if(sizeof(_res)!=sizeof(oldres)) {
+	ll_log(logptr, LLOGFAT,
+	       "ns_settimeo(): sizeof(_res)=%X != sizeof(oldres)=%X!!  Update interface.",
+	       sizeof(_res), sizeof(oldres));
+	return(1);
+    }
     if (called)
     {
 	bcopy((char *)&oldres,(char *)&_res,sizeof(oldres));
@@ -715,6 +736,7 @@ int     ns_time;
     ll_log(logptr, LLOGFTR, "ns_timeo: servers(%d), retrans(%d), retry(%d)",
 	_res.nscount, _res.retrans, _res.retry);
 #endif
+    return 0;
 }
 
 /*
@@ -870,7 +892,6 @@ int rval;
 {
     register struct ns_cache *cp;
     int i;
-    extern char *strdup();
 
     /* NOSTRICT */
     if ((cp = (struct ns_cache *)malloc(sizeof(*cp)))==0)

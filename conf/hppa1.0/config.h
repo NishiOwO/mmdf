@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.8 1998/06/01 09:42:38 krueger Exp $
+ * $Id: config.h,v 1.9 1999/08/12 13:15:32 krueger Exp $
  *
  * please set every configuration-switch here
  *
@@ -55,12 +55,6 @@
  *             and niftp will return the first 500 lines.
  */
 /* #undef CITATION=n */
-
-/*             Define  DBMCACHE  if  your  version of dbm(3)
- *             builds databases in core and then dumps  them
- *             to disk with dbmcachedump().
- */
-/* #undef DBMCACHE */
 
 /**********************************************************************/
 /*             Enable site depend code

@@ -73,6 +73,12 @@
  */
 /**/
 
+#ifdef HAVE_STRING_H
+#  include <string.h>
+#else /* HAVE_STRING_H */
+extern char *strdup();
+#endif /* HAVE_STRING_H */
+
 #define STITER     0
 #define STINIT     1
 #define STECMNT    2
@@ -105,7 +111,6 @@ LOCFUN void ap_7to8();
 
 extern LLog *logptr;
 extern AP_ptr ap_sqinsert ();
-extern char *strdup();
 #endif
 
 #if DEBUG > 1
@@ -519,8 +524,8 @@ endit:
 					routbase -> ap_chain -> ap_obvalue);
 	ap_sqinsert (r822ptr, APP_ETC, routbase -> ap_chain -> ap_chain);
 		       /* add it before local-part         */
-	ap_free (routbase);
 	ap_free (routbase -> ap_chain);
+	ap_free (routbase);
    } else {
 	ap = r822ptr;
 	while (ap -> ap_chain -> ap_obtype == APV_DOMN ||

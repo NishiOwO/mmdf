@@ -13,7 +13,6 @@
  */
 
 extern LLog *logptr;
-extern char *strdup();
 extern char *ap_p2s();
 extern AP_ptr ap_t2parts();
 

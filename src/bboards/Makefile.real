@@ -16,16 +16,16 @@ ZOTLIBS	=	getbbent.o dropsbr.o lock.o r1bindex.o strindex.o uprf.o \
 
 real-default:	bboards
 
-install:	$(CHANDIR)/$(MMPREF)bboards
+install:	$(MCHNDIR)/$(MMPREF)bboards
 
-$(CHANDIR)/$(MMPREF)bboards:	xbboards
-	-cp $(CHANDIR)/$(MMPREF)bboards zxbboards
+$(MCHNDIR)/$(MMPREF)bboards:	xbboards
+	-cp $(MCHNDIR)/$(MMPREF)bboards zxbboards
 	-chmod 0$(PGMPROT) zxbboards
 	$(INSTALL) -c -m 4$(PGMPROT) -o root xbboards $@
-#	cp xbboards $(CHANDIR)/$(MMPREF)bboards
-#	-$(CHOWN) root $(CHANDIR)/$(MMPREF)bboards
-#	-chmod 04$(PGMPROT) $(CHANDIR)/$(MMPREF)bboards
-	-@ls -ls $(CHANDIR)/$(MMPREF)bboards
+#	cp xbboards $(MCHNDIR)/$(MMPREF)bboards
+#	-$(CHOWN) root $(MCHNDIR)/$(MMPREF)bboards
+#	-chmod 04$(PGMPROT) $(MCHNDIR)/$(MMPREF)bboards
+	-@ls -ls $(MCHNDIR)/$(MMPREF)bboards
 	-@echo "BBoards installed normally"; echo ""
 
 bboards:	xbboards
