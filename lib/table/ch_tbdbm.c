@@ -226,6 +226,7 @@ char    *dmbuf;                 /* Domain route buffer */
 		(void) strcpy(official, argv[0]);
 		return(dmnptr);
 	    }
+        break;
 	}
     }
 
