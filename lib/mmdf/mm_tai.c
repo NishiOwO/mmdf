@@ -596,10 +596,10 @@ LOCVAR Cmd
 #ifdef HAVE_LDAPSUPPORT
   { "ldap",  CMDTFTLDAP,    0 },
 #endif /* HAVE_LDAPSUPPORT */
-  { "ns",    CMDTFTNS,      0 },
 #ifdef HAVE_NIS
   { "nis",   CMDTFTNIS,     0 },
 #endif /* HAVE_NIS */
+  { "ns",    CMDTFTNS,      0 },
 #ifdef HAVE_RBLSUPPORT
   { "rbl",   CMDTFTRBL,     0 },
 #endif /* HAVE_RBLSUPPORT */
