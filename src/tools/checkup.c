@@ -79,6 +79,7 @@
 #define         FINAL           0
 #define         PARTIAL         1
 
+extern int verbose_tai;
 extern char *dupfpath();
 #if !HAVE_SYS_ERRLIST_DECL
 extern int  sys_nerr;
@@ -176,7 +177,8 @@ main (argc, argv)
     strncpy(postmaster, "Postmaster", sizeof(postmaster));
     strncpy(MMDFlogin, mmdflogin, sizeof(MMDFlogin));
     strncpy(MMDFgroup, mmdfgroup, sizeof(MMDFgroup));
-
+    verbose_tai=1;
+    
     /*  check for the verbosity flag  */
     flaginit (argc, argv);
 

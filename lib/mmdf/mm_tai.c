@@ -4,6 +4,9 @@
 #include "ch.h"
 #include "ap.h"
 
+#define BACKWARD_COMPAT 1
+int verbose_tai = 0;
+
 extern int tb_noop();
 #define tb_file_init tb_noop
 #define tb_dbm_init tb_noop
@@ -653,7 +656,11 @@ int tb_tai (argc, argv)
     extern Table tb_mailids;
     extern Table tb_users;
 #endif /* HAVE_NIS */
-
+#ifdef BACKWARD_COMPAT
+    int tb_ind = 0;
+    char tb_bw_text[LINESIZE];
+#endif /* BACKWARD_COMPAT */
+    
 #ifdef DEBUG
     ll_log (logptr, LLOGFTR, "tb_tai (%s: %d)", argv[0], argc);
 #endif
@@ -683,6 +690,9 @@ int tb_tai (argc, argv)
     tbptr -> tb_type       = TBT_FILE;
 
     /* find first the type-field */
+#ifdef BACKWARD_COMPAT
+    memset(tb_bw_text, 0, sizeof(tb_bw_text));
+#endif /* BACKWARD_COMPAT */
     for (ind = 0; ind < argc; ind++)
     {
       if((cmdbsrch (argv[ind], argc - ind, cmdtbl, CMDTBENT) == CMDTTYPE) &&
@@ -693,6 +703,33 @@ int tb_tai (argc, argv)
         if(tbl_init[type].tb_init != 0)
           tbl_init[type].tb_init(tbptr);
       }
+#ifdef BACKWARD_COMPAT
+      if((cmdbsrch (argv[ind], argc - ind, cmdtbl, CMDTBENT) == CMDTFLAGS) &&
+         (ind<argc-1)) {
+    
+        switch (cmdbsrch (argv[ind+1], 0, tbflags, TBENT))
+        {
+            case CMDTFDBM:
+              tbptr -> tb_type = TBT_DBM;
+              snprintf(tb_bw_text, sizeof(tb_bw_text),
+                       "%s flags=dbm, use type=dbm", tb_bw_text);
+              break;
+
+            case CMDTFNS:
+              tbptr -> tb_type = TBT_NS;
+              snprintf(tb_bw_text, sizeof(tb_bw_text),
+                       "%s flags=ns, use type=ns", tb_bw_text);
+              break;
+#ifdef HAVE_NIS
+            case CMDTFNIS:
+              tbptr -> tb_type = TBT_NIS;
+              snprintf(tb_bw_text, sizeof(tb_bw_text),
+                       "%s flags=, use type=nis", tb_bw_text);
+              break;
+#endif /* HAVE_NIS */
+        }
+      }
+#endif /* BACKWARD_COMPAT */
     }
 
     /* parse now the other arguments */
@@ -748,19 +785,12 @@ int tb_tai (argc, argv)
               switch (cmdbsrch (argv[ind], 0, tbflags, TBENT))
               {
                   case CMDTFFILE:
-                    /*tbptr -> tb_flags |= TB_FILE;*/
-                    break;
-
                   case CMDTFDBM:
-                    if(tbptr -> tb_type == TBT_FILE)
-                      tbptr -> tb_type = TBT_DBM;
-                    /*tbptr -> tb_flags |= TB_DBM;*/
-                    break;
-
                   case CMDTFNS:
-                    if(tbptr -> tb_type == TBT_FILE)
-                      tbptr -> tb_type = TBT_NS;
-                    /*tbptr -> tb_flags |= TB_NS;*/
+#ifdef HAVE_NIS
+                  case CMDTFNIS:
+#endif /* HAVE_NIS */
+                    /* these switches are obsolete */
                     break;
 
                   case CMDTFDOMAIN:
@@ -783,14 +813,6 @@ int tb_tai (argc, argv)
                     tbptr -> tb_flags |= TB_ROUTE;
                     break;
                 
-#ifdef HAVE_NIS
-                  case CMDTFNIS:
-                    if(tbptr -> tb_type == TBT_FILE)
-                      tbptr -> tb_type = TBT_NIS;
-		            /*tbptr -> tb_flags |= TB_NIS;*/
-		            break;
- 
-#endif /* HAVE_NIS */
                   default:
                     tai_error ("unknown table flag", argv[ind-1],
                                argc, argv);
@@ -816,6 +838,15 @@ int tb_tai (argc, argv)
 	    }
 	}
     }
+#ifdef BACKWARD_COMPAT
+    if(strlen(tb_bw_text)>0) {
+      ll_log (logptr, LLOGGEN, "Table '%s' has old syntax %s",
+                      tbptr -> tb_name, tb_bw_text);
+      if(verbose_tai)
+        printf("**   Table '%s' has old syntax: %s\n",
+                      tbptr -> tb_name, tb_bw_text);
+    }
+#endif /* BACKWARD_COMPAT */
 
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "tb_tai (ret=YES)");
