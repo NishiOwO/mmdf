@@ -47,7 +47,7 @@ char *file;
 		return(0);
 	strcpy(curlock, file);
 	strcat(curlock, maillock);
-	strncpy(locktmp, sizeof(locktmp), lockname);
+	strncpy(locktmp, lockname, sizeof(locktmp));
 	mktemp(locktmp);
 	myremove(locktmp);
 	for (;;) {

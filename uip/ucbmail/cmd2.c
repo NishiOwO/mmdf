@@ -8,9 +8,12 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.4 $
+ *  $Revision: 1.5 $
  *
  *  $Log: cmd2.c,v $
+ *  Revision 1.5  1999/10/23 15:16:36  krueger
+ *  some minor fixes
+ *
  *  Revision 1.4  1986/01/07 13:41:18  galvin
  *  Change swrite to include MMDF delimiters in messages and to
  *  output the entire message instead of skipping the first/last line.
@@ -64,7 +67,7 @@ next(msgvec)
 	register int *ip, *ip2;
 	int list[2], mdot;
 
-	if (*msgvec != NULL) {
+	if (*msgvec != (int *)0) {
 
 		/*
 		 * If some messages were supplied, find the 
@@ -82,7 +85,7 @@ next(msgvec)
 		for (ip = msgvec; *ip != NULL; ip++)
 			if (*ip > mdot)
 				break;
-		if (*ip == NULL)
+		if (*ip == (int *)0)
 			ip = msgvec;
 		ip2 = ip;
 		do {
@@ -91,9 +94,9 @@ next(msgvec)
 				dot = mp;
 				goto hitit;
 			}
-			if (*ip2 != NULL)
+			if (*ip2 != (int *)0)
 				ip2++;
-			if (*ip2 == NULL)
+			if (*ip2 == (int *)0)
 				ip2 = msgvec;
 		} while (ip2 != ip);
 		printf("No messages applicable\n");
