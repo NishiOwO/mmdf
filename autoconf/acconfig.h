@@ -15,7 +15,7 @@
 
 
 /*
- * $Id: acconfig.h,v 1.6 1999/08/13 07:36:15 krueger Exp $
+ * $Id: acconfig.h,v 1.7 1999/08/24 14:17:00 krueger Exp $
  *
  */
 
@@ -91,11 +91,17 @@
    by a signal.  */
 #undef HAVE_RESTARTABLE_SYSCALLS
 
+/* Define if your system has its own `snprintf' function.  */
+#undef HAVE_SNPRINTF
+
 /* Define if your struct stat has st_blksize.  */
 #undef HAVE_ST_BLKSIZE
 
 /* Define if your struct stat has st_blocks.  */
 #undef HAVE_ST_BLOCKS
+
+/* Define if you have the statfs or the statvfs function.  */
+#undef HAVE_STATFS
 
 /* Define if you have the strcoll function and it is properly defined.  */
 #undef HAVE_STRCOLL
@@ -105,6 +111,12 @@
 
 /* Define if you have the strftime function.  */
 #undef HAVE_STRFTIME
+
+/* Define if you have the strncat function.  */
+#undef HAVE_STRNCAT
+
+/* Define if you have the strncpy function.  */
+#undef HAVE_STRNCPY
 
 /* Define if you have <sys/wait.h> that is POSIX.1 compatible.  */
 #undef HAVE_SYS_WAIT_H
@@ -127,6 +139,9 @@
 
 /* Define if you have the vprintf function.  */
 #undef HAVE_VPRINTF
+
+/* Define if you have the vsnprintf function.  */
+#undef HAVE_VSNPRINTF
 
 /* Define if you have the wait3 system call.  */
 #undef HAVE_WAIT3

@@ -608,7 +608,8 @@ AC_CHECK_HEADERS(arpa/nameser.h lastlog.h libio.h malloc.h memory.h)
 AC_CHECK_HEADERS(netdb.h netinet/in.h resolv.h termio.h)
 AC_CHECK_HEADER(sgtty.h,ac_cv_header_sgtty_h="yes")
 AC_CHECK_HEADERS(string.h strings.h syslog.h)
-AC_CHECK_HEADERS(sys/file.h sys/ioctl.h sys/socket.h sys/time.h sys/termio.h)
+AC_CHECK_HEADERS(sys/file.h sys/ioctl.h sys/mount.h sys/socket.h sys/statfs.h)
+AC_CHECK_HEADERS(sys/statvfs.h sys/time.h sys/termio.h sys/vfs.h)
 AC_CHECK_HEADERS(sys/termios.h sys/unistd.h)
 AC_CHECK_HEADERS(unistd.h utmp.h utmpx.h varargs.h)
 if test "$ac_cv_header_varargs_h" != "yes"; then
@@ -638,6 +639,8 @@ AC_CHECK_FUNC(vsnprintf,AC_DEFINE_UNQUOTED(HAVE_VSNPRINTF,1),[
 AC_MSG_WARN(Your system does not have snprint() nor vsnprintf())
 AC_MSG_WARN(the implement snprintf() replacement uses the unsecure sprintf()!)
 ])])
+AC_CHECK_FUNC(statvfs,AC_DEFINE_UNQUOTED(HAVE_STATFS,1),
+   AC_CHECK_FUNC(statfs,AC_DEFINE_UNQUOTED(HAVE_STATFS,1),))
 
 AC_FUNC_UTIME_NULL
 AC_FUNC_VFORK
