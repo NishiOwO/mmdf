@@ -100,7 +100,7 @@ mq_creat ()                      /* initialize for new message         */
 	snprintf(template, sizeof(template), "msg.aa%05.5d",getpid());
 
 	/* append template to standard part of name */
-	strncpy (mq_munique, template, sizeof(mq_munique));
+	strcpy (mq_munique, template/*, sizeof(mq_munique)*/);
     }
 
     while (access(mq_mfname,0) == 0) {
