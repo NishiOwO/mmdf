@@ -1,10 +1,11 @@
 /* 
  *  include Config-Switches
  */
-#include "config.h"
-
 #ifndef DIDUTIL
 #define DIDUTIL
+
+#include "config.h"
+
 #include <stdio.h>                /* minus the ctype stuff */
 #include <ctype.h>
 #include <setjmp.h>
