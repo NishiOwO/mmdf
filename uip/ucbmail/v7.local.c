@@ -8,11 +8,11 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.3 $
+ *  $Revision: 1.4 $
  *
  *  $Log: v7.local.c,v $
- *  Revision 1.3  1985/11/20 14:38:17  galvin
- *  Change findmail to locate the maildrop via MMDF defaults.
+ *  Revision 1.4  1985/12/18 01:54:04  galvin
+ *  Create maildrop using MMDF default protection modes.
  *
  * Revision 1.4  85/12/18  01:54:04  galvin
  * Create maildrop using MMDF default protection modes.
