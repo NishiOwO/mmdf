@@ -74,27 +74,41 @@ char    *sender;
 	if (rp_isbad (sm_cmd (linebuf, SM_STIME)))
 	    return (RP_DHST);
 
-	switch( sm_rp.sm_rval ) {
-	    case 250:
-		break;          /* We're off and running! */
-
-	    case 500:
-	    case 501:
-	    case 550:
-	    case 551:
-	    case 552:
-	    case 553:
-	    case 571:
-		return( sm_rp.sm_rval = RP_PARM );
-
-	    case 421:
-	    case 450:
-	    case 451:
-	    case 452:
-		return( sm_rp.sm_rval = RP_AGN);
+	switch( (int)(sm_rp.sm_rval/100) ) {
+        case 2:
+          switch(sm_rp.sm_rval) {
+              case 250:
+                break;          /* We're off and running! */
+          }
+          break;
+          
+        case 4:
+          switch(sm_rp.sm_rval) {
+              case 421:
+              case 450:
+              case 451:
+              case 452:
+              default:
+                return( sm_rp.sm_rval = RP_AGN);
+          }
+          break;
+          
+        case 5:
+          switch(sm_rp.sm_rval) { 
+              case 500:
+              case 501:
+              case 550:
+              case 551:
+              case 552:
+              case 553:
+              case 571:
+              default:
+                return( sm_rp.sm_rval = RP_PARM );
+          }
+          break;
 
 	    default:
-		return( sm_rp.sm_rval = RP_BHST);
+          return( sm_rp.sm_rval = RP_BHST);
 	}
 	return( RP_OK );
 }
@@ -113,38 +127,53 @@ char    adr[];                    /* rest of address                    */
     if (rp_isbad (sm_cmd (linebuf, SM_TTIME)))
 	return (RP_DHST);
 
-    switch (sm_rp.sm_rval)
+    switch ((int)(sm_rp.sm_rval/100))
     {
-	case 250:
-	case 251:
-	    sm_rp.sm_rval = RP_AOK;
+        case 2:
+          switch(sm_rp.sm_rval) {
+              case 250:
+              case 251:
+              default:
+                sm_rp.sm_rval = RP_AOK;
+                break;
+          }
+          break;
+          
+        case 4:
+          switch(sm_rp.sm_rval) {
+              case 421:
+              case 450:
+              case 451:
+              case 452:
+              default:
+                sm_rp.sm_rval = RP_AGN;
 	    break;
+          }
+          break;
+          
+        case 5:
+          switch(sm_rp.sm_rval) {
+              case 550:
+              case 511:
+              case 551:
+              case 552:
+              case 553:
+              case 554:               /* BOGUS: sendmail is out of spec! */
+                sm_rp.sm_rval = RP_USER;
+                break;
 
-	case 421:
-	case 450:
-	case 451:
-	case 452:
-	    sm_rp.sm_rval = RP_AGN;
-	    break;
-
-	case 550:
-	case 511:
-	case 551:
-	case 552:
-	case 553:
-	case 554:               /* BOGUS: sendmail is out of spec! */
-	    sm_rp.sm_rval = RP_USER;
-	    break;
-
-	case 500:
-	case 501:
-	case 544:
-	case 571:
-	    sm_rp.sm_rval = RP_PARM;
-	    break;
-
-	default:
-	    sm_rp.sm_rval = RP_RPLY;
+              case 500:
+              case 501:
+              case 544:
+              case 571:
+              default:
+                sm_rp.sm_rval = RP_PARM;
+                break;
+          }
+          break;
+          
+        default:
+          sm_rp.sm_rval = RP_RPLY;
     }
     return (sm_rp.sm_rval);
 }
@@ -324,7 +353,7 @@ int     time;                   /* Max time for sending and getting reply */
 {
     short     retval;
 #if !HAVE_SYS_ERRLIST_DECL
-    extern  char    *sys_errlist[];
+    extern char *sys_errlist[];
 #endif /* HAVE_SYS_ERRLIST_DECL */
     extern int errno;
 
