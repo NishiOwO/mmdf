@@ -121,24 +121,26 @@ getuinfo() {
 		if (p = strchr(pw->pw_gecos, '&')) {
 			/* Deal with Berkeley folly */
 			*p = 0;
-			sprintf(from, "%s%c%s%s <%s@%s.%s>", pw->pw_gecos,
-				 lowtoup(pw->pw_name[0]),
+			snprintf(from, sizeof(from), "%s%c%s%s <%s@%s.%s>", 
+                                 pw->pw_gecos, lowtoup(pw->pw_name[0]),
 				 pw->pw_name+1, p+1, midp, LocFirst, LocLast);
 		} else
-			sprintf(from, "%s <%s@%s.%s>", pw->pw_gecos, midp, LocFirst, LocLast);
+			snprintf(from, sizeof(from), "%s <%s@%s.%s>", pw->pw_gecos, midp, LocFirst, LocLast);
 	} else
 #endif
-	sprintf(from, "%c%s@%s.%s",	/* default from text */
+	snprintf(from, sizeof(from), "%c%s@%s.%s",	/* default from text */
 		lowtoup(midp[0]), &(midp[1]), LocFirst, LocLast);
 	/* Set default values for those options that need defaults */
 
-	strcpy(editor, ((p = getenv("EDITOR")) && *p) ? p : dfleditor);
-	strcpy(veditor, ((p = getenv("VISUAL")) && *p) ? p : dflveditor);
-	strcpy(checker, dflchecker);
-	sprintf(linebuf, "%s/.sent", pw->pw_dir);
-	strcpy(copyfile, linebuf);
-	sprintf(drffile, "%s/%s", pw->pw_dir, drft_tmplt);
-	strcpy(subargs, d_subargs);
+	strncpy(editor, ((p = getenv("EDITOR")) && *p) ? p : dfleditor, 
+                sizeof(editor));
+	strncpy(veditor, ((p = getenv("VISUAL")) && *p) ? p : dflveditor,
+                sizeof(veditor));
+	strncpy(checker, dflchecker, sizeof(checker));
+	snprintf(linebuf, sizeof(linebuf), "%s/.sent", pw->pw_dir);
+	strncpy(copyfile, linebuf, sizeof(copyfile));
+	snprintf(drffile, sizeof(drffile), "%s/%s", pw->pw_dir, drft_tmplt);
+	strncpy(subargs, d_subargs, sizeof(subargs));
 	wflag = 0;
 	cflag = 0;
 	aflag = 0;
@@ -147,11 +149,11 @@ getuinfo() {
 	dflag = 0;
 	pflag = 0;
 
-	strcpy(signature, from);
+	strncpy(signature, from, sizeof(signature));
 
 	/* Get info from the ".sendrc" file */
 
-	sprintf(rcfilename, "%s/%s", pw->pw_dir, SENDRC);
+	snprintf(rcfilename, sizeof(rcfilename), "%s/%s", pw->pw_dir, SENDRC);
 	if ((fp = fopen(rcfilename, "r")) != NULL) {
 		char *cp;
 
@@ -252,19 +254,22 @@ char **pp;
 	switch (key) {
 	case COPYFILE:
 		/* Pick a file to store file copies of sent messages */
-		strcpy(copyfile, *(++pp));
+		strncpy(copyfile, *(++pp), sizeof(copyfile));
 		if (copyfile[0] != '/') {
-			strcpy(tmpline, copyfile);
-			sprintf(copyfile, "%s/%s", pw->pw_dir, tmpline);
+			strncpy(tmpline, copyfile, sizeof(tmpline));
+			snprintf(copyfile, sizeof(copyfile), "%s/%s", 
+                                 pw->pw_dir, tmpline);
 		}
 		break;
 
 	case DRAFTDIR:
 		/* pickup the draft directory */
 		if (*(++pp) != 0)
-			sprintf(drffile, "%s/%s", *pp, drft_tmplt);
+			snprintf(drffile, sizeof(drffile), "%s/%s", 
+                                 *pp, drft_tmplt);
 		else
-			sprintf(drffile, "%s/%s", pw->pw_dir, drft_tmplt);
+			snprintf(drffile, sizeof(drffile), "%s/%s", 
+                                 pw->pw_dir, drft_tmplt);
 		break;
 
 	case SIGNATURE:
@@ -272,10 +277,10 @@ char **pp;
 		if (*(++pp) == 0) {
 #ifdef PWNAME
 			/* use his login name alone */
-			sprintf(signature, "%c%s@%s",
+			snprintf(signature, sizeof(signature), "%c%s@%s",
 				lowtoup(midp[0]), &(midp[1]), locname);
 #else
-			strcpy(signature, from);	/* NO-OP ? */
+			strncpy(signature, from, sizeof(signature));/*NO-OP?*/
 #endif
 		} else {
 			linebuf[0] = '\0';
@@ -285,10 +290,11 @@ char **pp;
 				*pp++;
 			}
 			if (checksignature(linebuf) == 0) {
-				strcpy(tmpline, locname);
+				strncpy(tmpline, locname, sizeof(tmpline));
 				for(p=tmpline ; *p ; p++)
 					*p = uptolow(*p);
-				sprintf(signature, "%s <%s@%s>",
+				snprintf(signature, sizeof(signature), 
+                                        "%s <%s@%s>",
 					linebuf, midp, tmpline);
 			} else {
 				printf("Illegal signature, using default\n");
@@ -299,10 +305,10 @@ char **pp;
 	case NOSIGNATURE:
 #ifdef PWNAME
 		/* use his login name alone */
-		sprintf(signature, "%c%s@%s",
+		snprintf(signature, sizeof(signature), "%c%s@%s",
 			lowtoup(midp[0]), &(midp[1]), locname);
 #else
-		strcpy(signature, from);
+		strncpy(signature, from, sizeof(signature));
 #endif
 		break;
 
@@ -312,10 +318,11 @@ char **pp;
 
 	case ALIASES:
 		aflag = 1;
-		strcpy(aliasfilename, *(++pp));
+		strncpy(aliasfilename, *(++pp), sizeof(aliasfilename));
 		if (aliasfilename[0] != '/') {
-			strcpy(tmpline, aliasfilename);
-			sprintf(aliasfilename, "%s/%s",pw->pw_dir,tmpline);
+			strncpy(tmpline, aliasfilename, sizeof(tmpline));
+			snprintf(aliasfilename, sizeof(aliasfilename), 
+                                 "%s/%s",pw->pw_dir,tmpline);
 		}
 
 		/*
@@ -354,7 +361,7 @@ char **pp;
 		break;
 
 	case SUBARGS:
-		strcpy(subargs, d_subargs);	/* Reset to default (required) */
+		strncpy(subargs, d_subargs, sizeof(subargs));	/* Reset to default (required) */
 		while (*(++pp) != NULL)
 			strcat(subargs, *pp);
 		wflag = 1;
@@ -362,17 +369,17 @@ char **pp;
 
 	case EDITOR:
 		/* Default editor for use with the "e" command */
-		strcpy(editor, *(++pp));
+		strncpy(editor, *(++pp), sizeof(editor));
 		break;
 
 	case VEDITOR:
 		/* Default editor for use with the "v" command */
-		strcpy(veditor, *(++pp));
+		strncpy(veditor, *(++pp), sizeof(veditor));
 		break;
 
 	case CHECKER:
 		/* Default spelling checker for use with the "c" command */
-		strcpy(checker, *(++pp));
+		strncpy(checker, *(++pp), sizeof(checker));
 		break;
 
 	case DIREDIT:
@@ -539,7 +546,7 @@ char *dest, *src, thehost[];
 	int	sub_flag;
 
 	if (thehost != 0)		/* save official version of default */
-		strcpy(defhost, thehost);
+		strncpy(defhost, thehost, sizeof(defhost));
 
 	for (ptr = dest, linelen = 0; *ptr != '\0'; ptr++, linelen++)
 		if (*ptr == '\n')	/* get length of last line of header */
@@ -567,7 +574,7 @@ char *dest, *src, thehost[];
 		parsadr(addr, name, address, temphost);
 		if (address[0] == '\0') {	/* change the default host */
 			if (temphost[0] != '\0')
-				strcpy(defhost, temphost);
+				strncpy(defhost, temphost, sizeof(defhost));
 			continue;
 		}
 		if (aflag && temphost[0]==0) {
@@ -593,9 +600,9 @@ char *dest, *src, thehost[];
 				continue;
 		}
 		if (temphost[0] == '\0')
-			strcpy(hostname, defhost);
+			strncpy(hostname, defhost, sizeof(hostname));
 		else
-			strcpy(hostname, temphost);
+			strncpy(hostname, temphost, sizeof(hostname));
 
 		if (name[0] != '\0') {	/* put into canonical form	*/
 					/* name <mailbox@host>		*/
@@ -611,7 +618,8 @@ char *dest, *src, thehost[];
 					continue;
 
 				case '\0':	/* nope			*/
-					sprintf(addr, "%s <%s@%s>",
+					snprintf(addr, sizeof(addr), 
+                                                "%s <%s@%s>",
 						name, address, hostname);
 					goto doaddr;
 
@@ -621,14 +629,15 @@ char *dest, *src, thehost[];
 				case ',':
 				case ';':
 				case ':':
-					sprintf(addr, "\"%s\" <%s@%s>",
+					snprintf(addr, sizeof(addr), 
+                                                "\"%s\" <%s@%s>",
 						name, address, hostname);
 					goto doaddr;
 				}
 			}
 		}
 		else {
-			sprintf(addr, "%s@%s", address, hostname);
+			snprintf(addr, sizeof(addr), "%s@%s", address, hostname);
 		}
 
 doaddr:
@@ -734,18 +743,18 @@ char *buf, *pos;
 		sd++;
 		*sd = '\0';
 		ed++;
-		sprintf(tmpbuffer, "%s%s", buf, ed);
+		snprintf(tmpbuffer, sizeof(tmpbuffer), "%s%s", buf, ed);
 	}
 
 	else
 		if (sd <= buf) {
 			ed++;
-			strcpy(tmpbuffer, ed);
+			strncpy(tmpbuffer, ed, sizeof(tmpbuffer));
 		}
 		else
 			if (*ed == '\0') {
 				*sd = '\0';
-				strcpy(tmpbuffer, buf);
+				strncpy(tmpbuffer, buf, sizeof(tmpbuffer));
 			}
 	strcpy(buf, tmpbuffer);
 }
@@ -851,7 +860,7 @@ char	*data;
 		}
 	}
 	nhp = (struct header *)malloc(sizeof(*nhp));
-	sprintf(buf, "%s:  ", name);
+	snprintf(buf, sizeof(buf), "%s:  ", name);
 	if (nhp == NULL || (nhp->hname = strdup(buf)) == NULL) {
 		printf("No memory for header '%s'\n", buf);
 		if (nhp)

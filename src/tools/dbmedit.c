@@ -182,7 +182,7 @@ register char   *str;
 	static  char    ti[512];
 
 	ndbents = 0;
-	str = strcpy(ti, str);
+	str = strncpy(ti, str, sizeof(ti));
 	for(dp = dbs ; dp < &dbs[sizeof(dbs)/sizeof(dbs[0])]; dp++){
 		if(*str == 0)
 			break;

@@ -71,17 +71,17 @@ char    info[],			  /* general info                       */
     switch (info[0])
     { 
 	case (ADR_TTY):
-	    sprintf (initbuf, "SEND FROM:<%s>", retadr);
+	    snprintf (initbuf, sizeof(initbuf), "SEND FROM:<%s>", retadr);
 	    break;
 	case (ADR_BOTH):
-	    sprintf (initbuf, "SAML FROM:<%s>", retadr);
+	    snprintf (initbuf, sizeof(initbuf), "SAML FROM:<%s>", retadr);
 	    break;
 	case (ADR_TorM):
-	    sprintf (initbuf, "SOML FROM:<%s>", retadr);
+	    snprintf (initbuf, sizeof(initbuf), "SOML FROM:<%s>", retadr);
 	    break;
 	case (ADR_MAIL):
 	default:
-	    sprintf (initbuf, "MAIL FROM:<%s>", retadr);
+	    snprintf (initbuf, sizeof(initbuf), "MAIL FROM:<%s>", retadr);
 	    break;
     }    
     retval = ps_cmd (initbuf);  /* ignore return */
@@ -105,7 +105,7 @@ struct rp_bufstruct *thereply;
 
     ph_nadrs++;
 
-    sprintf (linebuf, "RCPT TO:<%s>", adr);
+    snprintf (linebuf, sizeof(linebuf), "RCPT TO:<%s>", adr);
     if (rp_isbad (ps_cmd (linebuf)))
 	return (RP_DHST);
 
@@ -142,7 +142,7 @@ struct rp_bufstruct *thereply;
     if (ps_rp.sm_rgot) 
 	strncpy (thereply->rp_line, ps_rp.sm_rstr, ps_rp.sm_rlen+1);
     else
-	strcpy (thereply->rp_line, "Unknown Problem");
+	strncpy (thereply->rp_line, "Unknown Problem", sizeof(thereply->rp_line));
     
     thereply->rp_val = ps_rp.sm_rval;
     return (RP_OK);
@@ -209,12 +209,12 @@ struct rp_bufstruct *thereply;
 
     if (rp_isbad (ph_wstm ((char *) 0, 0))) {
 				/* flush text buffer / send eos       */
-	strcpy (thereply->rp_line, "Error flushing text to remote host");
+	strncpy (thereply->rp_line, "Error flushing text to remote host", sizeof(thereply->rp_line));
 	return(thereply->rp_val = RP_RPLY);
     }
 
     if (rp_isbad (ps_cmd("."))) {
-	strcpy (thereply->rp_line, "Bad response to final dot");
+	strncpy (thereply->rp_line, "Bad response to final dot", sizeof(thereply->rp_line));
 	return(thereply->rp_val = RP_BHST);
     }
 
@@ -230,7 +230,7 @@ struct rp_bufstruct *thereply;
 	if (ps_rp.sm_rgot)
 		strncpy (thereply->rp_line, ps_rp.sm_rstr, ps_rp.sm_rlen+1);
 	else
-		strcpy (thereply->rp_line, "Unknown Problem");
+		strncpy (thereply->rp_line, "Unknown Problem", sizeof(thereply->rp_line));
 	break;
 
     case 421:
@@ -241,7 +241,7 @@ struct rp_bufstruct *thereply;
 	if (ps_rp.sm_rgot)
 		strncpy (thereply->rp_line, ps_rp.sm_rstr, ps_rp.sm_rlen+1);
 	else     
-		strcpy (thereply->rp_line, "Unknown Problem");
+		strncpy (thereply->rp_line, "Unknown Problem", sizeof(thereply->rp_line));
     }
 
 #ifdef DEBUG

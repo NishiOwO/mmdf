@@ -168,7 +168,7 @@ char **argv;
           in it.  In the case of GNU's uucp-1.06.1, UU_MACHINE has it. -u@q.net */
        {
            FILE *fp; char **envpp; char tmpf[15];
-           strcpy(tmpf,"/tmp/de.XXXXXX");
+           strncpy(tmpf,"/tmp/de.XXXXXX", sizeof(tmpf));
            mkstemp(tmpf);
            fp=fopen(tmpf,"a");
            for(envpp=envp;*envpp;++envpp) {
@@ -220,7 +220,7 @@ char **argv;
 	setgid(pw->pw_gid);
 	setuid(pw->pw_uid);
 
-	(void) sprintf(Mailsys, "%s <%s@%s>",
+	(void) snprintf(Mailsys, sizeof(Mailsys), "%s <%s@%s>",
 		sitesignature, mmdflogin, locfullname);
 
 	/*
@@ -266,7 +266,7 @@ char **argv;
 		fromptr = ++cp;
 		cp = strchr(cp, ' ');		/* cp at end of name */
 		*cp++ = '\0';			/* term. name, cp at date */
-		(void) strcpy(fromwhom, fromptr);
+		(void) strncpy(fromwhom, fromptr, sizeof(fromwhom));
 		while (isspace(*cp)) cp++;	/* Skip any ws */
 		/*
 		 * The date is the rest of the line ending at \0 or remote
@@ -285,12 +285,12 @@ char **argv;
 					*cp = '\0';
 					p = strrchr(fromwhom, '!');
 					if (p != NULL)
-						(void) strcpy(origsys, p+1);
+						(void) strncpy(origsys, p+1, sizeof(origsys));
 					else
-						(void) strcpy(origsys, fromwhom);
+						(void) strncpy(origsys, fromwhom, sizeof(origsys));
 					(void) strcat(rm_from, fromwhom);
 					(void) strcat(rm_from, "!");
-					(void) strcpy(fromwhom, cp+1);
+					(void) strncpy(fromwhom, cp+1, sizeof(fromwhom));
 					goto out;
 				}
 				/*
@@ -301,7 +301,7 @@ char **argv;
 				        int adduucp=0;	/* Turn local names into proper names;
 							   gets MMDF-canonicalized later -u@q.net */
 					if(!(index(cp,'.'))) adduucp=1;
-					(void) strcpy(origsys, cp);
+					(void) strncpy(origsys, cp, sizeof(origsys));
 					if(adduucp) strcat(origsys,".UUCP");
 					(void) strcat(rm_from, cp);
 					if(adduucp) strcat(rm_from,".UUCP");
@@ -316,7 +316,7 @@ char **argv;
 
 		sscanf(cp, "remote from %s", sys);
 		(void) strcat(rm_from, sys);
-		(void) strcpy(origsys, sys);	/* Save for quick ref. */
+		(void) strncpy(origsys, sys, sizeof(origsys));	/* Save for quick ref. */
 		(void) strcat(rm_from, "!");
 	}
 out:
@@ -355,11 +355,11 @@ out:
 	 */
 	if ((d = strchr(rm_from, '!')) != NULL) {
 		*d = '\0';
-		(void) strcpy(nextdoor, rm_from);
+		(void) strncpy(nextdoor, rm_from, sizeof(nextdoor));
 		*d = '!';
 	}
 	else
-		(void) strcpy(nextdoor, rm_from);
+		(void) strncpy(nextdoor, rm_from, sizeof(nextdoor));
 	
 	/*
 	 * Find the channel depending in the nextdoor site
@@ -371,7 +371,7 @@ out:
 	 * Convert the from to Arpa format and leave it in from
 	 */
 	fromcvt(rm_from, fromwhom);
-	(void) strcpy(rm_from, fromwhom);
+	(void) strncpy(rm_from, fromwhom, sizeof(rm_from));
 
 	if (debug)
 		printf("from=%s, origpath=%s, date=%s\n",
@@ -451,7 +451,7 @@ register char *s, *name;
 		 */
 		if (*s != ' ' && *s != '\t' && *s != '\0') {
 			/* we need to add a space */
-			(void) strcpy(tmpbuf, s);
+			(void) strncpy(tmpbuf, s, sizeof(tmpbuf));
 			(void) sprintf(s, " %s", tmpbuf);
 		}
 		return(s);	/* Return a pointer to the rest of the line */
@@ -539,7 +539,7 @@ char *from, *date;
 							fprintf(rm_msgf, "%s<", rest);
 						*lkp = '<';
 						finalstr = ">\n";
-						(void) strcpy(tmpbuf, lkp);
+						(void) strncpy(tmpbuf, lkp, sizeof(tmpbuf));
 						/*
 						 * notice that we copy from the
 						 * '<' to start with a space
@@ -552,7 +552,7 @@ char *from, *date;
 					}
 					if (lkp = strchr(rest, '(')) {
 						*lkp = '\0';
-						(void) sprintf(tmpbuf, " (%s\n", lkp+1);
+						(void) snprintf(tmpbuf, sizeof(tmpbuf), " (%s\n", lkp+1);
 						finalstr = tmpbuf;
 					}
 				}
@@ -612,7 +612,7 @@ grabline()
 	if (usetmp) {
 		if (debug)
 			printf("using tmpline ");
-		(void) strcpy(linebuf, tmpline);
+		(void) strncpy(linebuf, tmpline, sizeof(linebuf));
 		usetmp = 0;
 	}
 	else
@@ -775,7 +775,7 @@ AP_ptr the_addr;
 	if (domain == (AP_ptr) 0 && strchr (s, '!') != (char *)NULL) {
 		char	adr2[LINESIZE];
 
-		(void) strcpy(adr, s);
+		(void) strncpy(adr, s, sizeof(adr));
 
 		/*
 		 * Stick the path it took to get here at the start.
@@ -789,7 +789,7 @@ AP_ptr the_addr;
 			if (strncmp(adr, s, strlen(s)) == 0) {
 				char c = *s;
 				*s = '\0';
-				(void) strcpy(adr2, origpath);
+				(void) strncpy(adr2, origpath, sizeof(adr2));
 				(void) strcat(adr2, adr);
 				*s = c;
 				break;
@@ -801,7 +801,7 @@ AP_ptr the_addr;
 		 */
 		if (*s == '\0') {
 			/* Append the adr to the path */
-			(void) strcpy(adr2, origpath);
+			(void) strncpy(adr2, origpath, sizeof(adr2));
 			(void) strcat(adr2, adr);
 		}
 
@@ -922,7 +922,7 @@ struct rp_bufstruct *rep;
 		return;
 	}
 	es = &e_stash[e_s_count++];
-	(void) strcpy(es->e_s_dest, dest);
+	(void) strncpy(es->e_s_dest, dest, sizeof(es->e_s_dest));
 	es->e_s_reason = *rep;
 }
 
@@ -1070,7 +1070,7 @@ int argc;
 		bomb("Failed to initialise submit");
 
 	/* Set nameserver timeout up high -- DSH */
-	(void) sprintf(subargs, "lvmti%s*k30*h", uchan);
+	(void) snprintf(subargs, sizeof(subargs), "lvmti%s*k30*h", uchan);
 
 	if (nextdoor[0]) {
 		q = subargs + strlen(subargs);
@@ -1183,7 +1183,7 @@ char *from, *newfrom;
 	if (debug)
 		printf("fromcvt on %s\n", from);
 
-	(void) strcpy(buf, from);
+	(void) strncpy(buf, from, sizeof(buf));
 	cp = strrchr(buf, '!');
 	if (cp == 0) {
 		(void) strcpy(newfrom, from);
@@ -1203,7 +1203,7 @@ char *from, *newfrom;
 			atoff = get_official(at+1, &saveit);
 			if (atoff) {
 				if (saveit) {
-					(void) strcpy(atstore, atoff);
+					(void) strncpy(atstore, atoff, sizeof(atstore));
 					atoff = atstore;
 				}
 			}
@@ -1255,7 +1255,7 @@ char *nxt;
 	/*
 	 * set default
 	 */
-	(void) strcpy(uchan, Uchan);
+	(void) strncpy(uchan, Uchan, sizeof(uchan));
 	
 	if ((tb_rmchans = tb_nm2struct("rmail.chans")) != (Table *)NOTOK) {
 		/*
@@ -1263,7 +1263,7 @@ char *nxt;
 		 * from list of channels
 		 */
 		if (tb_k2val(tb_rmchans, TRUE, nxt, tuchan) == OK)
-			(void) strcpy(uchan, tuchan);
+			(void) strncpy(uchan, tuchan, sizeof(uchan));
 	}
 
 	/*
@@ -1332,7 +1332,7 @@ char *n1, *n2;
 	if (o1 == NULL)
 		return(NULL);
 	if (saveit) {
-		(void) strcpy(res1, o1);
+		(void) strncpy(res1, o1, sizeof(res1));
 		o1 = res1;
 	}
 	o2 = get_official(n2, &saveit);

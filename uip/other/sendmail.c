@@ -200,7 +200,7 @@ char **argv;
 	if (verify && extract)
 		syserr("Verify mode not supported on header components");
 
-	strcpy(subflags, "ml");
+	strncpy(subflags, "ml", sizeof(subflags));
 	if (rewritefrom)
 		strcat(subflags, "t");
 	if (watch)
@@ -209,7 +209,7 @@ char **argv;
 		strcat(subflags, "v");
 	else
 		strcat(subflags, "xto,cc,bcc*");
-    sprintf( subflags, "%sF%s*", subflags, pwdptr->pw_name );
+    snprintf( subflags, sizeof(subflags), "%sF%s*", subflags, pwdptr->pw_name );
 
 	if (rp_isbad (mm_init ()) || rp_isbad (mm_sbinit ()))
 		syserr("Unable to submit mail at this time");
@@ -318,7 +318,7 @@ doheader()
 		mm_wtxt (line, strlen (line));
 	}
 	if (!gotdate) {
-		strcpy (line, "Date: ");
+		strncpy (line, "Date: ", sizeof(line));
 		cnvtdate (TIMREG, line+6);
 		strcat (line, "\n");
 		mm_wtxt (line, strlen(line));
@@ -326,7 +326,7 @@ doheader()
 	if (!gotfrom)
 		dofrom();
 	if (!gotsender) {
-		sprintf(line, "Sender: %s\n", from);
+		snprintf(line, sizeof(line), "Sender: %s\n", from);
 		mm_wtxt (line, strlen(line));
 	}
 	mm_wtxt("\n", 1);
@@ -337,9 +337,9 @@ dofrom()
 	char	line[128];
 
 	if (isstr(FullName))
-		sprintf(line, "From: %s <%s>\n", FullName, from);
+		snprintf(line, sizeof(line), "From: %s <%s>\n", FullName, from);
 	else
-		sprintf(line, "From: %s\n", from);
+		snprintf(line, sizeof(line), "From: %s\n", from);
 	mm_wtxt(line, strlen(line));
 }
 

@@ -82,14 +82,15 @@ char    *sender;
     infoboo=snprintf(linebuf, sizeof(linebuf), "MAIL FROM:<%s>", sender);
     INFOBOO;
 #if notdef
+#  ifdef HAVE_ESMTP_SIZE
     if (smtp_use_size)
     {
       infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen,
                  " SIZE=%d", message_size + message_linecount + ob->size_addition);       
       INFOBOO;
     }
-
-#ifdef SUPPORT_DSN
+#endif /* HAVE_ESMTP_SIZE */
+#ifdef HAVE_ESMTP_DSN
     if (smtp_use_dsn)
     {
       if (dsn_ret == dsn_ret_hdrs)
@@ -106,7 +107,7 @@ char    *sender;
         infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen," ENVID=%s", dsn_envid);
         INFOBOO;
     }
-#endif
+#endif /* HAVE_ESMTP_DSN */
 #endif
 
     if (rp_isbad (sm_cmd (linebuf, SM_STIME)))
@@ -166,7 +167,7 @@ char    adr[];                    /* rest of address                    */
     infoboo=snprintf(linebuf, sizeof(linebuf), "RCPT TO:<%s>", adr);
     INFOBOO;
 #if notdef
-#ifdef SUPPORT_DSN
+#ifdef HAVE_ESMTP_DSN
     if (smtp_use_dsn)
     {
       if ((addr->dsn_flags & rf_dsnflags) != 0)
@@ -193,7 +194,7 @@ char    adr[];                    /* rest of address                    */
         INFOBOO;
       }
     }
-#endif
+#endif /* HAVE_ESMTP_DSN */
 #endif
 
     if (rp_isbad (sm_cmd (linebuf, SM_TTIME)))

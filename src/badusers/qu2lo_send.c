@@ -54,7 +54,7 @@ char    ba_info[2 * LINESIZE],
       ba_sender[2 * LINESIZE],
       ba_adr[2 * LINESIZE],
       ba_adr_orig[2 * LINESIZE],
-      ba_replyto[2 * LINESIZE],
+  ba_replyto[2 * LINESIZE], /* don't forget to change strncpy() cmd in lo_wtmail.c */
       ba_size[16],
       *ba_parm;
 
@@ -110,7 +110,7 @@ qu2ba_send ()                       /* overall mngmt for batch of msgs    */
                       break;
               phs_note (chanptr, PHS_WRSTRT);
 
-              sprintf (ba_size, "%ld", qu_msglen);
+              snprintf (ba_size, sizeof(ba_size), "%ld", qu_msglen);
               result = qu2ba_each ();
               qu_rend();
               if (rp_isbad (result))
@@ -162,8 +162,8 @@ qu2ba_each ()               /* send copy of text per address      */
               replyval.rp_val = ba_verify ();
               if (rp_isbad (replyval.rp_val)) {
                 qu_wbrply (&replyval, (sizeof replyval.rp_val), ba_sender, ba_adr);
-                strcpy(ba_adr_orig, ba_adr);
-                strcpy(ba_adr, "badusers" );
+                strncpy(ba_adr_orig, ba_adr, sizeof(ba_adr_orig));
+                strncpy(ba_adr, "badusers", sizeof(ba_adr));
                 replyval.rp_val = ba_verify ();
                 if (rp_isbad (replyval.rp_val)) continue;
               }

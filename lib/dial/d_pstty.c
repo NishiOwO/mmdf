@@ -42,7 +42,7 @@ d_ttsave (fp, fname)              /* save the current setting           */
 
     d_savfd = fileno(fp);
     if (fname != 0)
-	(void) strcpy (d_savfname, fname);
+	(void) strncpy (d_savfname, fname, sizeof(d_savfname));
     else
 	d_savfname[0] = '\0';
 

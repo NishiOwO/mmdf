@@ -90,11 +90,11 @@ int phs_note (thechan, phase)               /* make a timestamp */
 		break;
     }
 
-    sprintf (stamploc, fmt, phsdfldir, thechan -> ch_name);
+    snprintf (stamploc, sizeof(stamploc), fmt, phsdfldir, thechan -> ch_name);
 
     /* We rely on umask() == 0 */
     if (close (creat (stamploc, 0666)) < 0) {
-      sprintf(stampdir, "%s/%s", phsdfldir, thechan -> ch_name);
+      snprintf(stampdir, sizeof(stampdir), "%s/%s", phsdfldir, thechan -> ch_name);
       if ( creatdir (stampdir, 0777, 0, 0) != OK ||
            (close (creat (stamploc, 0666)) < 0) ) {
 	  ll_log(logptr, LLOGPTR, "Unable to creat phase file");
@@ -198,7 +198,7 @@ time_t
 		break;
     }
 
-    sprintf (stamploc, fmt, phsdfldir, thechan -> ch_name);
+    snprintf (stamploc, sizeof(stamploc), fmt, phsdfldir, thechan -> ch_name);
 
     if (stat (stamploc, &statbuf) < 0)
 	return (0L);

@@ -73,17 +73,11 @@ int     badflg;			  /* true if at least one bad address */
 RETSIGTYPE (*orig) ();               /* to save old signal values */
 
 char   *adrptr;                   /* field currently getting addresses  */
-char    bigbuf[BBSIZE],              /* buffer for text of msg */
-	signature[S_BSIZE],            /* hold the signature */
-	host[HOSTSIZE],                 /* default hostname */
-	from[HOSTSIZE],
-	to[S_BSIZE],          /* primary recipients                 */
+char    to[S_BSIZE],          /* primary recipients                 */
 	bcc[S_BSIZE],         /* blind carbon copy addresses        */
 	cc[S_BSIZE],          /* secondary recipients               */
 	subject[S_BSIZE],
-	stdobuffer[BUFSIZ],
-	inclfile[FILNSIZE],
-	drffile[S_BSIZE];
+	stdobuffer[BUFSIZ];
 
 char    body,
 	lastsend,
@@ -96,12 +90,6 @@ char    body,
 
 /* Set the default user settable options */
 
-char editor[128];
-char veditor[128];
-char checker[128];
-char copyfile[128];
-char subargs[128];
-char aliasfilename[128];
 int wflag, cflag;
 int aflag, rflag;
 int qflag, dflag;

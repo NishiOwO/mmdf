@@ -186,7 +186,7 @@ char *subjstr;		/* where to save Subj     field */
 		 * unless the line was processed by gothdr(), and we want
 		 * to avoid processing extraneous continuations.
 		 */
-		 strcpy( curhdr, "boring-header-line:" );
+		 strncpy( curhdr, "boring-header-line:" , sizeof(curhdr));
 	}
 }
 
@@ -657,33 +657,40 @@ xomsgrc( filept )
 
 		else if( (np = strend( "twowinfil", tbuf )) != NULL ) {
 			if( *np != '\0' ) {
-				strcpy( twowinfil, np );
+				strncpy( twowinfil, np, TWOWINFILSIZE);
 			}
 		}
 
 		else if( (np = strend( "savebox", tbuf )) != NULL ) {
 			if( *np != '\0' ) {
-				strcpy( defoutfile, np );
-				strcpy( defmbox, np );
+				strncpy( defoutfile, np, DEFOUTFILESIZE);
+				strncpy( defmbox, np, DEFMBOXSIZE);
 			}
 		}
 
 		else if( (np = strend( "draftdir", tbuf )) != NULL ) {
 			if( *np != '\0' ) {
 				if( *np == '/' ) {
-					sprintf(draft_work,"%s/draft_work",np);
-					sprintf(draft_original,"%s/%s",np,draftorig);
+				     snprintf(draft_work, 
+                                        DRAFT_WORKSIZE,"%s/draft_work",np);
+				     snprintf(draft_original,
+                                        DRAFT_ORIGINALSIZE,
+                                        "%s/%s",np,draftorig);
 				}
 				else {
-					sprintf(draft_work,"%s/%s/draft_work",homedir,np);
-					sprintf(draft_original,"%s/%s/%s",homedir,np,draftorig);
+				     snprintf(draft_work,
+                                        DRAFT_WORKSIZE,
+                                        "%s/%s/draft_work",homedir,np);
+				     snprintf(draft_original,
+                                        DRAFT_ORIGINALSIZE,
+                                        "%s/%s/%s",homedir,np,draftorig);
 				}						
 			}
 		}
 
 		else if( (np = strend( "draftorig", tbuf )) != NULL ) {
 			if( *np != '\0' ) {
-				strcpy(draftorig,np);
+				strncpy(draftorig,np,DRAFTORIGSIZE);
 				np = strrchr(draft_original,'/');
 				*++np = '\0';
 				strcat(draft_original,draftorig);
@@ -693,9 +700,11 @@ xomsgrc( filept )
 		else if( (np = strend( "sendprog", tbuf )) != NULL ) {
 			if( *np != '\0' ) {
 				if( *np == '/' )
-					strcpy(sendprog,np);
+					strncpy(sendprog,np,sizeof(sendprog));
 				else
-					sprintf(sendprog,"%s/%s",homedir,np);
+					snprintf(sendprog,
+                                           sizeof(sendprog),
+                                           "%s/%s",homedir,np);
 
 				sndname = sendprog;
 			}

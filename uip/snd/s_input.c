@@ -97,7 +97,7 @@ input ()
 	bccptr = bcc;
 	otherptr = otherbuf;
 
-	strcpy(from, signature);
+	strncpy(from, signature, sizeof(from));
 	strcpy(otherptr, fromname);
 	strcat(otherptr, fromptr);
 	strcpy(fromptr, otherptr);
@@ -151,7 +151,8 @@ input ()
 		{
 			*p++ = '\0';
 			plc = strlen(newsubj);
-			sprintf( &newsubj[plc],"%s\n%s",pnt," ");
+			snprintf( &newsubj[plc], sizeof(newsubj) - plc, 
+                                 "%s\n%s",pnt," ");
 			pnt = p;
 		}
 		strcat( newsubj, pnt );
@@ -164,7 +165,7 @@ input ()
 	if (inclfile[0] != '\0')
 	{                             /* tack file to end of message        */
 		body = TRUE;
-		strcpy (bigbuf, inclfile);
+		strncpy (bigbuf, inclfile, sizeof(bigbuf));
 		infile = open (bigbuf, 0);
 		if (inclfile[0] != '\0')
 			inclfile[0] = '\0';
@@ -881,7 +882,7 @@ char *subjstr;		/* where to save Subj     field */
 		 * unless the line was processed by gothdr(), and we want
 		 * to avoid processing extraneous continuations.
 		 */
-		 strcpy( curhdr, "boring-header-line:" );
+		 strncpy( curhdr, "boring-header-line:", sizeof(curhdr) );
 	}
 	if(*bccstr != '\0')
 		bccflag = 1;
@@ -981,7 +982,7 @@ long length;
 	char tmpf[sizeof tmp_file];
 	register fd1, fd2, n;
 	char buf[BUFSIZE];
-    strcpy(tmp_file, "/tmp/truncXXXXXX");
+    strncpy(tmp_file, "/tmp/truncXXXXXX", sizeof(tmp_file));
 
 	if ((fd1 = open(path, 0)) < 0)
 		return -1;

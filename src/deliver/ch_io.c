@@ -181,7 +181,7 @@ ch_rrply (valstr, len)     /* read reply from channel            */
 #endif
 
     ch_rp.rp_val = RP_NOOP;
-    (void) strcpy (ch_rp.rp_line, "(No reason given)");
+    (void) strncpy (ch_rp.rp_line, "(No reason given)", sizeof(ch_rp.rp_line));
 
     result = ch_rrec ((char *) valstr, len);
 
@@ -410,8 +410,8 @@ Chan   *thechan;      /* channel descriptor structure       */
 	(void) close (nampipe[1]);
 	return (RP_NO);
     }
-    sprintf (arg1, "%d", nampipe[0]);
-    sprintf (arg2, "%d", respipe[1]);
+    snprintf (arg1, sizeof(arg1), "%d", nampipe[0]);
+    snprintf (arg2, sizeof(arg2), "%d", respipe[1]);
     arg3[0] = '\0';
     if( domsg == TRUE )
 	strcat( arg3, "w" );

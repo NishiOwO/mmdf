@@ -27,9 +27,9 @@ char   *argv[];
 
 /*  strcpy (host, locname); */  /* setup default host reference */
 #ifdef JNTMAIL
-	sprintf(host, "%s.%s",ap_dmflip(locdomain),locname );
+	snprintf(host, sizeof(host), "%s.%s",ap_dmflip(locdomain),locname );
 #else
-	sprintf(host, "%s.%s", locname, locdomain );
+	snprintf(host, sizeof(host), "%s.%s", locname, locdomain );
 #endif
 
 /*  if an argument is not a switch, assume that it is an address.
@@ -71,13 +71,13 @@ char   *argv[];
 		case 'f':         /* add file to end of message body    */
 	    	    if (++curarg >= argc)
 	    		break;
-		    strcpy (inclfile, argv[curarg]);
+		    strncpy (inclfile, argv[curarg], sizeof(inclfile));
 		    break;        /* file is named in next argument     */
 
 		case 'h':         /* default hostname for addresses     */
 	    	    if (++curarg >= argc)
 	    		break;
-		    strcpy (host, argv[curarg]);
+		    strncpy (host, argv[curarg], sizeof(host));
 		    break;        /* host is named in next argument     */
 
 		case 'n':	  /* send compatibility */

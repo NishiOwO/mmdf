@@ -1,4 +1,4 @@
-static char Id[] = "$Id: smtpsrvr.c,v 1.20 1999/08/16 10:04:08 krueger Exp $";
+static char Id[] = "$Id: smtpsrvr.c,v 1.21 1999/08/16 10:21:33 krueger Exp $";
 /*
  *                      S M T P S R V R . C
  *
@@ -246,14 +246,14 @@ char **argv;
 	if(*them >= '0' && *them <= '9')
 	    if ( stricked){
 		ll_log (logptr, LLOGTMP, "smtpsrvr can't lookup '%s'", them);
-		sprintf(replybuf,
+		snprintf(replybuf, sizeof(replybuf),
 		       "421 %s: Cannot resolve your address. '%s'\r\n",us,them);
 		netreply (replybuf);
 		exit (-1);
 	    }
 	    else {   /* make into [x.x.x.x] format */
 		them = strdup(them);
-	        strcpy(tmpstr, them);  
+	        strncpy(tmpstr, them, sizeof(tmpstr));  
 		sprintf(them, "%s", tmpstr);
 		/* sprintf(them, "[%s]", tmpstr); */
 #ifdef NODOMLIT
@@ -266,32 +266,32 @@ char **argv;
 	  smtp_refuse(&request, "Paranoid");
 	if (!hosts_access(&request)) smtp_refuse(&request, "denied");
 	if(mgt_addipaddr && mgt_addipname)
-	  sprintf(from_host, "%s [%s]", eval_client(&request),
+	  snprintf(from_host, sizeof(from_host), "%s [%s]", eval_client(&request),
 		  eval_hostaddr(request.client));
 	else if(mgt_addipname)
-	  sprintf(from_host, "%s ", eval_client(&request));
+	  snprintf(from_host, sizeof(from_host), "%s ", eval_client(&request));
 	else if(mgt_addipaddr)
-	  sprintf(from_host, "[%s]", eval_hostaddr(request.client));
+	  snprintf(from_host, sizeof(from_host), "[%s]", eval_hostaddr(request.client));
     if(strncmp(from_host, "unknown", 7)==0) {
       input_source = IN_SRC_LOCAL;
-	  sprintf(from_host, "%s", strdup(them));
+	  snprintf(from_host, sizeof(from_host), "%s", strdup(them));
     }
 	ll_log( logptr, LLOGGEN, "connection from: %s",eval_client(&request));
 #else /* HAVE_LIBWRAP */
-	/* sprintf(from_host, "%s [IP]", strdup(them));*/
+	/* sprintf(from_host, sizeof(from_host), "%s [IP]", strdup(them));*/
 	if (getpeername (0, (struct sockaddr *)&rmtaddr, &len_rmtaddr)>=0) {
 	  struct	hostent	*hp;
 	  hp = gethostbyaddr ( (char *)&rmtaddr.sin_addr,
 			       sizeof(rmtaddr.sin_addr), AF_INET );
 	  if ((hp == NULL) || !isstr(hp->h_name)) {
-	    sprintf(from_host, "[%s]",
+	    snprintf(from_host, sizeof(from_host), "[%s]",
 		    (char *)inet_ntoa(rmtaddr.sin_addr));
 	  } else
-	    sprintf(from_host, "%s [%s]", hp->h_name,
+	    snprintf(from_host, sizeof(from_host), "%s [%s]", hp->h_name,
 		    (char *)inet_ntoa(rmtaddr.sin_addr));
 	} else {
       input_source = IN_SRC_LOCAL;
-	  sprintf(from_host, "%s", strdup(them));
+	  snprintf(from_host, sizeof(from_host), "%s", strdup(them));
     }
 #endif /* HAVE_LIBWRAP */
 
@@ -303,7 +303,7 @@ char **argv;
 	 * the channel arg is now a comma seperated list of channels
 	 * useful for multiple sources ( As on UCL's ether )
 	 */
-    strcpy (tmp_buf, argv[3]);
+    strncpy (tmp_buf, argv[3], sizeof(tmp_buf));
 	Agc = str2arg (tmp_buf, NUMCHANS, Ags, (char *)0);
 	channel = Ags[Agc-1];
 	for(chanptr = (Chan *)0, n = 0 ; n < Agc ; n++){
@@ -332,7 +332,7 @@ char **argv;
 	if (chanptr == (Chan *) 0){
 		ll_log (logptr, LLOGTMP, "smtpsrvr (%s) no channel for host",
 								    them);
-		sprintf (replybuf,
+		snprintf (replybuf, sizeof(replybuf),
 			"421 %s: Your name, '%s', is unknown to us.\r\n",
 			us, them);
 		netreply (replybuf);
@@ -348,11 +348,11 @@ char **argv;
 	/* say we're listening */
 #ifdef HAVE_ESMTP
     if((chanptr->ch_access&CH_ESMTP)==CH_ESMTP)
-      sprintf (replybuf, "220 %s Server ESMTP (Complaints/bugs to:  %s)\r\n",
+      snprintf (replybuf, sizeof(replybuf), "220 %s Server ESMTP (Complaints/bugs to:  %s)\r\n",
                us, supportaddr);
     else
 #endif /* HAVE_ESMTP */
-      sprintf (replybuf, "220 %s Server SMTP (Complaints/bugs to:  %s)\r\n",
+      snprintf (replybuf, sizeof(replybuf), "220 %s Server SMTP (Complaints/bugs to:  %s)\r\n",
                us, supportaddr);
 	netreply (replybuf);
 
@@ -394,12 +394,12 @@ char *what;
 { 
   char replybuf[256];
   
-  /*  sprintf (replybuf, "220 %s Server SMTP (Complaints/bugs to:  %s)\r\n",
+  /*  snprintf (replybuf, sizeof(replybuf), "220 %s Server SMTP (Complaints/bugs to:  %s)\r\n",
 	   us, supportaddr);
   netreply (replybuf);*/
   ll_log( logptr, LLOGGEN, "Connection Refused (%s) from: %s",
 	  what, eval_client(request));
-  sprintf(replybuf, "451 Connection Refused (%s) from: %s\r\n", what, 
+  snprintf(replybuf, sizeof(replybuf), "451 Connection Refused (%s) from: %s\r\n", what, 
 	  eval_client(request));
   netreply(replybuf);
   byebye(1);
@@ -536,13 +536,13 @@ helo(int cmdnr)
  * Use this if you wish to be forgiving of hosts who don't announce
  * their full domain name:
  *
- *      (void) sprintf(replybuf, "%s.%s.%s", them, locname, locdomain);
+ *      (void) snprintf(replybuf, sizeof(replybuf), "%s.%s.%s", them, locname, locdomain);
  *      if(arg == 0 || !lexequ(arg, them) && !lexequ(arg, replybuf))
- *              sprintf(replybuf, "250 %s - you are a charlatan\r\n", us);
+ *              snprintf(replybuf, sizeof(replybuf), "250 %s - you are a charlatan\r\n", us);
  *      else  {                
  *		if (lexequ(arg, replybuf))
  *                      them = strdup(replybuf);
- *              sprintf (replybuf, "250 %s\r\n", us);
+ *              snprintf (replybuf, sizeof(replybuf), "250 %s\r\n", us);
  *      }                      
  *      netreply (replybuf);   
  *
@@ -551,14 +551,14 @@ helo(int cmdnr)
 
     if(smtp_proto != PRK_UNKNOWN) {
 #ifdef HAVE_ESMTP
-      sprintf(replybuf, "503 %s Duplicate HELO/EHLO\r\n", us);
+      snprintf(replybuf, sizeof(replybuf), "503 %s Duplicate HELO/EHLO\r\n", us);
 #else
-      sprintf(replybuf, "503 %s Duplicate HELO\r\n", us);
+      snprintf(replybuf, sizeof(replybuf), "503 %s Duplicate HELO\r\n", us);
 #endif
       netreply (replybuf);
     } else {
       if(arg == 0) {
-        sprintf(replybuf, "501 %s requires domain address\r\n",
+        snprintf(replybuf, sizeof(replybuf), "501 %s requires domain address\r\n",
                 commands[cmdnr].cmdname);
         netreply(replybuf);
       } else {
@@ -568,18 +568,18 @@ helo(int cmdnr)
         if(cmdnr==CMDEHLO) {
           smtp_proto = PRK_ESMTP;
           if(!lexequ(arg, them))
-            sprintf(replybuf, "250-%s - you are a charlatan\r\n", us);
+            snprintf(replybuf, sizeof(replybuf), "250-%s - you are a charlatan\r\n", us);
           else 
-            sprintf (replybuf, "250-%s\r\n", us);
+            snprintf (replybuf, "250-%s\r\n", us);
           netreply (replybuf);
           tell_esmtp_options();
         } else {
 #endif /* HAVE_ESMTP */
           smtp_proto = PRK_SMTP;
           if(!lexequ(arg, them))
-            sprintf(replybuf, "250 %s - you are a charlatan\r\n", us);
+            snprintf(replybuf, sizeof(replybuf), "250 %s - you are a charlatan\r\n", us);
           else 
-            sprintf (replybuf, "250 %s\r\n", us);
+            snprintf (replybuf, sizeof(replybuf), "250 %s\r\n", us);
           netreply (replybuf);
 #ifdef HAVE_ESMTP
         }
@@ -631,13 +631,15 @@ mail(int cmdnr)
 	 */
 
 #if notdef
-    if( (strcmp(name, "SIZE")==0) && () ){
+#ifdef HAVE_ESMTP_SIZE
+      if( (strcmp(name, "SIZE")==0) && () ){
       if (message_size_limit > 0 && size > message_size_limit) {
         snprintf(replybuf, sizeof(replybuf), "552 Message size exceeds maximum permitted\r\n");
         netreply(replybuf);
         return;
       }
     }
+#endif /* HAVE_ESMTP_SIZE */
     
     if (smtp_check_spool_space)
     {
@@ -650,18 +652,20 @@ mail(int cmdnr)
       size_checked = TRUE;    /* No need to check again below */
     }
     
+#ifdef HAVE_ESMTP_8BITMIME
     if (accept_8bitmime && strcmpic(name, "BODY") == 0 &&
         (strcmpic(value, "8BITMIME") == 0 ||
          strcmpic(value, "7BIT") == 0)) {}
-
-#ifdef HAVE_DSN
+#endif /* HAVE_ESMTP_8BITMIME */
+    
+#ifdef HAVE_ESMTP_DSN
     if (dsn && strcmpic(name, "RET") == 0)
       dsn_ret = (strcmpic(value, "HDRS") == 0)? dsn_ret_hdrs :
       (strcmpic(value, "FULL") == 0)? dsn_ret_full : 0;
 
     else if (dsn && strcmpic(name, "ENVID") == 0)
       dsn_envid = string_copy(value);
-#endif /* HAVE_DSN */
+#endif /* HAVE_ESMTP_DSN */
 
     if (!size_checked && !accept_check_fs(0))
     {
@@ -1037,16 +1041,16 @@ data(int cmdnr)
 	if( rp_isbad(mm_wtend()) || rp_isbad( mm_rrply( &thereply, &len)))
 		netreply("451 Unknown mail trouble, try later\r\n");
 	else if( rp_isgood(thereply.rp_val)) {
-		sprintf (buf, "250 %s\r\n", thereply.rp_line);
+		snprintf (buf, sizeof(buf), "250 %s\r\n", thereply.rp_line);
 		netreply (buf);
 		phs_msg(chanptr, numrecipients, (long) msglen);
 	}
 	else if( rp_gbval(thereply.rp_val) == RP_BNO) {
-		sprintf (buf, "554 %s\r\n", thereply.rp_line);
+		snprintf (buf, sizeof(buf), "554 %s\r\n", thereply.rp_line);
 		netreply (buf);
 	}
 	else {
-		sprintf (buf, "451 %s\r\n", thereply.rp_line);
+		snprintf (buf, sizeof(buf), "451 %s\r\n", thereply.rp_line);
 		netreply (buf);
 	}
 	s_alarm (0);
@@ -1083,7 +1087,7 @@ quit(int cmdnr)
 	time_t  timenow;
 
 	time (&timenow);
-	sprintf (buf, "221 %s says goodbye to %s at %.19s.\r\n",
+	snprintf (buf, sizeof(buf), "221 %s says goodbye to %s at %.19s.\r\n",
 		us, them, ctime(&timenow));
 	netreply(buf);
 	byebye( 0 );
@@ -1198,11 +1202,11 @@ register char *arg;
 				pw->pw_name,us);
 			return;
 		}
-		strcpy(buf, arg);
+		strncpy(buf, arg, sizeof(buf));
 		gotalias--;
 	}
 
-	strcpy(alstr, arg);
+	strncpy(alstr, arg, sizeof(alstr));
 
 	/* just say OK if it is a private alias */
 	if (gotalias && (flags & AL_PUBLIC) != AL_PUBLIC) {
@@ -1330,11 +1334,11 @@ char *pattern,
      *a1,*a2,*a3,*a4,*a5,*a6,*a7;
 {
 	if (expn_count > 0) {
-		sprintf(buf,"250-%s\r\n",saveaddr);
+		snprintf(buf, sizeof(buf),"250-%s\r\n",saveaddr);
 		netreply(buf);
 	}
 
-	sprintf(saveaddr,pattern,a1,a2,a3,a4,a5,a6,a7);
+	snprintf(saveaddr, sizeof(saveaddr),pattern,a1,a2,a3,a4,a5,a6,a7);
 	if (expn_count == 0)
 		savecode=code;
 	else
@@ -1347,9 +1351,9 @@ expn_dump()
 {
 
 	if (expn_count == 1 && savecode == NOTOK)
-		sprintf(buf,"550 %s\r\n", saveaddr);
+		snprintf(buf, sizeof(buf),"550 %s\r\n", saveaddr);
 	else
-		sprintf(buf,"250 %s\r\n", saveaddr);
+		snprintf(buf, sizeof(buf),"250 %s\r\n", saveaddr);
 
 	netreply(buf);
 }
@@ -1461,7 +1465,7 @@ vrfy(int cmdnr)
 
 	if (cp = strrchr(linebuf, '\n'))
 		*cp-- = 0;
-	sprintf(replybuf,"%s\r\n",linebuf);
+	snprintf(replybuf, sizeof(replybuf),"%s\r\n",linebuf);
 	netreply(replybuf);
 
 	return;

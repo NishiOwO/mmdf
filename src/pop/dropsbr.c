@@ -470,9 +470,9 @@ register char	*file;
     if ((dp = index (cp = r1bindex (file, '/'), '.')) == NULL)
 	dp = cp + strlen (cp);
     if (cp == file)
-	(void) sprintf (buffer, ".%.*s%s", dp - cp, cp, ".map");
+	(void) snprintf (buffer, sizeof(buffer), ".%.*s%s", dp - cp, cp, ".map");
     else
-	(void) sprintf (buffer, "%.*s.%.*s%s", cp - file, file, dp - cp,
+	(void) snprintf (buffer, sizeof(buffer), "%.*s.%.*s%s", cp - file, file, dp - cp,
 		cp, ".map");
 
     return buffer;

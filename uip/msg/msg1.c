@@ -192,22 +192,23 @@ char   *argv[];
 	    }
 	}
 
-	strcpy(username,tmpname);
+	strncpy(username,tmpname,sizeof(username));
 
-	sprintf( maininbox, "%s/%s",
+	snprintf( maininbox, sizeof(maininbox), "%s/%s",
 		(mldfldir==0 || isnull(mldfldir[0])) ? homedir : mldfldir,
 		(mldflfil==0 || isnull(mldflfil[0])) ? username : mldflfil);
 
 	/* Build default mailbox name */
-	strcpy( filename, maininbox);
+	strncpy( filename, maininbox,FILENAMESIZE );
 
-	sprintf( defmbox, "%s/%s", homedir, savmsgfn);
-	strcpy( defoutfile, defmbox);
+	snprintf( defmbox, DEFMBOXSIZE, "%s/%s", homedir, savmsgfn);
+	strncpy( defoutfile, defmbox, sizeof(defoutfile) );
 
-	strcpy( draftorig, "draft_original" );
+	strncpy( draftorig, "draft_original", DRAFTORIGSIZE);
 	/* Build strings for 2-window mode */
-	sprintf( draft_work, "%s/draft_work", homedir );
-	sprintf( draft_original, "%s/%s", homedir, draftorig );
+	snprintf( draft_work, DRAFT_WORKSIZE, "%s/draft_work", homedir );
+	snprintf( draft_original, DRAFT_ORIGINALSIZE, "%s/%s", homedir, 
+                  draftorig );
 
 	/* Get environment variables */
 	if( (ushell = getenv("SHELL")) == NULL )
@@ -216,7 +217,7 @@ char   *argv[];
 		ueditor = dfleditor;
 
 	/* The default 2-window filter is just the editor */
-	strcpy( twowinfil, ueditor);
+	strncpy( twowinfil, ueditor, TWOWINFILSIZE );
 
 #ifdef TIOCGWINSZ
 	if (ioctl(fileno(stdout), TIOCGWINSZ, &ws) != -1) {
@@ -232,7 +233,7 @@ char   *argv[];
 	}
 
 	/* Check for user option file */
-	sprintf( msgrcname, "%s/%s", homedir, msgrcfn);
+	snprintf( msgrcname, sizeof(msgrcname),  "%s/%s", homedir, msgrcfn);
 	if( (fpmsgrc = fopen(msgrcname,"r")) != NULL ) {
 		xomsgrc( fpmsgrc );
 		fclose( fpmsgrc );
@@ -240,7 +241,7 @@ char   *argv[];
 	restrt = 0;
 
 	if( argc > 1)
-		strcpy( filename, argv[1] );
+		strncpy( filename, argv[1], FILENAMESIZE );
 	if( argc > 2)
 		setmbox( argv[2] );
 		
@@ -376,7 +377,7 @@ ignore:		nxtchar = ttychar();
 			 */
 			if( ismainbox )  {
 				autoconfirm = FALSE;
-				strcpy( outfile, defmbox);
+				strncpy( outfile, defmbox, OUTFILESIZE );
 
 				/* tag all undeleted messages for action */
 				unset();
@@ -767,7 +768,7 @@ ignore:		nxtchar = ttychar();
 			gitr();
 			doiter(prhdr);
 			printf("To: ");
-			strcpy(outfile,resendprog);
+			strncpy(outfile,resendprog,OUTFILESIZE);
 			if( (outfile[strlen(resendprog)]=rdnxtfld()) == '\n' )
 				error("Cancelled\r\n");
 			else {

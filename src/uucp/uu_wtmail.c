@@ -59,8 +59,8 @@ uu_wtadr (host, adr, sender, realfrom)
     ll_log (logptr, LLOGFTR, "ap_outtype = %o", ap_outtype);
 #endif
 
-    strcpy(nextnode,"");
-    strcpy(who,"");
+    strncpy(nextnode,"", sizeof(nextnode));
+    strncpy(who,"", sizeof(who));
 
     if ((ap = ap_s2tree (adr)) == (AP_ptr) NOTOK)
     {
@@ -92,7 +92,7 @@ uu_wtadr (host, adr, sender, realfrom)
     ll_log (logptr, LLOGFST, "address = '%s'", adr);
 
     if (!isstr(host))
-	    strcpy(who, adr);
+	    strncpy(who, adr, sizeof(who));
     else {
 	    switch(tb_k2val (curchan -> ch_table, TRUE, host, nextnode)) {
 	    case NOTOK:
@@ -100,7 +100,7 @@ uu_wtadr (host, adr, sender, realfrom)
 	    case MAYBE:
 	    	return (RP_NS);
 	    }
-	    sprintf(who, nextnode, adr);
+	    snprintf(who, sizeof(who), nextnode, adr);
     }
 
     /* Extract first host name for destination */
@@ -108,12 +108,12 @@ uu_wtadr (host, adr, sender, realfrom)
     {
 	/* There is at least one relay machine */
 	*bangptr++ = '\0';
-	strcpy (nextnode, who);
-	strcpy(who, bangptr);
+	strncpy (nextnode, who, sizeof(nextnode));
+	strncpy(who, bangptr, sizeof(who));
     }
-    else strcpy(nextnode, "");
+    else strncpy(nextnode, "", sizeof(nextnode));
 
-    sprintf (linebuf, "%s %s!rmail \\(%s%s\\)",
+    snprintf (linebuf, sizeof(linebuf), "%s %s!rmail \\(%s%s\\)",
 		Uuxstr, nextnode, *who=='~' ? "\\\\" : "", who);
 
 #ifdef DEBUG

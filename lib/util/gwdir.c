@@ -167,7 +167,7 @@ LOCFUN wd_ckroot ()               /* check root dir for filesys name    */
 LOCFUN wd_cat ()
 {
     if (wd_name[0] == 0)
-	(void) strcpy (wd_name, wd_entry.dir.d_name);
+	(void) strncpy (wd_name, wd_entry.dir.d_name, sizeof(wd_name));
     else
     {
 	strcat (wd_name, "/");

@@ -223,12 +223,12 @@ char *list;
     int fd;
     int i;
 
-    strcpy (listname, list);
+    strncpy (listname, list, sizeof(listname));
 
     ismanager = (realid == 0 ? TRUE : FALSE);
-    sprintf (manager, "%s-request", listname);
+    snprintf (manager, sizeof(manager), "%s-request", listname);
     if (aliasfetch(TRUE, manager, buf, 0)!=OK)
-	strcpy (manager, supportaddr);
+	strncpy (manager, supportaddr,sizeof(manager));
     else if (!ismanager)
     {
 	p = buf;
@@ -249,7 +249,7 @@ char *list;
 	}
     }
 
-    sprintf (tmpbuf, "%s-outbound", listname);
+    snprintf (tmpbuf, sizeof(tmpbuf), "%s-outbound", listname);
     if (aliasfetch(TRUE, tmpbuf, buf, 0) != OK &&
 	aliasfetch(TRUE, listname, buf, 0) != OK)
     {
@@ -272,12 +272,12 @@ char *list;
     {
 	if ((p = strchr (q, ',')) != (char *) 0)
 	    *p = '\0';
-	strcpy (filename, q);
+	strncpy (filename, q, sizeof(filename));
     }
     else
     {
 	*p++ = '\0';
-	strcpy (filename, q);
+	strncpy (filename, q, sizeof(filename));
 	if ((q = strchr (p, ',')) != (char *) 0)
 	    *q = '\0';
 	if (ch_h2chan (p, 1) != OK)
@@ -597,7 +597,7 @@ char *user;
     int  fd;
 
 			    /* first make temp file in same dir */
-    strcpy (fpath, filename);
+    strncpy (fpath, filename, sizeof(fpath));
     cp = strrchr (fpath, '/');
     if (cp++ == 0)
 	fpath [0] = '\0';

@@ -63,7 +63,7 @@ char    fmt[],
 	printx ("\n");
 	fflush (stdout);
 
-	sprintf (newfmt, "%s%s\n", "err [ ABEND (%s) ] ", fmt);
+	snprintf (newfmt, sizeof(newfmt), "%s%s\n", "err [ ABEND (%s) ] ", fmt);
 	ll_err (logptr, LLOGFAT, newfmt, rp_valstr (code), b, c, d);
 	fprintf (stderr, newfmt, rp_valstr (code), b, c, d);
 #ifdef DEBUG

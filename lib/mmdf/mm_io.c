@@ -362,7 +362,7 @@ char    chname[];                 /* name of channel to invoke          */
     else                          /* exec pickup process (deliver)      */
     {
 	getfpath (pathpkup, cmddfldir, temppath);
-	sprintf (chbuf, "-c%s", chname);
+	snprintf (chbuf, sizeof(chbuf), "-c%s", chname);
 
 #ifdef DEBUG
 	ll_log (logptr, LLOGFTR, "Forking %s (%s)", temppath, chbuf);

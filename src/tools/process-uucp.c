@@ -98,7 +98,7 @@ char **argv;
 		fprintf(stderr, "Usage: %s file ...\n", argv[0]);
 		exit(1);
 	}
-	sprintf(buf, "%s-uucp", WRK_CHAN);
+	snprintf(buf, sizeof(buf), "%s-uucp", WRK_CHAN);
 	close(creat(buf, 0644));
 	for (i=1; i < argc; i++) {
 		if (argv[i][0] == '-') {
@@ -260,7 +260,7 @@ char *file;
 		perror(file);
 		return;
 	}
-	sprintf(buf, "%s-uucp", WRK_CHAN);
+	snprintf(buf, sizeof(buf), "%s-uucp", WRK_CHAN);
 	cfile = fopen(buf, "a");
 	if (cfile == NULL) {
 		/* printf("Open of %s failed with errno=%d\n", buf, errno); */
@@ -268,7 +268,7 @@ char *file;
 		fclose(ifile);
 		return;
 	}
-	sprintf(buf, "%s-top", WRK_DMN);
+	snprintf(buf, sizeof(buf), "%s-top", WRK_DMN);
 	topfile = fopen(buf, "a");
 	if (topfile == NULL) {
 		/* printf("Open of %s failed with errno=%d\n", buf, errno); */
@@ -297,7 +297,7 @@ char *file;
 			*sp2 = '\0';
 		}
 		if (pathbuf[0] == '\0')
-			strcpy(pathbuf, "NO-PATH-GIVEN!%s");
+			strncpy(pathbuf, "NO-PATH-GIVEN!%s", sizeof(pathbuf));
 		/* printf("before = %s\n", dmnbuf); */
 		(void) lowerify(dmnbuf);
 		/* printf("after = %s\n", dmnbuf); */

@@ -82,7 +82,7 @@ Dmn_route *dmnroute;              /* where to put routing information   */
 
     if (((dmntbl->dm_table->tb_flags & TB_SRC) == TB_NS) &&
 	isstr(dmntbl->dm_domain)) {
-	sprintf(sdbuf, "%s.%s", subdmn, dmntbl->dm_domain);
+	snprintf(sdbuf, sizeof(sdbuf), "%s.%s", subdmn, dmntbl->dm_domain);
 	retval = tb_k2val (dmntbl->dm_table, TRUE, sdbuf, dmnroute->dm_buf);
     }  
     else
@@ -120,7 +120,7 @@ Dmn_route *dmnroute;              /* where to put routing information   */
 	p++;
 	if (((dmntbl->dm_table->tb_flags & TB_SRC) == TB_NS) &&
 	    isstr(dmntbl->dm_domain)) {
-	    sprintf(sdbuf, "%s.%s", p, dmntbl->dm_domain);
+	    snprintf(sdbuf, sizeof(sdbuf), "%s.%s", p, dmntbl->dm_domain);
 	    retval = tb_k2val (dmntbl->dm_table, TRUE, sdbuf, tdmnbuf);
 	}  
 	else
@@ -287,7 +287,7 @@ Domain *
     ll_log (logptr, LLOGBTR, "dm_v2route (%s)", seenull(value));
 #endif
     if (value != (char *) 0)
-        (void) strcpy (tmpdmn.dm_buf, value);
+        (void) strncpy (tmpdmn.dm_buf, value, sizeof(tmpdmn.dm_buf));
     else
         *tmpdmn.dm_buf = '\0';
     tmpdmn.dm_argc = cstr2arg (tmpdmn.dm_buf, DM_NFIELD, tmpdmn.dm_argv, '.');
@@ -303,7 +303,7 @@ Domain *
 #endif
 
     dmnroute -> dm_argc = 1;    /* initialize with something safe */
-    (void) strcpy (dmnroute -> dm_buf, value);
+    (void) strncpy (dmnroute -> dm_buf, value, sizeof(dmnroute -> dm_buf));
     dmnroute -> dm_argv[0] = dmnroute -> dm_buf;
 
     tmpdmn.dm_argc--;
@@ -356,7 +356,7 @@ dm_rv2route (value, domain, dmnroute)
     Domain **seed;
     int perhaps = 0;
 
-    (void) strcpy (tmpdmn.dm_buf, value);
+    (void) strncpy (tmpdmn.dm_buf, value, sizeof(tmpdmn.dm_buf));
     tmpdmn.dm_argc = cstr2arg (tmpdmn.dm_buf, DM_NFIELD, tmpdmn.dm_argv, '.');
     if (tmpdmn.dm_argc == NOTOK) {
 #ifdef  DEBUG
@@ -417,7 +417,7 @@ Domain *
     ll_log (logptr, LLOGBTR, "dm_v2route (%s)", value);
 #endif
     dmnroute -> dm_argc = 1;    /* initialize with something safe */
-    (void) strcpy (dmnroute -> dm_buf, value);
+    (void) strncpy (dmnroute -> dm_buf, value, sizeof(dmnroute -> dm_buf));
     dmnroute -> dm_argv[0] = dmnroute -> dm_buf;
 
     if ((dmnptr = dm_rv2route (value, domain, dmnroute)) != (Domain *)0)

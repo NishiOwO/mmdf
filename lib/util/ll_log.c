@@ -118,7 +118,7 @@ register char *pref;
 	if ((curhdr = loginfo -> ll_hdr) == (char *) 0)
 	    curhdr = "XXXXXX";
 
-    (void) sprintf (tmpstr, "%-6.6s%04d", curhdr, pid % 10000);
+    (void) snprintf (tmpstr, sizeof(tmpstr), "%-6.6s%04d", curhdr, pid % 10000);
 				/* use last 4 digits of procid          */
 
     loginfo -> ll_hdr = strdup (tmpstr);

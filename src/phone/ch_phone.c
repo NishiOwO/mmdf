@@ -208,7 +208,7 @@ char    fmt[],
     if (rp_isbad (code))
 	if (rp_gbval (code) == RP_BNO || logptr -> ll_level >= LLOGBTR)
 	{                         /* don't worry about minor stuff      */
-	    sprintf (linebuf, "%s%s", "err [ ABEND (%s) ]\t", fmt);
+	    snprintf (linebuf, sizeof(linebuf), "%s%s", "err [ ABEND (%s) ]\t", fmt);
 	    ll_log (logptr, LLOGFAT, linebuf, rp_valstr (code), b, c, d);
 				/* disable error reporting */
 #ifdef DEBUG

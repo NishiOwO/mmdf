@@ -67,7 +67,7 @@ nxtmsg:
 	fflush (tmpout);
 	if (ferror (tmpout))
 	    endit ("Error writing");
-	sprintf (tmpstr, ",%s", thefile);
+	snprintf (tmpstr, sizeof(tmpstr), ",%s", thefile);
 
 	if (link (thefile, tmpstr) < 0 &&
 		unlink (tmpstr) &&
@@ -79,7 +79,7 @@ nxtmsg:
 	    endit ("Unable to link temporary into old file name");
 	if (unlink (tmpfil) < 0)
 	    endit ("Unable to unlink temporary file");
-	sprintf (tmpstr, ".{%s", thefile);
+	snprintf (tmpstr, sizeof(tmpstr), ".{%s", thefile);
 	unlink (tmpstr);          /* get rid of parsefile                 */
 	printf ("ok\n");
 

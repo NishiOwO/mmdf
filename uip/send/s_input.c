@@ -150,7 +150,7 @@ input ()
     {                             /* tack file to end of message        */
 	putc('\n', stdout);
 	body = TRUE;
-	strcpy (bigbuf, inclfile);
+	strncpy (bigbuf, inclfile, sizeof(bigbuf));
 	goto doincl;
     }
 

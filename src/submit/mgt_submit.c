@@ -448,7 +448,7 @@ mgt_aend ()
     if (lnk_nadrs <= 0)
 	err_msg (RP_NDEL, "No valid addresses");
 
-    sprintf (sizstr, "%ld", tx_msize);
+    snprintf (sizstr, sizeof(sizstr), "%ld", tx_msize);
 				  /* ll_log can't handle longs          */
     if (mgt_vchan.mgt_achan == 0) /* local submission                   */
 	ll_log (logptr, LLOGBST, "lin %s (%d, %s) %s %s",
@@ -1073,7 +1073,7 @@ mgt_rcv (curlen, fmt, val1, val2, val3)
     char linebuf[LINESIZE];
     int len;
 
-    sprintf (linebuf, fmt, val1, val2, val3);
+    snprintf (linebuf, sizeof(linebuf), fmt, val1, val2, val3);
     len = strlen (linebuf);
     if ((curlen + len) > 77)
     {

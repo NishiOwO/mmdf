@@ -203,7 +203,7 @@ int     dohdr;                    /* perform address massaging          */
     ll_log (logptr, LLOGBTR, "qu_minit (%s, dohdr=%d)", msgfile, dohdr);
 #endif
 
-    sprintf (linebuf, "%s%s", mquedir, msgfile);
+    snprintf (linebuf, sizeof(linebuf), "%s%s", mquedir, msgfile);
     qu_msgfile = strdup (linebuf);
 
     if (qu_txfd > 0)

@@ -215,15 +215,15 @@ LOCFUN
 			dchan = host;
 			if(*dchan == '\0'){ /* no channel must be local */
 			    dchan = 0;
-			    sprintf(info, "vmjlk%d*",NS_DELTIME);
+			    snprintf(info, sizeof(info), "vmjlk%d*",NS_DELTIME);
 			}
 			else if(*dhost == '\0')
-			    sprintf(info, "vmjlk%d*",NS_DELTIME);
+			    snprintf(info, sizeof(info), "vmjlk%d*",NS_DELTIME);
 			else
 			{
 			    /* reset the host as before
 			    * dchan is already set */
-			    sprintf(info, "vmjlh%s*k%d", dhost,NS_DELTIME);
+			    snprintf(info, sizeof(info), "vmjlh%s*k%d", dhost,NS_DELTIME);
 			}
 
 		    if (domsg)
@@ -359,7 +359,7 @@ RP_Buf *rp;
 
     if (rp_isbad(mm_wtend()) || rp_isbad(mm_rrply(rp,&len))) {
 	rp->rp_val = RP_RPLY;
-	strcpy (rp->rp_line, "Unknown Problem");
+	strncpy (rp->rp_line, "Unknown Problem", sizeof(rp->rp_line));
 	return;
     }
     

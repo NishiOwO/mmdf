@@ -407,7 +407,7 @@ LOCFUN
     getwho (&q2p_uid, &effecid);
     pwdptr = getpwuid (q2p_uid);
 
-    strcpy (q2p_username, pwdptr -> pw_name);
+    strncpy (q2p_username, pwdptr -> pw_name, sizeof(q2p_username));
 }
 /**/
 

@@ -55,7 +55,7 @@ char    *info,			  /* general info                       */
 #endif
 
     if (vianet != (char *)0)       /* we are relay; add name of source   */
-	sprintf (infoline, "ti%s*",vianet);
+	snprintf (infoline, sizeof(infoline), "ti%s*",vianet);
     else
 	infoline[0] = '\0';
 
@@ -87,7 +87,7 @@ char    *host,			  /* "next" location part of address    */
 #endif
 
     if (isstr (host)) {
-	sprintf (adrbuf, "%s@%s", adr, host);
+	snprintf (adrbuf, sizeof(adrbuf), "%s@%s", adr, host);
 	adr = adrbuf;
     }
 

@@ -379,7 +379,7 @@ RP_Buf *rp;
                 if (sm_rp.sm_rgot)
                   strncpy (rp->rp_line, sm_rp.sm_rstr, sm_rp.sm_rlen);
                 else
-                  strcpy (rp->rp_line, "Unknown Problem");
+                  strncpy (rp->rp_line, "Unknown Problem", sizeof(rp->rp_line));
           }
           return;
           
@@ -394,7 +394,7 @@ RP_Buf *rp;
                 if (sm_rp.sm_rgot)
                   strncpy (rp->rp_line, sm_rp.sm_rstr, sm_rp.sm_rlen);
                 else
-                  strcpy (rp->rp_line, "Unknown Problem");
+                  strncpy (rp->rp_line, "Unknown Problem", sizeof(rp->rp_line));
                 break;          /* We're off and running! */
           }
           return;
@@ -404,7 +404,7 @@ RP_Buf *rp;
           if (sm_rp.sm_rgot)
             strncpy (rp->rp_line, sm_rp.sm_rstr, sm_rp.sm_rlen);
           else
-            strcpy (rp->rp_line, "Unknown Problem");
+            strncpy (rp->rp_line, "Unknown Problem", sizeof(rp->rp_line));
           return;
 	}
 
@@ -459,7 +459,7 @@ RP_Buf *rp;
     printx (" ");
     if( rp_isbad( sm_cmd( ".", SM_PTIME + (3*nadrs) ))) {
 	rp->rp_val = RP_BHST;
-	strcpy (rp->rp_line, "Bad response to final dot");
+	strncpy (rp->rp_line, "Bad response to final dot", sizeof(rp->rp_line));
 	return;
     }
 
@@ -495,7 +495,7 @@ RP_Buf *rp;
                 if (sm_rp.sm_rgot)
                   strncpy (rp->rp_line, sm_rp.sm_rstr, sm_rp.sm_rlen);
                 else
-                  strcpy (rp->rp_line, "Unknown Problem");
+                  strncpy (rp->rp_line, "Unknown Problem", sizeof(rp->rp_line));
                 break;
           }
           return;
@@ -511,7 +511,7 @@ RP_Buf *rp;
                 if (sm_rp.sm_rgot)
                   strncpy (rp->rp_line, sm_rp.sm_rstr, sm_rp.sm_rlen);
                 else
-                  strcpy (rp->rp_line, "Unknown Problem");
+                  strncpy (rp->rp_line, "Unknown Problem", sizeof(rp->rp_line));
                 break;
           }
           return;

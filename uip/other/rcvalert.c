@@ -100,7 +100,7 @@ guinfo ()			  /* get user name & login directory    */
     getwho (&realid, &effecid);
     pwdptr = getpwuid (effecid);
 
-    strcpy (username, pwdptr -> pw_name);
+    strncpy (username, pwdptr -> pw_name, sizeof(username));
 
 #ifdef DEBUG
     ll_log (logptr, LLOGFTR, "id=%d, u='%s'", effecid, username);
@@ -199,7 +199,8 @@ scanbld ()
     }
 
     if (addflag == SET)
-	strcpy (&(scanl.subject[sublen]), (len > 0) ? "...)" : ")");
+	strncpy (&(scanl.subject[sublen]), (len > 0) ? "...)" : ")", 
+                  sizeof(scanl.subject) - sublen );
     else
 	scanl.subject[sublen] = '\0';
 }

@@ -84,7 +84,8 @@ get_aliasfile ()
 
 	/* Get info from the ".sendrc" file */
 
-	sprintf( rcfilename, "%s/%s", pwdptr->pw_dir, rcname );
+	snprintf( rcfilename, sizeof(rcfilename), "%s/%s", 
+                  pwdptr->pw_dir, rcname );
 	if(( fp = fopen(rcfilename, "r")) != NULL ) {
 		char *cp;
 
@@ -126,7 +127,7 @@ char   *argv[];
 	if (rp_isbad (mm_init ()) || rp_isbad (mm_sbinit ()))
 		err_abrt (RP_MECH, "Unable to submit mail; please report this error");
 
-	strcpy (linebuf, regargs);    /* standard stuff                     */
+	strncpy (linebuf, regargs, sizeof(linebuf));    /* standard stuff                     */
 
 	if ((sbmtargs = sbargs (argc, argv)) != 0)
 		/* any args to be args to submit?       */
@@ -218,7 +219,7 @@ contents[];
 {
 	char    linebuf[LINESIZE];
 
-	sprintf (linebuf, "%-10s%s\n", name, contents);
+	snprintf (linebuf, sizeof(linebuf), "%-10s%s\n", name, contents);
 	mm_wtxt (linebuf, strlen (linebuf));
 }
 
@@ -231,7 +232,7 @@ dosender ()
 
 	gotsig = FALSE;
 
-	sprintf (linebuf, "%s/.signature", logdir);
+	snprintf (linebuf, sizeof(linebuf), "%s/.signature", logdir);
 
 	if ((sigfp = fopen (linebuf, "r")) != NULL)
 	{                         /* there is a file w/signature?       */
@@ -242,10 +243,10 @@ dosender ()
 	}
 
 	if (gotsig)                   /* real name + mailbox                */
-		sprintf (linebuf, "%s <%s@%s.%s>",
+		snprintf (linebuf, sizeof(linebuf), "%s <%s@%s.%s>",
 			 sigtxt, username, locname, locdomain);
 	else                          /* just the mailbox info              */
-		sprintf (linebuf, "%s@%s.%s", username, locname, locdomain);
+		snprintf (linebuf, sizeof(linebuf), "%s@%s.%s", username, locname, locdomain);
 
 	sndhdr ("Resent-From:  ", linebuf);
 }

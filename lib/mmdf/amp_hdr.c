@@ -107,10 +107,10 @@ FILE *ain, *aout;
     gotfrom = FALSE;
 
     if (chanptr == (Chan *) 0) {
-	(void) strcpy (fromsite, locname);
+	(void) strncpy (fromsite, locname, sizeof(fromsite));
 	ourdomain = locdomain;
     } else {
-	(void) strcpy (fromsite, chanptr -> ch_lname);
+	(void) strncpy (fromsite, chanptr -> ch_lname, sizeof(fromsite));
 	ourdomain = chanptr -> ch_ldomain;
     }
 
@@ -206,7 +206,7 @@ FILE *ain, *aout;
 		    if (aptmp = findap (ap_pstrt, APV_DOMN))
 		    {
 			gotfrom = TRUE;
-			(void) strcpy (fromsite, aptmp -> ap_obvalue);
+			(void) strncpy (fromsite, aptmp -> ap_obvalue, sizeof(fromsite));
 			ourdomain = (char *) 0;
 				/* SEK ap_normalize will add a suitable */
 				/* domain if not already there          */

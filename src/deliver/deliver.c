@@ -703,7 +703,7 @@ ovr_queue (curch, dolin)         /* Process entire message queue       */
 		"ovr_queue (%s, %o)", curch -> ch_name, dolin);
 #endif
 
-    sprintf (subque, "%s%s", squepref, curch -> ch_queue);
+    snprintf (subque, sizeof(subque), "%s%s", squepref, curch -> ch_queue);
     if ((ovr_dirp = opendir (subque)) == NULL)
 	 /*   err_abrt (RP_FOPN, "can't open address queue"); */
 			      /* SEK - I don't see any reason to abort */
@@ -826,7 +826,7 @@ LOCFUN
 	    if (ovr_ismsg (dp))
 	    {
 		numproc++;
-		(void) strcpy (ovr_mlist[0].mg_mname, dp->d_name);
+		(void) strncpy (ovr_mlist[0].mg_mname, dp->d_name, sizeof(ovr_mlist[0].mg_mname));
 		if (msg_proc (curch, &ovr_mlist[0]) == RP_NET)
 		{
 			printx("killing channel '%s'\n", curch->ch_name);
@@ -880,7 +880,8 @@ LOCFUN
 #ifdef DEBUG
 	    ll_log (logptr, LLOGFTR, "name='%s'", argv[argind]);
 #endif
-	    (void) strcpy (ovr_mlist[msgind++].mg_mname, argv[argind]);
+	    (void) strncpy (ovr_mlist[msgind++].mg_mname, argv[argind],
+                        sizeof(ovr_mlist[msgind++].mg_mname));
 	}
 
     return (msgind);
@@ -934,10 +935,10 @@ LOCFUN
     for (num = 0; num < numproc && (dp = readdir (ovr_dirp)) != NULL; )
 	if (ovr_ismsg (dp))
 	{
-	    (void) strcpy (ovr_mlist[num].mg_mname, dp->d_name);
+	    (void) strncpy (ovr_mlist[num].mg_mname, dp->d_name, sizeof(ovr_mlist[num].mg_mname));
 				  /* get queue entry name (msg name)   */
 #ifdef STATSORT
-	    sprintf (msg_txname, "%s%s", mquedir, ovr_mlist[num].mg_mname);
+	    snprintf (msg_txname, sizeof(msg_txname), "%s%s", mquedir, ovr_mlist[num].mg_mname);
 	    if (stat (msg_txname, &statbuf) == NOTOK)
 		continue;
 	    ovr_mlist[num].mg_time = statbuf.st_mtime;
@@ -965,7 +966,7 @@ LOCFUN
 
 #ifdef LARGESIZE
 #ifndef STATSORT
-	    sprintf (msg_txname, "%s%s", mquedir, ovr_mlist[num].mg_mname);
+	    snprintf (msg_txname, sizeof(msg_txname), "%s%s", mquedir, ovr_mlist[num].mg_mname);
 	    if (stat (msg_txname, &statbuf) != NOTOK)
 #endif /* STATSORT */
 		if (st_gsize (&statbuf) > LARGESIZE)
@@ -1145,9 +1146,9 @@ LOCFUN
 #endif
 
     if (theque == (char *) 0)
-	sprintf (thename, "%s%s", aquedir, themsg -> mg_mname);
+	snprintf (thename, sizeof(thename), "%s%s", aquedir, themsg -> mg_mname);
     else
-	sprintf (thename, "%s%s/%s",
+	snprintf (thename, sizeof(thename), "%s%s/%s",
 			squepref, theque, themsg -> mg_mname);
 
     if (unlink (thename) < OK) /* this is real queue handle  */
@@ -1156,7 +1157,7 @@ LOCFUN
 
     if (theque == (char *) 0)
     {                             /* get rid of ALL the message */
-	sprintf (thename, "%s%s", mquedir, themsg -> mg_mname);
+	snprintf (thename, sizeof(thename), "%s%s", mquedir, themsg -> mg_mname);
 	if (unlink (thename) < OK) /* the text is just "baggage"         */
 	    ll_err (logptr, LLOGTMP, "Problem unlinking %s text: '%s'",
 		themsg -> mg_mname, thename);
@@ -1281,7 +1282,7 @@ adr_each (curch, themsg)          /* do each address                    */
 		    addr_sent = FALSE;
 		    adr_start = theadr.adr_pos;	/* start new sublist */
 		}
-	    (void) strcpy (ch_chost, theadr.adr_host);
+	    (void) strncpy (ch_chost, theadr.adr_host, sizeof(ch_chost));
 	}
 
 	if (ca_find (&curch -> ch_dead, theadr.adr_host) != 0) {
@@ -1303,7 +1304,7 @@ adr_each (curch, themsg)          /* do each address                    */
 
 	if (curch -> ch_access & DLVRHST) {
 	    if (ovr_host[0] == '\0')
-		strcpy (ovr_host, theadr.adr_host);
+		strncpy (ovr_host, theadr.adr_host, sizeof(ovr_host));
 	}
 
 	/*
@@ -1373,7 +1374,7 @@ adr_each (curch, themsg)          /* do each address                    */
 		} else {
 		    char orphanage[ADDRSIZE];
 
-		    sprintf (orphanage, "Orphanage <%s>", supportaddr);
+		    snprintf (orphanage, sizeof(orphanage), "Orphanage <%s>", supportaddr);
 		    printx (", couldn't return\n");
 		    printx ("to '%s', trying orphanage", msg_sender);
 		    (void) fflush (stdout);
@@ -1798,7 +1799,7 @@ char    *fmt, *b, *c, *d;
 	printf ("\n");
 	(void) fflush (stdout);
 
-	sprintf (newfmt, "%s%s", "err [ ABEND (%s) ] ", fmt);
+	snprintf (newfmt, sizeof(newfmt), "%s%s", "err [ ABEND (%s) ] ", fmt);
 	ll_err (logptr, LLOGFAT, newfmt, rp_valstr (code), b, c, d);
 #ifdef DEBUG
 	sigabort (fmt);

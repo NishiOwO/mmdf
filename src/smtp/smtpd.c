@@ -63,7 +63,7 @@ char **argv;
 	thishost[sizeof(thishost)-1]='\0';
 	workarea[sizeof(workarea)-1]='\0';
 	setbuf(stderr, errbuf);
-	sprintf(programid, "smtpd(%5.5d): ", getpid());
+	snprintf(programid, sizeof(programid), "smtpd(%5.5d): ", getpid());
 	getwho (&callerid, &effecid); /* who am I and who is running me?    */
 	mmdf_init (argv[0]);
 	gethostname(thishost, sizeof(thishost)-1);	/* current hostname */

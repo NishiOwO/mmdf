@@ -52,7 +52,7 @@ char    info[],			  /* general info                       */
     ll_log (logptr, LLOGBTR, "po_winit");
 #endif
 
-    sprintf (linebuf, "%s;%s", info, retadr);
+    snprintf (linebuf, sizeof(linebuf), "%s;%s", info, retadr);
 				  /* slave:  <info> ';'<retadr>    */
     retval = po_wrec (linebuf, strlen (linebuf));
 
@@ -72,7 +72,7 @@ char    *host,			  /* "next" location part of address    */
     ll_log (logptr, LLOGBTR, "po_wadr()");
 #endif
 
-    strcpy (adrbuf, adr);
+    strncpy (adrbuf, adr, sizeof(adrbuf));
 				  /* tell the user, if watching         */
     retval = po_wrec (adrbuf, strlen (adrbuf));
 

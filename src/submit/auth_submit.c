@@ -668,7 +668,7 @@ LOCFUN auth_warn ()
 #endif
     if (!isstr(mgt_return))
 	return;
-     sprintf (buf, "Authorization Warning Daemon <%s>", authrequest);
+     snprintf (buf, sizeof(buf), "Authorization Warning Daemon <%s>", authrequest);
      ml_1adr (NO, YES, buf, "Authorization Warning",
 		mgt_return);
      ml_txt ("\nNot authorized to send mail to address: ");
@@ -697,10 +697,10 @@ auth_bad ()
     if (auth_sender.a_type == AUTH_EXPIRE)
     {
 	if (auth_sender.a_reason  == (char *) 0)
-	    sprintf (auth_msg, "sender '%s' no longer authorized for address '%s'",
+	    snprintf (auth_msg, sizeof(auth_msg), "sender '%s' no longer authorized for address '%s'",
 		auth_sender.a_addr, auth_rcvr.a_addr);
 	else
-	    sprintf (auth_msg, "sender '%s' no authorization for address '%s' for reason: (%s)",
+	    snprintf (auth_msg, sizeof(auth_msg), "sender '%s' no authorization for address '%s' for reason: (%s)",
 		auth_sender.a_addr,
 		auth_rcvr.a_addr,
 		auth_sender.a_reason);
@@ -708,19 +708,19 @@ auth_bad ()
     else if (auth_rcvr.a_type == AUTH_EXPIRE)
     {
 	if (auth_rcvr.a_reason == (char *) 0)
-	    sprintf (auth_msg, "recipient '%s' no longer authorized",
+	    snprintf (auth_msg, sizeof(auth_msg), "recipient '%s' no longer authorized",
 			auth_rcvr.a_addr);
 	else
-	    sprintf (auth_msg, "recipient '%s' no authorization for reason: (%s)",
+	    snprintf (auth_msg, sizeof(auth_msg), "recipient '%s' no authorization for reason: (%s)",
 		auth_rcvr.a_addr,
 		auth_rcvr.a_reason);
     }
     else
 #ifdef  UCL
-	sprintf (auth_msg, "  Sender '%s' not authorized.",
+	snprintf (auth_msg, sizeof(auth_msg), "  Sender '%s' not authorized.",
 							auth_sender.a_addr);
 #else /* UCL */
-	sprintf (auth_msg, "sender '%s' not authorized to send to address '%s'",
+	snprintf (auth_msg, sizeof(auth_msg), "sender '%s' not authorized to send to address '%s'",
 		     auth_sender.a_addr, auth_rcvr.a_addr);
 #endif /* UCL */
 
@@ -912,7 +912,7 @@ char *format,
 	char fbuf [LINESIZE];
 
 	auth_do = TRUE;         /* we now care about this message       */
-	sprintf (fbuf, "%%s: %s", format);
+	snprintf (fbuf, sizeof(fbuf), "%%s: %s", format);
 	ll_log (&authlog, LLOGFST, fbuf, mq_munique, a1, a2, a3, a4, a5,
 		a6, a7, a8, a9);
     printx("==>");

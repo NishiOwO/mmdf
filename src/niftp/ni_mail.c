@@ -104,7 +104,7 @@ char  **rpstring;               /* Where to stuff result string */
 	   default:
 		if (max_tries < 1)      /* don't wait around              */
 		{
-		    sprintf (tmpstring,
+          snprintf (tmpstring, sizeof(tmpstring),
 				"Not waiting for MMDF to transfer mail");
 		    return (OK);
 		}
@@ -117,14 +117,14 @@ char  **rpstring;               /* Where to stuff result string */
 		if (status == 0)
 					/* Fatal crash                  */
 		{
-		    sprintf (tmpstring, "MMDF crashed - aarrg");
+		    snprintf (tmpstring, sizeof(tmpstring), "MMDF crashed - aarrg");
 		    return (NOTOK);
 		}
 
 		if (rp_isgood (status))
 					/* Success                         */
 		{
-		    sprintf (tmpstring, "Mail transferred correctly (%s)",
+		    snprintf (tmpstring, sizeof(tmpstring), "Mail transferred correctly (%s)",
 						rp_valstr (status));
 		    return (OK);
 		}
@@ -135,11 +135,11 @@ char  **rpstring;               /* Where to stuff result string */
 		    switch (status)
 		    {
 			case  RP_NDEL:
-				sprintf (tmpstring, "No valid recipients" );
+				snprintf (tmpstring, sizeof(tmpstring), "No valid recipients" );
 				return (OK);
 				break;
 			default:
-				sprintf (tmpstring,
+				snprintf (tmpstring, sizeof(tmpstring),
 					"Fatal error on mail transfer (%s)",
 					rp_valstr (status));
 				return (NOTOK);
@@ -157,7 +157,7 @@ char  **rpstring;               /* Where to stuff result string */
 					/*  We have tried as many times as  */
 					/*  allowed                         */
 
-    sprintf (tmpstring, "Repeated temporary MMDF failure (%s) after %d attempts",
+    snprintf (tmpstring, sizeof(tmpstring), "Repeated temporary MMDF failure (%s) after %d attempts",
 			      rp_valstr (status), no_tries);
     return (NOTOK);
 }

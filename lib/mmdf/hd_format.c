@@ -34,7 +34,7 @@ long
     hd_fpdup = fdopen (dup (fd), "r");
 				  /* open stream to msg text  */
 
-    (void) strcpy (hd_cur, hd_fn);
+    (void) strncpy (hd_cur, hd_fn, sizeof(hd_cur));
     mktemp (hd_cur);   /*  create name for translated header file */
 
     if (close(creat(hd_cur, 0600)) < 0) {

@@ -26,17 +26,17 @@ unsigned int    msgno;			/* message currently being processed */
 char    key[80];
 char	*gc;
 
-char    filename[64];
+char    filename[FILENAMESIZE];
 char	outfile[OUTFILESIZE];
-char	defmbox[60];
-char	oldfile[60];
+char	defmbox[DEFMBOXSIZE];
+char	oldfile[OLDFILESIZE];
 char	*homedir;		/* Full path to home directory */
 
-char    maininbox[60];
-char	binarybox[60];		/* Binary map file filename */
-char	msgrcname[60];		/* User options filename */
-char    defoutfile[60];
-char    username[20];
+char    maininbox[MAININBOXSIZE];
+char	binarybox[BINARYBOXSIZE];		/* Binary map file filename */
+char	msgrcname[MSGRCNAMESIZE];		/* User options filename */
+char    defoutfile[DEFOUTFILESIZE];
+char    username[USERNAMESIZE];
 char    ismainbox;		/* current file is receiving .mail  */
 char    nxtchar;
 char    lstsep;			/* separate messages by formfeed   */
@@ -67,7 +67,7 @@ int	linecount;
 char	*ushell, *ueditor;
 char	*nullstr;		/* A null string */
 
-char	twowinfil[64];		/* filter for 2-window-answer mode */
-char	draft_work[64];		/* Work file for 2-window answer */
-char	draft_original[64];	/* Original message(s) for 2-window ans */
-char	draftorig[64];		/* Message saving file */
+char	twowinfil[TWOWINFILSIZE];		/* filter for 2-window-answer mode */
+char	draft_work[DRAFT_WORKSIZE];		/* Work file for 2-window answer */
+char	draft_original[DRAFT_ORIGINALSIZE];	/* Original message(s) for 2-window ans */
+char	draftorig[DRAFTORIGSIZE];		/* Message saving file */

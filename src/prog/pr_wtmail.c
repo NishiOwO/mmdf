@@ -68,7 +68,7 @@ pr_wtadr (host, adr, from)
 
 /*  get the host address from the channel table  */
 
-    strcpy (hostadr, "");
+    strncpy (hostadr, "", sizeof(hostadr));
     if (isstr (host)) {
 	if (tb_k2val (chan->ch_table, TRUE, host, hostadr) != OK)
 	    return (RP_USER);       /* No such host */
@@ -116,9 +116,9 @@ pr_wtadr (host, adr, from)
 /* who are we ? */
 
     if (isstr(chan->ch_lname) && isstr(chan->ch_ldomain))
-	sprintf(local, "%s.%s", chan->ch_lname, chan->ch_ldomain);
+	snprintf(local, sizeof(local), "%s.%s", chan->ch_lname, chan->ch_ldomain);
     else
-	strcpy(local, locfullname);
+	strncpy(local, locfullname, sizeof(local));
 
 /*  set the variables; generate the command and execute  */
 

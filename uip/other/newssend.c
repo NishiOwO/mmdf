@@ -153,7 +153,7 @@ contents[];
 {
 	char    linebuf[LINESIZE];
 
-	sprintf (linebuf, "%-10s%s\n", name, contents);
+	snprintf (linebuf, sizeof(linebuf), "%-10s%s\n", name, contents);
 	mm_wtxt (linebuf, strlen (linebuf));
 }
 

@@ -144,7 +144,7 @@ getentry ()
     if (linebuf[0] != '\0')
     {
 	if (linebuf[0] != ';')
-	    (void) strcpy (entry, linebuf);
+	    (void) strncpy (entry, linebuf, sizeof(entry));
 	linebuf[0] = '\0';
     }
     else
@@ -249,7 +249,7 @@ output (argc, argv)       /* output the list of host references */
 		(void) strncpy (buf, oargv[0], strlen(oargv[0])-domainlen-1);
 		buf [strlen(oargv[0]) - domainlen - 1]  = '\0';
 	    } else {  /* KLUDGE: No domain specified, wing it! */
-		(void) strcpy (buf, oargv[0]);
+		(void) strncpy (buf, oargv[0], sizeof(buf));
 		if (p = strrchr(buf, '.'))
 		    *p = '\0';
 	    }

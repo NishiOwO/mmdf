@@ -88,7 +88,7 @@ errmsg_open ()
 	    
 	    if (newprio > prio) {
 		while (*p == ' ' || *p == '\t') p++;
-		strcpy (sender_buf, p);
+		strncpy (sender_buf, p, sizeof(sender_buf));
 		sender = sender_buf;
 		prio = newprio;
 	    }
@@ -213,7 +213,7 @@ mopen (to, subj)
     char *to, *subj;
 {
     char buff[64];
-    sprintf (buff, "%s <%s@%s>", sitesignature, mmdflogin, locfullname);
+    snprintf (buff, sizeof(buff), "%s <%s@%s>", sitesignature, mmdflogin, locfullname);
     msuccess = (ml_1adr (NO, YES, buff, subj, to) == OK);
 }
 
@@ -223,7 +223,7 @@ mprintf (f, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9)
 {
     char buff[128];
     if (!msuccess) return;
-    sprintf (buff, f, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
+    snprintf (buff, sizeof(buff), f, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
     msuccess = (ml_txt (buff) == OK);
 }
 

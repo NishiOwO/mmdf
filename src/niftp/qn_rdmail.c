@@ -119,7 +119,7 @@ char    *sender;                /* place to stuff name of message sender*/
     reverse = ap_dmflip (TSname);
     official [0] = 0;
 
-    strcpy (chan_buf, qn_nichanlist);
+    strncpy (chan_buf, qn_nichanlist, sizeof(chan_buf));
     if ((argc = str2arg (chan_buf, 20, argv, (char *)0)) == NOTOK)
     {
 	ll_err (logptr, LLOGFAT, "qn_rinit: str2arg failed '%s'", chan_buf);
@@ -337,12 +337,12 @@ char    *adr,
 
     if (rp_isgood (reply -> rp_val))
     {
-	sprintf (line, "%s@%s", adr, host);
+	snprintf (line, sizeof(line), "%s@%s", adr, host);
 	return (rtn_adr (line, TRUE));
     }
     else
     {
-	strcpy (line, reply -> rp_line);
+	strncpy (line, reply -> rp_line, sizeof(line));
 	return (rtn_adr (line, FALSE));
     }
 

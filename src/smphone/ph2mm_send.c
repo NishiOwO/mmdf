@@ -243,9 +243,9 @@ helo()
 	char replybuf[128];
 
 	if (curchan -> ch_confstr)
-	    sprintf (replybuf, "250 %s", curchan -> ch_confstr);
+	    snprintf (replybuf, sizeof(replybuf), "250 %s", curchan -> ch_confstr);
 	else
-	    sprintf (replybuf, "250 %s.%s", curchan -> ch_lname,
+	    snprintf (replybuf, sizeof(replybuf), "250 %s.%s", curchan -> ch_lname,
 					        curchan -> ch_ldomain);
 	netreply (replybuf);
 }
@@ -276,13 +276,13 @@ mail()
 	}
 
 	if (equal(buf, "mail", 4))
-	    strcpy (info, "mv");
+	    strncpy (info, "mv", sizeof(info));
 	else if (equal(buf, "send", 4))
-	    strcpy (info, "yv");
+	    strncpy (info, "yv", sizeof(info));
 	else if (equal(buf, "saml", 4))
-	    strcpy (info, "bv");
+	    strncpy (info, "bv", sizeof(info));
 	else
-	    strcpy (info, "mv");  /* shouldn't ever get here */
+	    strncpy (info, "mv", sizeof(info));  /* shouldn't ever get here */
 
 	/* Scan FROM: parts of arg */
 	sender = strchr (arg, ':') + 1;
@@ -305,13 +305,13 @@ mail()
 		mm_end( NOTOK );
 		mmdfstart();
 	} else if( rp_gbval( thereply.rp_val ) == RP_BNO) {
-		sprintf (replybuf, "501 %s", thereply.rp_line);
+		snprintf (replybuf, sizeof(replybuf), "501 %s", thereply.rp_line);
 		netreply (replybuf);
 		sender = (char *) 0;
 		mm_end( NOTOK );
 		mmdfstart();
 	} else if( rp_gbval( thereply.rp_val ) == RP_BTNO) {
-		sprintf (replybuf, "451 %s", thereply.rp_line);
+		snprintf (replybuf, sizeof(replybuf), "451 %s", thereply.rp_line);
 		netreply (replybuf);
 		sender = (char *) 0;
 		mm_end( NOTOK );
@@ -346,18 +346,18 @@ rcpt()
 		if( rp_isbad( mm_rrply( &thereply, &len )))
 			netreply( "451 Mail system problem" );
 		else {
-			sprintf (replybuf, "451 %s", thereply.rp_line);
+			snprintf (replybuf, sizeof(replybuf)), "451 %s", thereply.rp_line);
 			netreply (replybuf);
 		}
 	} else {
 		if( rp_isbad( mm_rrply( &thereply, &len )))
 			netreply("451 Mail system problem");
 		else if( rp_gbval( thereply.rp_val ) == RP_BNO) {
-			sprintf (replybuf, "550 %s", thereply.rp_line);
+			snprintf (replybuf, sizeof(replybuf), "550 %s", thereply.rp_line);
 			netreply (replybuf);
 		}
 		else if( rp_gbval( thereply.rp_val ) == RP_BTNO) {
-			sprintf (replybuf, "451 %s", thereply.rp_line);
+			snprintf (replybuf, sizeof(replybuf), "451 %s", thereply.rp_line);
 			netreply (replybuf);
 		}
 		else {
@@ -467,15 +467,15 @@ data()
 	if( rp_isbad(mm_wtend()) || rp_isbad( mm_rrply( &thereply, &len)))
 		netreply("451 Unknown mail trouble, try later");
 	else if( rp_isgood(thereply.rp_val)) {
-		sprintf (buf, "250 %s", thereply.rp_line);
+		snprintf (buf, sizeof(buf), "250 %s", thereply.rp_line);
 		netreply (buf);
 	}
 	else if( rp_gbval(thereply.rp_val) == RP_BNO) {
-		sprintf (buf, "554 %s", thereply.rp_line);
+		snprintf (buf, sizeof(buf), "554 %s", thereply.rp_line);
 		netreply (buf);
 	}
 	else {
-		sprintf (buf, "451 %s", thereply.rp_line);
+		snprintf (buf, sizeof(buf), "451 %s", thereply.rp_line);
 		netreply (buf);
 	}
 	sender = (char *) 0;
@@ -521,7 +521,7 @@ quit()
 	time_t	timenow;
 
 	time (&timenow);
-	sprintf (buf, "221 session complete at %.19s.",
+	snprintf (buf, sizeof(buf), "221 session complete at %.19s.",
 		ctime(&timenow));
 	netreply(buf);
 	return(byebye( 0 ));
@@ -577,11 +577,11 @@ help()
 
 /*	  netreply("214-The following commands are accepted:\r\n214-" );
  *	  for(p = commands, i = 1; p->cmdname; p++, i++) {
- *		  sprintf (replybuf, "%s%s", p->cmdname, ((i%10)?" ":"\r\n214-") );
+ *		  snprintf (replybuf, sizeof(replybuf), "%s%s", p->cmdname, ((i%10)?" ":"\r\n214-") );
  *		  netreply (replybuf);
  *	  }
  */
-	sprintf (replybuf, "214 Send complaints/bugs to:  %s", supportaddr);
+	snprintf (replybuf, sizeof(replybuf), "214 Send complaints/bugs to:  %s", supportaddr);
 	netreply (replybuf);
 }
 

@@ -133,7 +133,7 @@ char    *sub,                     /* subject line                       */
 	ml_state = ML_MSG;
     }
 
-    strcpy (linebuf, "rmxto,cc*");
+    strncpy (linebuf, "rmxto,cc*", sizeof(linebuf));
     if (!ret)                     /* disable return to sender           */
 	strcat(linebuf, "q");
 
@@ -206,7 +206,7 @@ char *contents;
     char linebuf[LINESIZE];
 
     if (ml_state == ML_HEADER) {
-	sprintf(linebuf, "%-10s%s\n", name, contents);
+	snprintf(linebuf, sizeof(linebuf), "%-10s%s\n", name, contents);
 	mm_wtxt(linebuf, strlen (linebuf));
     }
     return(OK);
@@ -227,12 +227,12 @@ char    cmpnt[],
 
     if (name != 0)
     {
-	strcpy (sigtxt, name);
+	strncpy (sigtxt, name, sizeof(sigtxt));
 	gotsig = TRUE;
     }
     else
     {                             /* user didn't give us a signature    */
-	sprintf (linebuf, "%s/.signature", logdir);
+	snprintf (linebuf, sizeof(linebuf), "%s/.signature", logdir);
 
 	if ((sigfd = open (linebuf, 0)) >= 0)
 	{                         /* there is a file w/signature?       */
@@ -252,7 +252,7 @@ char    cmpnt[],
     {
 	for (ptr = locfullname; *ptr != 0; ptr++)
 	    *ptr = uptolow (*ptr);      /* Screw locfullname */
-	sprintf (linebuf, "%s <%s@%s>", sigtxt, username, locfullname);
+	snprintf (linebuf, sizeof(linebuf), "%s <%s@%s>", sigtxt, username, locfullname);
     }
     else                          /* just the mailbox info              */
 	sprintf (linebuf, "%s@%s", username, locfullname);

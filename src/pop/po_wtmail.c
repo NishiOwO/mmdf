@@ -99,12 +99,12 @@ Chan * chanptr;
 
     chnlname = chanptr -> ch_name;
 #ifndef	notdef
-    sprintf (chnlinfo, submitopts, chnlname);
+    snprintf (chnlinfo, sizeof(chnlinfo), submitopts, chnlname);
 #else /* notdef			/* the following is probably a BAD idea */
     if (chanptr -> ch_host == NULL)
 	chnlinfo[0] = NULL;	/* local delivery ONLY */
     else
-	sprintf (chnlinfo, submitopts, chanptr -> ch_host);
+	snprintf (chnlinfo, sizeof(chnlinfo), submitopts, chanptr -> ch_host);
 #endif /* notdef */
 
 #ifndef	POP
@@ -119,13 +119,13 @@ Chan * chanptr;
     bbrdgid = pw -> pw_gid;
 #ifndef	POP
     if (isstr (locfullmachine))
-	sprintf (bbrdfrom, "%s@%s", pw -> pw_name, locfullmachine);
+	snprintf (bbrdfrom, sizeof(bbrdfrom), "%s@%s", pw -> pw_name, locfullmachine);
     else
-	sprintf (bbrdfrom, "%s@%s", pw -> pw_name, locfullname);
+	snprintf (bbrdfrom, sizeof(bbrdfrom), "%s@%s", pw -> pw_name, locfullname);
 #ifdef DEBUG
     ll_log (logptr, LLOGGEN, "distributing as '%s'", bbrdfrom);
 #endif
-    sprintf (bbrdhome, pw -> pw_dir);
+    snprintf (bbrdhome, sizeof(bbrdhome), pw -> pw_dir);
 #endif /* not POP */
 
 #ifndef	POP
@@ -217,9 +217,9 @@ char   *host,
 	return RP_USER;
 #ifndef	POP
     if (isstr (locfullmachine))
-	sprintf(bbrdaddr,"local-%s-request@%s", curbb->bb_name, locfullmachine);
+	snprintf(bbrdaddr, sizeof(bbrdaddr),"local-%s-request@%s", curbb->bb_name, locfullmachine);
     else
-	sprintf(bbrdaddr,"local-%s-request@%s", curbb->bb_name, locfullname);
+	snprintf(bbrdaddr, sizeof(bbrdaddr),"local-%s-request@%s", curbb->bb_name, locfullname);
 #endif /* not POP */
 #ifdef DEBUG
     ll_log (logptr, LLOGGEN, "=> BBoard %s: file='%s' info='%s'",
@@ -556,7 +556,7 @@ short   result;
     printx ("\rerrors during distribution: ");
     if (domsg)
 	(void) fflush (stdout);
-    (void) sprintf (intro, "bboards%d distribution for %s failed [%s]\n",
+    (void) snprintf (intro, sizeof(intro), "bboards%d distribution for %s failed [%s]\n",
 	    getpid (), curbb -> bb_name, rp_valstr (result));
     if (loseaux (bbrdaddr, bbrdfrom, intro) != OK
 	    && loseaux (bbrdfrom, (char *) 0, intro) != OK) {
@@ -712,13 +712,13 @@ char   *fmt,
 
     ll_log (logptr, level, fmt, a, b, c, d, e);
 
-    sprintf (buffer, fmt, a, b, c, d, e);
+    snprintf (buffer, sizeof(buffer), fmt, a, b, c, d, e);
     strcat (buffer, "\n");
 
     printx ("\rerror: %s", buffer);
 
     if (err_fd == NOTOK) {
-	unlink (mktemp (strcpy (tmpfil, "/tmp/bboardsXXXXXX")));
+	unlink (mktemp (strncpy (tmpfil, "/tmp/bboardsXXXXXX", sizeof(tmpfil))));
 	if ((err_fd = creat (tmpfil, 0600)) == NOTOK)
 	    return result;
 	close (err_fd);
@@ -764,14 +764,14 @@ mbx_init () {
 	return RP_LIO;
     }
 
-    strcpy (name, curbb -> bb_name);
+    strncpy (name, curbb -> bb_name, sizeof(name));
     if ((curbb = getbbnam (name)) == (struct bboard *) NULL) {
 	printx ("\runable to get information on BBoard %s\n", name);
 	ll_err (logptr, LLOGFAT, "unable to get info on %s", name);
 	lkfclose (fp, curbb -> bb_info);
 	return RP_LIO;
     }
-    sprintf (bbrdheader, "BBoard-ID: %d\nBB-Posted: %s\n",
+    snprintf (bbrdheader, sizeof(bbrdheader), "BBoard-ID: %d\nBB-Posted: %s\n",
 	    ++curbb -> bb_maxima, cnvtdate (TIMREG, bbrdtime));
     fprintf (fp, "%d\n%s\n", curbb -> bb_maxima, bbrdtime);
 

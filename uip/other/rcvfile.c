@@ -89,7 +89,7 @@ char	**argv;
 	fputs ("  *** missing filing directory\n", stderr);
 	finish (RP_PARM);
     }
-    sprintf(filename, "%s/", filedir);
+    snprintf(filename, sizeof(filename), "%s/", filedir);
 
     /*
      *  parse the header, find interesting info and save it.
@@ -210,7 +210,8 @@ long	size;
 	fprintf (stderr, "  *** get owner error (%d)\n", errno);
     }
 
-    sprintf (linebuf, "[%s]%s got %ld characters.\n\nFrom %s, sent %s.\n",
+    snprintf (linebuf, sizeof(linebuf), 
+             "[%s]%s got %ld characters.\n\nFrom %s, sent %s.\n",
 	     locname, file, size, thefrom, thedate);
 
     if (ml_1adr (NO, NO, "FILE SERVER", (char *) 0, owner -> pw_name) < OK ||
@@ -224,7 +225,7 @@ char *path;
 {
     register char *ptr;
 
-    strcpy (dirname, path);
+    strncpy (dirname, path, sizeof(dirname));
     if (ptr = strrchr(dirname+1, '/'))
 	*ptr = '\0';
     else

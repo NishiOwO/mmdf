@@ -58,7 +58,7 @@ char    info[],			  /* general info                       */
     ph_nadrs = 0;
     ph_nchrs = 0L;
 
-    sprintf (initbuf, "%s;%s", info, retadr);
+    snprintf (initbuf, sizeof(initbuf), "%s;%s", info, retadr);
 				  /* slave:  <info> \n <retadr>    */
     retval = ph_wrec (initbuf, strlen (initbuf));
 

@@ -1,4 +1,4 @@
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.15 1998/12/10 13:19:50 krueger Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.16 1999/08/16 10:21:34 krueger Exp $ */
 /*
  *     MULTI-CHANNEL MEMO DISTRIBUTION FACILITY  (MMDF)
  *     
@@ -197,8 +197,8 @@ mclean ()			  /* get rid of orphaned text files     */
 mproc (filename)                /* check for & remove orphaned msgs   */
 char    filename[];
 {
-    (void) sprintf (mname, "%s%s", mquedir, filename);
-    (void) sprintf (aname, "%s%s", aquedir, filename);
+    (void) snprintf (mname, sizeof(mname), "%s%s", mquedir, filename);
+    (void) snprintf (aname, sizeof(aname), "%s%s", aquedir, filename);
 
     if (minage (mname) && stat (aname, &testnode) == -1)
     {                             /* old & no aquedir association       */
@@ -245,7 +245,7 @@ aclean ()
 	if (ismsg (dp))
 	{
 				  /* get queue entry name (msg name)   */
-	    (void) strcpy (themsg.mg_mname, dp->d_name);
+	    (void) strncpy (themsg.mg_mname, dp->d_name, sizeof(themsg.mg_mname));
 	    if (mq_rinit ((Chan *) 0, &themsg, retadr) != OK)
           continue;
 #ifdef NEW_CLEAN
@@ -361,7 +361,7 @@ deque (themsg)
     	 */
 	if (!lexequ (curque, theadr.adr_que))
 	{
-	    (void) strcpy (curque, theadr.adr_que);
+	    (void) strncpy (curque, theadr.adr_que, sizeof(curque));
 	    msg_dequeue (theadr.adr_que, themsg);
 	}
     }
@@ -385,9 +385,9 @@ LOCFUN
 #endif
 
     if (theque == (char *) 0)
-        (void) sprintf (thename, "%s%s", aquedir, themsg -> mg_mname);
+        (void) snprintf (thename, sizeof(thename), "%s%s", aquedir, themsg -> mg_mname);
     else
-	(void) sprintf (thename, "%s%s/%s",
+	(void) snprintf (thename, sizeof(thename), "%s%s/%s",
 			squepref, theque, themsg -> mg_mname);
 
     if (unlink (thename) < OK && errno != ENOENT) {
@@ -398,7 +398,7 @@ LOCFUN
 
     if (theque == (char *) 0)
     {				  /* get rid of ALL the message */
-	(void) sprintf (thename, "%s%s", mquedir, themsg -> mg_mname);
+	(void) snprintf (thename, sizeof(thename), "%s%s", mquedir, themsg -> mg_mname);
 	if (unlink (thename) < OK) /* the text is just "baggage"         */
 	    ll_err (logptr, LLOGTMP, "Problem unlinking %s text: '%s'",
 	        themsg -> mg_mname, thename);
@@ -505,7 +505,7 @@ doreturn (themsg, theadr, retadr)
     {                         /* dequeue if couldn't notify   */
 	char orphanage[ADDRSIZE];
 
-	(void) sprintf (orphanage, "Orphanage <%s>", supportaddr);
+	(void) snprintf (orphanage, sizeof(orphanage), "Orphanage <%s>", supportaddr);
 	printx (" couldn't return,\ntrying orphanage...");
 	(void) fflush (stdout);
 	if (rtn_time (themsg, orphanage) == OK)

@@ -316,7 +316,7 @@ char   *argv[];
     if (rp_isbad (mm_init ()) || rp_isbad (mm_sbinit ()))
 	err_abrt (RP_MECH, "Unable to submit mail; please report this error");
 
-    strcpy (linebuf, regargs);    /* standard stuff          */
+    strncpy (linebuf, regargs, sizeof(linebuf));    /* standard stuff        */
     if (isstr(sbmtargs))
         strcat (linebuf, sbmtargs);   /* extra args for submit   */
 
@@ -385,14 +385,14 @@ char   *argv[];
 	default:
 	    if (addrtype == ADDR_TO) {
 		if (!strlen(tolist))
-		    strcpy (tolist, argv[i]);
+		    strncpy (tolist, argv[i], sizeof(tolist));
 		else {
 		    strcat (tolist, ", ");
 		    strcat (tolist, argv[i]);
 		}
 	    } else { /* ADDR_CC */
 		if (!strlen(cclist))
-		    strcpy (cclist, argv[i]);
+		    strncpy (cclist, argv[i], sizeof(cclist));
 		else {
 		    strcat (cclist, ", ");
 		    strcat (cclist, argv[i]);
@@ -455,7 +455,7 @@ char	*name,
 {
     char    linebuf[LINESIZE];
 
-    sprintf (linebuf, "%-10s%s\n", name, contents);
+    snprintf (linebuf, sizeof(linebuf), "%-10s%s\n", name, contents);
     mm_wtxt (linebuf, strlen (linebuf));
 }
 /**/
@@ -532,12 +532,12 @@ int     fancy;          /* make address fancy? */
 
     if (!fancy || name != 0)
     {
-	strcpy (sigtxt, name);
+	strncpy (sigtxt, name, sizeof(sigtxt));
 	gotsig = TRUE;
     }
     else
     {                             /* user didn't give us a signature    */
-	sprintf (linebuf, "%s/.signature", logdir);
+	snprintf (linebuf, sizeof(linebuf), "%s/.signature", logdir);
 
 	if ((sigfp = fopen (linebuf, "r")) != NULL)
 	{
@@ -556,10 +556,12 @@ int     fancy;          /* make address fancy? */
     {
 	for (ptr = locname; *ptr != 0; ptr++)
 	    *ptr = uptolow (*ptr);      /* Screw locname */
-	sprintf (linebuf, "%s <%s@%s.%s>", sigtxt, username, locname, locdomain);
+	snprintf (linebuf, sizeof(linebuf), "%s <%s@%s.%s>", 
+                  sigtxt, username, locname, locdomain);
     }
     else                          /* just the mailbox info              */
-	sprintf (linebuf, "%s@%s.%s", username, locname, locdomain);
+	snprintf (linebuf, sizeof(linebuf), "%s@%s.%s", 
+                  username, locname, locdomain);
 
     sndhdr (cmpnt, linebuf);
 }

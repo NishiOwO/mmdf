@@ -71,3 +71,23 @@ struct header {
 
 #define	NARGS	20	/* Maximum number of args to set and in .sendrc lines */
 #define M_BSIZE 256
+
+/* Everything below was previously situated in s_main.c   */
+/* Moved here when sprintf was changed to snprintf        */
+/* and strcpy to strncpy                                  */
+char    aliasfilename[128],
+        bigbuf[BBSIZE],              /* buffer for text of msg */
+        drffile[S_BSIZE],
+        from[S_BSIZE],
+        host[64],                 /* default hostname */
+        inclfile[FILNSIZE],
+        signature[S_BSIZE],            /* hold the signature */
+        tmpdrffile[S_BSIZE];
+
+/* Set the default user settable options */
+
+char editor[128];
+char checker[128];
+char copyfile[128];
+char subargs[128];
+

@@ -90,7 +90,7 @@ register int    f;
     if (BBuid == -1)
 	return setbbinfo (BBOARDS, file, f);
 
-    (void) strcpy (BBData, file);
+    (void) strncpy (BBData, file, sizeof(BBData));
 
     BBflags = SB_NULL;
     (void) endbbent ();
@@ -108,7 +108,7 @@ register int	f;
     register struct passwd *pw;
 
     if ((pw = getpwnam (user)) == NULL) {
-	(void) sprintf (BBErrors, "unknown user: %s", user);
+	(void) snprintf (BBErrors, sizeof(BBErrors), "unknown user: %s", user);
 	return 0;
     }
 
@@ -139,7 +139,7 @@ register char  *name,
     register struct passwd *pw;
 
     if ((pw = getpwnam (name)) == NULL) {
-	(void) sprintf (BBErrors, "unknown user: %s", name);
+	(void) snprintf (BBErrors, sizeof(BBErrors), "unknown user: %s", name);
 	return 0;
     }
 
@@ -151,10 +151,10 @@ static int  setpwaux (pw, file)
 register struct passwd *pw;
 register char  *file;
 {
-    (void) strcpy (BBName, pw -> pw_name);
+    (void) strncpy (BBName, pw -> pw_name, sizeof(BBName));
     BBuid = pw -> pw_uid;
-    (void) strcpy (BBDir, pw -> pw_dir);
-    (void) sprintf (BBData, "%s/%s",
+    (void) strncpy (BBDir, pw -> pw_dir, sizeof(BBDir));
+    (void) snprintf (BBData, sizeof(BBData), "%s/%s",
 	    *file != '/' ? BBDir : "",
 	    *file != '/' ? file : file + 1);
 
@@ -173,7 +173,7 @@ register int     f;
 	    return 0;
 
 	if ((BBfile = fopen (BBData, "r")) == NULL) {
-	    (void) sprintf (BBErrors, "unable to open: %s", BBData);
+	    (void) snprintf (BBErrors, sizeof(BBErrors), "unable to open: %s", BBData);
 	    return 0;
 	}
     }
@@ -203,13 +203,13 @@ long    getbbtime () {
 	    return 0;
 
 	if (stat (BBData, &st) == NOTOK) {
-	    (void) sprintf (BBErrors, "unable to stat: %s", BBData);
+	    (void) snprintf (BBErrors, sizeof(BBErrors), "unable to stat: %s", BBData);
 	    return 0;
 	}
     }
     else
 	if (fstat (fileno (BBfile), &st) == NOTOK) {
-	    (void) sprintf (BBErrors, "unable to fstat: %s", BBData);
+	    (void) snprintf (BBErrors, sizeof(BBErrors), "unable to fstat: %s", BBData);
 	    return 0;
 	}
 
@@ -367,14 +367,14 @@ static int  BBread () {
 
     if (*bb -> bb_request == '-')
 	if (p == NULL && r && *r == '@')
-	    (void) sprintf (BBRequest, "%s%s%s",
+	    (void) snprintf (BBRequest, sizeof(BBRequest), "%s%s%s",
 		    bb -> bb_name, bb -> bb_request, r);
 	else
-	    (void) sprintf (BBRequest, "%s%s",
+	    (void) snprintf (BBRequest, sizeof(BBRequest), "%s%s",
 		    bb -> bb_name, bb -> bb_request);
     else
 	if (p == NULL && r && *r == '@' && *bb -> bb_request)
-	    (void) sprintf (BBRequest, "%s%s", bb -> bb_request, r);
+	    (void) snprintf (BBRequest, sizeof(BBRequest), "%s%s", bb -> bb_request, r);
 
     if (BBRequest[0])
 	bb -> bb_request = BBRequest;
@@ -384,7 +384,7 @@ static int  BBread () {
 		: bb -> bb_leader[0];
 
     if (*bb -> bb_addr == '@') {
-	(void) sprintf (BBAddr, "%s%s", bb -> bb_name, bb -> bb_addr);
+	(void) snprintf (BBAddr, sizeof(BBAddr), "%s%s", bb -> bb_name, bb -> bb_addr);
 	bb -> bb_addr = BBAddr;
     }
     else
@@ -394,22 +394,22 @@ static int  BBread () {
     if (*bb -> bb_file == NULL)
 	return;
     if (*bb -> bb_file != '/') {
-	(void) sprintf (BBFile, "%s/%s", BBDir, bb -> bb_file);
+	(void) snprintf (BBFile, sizeof(), "%s/%s", BBDir, bb -> bb_file);
 	bb -> bb_file = BBFile;
     }
 
     if ((cp = strrchr (bb -> bb_file, '/')) == NULL || *++cp == NULL)
-	(void) strcpy (prf, ""), cp = bb -> bb_file;
+	(void) strncpy (prf, "", sizeof(prf)), cp = bb -> bb_file;
     else
-	(void) sprintf (prf, "%.*s", cp - bb -> bb_file, bb -> bb_file);
+	(void) snprintf (prf, sizeof(prf), "%.*s", cp - bb -> bb_file, bb -> bb_file);
     if ((dp = strchr (cp, '.')) == NULL)
 	dp = cp + strlen (cp);
 
-    (void) sprintf (BBArchive, "%s%s/%s", prf, ARCHIVE, cp);
+    (void) snprintf (BBArchive, sizeof(BBArchive), "%s%s/%s", prf, ARCHIVE, cp);
     bb -> bb_archive = BBArchive;
-    (void) sprintf (BBInfo, "%s.%.*s%s", prf, dp - cp, cp, CNTFILE);
+    (void) snprintf (BBInfo, sizeof(BBInfo), "%s.%.*s%s", prf, dp - cp, cp, CNTFILE);
     bb -> bb_info = BBInfo;
-    (void) sprintf (BBMap, "%s.%.*s%s", prf, dp - cp, cp, MAPFILE);
+    (void) snprintf (BBMap, sizeof(BBMap), "%s.%.*s%s", prf, dp - cp, cp, MAPFILE);
     bb -> bb_map = BBMap;
 
     if ((info = fopen (bb -> bb_info, "r")) == NULL)
@@ -418,7 +418,7 @@ static int  BBread () {
     if (fgets (line, sizeof line, info) && (i = atoi (line)) > 0)
 	bb -> bb_maxima = (unsigned) i;
     if (!feof (info) && fgets (line, sizeof line, info)) {
-	(void) strcpy (BBDate, line);
+	(void) strncpy (BBDate, line, sizeof(BBDate));
 	if (cp = strchr (BBDate, NEWLINE))
 	    *cp = NULL;
 	bb -> bb_date = BBDate;
@@ -450,7 +450,7 @@ register struct bboard  *b;
 	if ((pw = getpwuid (uid = getuid ())) == NULL)
 	    return 0;
 	gid = getgid ();
-	(void) strcpy (username, pw -> pw_name);
+	(void) strncpy (username, pw -> pw_name, sizeof(username));
     }
 
     if (uid == BBuid)
@@ -610,17 +610,17 @@ register int     (*action) ();
 
 		case NULL: 
 		    if ((cp = strrchr (bb -> bb_file, '/')) == NULL || *++cp == NULL)
-			(void) strcpy (prf, ""), cp = bb -> bb_file;
+			(void) strncpy (prf, "", sizeof(prf)), cp = bb -> bb_file;
 		    else
-			(void) sprintf (prf, "%.*s", cp - bb -> bb_file, bb -> bb_file);
+			(void) snprintf (prf, sizeof(prf), "%.*s", cp - bb -> bb_file, bb -> bb_file);
 		    if ((dp = strchr (cp, '.')) == NULL)
 			dp = cp + strlen (cp);
-		    (void) sprintf (file, "%s.%.*s%s", prf, dp - cp, cp, DSTFILE);
+		    (void) snprintf (file, sizeof(file), "%s.%.*s%s", prf, dp - cp, cp, DSTFILE);
 		    hp = file;
 		    break;
 
 		default: 
-		    (void) sprintf (file, "%s/%s", BBDir, item);
+		    (void) snprintf (file, sizeof(file), "%s/%s", BBDir, item);
 		    hp = file;
 		    break;
 	    }
@@ -642,13 +642,13 @@ register int     (*action) ();
 	default: 
 	    if (hp = strrchr (item, '@')) {
 		*hp++ = NULL;
-		(void) strcpy (mbox, item);
-		(void) strcpy (host, hp);
+		(void) strncpy (mbox, item, sizeof(mbox));
+		(void) strncpy (host, hp, sizeof(host));
 		*--hp = '@';
 	    }
 	    else {
-		(void) sprintf (mbox, "%s%s", DISTADR, bb -> bb_name);
-		(void) strcpy (host, item);
+		(void) snprintf (mbox, sizeof(mbox), "%s%s", DISTADR, bb -> bb_name);
+		(void) strncpy (host, item, sizeof(host));
 	    }
 	    if (result = (*action) (mbox, host))
 		(void) bblose ("action (%s, %s) returned 0%o", mbox, host, result);
@@ -667,7 +667,7 @@ char   *fmt,
        *c;
 {
     if (BBErrors[0] == NULL)
-	(void) sprintf (BBErrors, fmt, a, b, c);
+	(void) snprintf (BBErrors, sizeof(BBErrors), fmt, a, b, c);
 
     return NOTOK;
 }

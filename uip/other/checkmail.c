@@ -142,8 +142,8 @@ char thename[];
 	char		msgname[LINESIZE];
 	char		linebuf[LINESIZE];
 
-	strcpy(themsg.mg_mname, thename);
-	sprintf(msgname, "%s%s", mquedir, thename);
+	strncpy(themsg.mg_mname, thename, sizeof(themsg.mg_mname));
+	snprintf(msgname, sizeof(msgname), "%s%s", mquedir, thename);
 
 	if (stat(msgname, &sb) < 0) {
 		perror(msgname);

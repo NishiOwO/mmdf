@@ -80,13 +80,13 @@ char   *argv[];
 		case 'f':         /* add file to end of message body    */
 	    	    if (++curarg >= argc)
 	    		break;
-		    strcpy (inclfile, argv[curarg]);
+		    strncpy (inclfile, argv[curarg], sizeof(inclfile));
 		    break;        /* file is named in next argument     */
 
 		case 'h':         /* default hostname for addresses     */
 	    	    if (++curarg >= argc)
 	    		break;
-		    strcpy (host, argv[curarg]);
+		    strncpy (host, argv[curarg], sizeof(host));
 		    break;        /* host is named in next argument     */
 
 	    	case 'n':

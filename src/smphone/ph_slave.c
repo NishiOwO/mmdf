@@ -105,7 +105,7 @@ char   *argv[];
 	s_alarm (0);
     }
     else                          /* use the argument                   */
-	strcpy (chaname, argv[1]);
+	strncpy (chaname, argv[1], sizeof(chaname));
 
     ll_hdinit (logptr, chaname); /* which channel are we?    */
 
@@ -233,7 +233,7 @@ char   *fmt,
 	    break;
 
 	default: 
-	    sprintf (newfmt, "%s%s", "err [ ABEND (%s) ] ", fmt);
+	    snprintf (newfmt, sizeof(newfmt), "%s%s", "err [ ABEND (%s) ] ", fmt);
 	    ll_err (logptr, LLOGFAT, newfmt, rp_valstr (code), b, c, d);
     }
 }

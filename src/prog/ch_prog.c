@@ -111,7 +111,7 @@ err_abrt (code, f, a0, a1, a2)
     if (rp_isbad (code)) {
 	if (rp_gbval (code) == RP_BNO || logptr->ll_level >= LLOGTMP) {
 	    /* don't worry about minor stuff */
-	    sprintf (buf, "%s%s", "err [ ABEND (%s) ]\t", f);
+	    snprintf (buf, sizeof(buf), "%s%s", "err [ ABEND (%s) ]\t", f);
 	    ll_log (logptr, LLOGFAT, buf, rp_valstr (code), a0, a1, a2);
 	    abort (code);
 	}

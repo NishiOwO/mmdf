@@ -116,19 +116,22 @@ getuinfo() {
 	if (p = strchr( pw->pw_gecos, '&' )) {
 		/* Deal with Berkeley folly */
 		*p = 0;
-		sprintf( from, "%s%c%s%s <%s@%s.%s>", pw->pw_gecos,
+		snprintf( from, sizeof(from), "%s%c%s%s <%s@%s.%s>", 
+                         pw->pw_gecos,
 			 lowtoup( pw->pw_name[0] ),
 #ifdef JNTMAIL
 			 pw->pw_name+1, p+1, midp, ap_dmflip(locdomain), locname );
 	} else
-		sprintf( from, "%s <%s@%s.%s>", pw->pw_gecos, midp, ap_dmflip(locdomain), locname);
+		snprintf( from, sizeof(from), "%s <%s@%s.%s>", 
+                         pw->pw_gecos, midp, ap_dmflip(locdomain), locname);
 #else JNTMAIL
 			pw->pw_name+1, p+1, midp, locname, locdomain);
 	} else
-		sprintf( from, "%s <%s@%s.%s>", pw->pw_gecos, midp, locname, locdomain );
+		snprintf( from, sizeof(from), "%s <%s@%s.%s>", 
+                         pw->pw_gecos, midp, locname, locdomain );
 #endif JNTMAIL
 #else
-	sprintf( from, "%c%s@%s.%s",	/* default from text */
+	snprintf( from, sizeof(from), "%c%s@%s.%s",	/* default from text */
 #ifdef JNTMAIL
 		lowtoup( midp[0] ), &(midp[1]), ap_dmflip(locdomain), locname);
 #else JNTMAIL
@@ -137,23 +140,25 @@ getuinfo() {
 #endif
 	/* Set default values for those options that need defaults */
 
-	strcpy(editor, ((p = getenv("VISUAL")) && *p) ? p : 
- 		        (((p = getenv("EDITOR")) && *p) ? p : dflveditor));
-	strcpy(checker, dflchecker);
-	sprintf(linebuf, "%s/.sent", pw->pw_dir);
-	strcpy(copyfile, linebuf);
-	sprintf(drffile, "%s/%s", pw->pw_dir, drft_tmplt);
- 	sprintf(tmpdrffile, "%s/%s", pw->pw_dir, tmp_tmplt);
-	strcpy( subargs, d_subargs );
+	strncpy(editor, ((p = getenv("VISUAL")) && *p) ? p : 
+ 		        (((p = getenv("EDITOR")) && *p) ? p : dflveditor),
+                        sizeof(editor));
+	strncpy(checker, dflchecker, sizeof(checker));
+	snprintf(linebuf, sizeof(linebuf), "%s/.sent", pw->pw_dir);
+	strncpy(copyfile, linebuf, sizeof(copyfile));
+	snprintf(drffile, sizeof(drffile), "%s/%s", pw->pw_dir, drft_tmplt);
+ 	snprintf(tmpdrffile, sizeof(tmpdrffile), "%s/%s", 
+                 pw->pw_dir, tmp_tmplt);
+	strncpy( subargs, d_subargs, sizeof(subargs) );
 	wflag = 0;
 	cflag = 0;
 	rflag = 0;
 	qflag = 0;
 	pflag = 0;
-       	strcpy (signature, from);
+       	strncpy (signature, from, sizeof(signature));
 	/* Get info from the ".sendrc" file */
 
-	sprintf( rcfilename, "%s/%s", pw->pw_dir, rcname );
+	snprintf( rcfilename, sizeof(rcfilename), "%s/%s", pw->pw_dir, rcname );
 	if(( fp = fopen(rcfilename, "r")) != NULL ) {
 		char *cp;
 
@@ -207,11 +212,12 @@ char **pp;
 		}
 		else
 		{
-			strcpy( copyfile, *pp);
+			strncpy( copyfile, *pp, sizeof(copyfile));
 			if( copyfile[0] != '/' ) 
 			{
-				strcpy(tmpline, copyfile);
-				sprintf(copyfile, "%s/%s",pw->pw_dir,tmpline);
+				strncpy(tmpline, copyfile, sizeof(tmpline));
+				snprintf(copyfile, sizeof(copyfile), 
+                                   "%s/%s",pw->pw_dir,tmpline);
 			}
 		}
 		break;
@@ -220,13 +226,17 @@ char **pp;
 		/* pickup the draft directory */
 		if( *(++pp) != NULL )
 		{
-			sprintf( drffile, "%s/%s", *pp, drft_tmplt );
-			sprintf( tmpdrffile, "%s/%s", *pp, tmp_tmplt );
+			snprintf( drffile, sizeof(drffile), "%s/%s", 
+                                  *pp, drft_tmplt );
+			snprintf( tmpdrffile, sizeof(tmpdrffile), "%s/%s", 
+                                  *pp, tmp_tmplt );
 		}
 		else
 		{
-			sprintf( drffile, "%s/%s", pw->pw_dir, drft_tmplt);
-			sprintf( tmpdrffile, "%s/%s", pw->pw_dir, tmp_tmplt);
+			snprintf( drffile, sizeof(drffile), "%s/%s", 
+                                  pw->pw_dir, drft_tmplt);
+			snprintf( tmpdrffile, sizeof(tmpdrffile), "%s/%s", 
+                                  pw->pw_dir, tmp_tmplt);
 		}
 		break;
 
@@ -234,14 +244,15 @@ char **pp;
 		/* If he wants a signature block use it */
 		if( *(++pp) == 0 ){
 #ifdef PWNAME
-			sprintf( signature, "%c%s@%s.%s", /* use his login name alone */
+			snprintf( signature, sizeof(signature), "%c%s@%s.%s", 
+                                                /* use his login name alone */
 #ifdef JNTMAIL
 			   lowtoup(midp[0]), &(midp[1]), ap_dmflip(locdomain), locname );
 #else JNTMAIL
 			   lowtoup(midp[0]), &(midp[1]), locname, locdomain );
 #endif JNTMAIL
 #else
-			strcpy( signature, from );	/* NO-OP ? */
+			strncpy( signature, from, sizeof(signature) );	/* NO-OP ? */
 #endif
 		} else {
 			linebuf[0] = '\0';
@@ -252,13 +263,16 @@ char **pp;
 			}
 			if (checksignature (linebuf) == 0) {
 #ifdef JNTMAIL
-				sprintf(tmpline, "%s.%s", ap_dmflip(locdomain), locname);
+				snprintf(tmpline, sizeof(tmpline), "%s.%s", 
+                                         ap_dmflip(locdomain), locname);
 #else JNTMAIL
-				sprintf(tmpline, "%s.%s", locname, locdomain);
+				snprintf(tmpline, sizeof(tmpline), "%s.%s", 
+                                         locname, locdomain);
 #endif JNTMAIL
 				for( p=tmpline ; *p ; p++)
 					*p = uptolow(*p);
-				sprintf( signature, "%s <%s@%s>",
+				snprintf( signature, sizeof(signature),
+                                   "%s <%s@%s>",
 				   linebuf, midp, tmpline);
 			} else {
 				fprintf(stderr,"Illegal signature, using default\n");
@@ -268,14 +282,15 @@ char **pp;
 
 	case NOSIGNATURE:
 #ifdef PWNAME
-		sprintf( signature, "%c%s@%s.%s", /* use his login name alone */
+		snprintf( signature, sizeof(signature), "%c%s@%s.%s", 
+                                                /* use his login name alone */
 #ifdef JNTMAIL
 			   lowtoup(midp[0]), &(midp[1]), ap_dmflip(locdomain), locname );
 #else JNTMAIL
 			   lowtoup(midp[0]), &(midp[1]), locname, locdomain);
 #endif JNTMAIL
 #else
-		strcpy( signature, from );
+		strncpy( signature, from, sizeof(signature) );
 #endif
 		break;
 
@@ -288,11 +303,13 @@ char **pp;
 			fprintf(stderr,"You need to specify an alias file name!\n");
 		else
 		{
-			strcpy( aliasfilename, *pp );
+			strncpy( aliasfilename, *pp, sizeof(aliasfilename) );
 			if( aliasfilename[0] != '/' ) 
 			{
-				strcpy(tmpline, aliasfilename);
-				sprintf(aliasfilename, "%s/%s",pw->pw_dir,tmpline);
+				strncpy(tmpline, aliasfilename, 
+                                        sizeof(tmpline));
+				snprintf(aliasfilename, sizeof(aliasfilename), 
+                                         "%s/%s",pw->pw_dir,tmpline);
 			}
 		}
 		aliasinit( aliasfilename );
@@ -312,7 +329,7 @@ char **pp;
 			fprintf(stderr,"Defaulting to %s.\n",editor);
 		}
 		else
-			strcpy( editor, *pp );
+			strncpy( editor, *pp, sizeof(editor) );
 		break;
 	case VEDITOR:
 		/* Default editor for use with the "e" command */
@@ -322,7 +339,7 @@ char **pp;
 			fprintf(stderr,"Defaulting to %s.\n",editor);
 		}
 		else
-			strcpy( editor, *pp );
+			strncpy( editor, *pp, sizeof(editor) );
 		ded = 1;
 		break;
 
@@ -334,7 +351,7 @@ char **pp;
 			fprintf(stderr,"Defaulting to %s.\n",checker);
 		}
 		else
-			strcpy( checker, *pp );
+			strncpy( checker, *pp, sizeof(checker) );
 		break;
 
    	case PAGING : 
@@ -596,18 +613,18 @@ char *buf, *pos;
 		sd++;
 		*sd = '\0';
 		ed++;
-		sprintf( tmpbuffer, "%s%s", buf, ed);
+		snprintf( tmpbuffer, sizeof(tmpbuffer), "%s%s", buf, ed);
 	}
 
 	else
 	if( sd <= buf ){
 		ed++;
-		strcpy(tmpbuffer, ed);
+		strncpy(tmpbuffer, ed, sizeof(tmpbuffer));
 	}
 	else
 	if( *ed == '\0' ){
 		*sd = '\0';
-		strcpy(tmpbuffer, buf);
+		strncpy(tmpbuffer, buf, sizeof(tmpbuffer));
 	}
 	strcpy( buf, tmpbuffer );
 }
@@ -713,7 +730,7 @@ char	*data;
 		}
 	}
 	nhp = (struct header *)malloc(sizeof (*nhp));
-	sprintf(buf, "%s:  ", name);
+	snprintf(buf, sizeof(buf), "%s:  ", name);
 	if (nhp == NULL || (nhp->hname = strdup(buf)) == NULL) {
 		fprintf(stderr,"No memory for header '%s'\n", buf);
 		if (nhp)

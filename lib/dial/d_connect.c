@@ -656,7 +656,7 @@ char   *number;
 
     warning = 0;
     if (d_prtpt -> p_acupref != (char *) 0)
-	(void) strcpy (linebuf, d_prtpt -> p_acupref);
+	(void) strncpy (linebuf, d_prtpt -> p_acupref, sizeof(linebuf));
     else
 	linebuf[0] = '\0';
 

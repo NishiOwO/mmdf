@@ -53,9 +53,9 @@ char	*name,			/* where to put name part	*/
 	    (route = ap_p2s((AP_ptr)0, (AP_ptr)0,
 	    (AP_ptr)0, (AP_ptr)0, routep)) != (char *)NOTOK)
 	{
-		(void) strcpy(tbuf, route);
+		(void) strncpy(tbuf, route, sizeof(tbuf));
+		(void) strncat(tbuf, mbox, sizeof(tbuf)-strlen(route));
 		free(route);
-		(void) strcat(tbuf, mbox);
 		(void) strcpy(mbox, tbuf);
 	}
 	ap_free(treep);

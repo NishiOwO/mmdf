@@ -94,14 +94,14 @@ char    reason[];                 /* the problem                        */
 
     ll_close (logptr);
 
-    sprintf (linebuf, "%s  (%s)", rtn_nosnd, themsg -> mg_mname);
+    snprintf (linebuf, sizeof(linebuf), "%s  (%s)", rtn_nosnd, themsg -> mg_mname);
     if (rtn_mlinit (linebuf, retadr) != OK)
 	return (NOTOK);           /* set up for returning               */
 
     rtn_pnam (adrptr, theaddr);
 
 
-    sprintf (linebuf, "%s\n'%s' %s:  '%s'\n\n",
+    snprintf (linebuf, sizeof(linebuf), "%s\n'%s' %s:  '%s'\n\n",
 		"    Your message could not be delivered to",
 		theaddr, "for the following\nreason",
 		(isstr (reason) ? reason : noreason));
@@ -126,7 +126,7 @@ rtn_warn (themsg, retadr)         /* notify of delay in delivery        */
     ll_log (logptr, LLOGPTR, "rtn_warn ()");
 #endif
 
-    sprintf (subject, "%s  (%s)", rtn_yetsnd, themsg -> mg_mname);
+    snprintf (subject, sizeof(subject), "%s  (%s)", rtn_yetsnd, themsg -> mg_mname);
     if (rtn_mlinit (subject, retadr) != OK)
 	return (NOTOK);           /* set up for returning               */
 
@@ -142,7 +142,7 @@ rtn_warn_init (themsg, retadr)         /* notify of delay in delivery        */
     char *retadr;
 {
     char   subject[32];
-    sprintf (subject, "%s  (%s)", rtn_yetsnd, themsg -> mg_mname);
+    snprintf (subject, sizeof(subject), "%s  (%s)", rtn_yetsnd, themsg -> mg_mname);
     if (rtn_mlinit (subject, retadr) != OK)
 	return (NOTOK);           /* set up for returning               */
 
@@ -166,12 +166,12 @@ rtn_warn_per_adr (themsg, theadr, curfailtime) /* notify of delay in delivery */
 #endif
 
 	rtn_pnam (theadr, theaddr);
-    sprintf (linebuf, "\t%s\n", theaddr);
+    snprintf (linebuf, sizeof(linebuf), "\t%s\n", theaddr);
     ml_txt (linebuf);
     msghour = (int) ((curtime - themsg -> mg_time) / 3600);
     days = ((curfailtime - msghour) + 23) / 24;
     days = curfailtime - msghour;
-    sprintf (linebuf, "\t\ttrying for %d more days.\n", days < 0 ? 0 : days);
+    snprintf (linebuf, sizeof(linebuf), "\t\ttrying for %d more days.\n", days < 0 ? 0 : days);
     ml_txt (linebuf);
 #if 0
     rtn_cite (themsg -> mg_mname); /* include message citation           */
@@ -197,7 +197,7 @@ char *retadr;
     ll_log (logptr, LLOGPTR, "rtn_time (%s)", themsg -> mg_mname);
 #endif
 
-    sprintf (subject, "%s  (%s)", rtn_nosnd, themsg -> mg_mname);
+    snprintf (subject, sizeof(subject), "%s  (%s)", rtn_nosnd, themsg -> mg_mname);
     if (rtn_mlinit (subject, retadr) != OK)
 	return (NOTOK);           /* set up for returning               */
 
@@ -225,7 +225,7 @@ LOCFUN
 				  /* number of hours already in queue   */
     days = (msghour + 23) / 24;
 				  /* round up to nearest whole day      */
-    sprintf (linebuf, "    After %d %s (%d hours), your message %s\nfully delivered.",
+    snprintf (linebuf, sizeof(linebuf), "    After %d %s (%d hours), your message %s\nfully delivered.",
 	    days, ((days == 1) ? "day" : "days"), msghour,
 	    (dowarn ? "has not yet been" : "could not be"));
     ml_txt (linebuf);             /* introductory line                  */
@@ -254,7 +254,8 @@ LOCFUN
     {
       ml_txt ("  Attempts to deliver the message will continue\n");
       days = ((failtime - msghour) + 23) / 24;
-      sprintf (linebuf, "for %d more days.", days < 0 ? 0 : days);
+      snprintf (linebuf, sizeof(linebuf), "for %d more days.",
+                days < 0 ? 0 : days);
       ml_txt (linebuf);             /* send apologetic nonsense  */
       ml_txt ("  No further action is required by you.\n\n");
       ml_txt ("    Delivery attempts are still pending for the following address(es):\n\n");
@@ -299,7 +300,7 @@ char    *retadr;
 	ll_log (logptr, LLOGTMP, "no return address");
 	return (NOTOK);
     }
-    sprintf (fromline, "%s %s <%s@%s>",
+    snprintf (fromline, sizeof(fromline), "%s %s <%s@%s>",
 		locfullname, sitesignature, mmdflogin, locfullname);
 				  /* From field ignores uid             */
     if (ml_1adr (NO, YES, fromline, subject, retadr) != OK)
@@ -335,7 +336,7 @@ LOCFUN
 	if ((dodone && adrbuf.adr_delv == ADR_DONE) ||
 	    (!dodone && adrbuf.adr_delv != ADR_DONE)  )
 	{                         /* format address and print it        */
-	    sprintf (linebuf, "\t%s\n", theaddr);
+	    snprintf (linebuf, sizeof(linebuf), "\t%s\n", theaddr);
 #ifdef DEBUG
 	    ll_log (logptr, LLOGFTR, "\tlisted");
 #endif
@@ -382,7 +383,7 @@ LOCFUN
 
     ml_txt ("\n    Your message follows:\n\n");
 
-    sprintf (file, "%s%s", mquedir, mname);
+    snprintf (file, sizeof(file), "%s%s", mquedir, mname);
     msg_tfp = fopen (file, "r");
 
     ml_file (msg_tfp);
@@ -405,7 +406,7 @@ rtn_cite (mname)
 
     ml_txt ("\n    Your message begins as follows:\n\n");
 
-    sprintf (file, "%s%s", mquedir, mname);
+    snprintf (file, sizeof(file), "%s%s", mquedir, mname);
     if ((msg_tfp = fopen (file, "r")) == NULL)
     {
 	ll_err (logptr, LLOGTMP, "can't open '%s' msg file '%s'",
@@ -463,7 +464,7 @@ char    *reason;
 
 	fputs (delim1, dfp);          /* Message separator */
 	fprintf (dfp, "Reason:   %s\n", reason);
-	sprintf (file, "%s%s", mquedir, msgname);
+	snprintf (file, sizeof(file), "%s%s", mquedir, msgname);
 	if ((mfp = fopen(file, "r")) == NULL) {
 		fprintf (dfp, "Can't open message file %s\n", file);
 	} else {
@@ -471,7 +472,7 @@ char    *reason;
 			fwrite(buf, 1, nread, dfp);
 	}
 	fputs ("-------End of deadletter, start address list-------\n", dfp);
-	sprintf (file, "%s%s", aquedir, msgname);
+	snprintf (file, sizeof(file), "%s%s", aquedir, msgname);
 	if ((mfp = fopen(file, "r")) == NULL) {
 		fprintf (dfp, "Can't open address list file %s\n", file);
 	} else {

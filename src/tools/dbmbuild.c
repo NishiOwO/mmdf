@@ -289,7 +289,7 @@ int new;
       if (Verbose || Debug)
 	    fprintf (stderr, "Temporary database:  %s$\n", dbfile);
 #ifdef HAVE_LIBGDBM
-	(void) sprintf (tmpfile, "%s$", dbfile);
+	(void) snprintf (tmpfile, sizeof(tmpfile), "%s$", dbfile);
 	if(Debug)
 	    fprintf (stderr, "creating '%s'\n", tmpfile);
 
@@ -301,7 +301,7 @@ int new;
 	}
 	chmod (tmpfile, 0644);  /* in case umask screwed us */
 #else /* HAVE_LIBGDBM */
-	(void) sprintf (tmpfile, "%s$.pag", dbfile);
+	(void) snprintf (tmpfile, sizeof(tmpfile), "%s$.pag", dbfile);
 	if(Debug)
 	    fprintf (stderr, "creating '%s'\n", tmpfile);
 
@@ -313,7 +313,7 @@ int new;
 	}
 	chmod (tmpfile, 0644);  /* in case umask screwed us */
 
-	(void) sprintf (tmpfile, "%s$.dir", dbfile);
+	(void) snprintf (tmpfile, sizeof(tmpfile), "%s$.dir", dbfile);
 	if(Debug)
 	    fprintf (stderr, "creating '%s'\n", tmpfile);
 
@@ -325,7 +325,7 @@ int new;
 	}
 	chmod (tmpfile, 0644);  /* in case umask screwed us */
 #endif /* HAVE_LIBGDBM */
-	(void) sprintf (tmpfile, "%s$", dbfile);
+	(void) snprintf (tmpfile, sizeof(tmpfile), "%s$", dbfile);
 	return (dbfinit (tmpfile));
     }
 
@@ -350,8 +350,8 @@ int new;
 	    fprintf(stderr, "Moving to database:  %s\n", dbfile);
 
 #ifdef HAVE_LIBGDBM
-	(void) sprintf (fromfile, "%s$", dbfile);
-	(void) sprintf (tofile, "%s", dbfile);
+	(void) snprintf (fromfile, sizeof(fromfile), "%s$", dbfile);
+	(void) snprintf (tofile, sizeof(tofile), "%s", dbfile);
 	if (Debug)
 	    fprintf (stderr, "moving '%s'\n", fromfile);
 
@@ -364,8 +364,8 @@ int new;
 	    cleanup (-1);
 	}
 #else /* HAVE_LIBGDBM */
-	(void) sprintf (fromfile, "%s$.pag", dbfile);
-	(void) sprintf (tofile, "%s.pag", dbfile);
+	(void) snprintf (fromfile, sizeof(fromfile), "%s$.pag", dbfile);
+	(void) snprintf (tofile, sizeof(tofile), "%s.pag", dbfile);
 	if (Debug)
 	    fprintf (stderr, "moving '%s'\n", fromfile);
 
@@ -378,8 +378,8 @@ int new;
 	    cleanup (-1);
 	}
 
-	(void) sprintf (fromfile, "%s$.dir", dbfile);
-	(void) sprintf (tofile, "%s.dir", dbfile);
+	(void) snprintf (fromfile, sizeof(fromfile), "%s$.dir", dbfile);
+	(void) snprintf (tofile, sizeof(tofile), "%s.dir", dbfile);
 	if(Debug)
 	    fprintf (stderr, "moving '%s'\n", fromfile);
 
@@ -451,20 +451,26 @@ process (tblptr)
     if (tblptr -> tb_fp == (FILE *)EOF)
 	return;
 
+    switch(tblptr -> tb_flags & TB_SRC) {
 #ifdef HAVE_NAMESERVER
-    if ((tblptr -> tb_flags & TB_SRC) == TB_NS) {
+        case TB_NS:
     	if (Debug || Verbose)
 	    fprintf (stderr, "   (Nameserver table)\n");
 	return;
-    }
+          break;
 #endif /* HAVE_NAMESERVER */
+
 #ifdef HAVE_NIS
-    if ((tblptr -> tb_flags & TB_SRC) == TB_NIS) {
+        case TB_NIS:
       if (Debug || Verbose)
           fprintf (stderr, "   (NIS table)\n");
       return;
-    }
+      break:
 #endif /* HAVE_NIS */
+        default:
+          break;
+    }
+
     if (!tb_open (tblptr, TRUE)) /* gain access to a channel table */
     {
 	fprintf (stderr, "could not open table \"%s\" (%s, file = '%s'):\n\t",
@@ -594,14 +600,19 @@ datum value;
 check (tblptr)
 Table *tblptr;
 {
+  switch(tblptr -> tb_flags & TB_SRC) {
+    
 #ifdef HAVE_NAMESERVER
-    if ((tblptr -> tb_flags & TB_SRC) == TB_NS)
+      case TB_NS:
 	return(0);
 #endif /* HAVE_NAMESERVER */
 #ifdef HAVE_NIS
-    if ((tblptr -> tb_flags & TB_SRC) == TB_NIS)
+      case TB_NIS:
       return(0);
 #endif /* HAVE_NIS */
+      default:
+  }
+  
     if (tblptr -> tb_fp == (FILE *)EOF)
 	return(1);		/* We already know its bad */
     if (!tb_open (tblptr, TRUE)) /* gain access to a channel table */

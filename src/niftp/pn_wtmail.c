@@ -177,7 +177,7 @@ pn_wainit ()                           /* generate and open file        */
          /* not sure the %02 is portable - if not then you */
 	 /* will need to add some space detection code to */
 	 /* assignments below */
-         (void) sprintf(fi, "%02d%02d", tm->tm_mon, tm->tm_mday);
+         (void) snprintf(fi, sizeof(fi), "%02d%02d", tm->tm_mon, tm->tm_mday);
          template[2] = fi[0];
          template[3] = fi[1];
          template[4] = fi[2];
@@ -236,7 +236,7 @@ char    *adr;           /* rest of address / route                      */
     if (firstadr)
     {
 	firstadr = FALSE;
-	strcpy (pn_curhost, host);
+	strncpy (pn_curhost, host, sizeof(pn_curhost));
     }
     else
     {
@@ -335,7 +335,7 @@ int len;
 	}
 	if (!inheader)  /* reached end of header                */
 	   return (pn_wtxt (back, strlen (back)));
-	strcpy (partialbuf, back);
+	strcnpy (partialbuf, back, sizeof(partialbuf));
 	return (RP_OK);
     }
     else

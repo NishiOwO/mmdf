@@ -25,7 +25,7 @@ char *username;
 			return (NULL);
 		buf[MAILIDSIZ] = '\0';          /* Paranoid */
 	} else
-		(void) strcpy (buf, username);
+		(void) strncpy (buf, username, sizeof(buf));
 
 #ifdef DEBUG
 	ll_log (logptr, LLOGFTR, "getmailid returns '%s'", buf);

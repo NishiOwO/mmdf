@@ -84,16 +84,22 @@ char **argv;
 check (tblptr)
 Table *tblptr;
 {
+  switch(tblptr -> tb_flags & TB_SRC) {
+    
 #ifdef HAVE_NAMESERVER
-    if ((tblptr -> tb_flags & TB_SRC) == TB_NS)
-	return;
+      case TB_NS: return;
 #endif /* HAVE_NAMESERVER */
+
 #ifdef HAVE_NIS
-    if ((tblptr -> tb_flags & TB_SRC) == TB_NIS) return;
+      case TB_NIS: return;
 #endif /* HAVE_NIS */
+
+      default:
     if (tblptr -> tb_fp == (FILE *)EOF)
 	return;		     /* Already done */
     printf("%s\n", tblptr -> tb_file);
     tblptr -> tb_fp = (FILE *) EOF;
+        break;
+  }
     return;
 }

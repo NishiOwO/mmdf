@@ -126,12 +126,20 @@ extern unsigned int    msgno;		/* message currently being processed */
 extern char    key[];
 extern char	*gc;
 
+#define FILENAMESIZE    64
+#define DEFMBOXSIZE     60
+#define OLDFILESIZE     60
 extern char    filename[];
 extern char	outfile[];
 extern char	defmbox[];
 extern char	oldfile[];
 extern char	*homedir;		/* Full path to home directory */
 
+#define MAININBOXSIZE   60
+#define	BINARYBOXSIZE   60
+#define	MSGRCNAMESIZE   60
+#define DEFOUTFILESIZE  60
+#define USERNAMESIZE    20
 extern char maininbox[60];
 extern char binarybox[60];	    /* Binary map file filename */
 extern char msgrcname[60];	    /* User options filename */
@@ -190,6 +198,10 @@ extern char	*savmsgfn;
 extern char	*sndname;		/* Name of mail sending program */
 extern char	*nullstr;		/* A null string */
 
+#define TWOWINFILSIZE   64
+#define DRAFT_WORKSIZE  64
+#define DRAFT_ORIGINALSIZE 64
+#define DRAFTORIGSIZE   64
 extern char	twowinfil[];		/* filter for 2-window-answer mode */
 extern char	draft_work[];		/* Work file for 2-window answer */
 extern char	draft_original[];  /* Original message(s) for 2-window ans */

@@ -125,11 +125,11 @@ char *signame (sig)
     if (sig >= 0 && sig < NSIG) {
 	return (sys_siglist [sig]);
     } else {
-	sprintf (buff, "unknown signal %d", sig);
+	snprintf (buff, sizeof(buff), "unknown signal %d", sig);
 	return (buff);
     }
 #else /* SYS_SIGLIST_DECLARED */
-    sprintf(buff, "Signal %d", sig);
+    snprintf(buff, sizeof(buff), "Signal %d", sig);
     return(buff);
 #endif /* SYS_SIGLIST_DECLARED */
 }
@@ -335,20 +335,20 @@ MAIN (argc, argv)
      * recvprog will normally be called from some background daemon.
      * We're trying to avoid nameserver timeouts. -- DSH
      */
-    strcpy (subargs, "tmlvk30*");
+    strncpy (subargs, "tmlvk30*", sizeof(subargs));
     if (channel) {
     	Chan *curchan;
 
 	if ((curchan = ch_nm2struct (channel)) == (Chan *) NOTOK)
 	    err_abrt (RP_PARM, "unknown channel name '%s'", channel);
     	ch_llinit(curchan);
-	sprintf (buf, "%si%s*", subargs, channel);
-	strcpy (subargs, buf);
+	snprintf (buf, sizeof(buf), "%si%s*", subargs, channel);
+	strncpy (subargs, buf, sizeof(subargs));
     }
     if (hosttype != HT_NONE) {
-	sprintf (buf, "%sh%s*", subargs, 
+	snprintf (buf, sizeof(buf), "%sh%s*", subargs, 
 			    (hosttype == HT_VIA ? ap_dmflip (host) : host));
-	strcpy (subargs, buf);
+	strncpy (subargs, buf, sizeof(subargs));
     }
     if (!sender) {
 	strcat (subargs, "s");
@@ -416,7 +416,7 @@ MAIN (argc, argv)
 	    default:
 		{
 		    char buff [512];
-		    sprintf (buff, "understand reply to %s:\n%c%s",
+		    snprintf (buff, sizeof(buff), "understand reply to %s:\n%c%s",
 						adr, PR_ERR, rply.rp_line);
 		    terminate (buff, rp);
 		}

@@ -24,7 +24,7 @@ char *aliasfile;
 	char tmpbuf[BSIZE];
 	aflag = 1;
 
-	(void) strcpy( alsfilename, aliasfile );
+	(void) strncpy( alsfilename, aliasfile, sizeof(alsfilename));
 		/*
 		**  Open the alias file and store the keys and lists
 		**  in core
@@ -79,7 +79,7 @@ char *dest, *src, thehost[];
     int sub_flag;
 
     if (thehost != 0)                /* save official version of default   */
-	(void) strcpy (defhost, thehost);
+	(void) strncpy (defhost, thehost, sizeof(defhost));
 
     for (ptr = dest, linelen = 0; *ptr != '\0'; ptr++, linelen++)
 	if (*ptr == '\n')         /* get length of last line of header  */
@@ -110,7 +110,7 @@ char *dest, *src, thehost[];
 	if (address[0] == '\0')
 	{                         /* change the default host */
 	    if (temphost[0] != '\0')
-		(void) strcpy (defhost, temphost);
+		(void) strncpy (defhost, temphost, sizeof(defhost));
 	    continue;
 	}
 	if( aflag && temphost[0]==0){
@@ -136,9 +136,9 @@ char *dest, *src, thehost[];
 			continue;
 	}
 	if (temphost[0] == '\0')
-	    (void) strcpy (hostname, defhost);
+	    (void) strncpy (hostname, defhost, sizeof(hostname));
 	else
-	    (void) strcpy (hostname, temphost);
+	    (void) strncpy (hostname, temphost, sizeof(hostname));
 
 	if (name[0] != '\0')      /* put into canonical form            */
 	{                         /* name <mailbox@host>                */
@@ -153,7 +153,7 @@ char *dest, *src, thehost[];
 			continue;
 
 		    case '\0':    /* nope                               */
-			sprintf (addr, "%s <%s@%s>",
+			snprintf (addr, sizeof(addr), "%s <%s@%s>",
 				name, address, hostname);
 			goto doaddr;
 
@@ -163,7 +163,7 @@ char *dest, *src, thehost[];
 		    case ',':
 		    case ';':
 		    case ':':
-			sprintf (addr, "\"%s\" <%s@%s>",
+			snprintf (addr, sizeof(addr), "\"%s\" <%s@%s>",
 				    name, address, hostname);
 			goto doaddr;
 		}
@@ -171,7 +171,7 @@ char *dest, *src, thehost[];
 	}
 	else
 	{
-	    sprintf (addr, "%s@%s", address, hostname);
+	    snprintf (addr, sizeof(addr), "%s@%s", address, hostname);
 	}
 
 doaddr:

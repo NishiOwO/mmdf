@@ -126,9 +126,9 @@ ph_sbinit ()                      /* ready to submit to remote site     */
     }
 
     if (ph_curchan -> ch_confstr)
-	sprintf (linebuf, "HELO %s", ph_curchan -> ch_confstr);
+	snprintf (linebuf, sizeof(linebuf), "HELO %s", ph_curchan -> ch_confstr);
     else
-	sprintf (linebuf, "HELO %s.%s", ph_curchan -> ch_lname,
+	snprintf (linebuf, sizeof(linebuf), "HELO %s.%s", ph_curchan -> ch_lname,
 				    ph_curchan -> ch_ldomain);
     if (rp_isbad (ps_cmd( linebuf )) || ps_rp.sm_rval != 250 ) {
 	ll_log(logptr, LLOGFAT, "bad response to HELO");
@@ -156,7 +156,7 @@ ph_pkinit ()                      /* initialize remote pickup            */
 #endif
 
     /* say we're listening */
-    sprintf (replybuf, "220 Server SMTP (Complaints/bugs to:  %s)",
+    snprintf (replybuf, sizeof(replybuf), "220 Server SMTP (Complaints/bugs to:  %s)",
 		       supportaddr);
     if (rp_isbad (retval = ph_wrec (replybuf, strlen(replybuf)))) 
 	return (retval);

@@ -353,7 +353,7 @@ RP_Buf *rp;
 
     if (rp_isbad(mm_wtend()) || rp_isbad(mm_rrply(rp,&len))) {
 	rp->rp_val = RP_RPLY;
-	strcpy(rp->rp_line,"Unknown problem");
+	strncpy(rp->rp_line,"Unknown problem", sizeof(rp->rp_line));
 	return;
     }
 

@@ -448,9 +448,9 @@ restart:
     /* need local machine name */
     if (local[0] == '\0') {
 	if ((locfullmachine != 0) && (*locfullmachine != '\0'))
-	    (void) strcpy(local, locfullmachine);
+	    (void) strncpy(local, locfullmachine, sizeof(local));
 	else
-	    (void) strcpy(local, locfullname);
+	    (void) strncpy(local, locfullname, sizeof(local));
     }
 
     /* skip header */
@@ -829,9 +829,9 @@ int tbltype;
 		case TB_DOMAIN:
 		    /* fill in dn_name */
 		    if (cp->nc_count)
-			(void) strcpy(dn_name,cp->nc_data);
+			(void) strncpy(dn_name,cp->nc_data, sizeof(dn_name));
 		    else
-			(void) strcpy(dn_name,cp->nc_key);
+			(void) strncpy(dn_name,cp->nc_key, sizeof(dn_name));
 	    }
 	}
 

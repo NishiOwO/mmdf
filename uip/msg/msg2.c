@@ -101,7 +101,8 @@ int crflag;
 {
 	char lbuf[LINESIZE];
 
-	sprintf( lbuf, "%4d%c%c%c%c%c%c%5ld: %-9.9s %-15.15s %.30s%s\n",
+	snprintf( lbuf, LINESIZE,  
+                "%4d%c%c%c%c%c%c%5ld: %-9.9s %-15.15s %.30s%s\n",
 		msgno,
 		mptr->flags & MSG_NEW ? 'N' : ' ',
 		mptr->flags & MSG_DELETED ? 'D' : ' ',
@@ -166,7 +167,7 @@ char	*def;		/* optional default */
 	fputs( s, stdout);
 	fflush( stdout);
 
-	strcpy( oldfile, f);
+	strncpy( oldfile, f, OLDFILESIZE);
 
 	if( xfgets( tmpbuf, sizeof(tmpbuf), stdin) == NULL || strlen(tmpbuf) <= 1 )  {
 		if( def == (char *)0)
@@ -399,7 +400,8 @@ writmsg()
 	tmpbuf[len] = '\0';
 	if( strcmp( tmpbuf, delim1 ) != 0 )  {
 		/* Build useful error message in tempbuf, then abort */
-		sprintf(tmpbuf, "Mailbox delimeter corrupted at file offset=%ld.\n\
+		snprintf(tmpbuf, sizeof(tmpbuf), 
+"Mailbox delimeter corrupted at file offset=%ld.\n\
 Message was From: %s\nSubject: %s\nDate: %s\n\
 Recommend you exit MSG, remove the binary box, and restart.\n",
 			mptr->start, mptr->from, mptr->subject, mptr->datestr);
@@ -677,16 +679,20 @@ ansmsg()
 
 	if( !isnull( tmprply[0]))
 		/* send to Reply-To */
-		sprintf( &sndto[strlen( sndto)], ",%s%c", tmprply, '\0');
+		snprintf( &sndto[strlen( sndto)], MSG_BSIZE-strlen(sndto), 
+                          ",%s%c", tmprply, '\0');
 	else if( !isnull( tmpfrom[0]))
 		/* send to From, if no Reply-To */
-		sprintf( &sndto[strlen( sndto)], ",%s%c", tmpfrom, '\0');
+		snprintf( &sndto[strlen( sndto)], MSG_BSIZE-strlen(sndto),
+                          ",%s%c", tmpfrom, '\0');
 
 	if( !isnull( tmpto[0]))
-		sprintf( &sndcc[strlen( sndcc)], ",%s%c", tmpto, '\0');
+		snprintf( &sndcc[strlen( sndcc)], MSG_BSIZE-strlen(sndcc),
+                          ",%s%c", tmpto, '\0');
 
 	if( !isnull( tmpcc[0]))
-		sprintf( &sndcc[strlen( sndcc)], ",%s%c", tmpcc, '\0');
+		snprintf( &sndcc[strlen( sndcc)], MSG_BSIZE-strlen(sndcc),
+                         ",%s%c", tmpcc, '\0');
 
 	if( !isnull( tmpsubj[0]))  {
 		/* save the destination */
@@ -700,15 +706,18 @@ ansmsg()
 
 		if( ansnum  == 1)
 			/* not the first message */
-			sprintf( sndsubj, "Re:  %s%c", &tmpsubj[ind], '\0');
+			snprintf( sndsubj, sizeof(sndsubj),
+                                  "Re:  %s%c", &tmpsubj[ind], '\0');
 		else {
 			/* append more addresses */
 			if( (llenleft = sizeof(sndsubj) - strlen(sndsubj))
 			    -strlen(&tmpsubj[ind])-9 > 0 )
-				sprintf( &sndsubj[strlen( sndsubj)],
+				snprintf( &sndsubj[strlen( sndsubj)],
+                                          sizeof(sndsubj)-strlen(sndsubj),
 					"\n     %s%c", &tmpsubj[ind], '\0');
 			else if( llenleft > 7 )
-				sprintf( &sndsubj[strlen( sndsubj)],
+				snprintf( &sndsubj[strlen( sndsubj)],
+                                          sizeof(sndsubj)-strlen(sndsubj),
 				"\n...%c", '\0');
 		}
 	}
@@ -766,16 +775,18 @@ fwdmsg()
 		/* If we had a subject line, bracket the subject info */
 		if( isnull( sndsubj[0]) )
 			/* the first subject line */
-			sprintf( sndsubj, "[%s:  %s]%c",
+			snprintf( sndsubj, sizeof(sndsubj), "[%s:  %s]%c",
 				mptr->from, line, '\0');
 		else {
 			/* not the first line */
 			if( (llenleft = sizeof(sndsubj) - strlen(sndsubj))
 			    -strlen(line)-SIZEFROM-10 > 0 )
-				sprintf( &sndsubj[strlen( sndsubj)],
+				snprintf( &sndsubj[strlen( sndsubj)],
+                                        sizeof(sndsubj)-strlen(sndsubj),
 				"\n[%s:  %s]%c", mptr->from, line, '\0');
 			else if( llenleft > 7 )
-				sprintf( &sndsubj[strlen( sndsubj)],
+				snprintf( &sndsubj[strlen( sndsubj)],
+                                        sizeof(sndsubj)-strlen(sndsubj),
 				"\n...%c", '\0');
 
 		}
@@ -849,9 +860,10 @@ filout(line, ofp)
 		if ( linecount >= pagesize - 2 && msgsize != 0 ) {
 			tt_raw();
 			if( pcntdn < 0 )
-				sprintf(tmpbuf,"Continue?");
+				snprintf(tmpbuf, sizeof(tmpbuf), "Continue?");
 			else
-				sprintf(tmpbuf,"Continue (%d%%)?",pcntdn);
+				snprintf(tmpbuf, sizeof(tmpbuf), 
+                                         "Continue (%d%%)?",pcntdn);
 			if( (cmd = confirm(tmpbuf,NOLF)) == FALSE )
 				error("");
 			tt_norm();
@@ -920,7 +932,7 @@ makedrft() {
 
 	/* LIST messages into the draft_original file */
 	lstsep = TRUE;
-	strcpy( outfile, draft_original );
+	strncpy( outfile, draft_original, OUTFILESIZE);
 	cpyiter( lstmsg, DOIT, (int(*)()) 0 );
 
 }

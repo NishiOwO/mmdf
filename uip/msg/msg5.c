@@ -104,7 +104,7 @@ int     setflg;
 		if( (filefp = fopen( filename, "r")) == NULL)  {
 			printf( "can't open '%s'\r\n", filename);
 			if( oldflag)  {
-				strcpy( filename, oldfile);
+				strncpy( filename, oldfile, FILENAMESIZE);
 				filefp = fopen( filename, "r");
 			}
 			error( "");
@@ -421,9 +421,9 @@ int     setflg;
 					/* sender was self */
 					parsadr(tostr, name, mbox,( char *) 0);
 					if( !isnull( name[0]))
-						sprintf( fromstr, "To: %s%c", name, '\0');
+						snprintf( fromstr, sizeof(fromstr), "To: %s%c", name, '\0');
 					else
-						sprintf( fromstr, "To: %s%c", mbox, '\0');
+						snprintf( fromstr, sizeof(fromstr), "To: %s%c", mbox, '\0');
 				}  else  {
 #endif
 					if( !isnull( name[0]))
@@ -637,7 +637,7 @@ overwrit()
 			}
 		}
 	}  else  {
-		strcpy( tempfile, filename);
+		strncpy( tempfile, filename, sizeof(tempfile));
 		/* get the path to directory of file  */
 		if (ptr = strrchr(tempfile, '/'))
 			*++ptr = '\0';
@@ -772,7 +772,7 @@ register char *arg;
 	char fname[72];
 
 	ending[0] = fname[0] = 0;
-	strcpy( fname, arg );
+	strncpy( fname, arg, sizeof(fname) );
 
 	/* Find the last path component */
 	sav = cp = fname;
@@ -782,12 +782,12 @@ register char *arg;
 
 	if( sav == fname )  {
 		/* No slashes found in path name */
-		sprintf( binarybox, "%s%s", binarypre, fname );
+		snprintf( binarybox, sizeof(binarybox), "%s%s", binarypre, fname );
 	}  else  {
-		strcpy( ending, sav );
+		strncpy( ending, sav, sizeof(ending) );
 		*(sav-1) = 0;
 
-		sprintf( binarybox, "%s/%s%s", fname, binarypre, ending );
+		snprintf( binarybox, sizeof(binarybox), "%s/%s%s", fname, binarypre, ending );
 	}
 }
 
@@ -824,7 +824,7 @@ binbuild()
 	oldintr = signal(SIGINT,SIG_IGN);
 	oldquit = signal(SIGQUIT,SIG_IGN);
 #endif /* HAVE_SIGSETMASK */
-	strcpy( tempfile, binarybox);
+	strncpy( tempfile, binarybox, sizeof(tempfile));
 	/* get the path to directory of file  */
 	if (ptr = strrchr(tempfile, '/'))
 		*++ptr = '\0';
@@ -964,8 +964,8 @@ nomem() {
 setmbox(file)
 register char *file;
 {
-	strcpy(defmbox, file);
-	strcpy(defoutfile, file);
+	strncpy(defmbox, file, DEFMBOXSIZE);
+	strncpy(defoutfile, file, sizeof(defoutfile));
 	ismainbox++;
 }
 

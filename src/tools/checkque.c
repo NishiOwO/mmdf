@@ -302,7 +302,7 @@ ovr_queue()			/* Process entire message queue		*/
 	{
 		for (index = 0; index < nchan; index++)
 		{
-			(void) strcpy(qname, squepref);
+			(void) strncpy(qname, squepref, sizeof(qname));
 			strcat(qname, chcodes[index]->ch_queue);
 			ovr_aqueue(qname);
 		}
@@ -341,7 +341,7 @@ char thename[];
 	struct	stat	statbuf;
 	char		msgpath[28];
 
-	(void) sprintf(msgpath, "%s%s", mquedir, thename);
+	(void) snprintf(msgpath, sizeof(msgpath), "%s%s", mquedir, thename);
 	if (stat(msgpath, &statbuf) < 0) {
 		printf("\n*** %s: Couldn't stat;  error %d.\n", thename, errno);
 		(void) fflush(stdout);
@@ -361,7 +361,7 @@ char thename[];
 	/*
 	 *  Check for real anomalies!
 	 */
-	(void) strcpy(curmsg.mg_mname, thename);
+	(void) strncpy(curmsg.mg_mname, thename, sizeof(curmsg.mg_mname));
 
 	if (mq_rinit((Chan *)0, &curmsg, msg_sender) == OK)
 	{
@@ -410,7 +410,7 @@ Msg *themsg;
 			}
 			else
 			{
-				(void) strcpy(oldque, newadr.adr_que);
+				(void) strncpy(oldque, newadr.adr_que, sizeof(oldque));
 				if (newadr.adr_delv != ADR_DONE)
 				{
 					if (curch != newch)
@@ -423,7 +423,7 @@ Msg *themsg;
 							if (curch->ch_host == (char *)0)
 							{
 								/* code folded from here */
-								(void) strcpy(curhost, newadr.adr_host);
+								(void) strncpy(curhost, newadr.adr_host, sizeof(curhost));
 								ch_newhost(curind, curhost, themsg->mg_time);
 								/* unfolding */
 							}
@@ -441,7 +441,7 @@ Msg *themsg;
 						    && curch->ch_host == (char *)0
 						    && !lexequ(curhost, newadr.adr_host))
 						{
-							(void) strcpy(curhost, newadr.adr_host);
+							(void) strncpy(curhost, newadr.adr_host, sizeof(curhost));
 							ch_newhost(curind, curhost, themsg->mg_time);
 						}
 					}
@@ -478,7 +478,7 @@ Msg  *themsg;
 		ch_stat[theind].oldest == 0)
 	{
 		ch_stat[theind].oldest = themsg->mg_time;
-		(void) strcpy(ch_stat[theind].oldmsg, themsg->mg_mname);
+		(void) strncpy(ch_stat[theind].oldmsg, themsg->mg_mname, sizeof(ch_stat[theind].oldmsg));
 	}
 	return;
 
@@ -622,7 +622,7 @@ ch_report()
 			if (timestamp[6] != (time_t) 0)
 				overstamp[6] = (curtime - timestamp[6])/2;
 		} else {
-			sprintf(tmp, "%-8s login", chptr->ch_login);
+			snprintf(tmp, sizeof(tmp), "%-8s login", chptr->ch_login);
 			textout[0] = tmp;
 			timestamp[0] = ch_stat[chind].llog;
 			if (timestamp[0] != (time_t) 0)

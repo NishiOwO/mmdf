@@ -23,7 +23,7 @@ char * buf;
 			/*, don't flip if quoted  or dlit */
 	return (strdup (buf));
 
-    (void) strcpy (tbuf, buf);
+    (void) strncpy (tbuf, buf, sizeof(tbuf));
     argc = cstr2arg (tbuf, DM_NFIELD, argv, '.');
 
     cp = malloc (strlen (buf) + 1);
@@ -31,7 +31,7 @@ char * buf;
 	ll_log (logptr, LLOGTMP, "dm_flip - malloc failure");
 	return ((char *) 0);
     }
-    (void) strcpy (cp, argv [argc - 1]);
+    (void) strncpy (cp, argv [argc - 1], strlen (buf));
     for (i = argc - 2; i >= 0; i--) {
 	strcat (cp, ".");
 	strcat (cp, argv [i]);

@@ -188,11 +188,11 @@ mq_rinit (thechan, themsg, retadr)	/* gain access to info on the msg */
 
     if (thechan == (Chan *) 0)	/* do the entire queue */
     {
-	sprintf (msgname, "%s%s", aquedir, themsg -> mg_mname);
+	snprintf (msgname, sizeof(msgname), "%s%s", aquedir, themsg -> mg_mname);
     }
     else
     {
-	sprintf (msgname, "%s%s/%s",
+	snprintf (msgname, sizeof(msgname), "%s%s/%s",
 		squepref, thechan -> ch_queue, themsg -> mg_mname);
     }
 

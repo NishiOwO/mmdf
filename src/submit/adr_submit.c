@@ -197,8 +197,8 @@ adr_check (local, domain, route) /* check & save an address            */
 		return(RP_NS);
 	    else if(retval == OK)
 	    {
-		strcpy (tstline, hptr -> ap_obvalue);
-		strcpy (official, tstline); /* no domain */
+		strncpy (tstline, hptr -> ap_obvalue, sizeof(tstline));
+		strncpy (official, tstline, sizeof(official)); /* no domain */
 		goto storeit;
 	    }
 	}
@@ -244,8 +244,8 @@ adr_check (local, domain, route) /* check & save an address            */
 		    }
 		}
 		if ((thechan = ch_nm2struct("badhosts")) != (Chan *)NOTOK) {
-		    strcpy (tstline, thechan->ch_host ? thechan->ch_host : "");
-		    strcpy (official, hptr -> ap_obvalue);
+		    strncpy (tstline, thechan->ch_host ? thechan->ch_host : "", sizeof(tstline));
+		    strncpy (official, hptr -> ap_obvalue, sizeof(official));
 		    goto storeit;
 		}
 
@@ -271,7 +271,7 @@ adr_check (local, domain, route) /* check & save an address            */
 		    default:
 			return (RP_BHST);
 		    }
-		    strcpy (tstline, dmrt.dm_argv[0]);
+		    strncpy (tstline, dmrt.dm_argv[0], sizeof(tstline));
 		    goto storeit;                /* store it */
 		}
 
@@ -337,8 +337,8 @@ adr_check (local, domain, route) /* check & save an address            */
 
 				   default:
 					/* Found host ref               */
-					strcpy (tstline, dmrt.dm_argv [dmrt.dm_argc  - 2]);
-					strcpy (official, tstline);
+					strncpy (tstline, dmrt.dm_argv [dmrt.dm_argc  - 2], sizeof(tstline));
+					strncpy (official, tstline, sizeof(official));
 					/* Now remove first component of */
 					/* route                         */
 					if (route == (AP_ptr) 0) {
@@ -375,10 +375,9 @@ adr_check (local, domain, route) /* check & save an address            */
 			route = ap;
 			continue;
 		    default:
-			strcpy (tstline,
-				dmrt.dm_argv [dmrt.dm_argc - 1]);
+			strncpy (tstline, dmrt.dm_argv [dmrt.dm_argc - 1], sizeof(tstline));
 			if (dmrt.dm_argc > 1)
-			    strcpy(official, tstline);
+			    strncpy(official, tstline, sizeof(official));
 				/* make sure official has full domain   */
 			goto storeit;
 		}
@@ -536,7 +535,7 @@ adr_local (local)                       /* process host-less reference */
     char    *cp;
     int     retval, bypass = 0;
 
-    strcpy (tmpstr, local);
+    strncpy (tmpstr, local, sizeof(tmpstr));
 
     /*
      *  Important Note:
@@ -574,8 +573,8 @@ adr_local (local)                       /* process host-less reference */
 	{
 	    char   tbuf [LINESIZE];
 	    *cp++ = '\0';
-	    sprintf (tbuf, "%s@%s", cp, tmpstr);
-	    strcpy (tmpstr, tbuf);
+	    snprintf (tbuf, sizeof(tbuf), "%s@%s", cp, tmpstr);
+	    strncpy (tmpstr, tbuf, sizeof(tmpstr));
 	}
 	if ((adrtree = ap_s2tree (tmpstr)) != (AP_ptr) NOTOK) {
 	    if(ap_normalize ((char *) 0, (char *) 0, adrtree, (Chan *) 0) ==
@@ -602,13 +601,13 @@ adr_local (local)                       /* process host-less reference */
 		    ch_dflnam);
 	return (RP_BHST);
     }
-    strcpy (tmpstr, local);
+    strncpy (tmpstr, local, sizeof(tmpstr));
 			    /* local will be untouched version    */
     qualstr[0] = '\0';
     adr_gparm (tmpstr, qualstr);
 
     if (bypass = (local[0] == '~')) {    /* bypass alias search   */
-	strcpy (tmpstr, &tmpstr[1]);
+	strncpy (tmpstr, &tmpstr[1], sizeof(tmpstr));
 	strcpy (local, &local[1]);      /* need both if qualstr     */
     }
 
@@ -784,7 +783,7 @@ int	bypass;
     if (alp == (Alias *)0)
 	return (badretval);
 
-    strcpy (tmpbuf, mbox);
+    strncpy (tmpbuf, mbox, sizeof(tmpbuf));
     strcat (tmpbuf, qualstr);
 
     if (lnk_adinfo ((Chan *) 0, "", tmpbuf) == OK) {
@@ -815,7 +814,7 @@ int	bypass;
 	    strcat (newalias.aliasbuf, qualstr);
 	else {
 	    *p++ = '\0';
-	    sprintf (tmpbuf, "%s%s@%s", newalias.aliasbuf, qualstr, p);
+	    snprintf (tmpbuf, sizeof(tmpbuf), "%s%s@%s", newalias.aliasbuf, qualstr, p);
 	    strcpy (newalias.aliasbuf, tmpbuf);
 	}
     }
@@ -836,20 +835,20 @@ int	bypass;
 	ll_log (logptr, LLOGTMP, "Bad address in alias %s", mbox);
 	if (tracing)
 	    printf ("Bad address in alias %s\n", mbox);
-	sprintf (linebuf, "%s %s", locfullname, sitesignature);
+	snprintf (linebuf, sizeof(linebuf), "%s %s", locfullname, sitesignature);
 	ml_1adr (NO, NO, linebuf, "Bad address in alias", supportaddr);
-	sprintf (linebuf, "Found bad address in alias '%s'.\n", mbox);
+	snprintf (linebuf, sizeof(linebuf), "Found bad address in alias '%s'.\n", mbox);
 	ml_txt (linebuf);
 	if (retval == RP_NAUTH)
 	    ml_txt ("    (Authorization problem with valid address)\n");
-	sprintf (linebuf, "The alias was '%s'.\n\n", newalias.aliasbuf);
+	snprintf (linebuf, sizeof(linebuf), "The alias was '%s'.\n\n", newalias.aliasbuf);
 	ml_txt (linebuf);
 	if (badlist) {
-	    sprintf (linebuf, "There were problems with:\n");
+	    snprintf (linebuf, sizeof(linebuf), "There were problems with:\n");
 	    ml_txt (linebuf);
 	    ml_txt (badlist);
 	    free (badlist);
-	    sprintf (linebuf, 
+	    snprintf (linebuf, sizeof(linebuf), 
 	"\nThe remaining addresses in the alias were used for submission.\n\n");
 	    ml_txt (linebuf);
 	}

@@ -302,7 +302,7 @@ else
 		case APV_MBOX:
 					/* SEK - YUK                    */
 		    if (strindex (":Include:", curptr -> ap_obvalue) == 0)
-			(void) strcpy (tmpbuf, curptr -> ap_obvalue);
+			(void) strncpy (tmpbuf, curptr -> ap_obvalue, sizeof(tmpbuf));
 		    else
 			val2str (tmpbuf, curptr -> ap_obvalue, APV_MBOX);
 		    cp = multcat(strp, tmpbuf, (char *)0);

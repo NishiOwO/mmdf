@@ -260,7 +260,7 @@ retry:
     /* file didn't exist */
     if (p = strrchr (file, '/')) {
 	*p = '\0';
-	(void) strcpy (tempname, file);
+	(void) strncpy (tempname, file, sizeof(tempname));
 	*p = '/';
 	(void) strcat (tempname, "/");
     } else

@@ -223,11 +223,11 @@ mq_eomsg ()                       /* done submitting message            */
 	    ll_log (logptr, LLOGFTR,
 			"linking to sub-queue '%s'", (*chanptr) -> ch_queue);
 #endif
-	    sprintf (subname, "%s%s/%s",
+	    snprintf (subname, sizeof(subname), "%s%s/%s",
 				squepref, (*chanptr) -> ch_queue, mq_munique);
 	    if (link (mq_tfname, subname) == NOTOK)
 	    {                         /* add it to the subqueue         */
-		sprintf (subname, "%s%s",
+		snprintf (subname, sizeof(subname), "%s%s",
 				squepref, (*chanptr) -> ch_queue);
 		err_abrt (RP_FCRT, "sub-directory '%s' missing", subname);
 	    }

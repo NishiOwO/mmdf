@@ -41,7 +41,7 @@ creatdir (dirptr, mode, owner, group)
 	    return( NOTOK );
     }
 
-    (void) strcpy (shcmd, "mkdir ");   /* initialize string with command */
+    (void) strncpy (shcmd, "mkdir ", sizeof(shcmd));   /* initialize string with command */
     partpath = &shcmd[strlen (shcmd)];
 
     for (nptr = partpath, *nptr++ = *dirptr++; ; *nptr++ = *dirptr++)

@@ -950,7 +950,7 @@ alst_gfil (file)                 /* read file address list             */
 	    printf ("Bad address in file %s\n", file);
 	    fflush(stdout);
 	}
-	sprintf (linebuf, "%s %s", locfullname, sitesignature);
+	snprintf (linebuf, sizeof(linebuf), "%s %s", locfullname, sitesignature);
 	ml_init (NO, NO, linebuf, "Bad address in file");
 	ml_adr (supportaddr);
 	if( (pw = getpwuid (statbuf.st_uid))
@@ -958,14 +958,14 @@ alst_gfil (file)                 /* read file address list             */
 		ml_adr (cp);
 	ml_aend();
 	ml_tinit();
-	sprintf (linebuf, "Found bad address in the file '%s'.\n\n", file);
+	snprintf (linebuf, sizeof(linebuf), "Found bad address in the file '%s'.\n\n", file);
 	ml_txt (linebuf);
 	if (badlist) {
-	    sprintf (linebuf, "There were problems with:\n");
+	    snprintf (linebuf, sizeof(linebuf), "There were problems with:\n");
 	    ml_txt (linebuf);
 	    ml_txt (badlist);
 	    free (badlist);
-	    sprintf (linebuf, 
+	    snprintf (linebuf, sizeof(linebuf),
 	"\nThe remaining addresses in the file were used for submission.\n\n");
 	    ml_txt (linebuf);
 	}
@@ -1118,7 +1118,7 @@ dlv_invoke ()                     /* maybe try immediate transmission   */
     ll_log (logptr, LLOGBTR, "dlv_invoke ()");
 #endif
 
-    strcpy (dochans, "-c");       /* switch, indicating chans to run    */
+    strncpy (dochans, "-c", sizeof(dochans));       /* switch, indicating chans to run    */
 
     for (proctyp = dowait = 0, chanptr = ch_tbsrch; *chanptr != 0; chanptr++)
 	if ((*chanptr) -> ch_access & DLVRDID)
@@ -1245,12 +1245,12 @@ char   *fmt,
 	case RP_HUH:              /* not if it was a user error         */
 	case RP_PARM:
 	case RP_USER:
-	    sprintf (newfmt, "%s %s", "xin", fmt);
+	    snprintf (newfmt, sizeof(newfmt), "%s %s", "xin", fmt);
 	    ll_log (logptr, LLOGFST, newfmt, b, c, d);
 	    break;
 
 	default:
-	    sprintf (newfmt, "%s  %s", "err [ ABEND (%s) ] ", fmt);
+	    snprintf (newfmt, sizeof(newfmt), "%s  %s", "err [ ABEND (%s) ] ", fmt);
 	    ll_err (logptr, LLOGFAT, newfmt, rp_valstr (code), b, c, d);
     }
 

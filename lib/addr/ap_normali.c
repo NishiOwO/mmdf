@@ -172,7 +172,7 @@ AP_ptr
 
 	if (!isstr(dflhost))
 	{
-	    strcpy(official, locfullname);
+	    strncpy(official, locfullname, sizeof(official));
 	    ap_append (mbxprefptr -> ap_chain, APV_DOMN, official);
 #ifdef DEBUG
 	    ll_log (logptr, LLOGFTR, "appending %s domain (local)",
@@ -182,9 +182,9 @@ AP_ptr
 	else
 	{
 	    if (!isstr(dfldomain))
-		(void) strcpy (official, dflhost);
+		(void) strncpy (official, dflhost, sizeof(official));
 	    else
-		sprintf (official, "%s.%s", dflhost, dfldomain);
+		snprintf (official, sizeof(official), "%s.%s", dflhost, dfldomain);
 	    ap_append (mbxprefptr -> ap_chain, APV_DOMN, official);
 #ifdef DEBUG
 	    ll_log (logptr, LLOGFTR, "appending %s domain",
@@ -557,7 +557,7 @@ Chan *thechan;
 	case MAYBE:
 		return(MAYBE);
 	default:
-	    strcpy (buf, locfullname);
+	    strncpy (buf, locfullname, sizeof(buf));
 				/* SEK might be better to get dm_v2route */
 				/* to do this                            */
 	    if (lexequ (official, buf) && (thechan != NULL)) {
@@ -565,7 +565,7 @@ Chan *thechan;
 		    sprintf (official, "%s.%s", thechan -> ch_lname,
 				thechan -> ch_ldomain);
 		else
-		    sprintf (official, "%s", thechan -> ch_lname);
+		    snprintf (official, sizeof(official), "%s", thechan -> ch_lname);
 	    }
     }
 

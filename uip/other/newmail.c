@@ -46,11 +46,11 @@ main()
 		thefile = getlogin();
 
 
-	sprintf(mboxbuf, "%s/%s", thedir, thefile);
+	snprintf(mboxbuf, sizeof(mboxbuf), "%s/%s", thedir, thefile);
 	if (stat(mboxbuf, &statb) == -1 || statb.st_size == 0)
 		exit(0);	/* No mail at all */
 
-	sprintf(binboxbuf, "%s/._%s", thedir, thefile);
+	snprintf(binboxbuf, sizeof(binboxbuf), "%s/._%s", thedir, thefile);
 	if ((fd = open(binboxbuf, 0)) != -1)
 		new = uses_msg(fd, &statb);
 	else if ((fp = fopen(mboxbuf, "r")) != NULL)

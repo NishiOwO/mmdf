@@ -36,10 +36,10 @@ d_cstart(number, linetype)
     time(&d_cstime);
 
     if (number)
-      (void) strcpy(d_cnumber, number);
+      (void) strncpy(d_cnumber, number, sizeof(d_cnumber));
 
     if (linetype)
-      (void) strcpy(d_linetype, linetype);
+      (void) strncpy(d_linetype, linetype, sizeof(d_linetype));
 
     return(D_OK);
     }

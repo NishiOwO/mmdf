@@ -201,7 +201,7 @@ int	noisy;
     (void) fseek (fp, pos, 0);
     for (ep = (dp = pp) + len - 1; fgets (buffer, sizeof buffer, fp);) {
 	size = 0;
-	if (strcmp (buffer, mmdlm1) == 0)
+	if (strncmp (buffer, mmdlm1, sizeof(buffer)) == 0)
 	    pos += ld1, dp -> d_start = pos;
 	else {
 	    dp -> d_start = pos, pos += (long) strlen (buffer);
@@ -470,9 +470,9 @@ register char	*file;
     if ((dp = index (cp = r1bindex (file, '/'), '.')) == NULL)
 	dp = cp + strlen (cp);
     if (cp == file)
-	(void) sprintf (buffer, ".%.*s%s", dp - cp, cp, ".map");
+	(void) snprintf (buffer, sizeof(buffer), ".%.*s%s", dp - cp, cp, ".map");
     else
-	(void) sprintf (buffer, "%.*s.%.*s%s", cp - file, file, dp - cp,
+	(void) snprintf (buffer, sizeof(buffer), "%.*s.%.*s%s", cp - file, file, dp - cp,
 		cp, ".map");
 
     return buffer;

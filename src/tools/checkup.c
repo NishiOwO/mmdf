@@ -169,8 +169,8 @@ main (argc, argv)
     struct passwd *pwdptr;
     int ind;
     char postmaster[13];
-    strcpy(postmaster, "Postmaster");
-    strcpy(MMDFlogin, mmdflogin);
+    strncpy(postmaster, "Postmaster", sizeof(postmaster));
+    strncpy(MMDFlogin, mmdflogin, sizeof(MMDFlogin));
 
     /*  check for the verbosity flag  */
     flaginit (argc, argv);
@@ -362,7 +362,7 @@ main (argc, argv)
 	    {
 	    	static char path[64];
 
-	    	(void) sprintf (path, "%s%s",
+	    	(void) snprintf (path, sizeof(path), "%s%s",
 		    squepref, ch_tbsrch[ind] -> ch_queue);
 		que (LEVEL5, subhdrfmt, ch_tbsrch[ind] -> ch_show, path);
 		chkpath (FINAL, path, 0777, 0777, mmdfuid, mmdfgid, MMDFlogin);
@@ -430,7 +430,7 @@ chk_dprts ()
     for (index = 0;  d_prts[index].p_port != NULL;  index++)
     {
 	/*  check the dial out lines  */
-	(void) sprintf (desc, "0%o %.25s", d_prts[index].p_speed,
+	(void) snprintf (desc, sizeof(desc), "0%o %.25s", d_prts[index].p_speed,
 	    d_prts[index].p_ltype);
 	que (LEVEL5, subhdrfmt, d_prts[index].p_port, desc);
 	qflush (LEVEL5);
@@ -700,22 +700,22 @@ register char *title;
     struct stat statbuf;
 
     tb -> tb_fp = (FILE *) NOTOK;	/* flag this table as processed */
-    if ((tb -> tb_flags&TB_SRC) == TB_NS) {
+    switch(tb -> tb_flags&TB_SRC) {
+        case TB_NS:
 	que (LEVEL6, subhdrfmt, title, "(via nameserver)");
-    	return;
-    } else {
+          break;
+
 #ifdef HAVE_NIS
-      if ((tb -> tb_flags&TB_SRC) == TB_NIS) {
+        case TB_NIS:
 	cknistable(tb, title);
-	return;
-      } else {
+          break;
 #endif /* HAVE_NIS */
+
+        default:
 	que (LEVEL6, subhdrfmt, title, tb -> tb_file);
 	if (stat (tb -> tb_file, &statbuf) < OK)
 	    que (LEVEL1, probfmt, "cannot stat", xerrstr());
-#ifdef HAVE_NIS
-      }
-#endif /* HAVE_NIS */
+          break;
     }
     qflush (LEVEL6);
 }
@@ -747,7 +747,7 @@ Chan *chanptr;
     if ((initstr("pobox", chanptr -> ch_ppath, 5) != (-1)) &&
 	((chanptr -> ch_access & DLVRPSV) != 0        )   )
 	{
-	strcat(strcpy(slaveloc,cmddfldir), "/slave");
+	strcat(strncpy(slaveloc,cmddfldir, sizeof(slaveloc)), "/slave");
 	if (strcmp (ret -> pw_shell, slaveloc) != 0)
 	    que (LEVEL1, "Bad login prog    : '%s' is not phonenet slave\n",
 			    ret -> pw_shell);
@@ -1122,9 +1122,9 @@ xerrstr()
     static char buff[64];
 
     if (errno > sys_nerr || errno < 0)
-	(void) sprintf (buff, "Errno %d", errno);
+	(void) snprintf (buff, sizeof(buff), "Errno %d", errno);
     else
-	(void) strcpy(buff, sys_errlist[errno]);
+	(void) strncpy(buff, sys_errlist[errno], sizeof(buff));
     return (buff);
 }
 /**/

@@ -183,19 +183,19 @@ ba_slave ()
       switch (*ba_parm) {
       case '|':       /* send to special process          */
               printx ("(sending message to piped process)\r\n\t");
-              sprintf (buf, "default - | A \"%s\"", ba_parm+1);
+              snprintf (buf, sizeof(buf), "default - | A \"%s\"", ba_parm+1);
               if( parse_line(mp, buf) != OK)
                       ll_log (logptr, LLOGTMP, "problem parsing '%s'", buf);
               return ( ba_dorules(mp, mp+1) );
       case '^':
               printx ("(sending message to process unformatted)\r\n\t");
-              sprintf (buf, "default - ^ A \"%s\"", ba_parm + 1);
+              snprintf (buf, sizeof(buf), "default - ^ A \"%s\"", ba_parm + 1);
               if( parse_line (mp, buf) != OK)
                       ll_log (logptr, LLOGTMP, "problem parsing '%s'", buf);
               return ( ba_dorules(mp, mp+1) );
       case '/':
               printx ("(placing into mail file '%s')\r\n\t", ba_parm+1);
-              sprintf (buf, "default - > A \"%s\"", ba_parm +1 );
+              snprintf (buf, sizeof(buf), "default - > A \"%s\"", ba_parm +1 );
               if( parse_line (mp, buf) != OK)
                       ll_log (logptr, LLOGTMP, "problem parsing '%s'", buf);
               return (ba_dorules (mp, mp + 1));
@@ -218,7 +218,7 @@ ba_slave ()
       /* FOURTH Attempt: regular deliver to the mailbox */
 
       printx ("trying normal delivery\r\n");
-      sprintf (buf, "%s/%s",
+      snprintf (buf, sizeof(buf), "%s/%s",
               (mldfldir == 0 || isnull(mldfldir[0])) ? "." : mldfldir,
               (mldflfil == 0 || isnull(mldflfil[0])) ? ba_pw->pw_name : mldflfil);
       return (ba_dofile (buf));
@@ -247,7 +247,7 @@ char  *mboxname;
           char buffer[BUFSIZ];
           int len;
 
-          (void) sprintf (buffer, "Return-Path: <%s>\n", ba_sender);
+          (void) snprintf (buffer, sizeof(buffer), "Return-Path: <%s>\n", ba_sender);
           len = strlen(buffer);
           if (write (mbx_fd, buffer, len) != len) {
               ll_err (logptr, LLOGTMP, "error writing out return-path");
@@ -259,7 +259,7 @@ char  *mboxname;
           char buffer[BUFSIZ];
           int len;
 
-          (void) sprintf (buffer, "Real-To: <%s>\n", ba_adr_orig);
+          (void) snprintf (buffer, sizeof(buffer), "Real-To: <%s>\n", ba_adr_orig);
           len = strlen(buffer);
           if (write (mbx_fd, buffer, len) != len) {
               ll_err (logptr, LLOGTMP, "error writing out real-to");
@@ -472,7 +472,7 @@ ba_padadr()
 
     for(i=0; vararray[i] != 0; i += 2)
     {
-      (void) strcpy(tmp,vararray[i+1]);
+      (void) strncpy(tmp,vararray[i+1], sizeof(tmp));
 
       for(c1=tmp,c2=vararray[i+1]; *c1 != '\0'; c1++)
       {
@@ -961,10 +961,10 @@ Mdlvry  *mpbase, *mpmax;
                               }
                               if(( mp->m_dollar & 1))
                                       if(! gotrepl && lexequ(name, "from"))
-                                              (void) strcpy(ba_replyto, contents);
+                                  (void) strncpy(ba_replyto, contents, 2 * LINESIZE);
                                       else if(lexequ(name, "reply-to"))
                                       {
-                                              (void) strcpy(ba_replyto, contents);
+                                  (void) strncpy(ba_replyto, contents, 2 * LINESIZE);
                                               gotrepl = TRUE;
                                       }
                       }
@@ -1158,10 +1158,10 @@ LOCFUN setupenv()
     setpgrp();
 #  endif /* HAVE_SETPGRP */
 #endif /* HAVE_SETPGID */
-      sprintf (homestr, "HOME=%s", ba_pw->pw_dir);
-      sprintf (shellstr, "SHELL=%s",
+      snprintf (homestr, sizeof(homestr), "HOME=%s", ba_pw->pw_dir);
+      snprintf (shellstr, sizeof(shellstr), "SHELL=%s",
                       isstr(ba_pw->pw_shell) ? ba_pw->pw_shell : "/bin/sh");
-      sprintf (userstr, "USER=%s", ba_pw->pw_name);
+      snprintf (userstr, sizeof(userstr), "USER=%s", ba_pw->pw_name);
       envp[0] = homestr;
       envp[1] = shellstr;
       envp[2] = userstr;

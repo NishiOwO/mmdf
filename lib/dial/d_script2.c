@@ -81,7 +81,7 @@ d_scopen (scriptfile, nfields, fields)
     }
 
     d_scline = 0;
-    (void) strcpy (d_scfile, scriptfile);
+    (void) strncpy (d_scfile, scriptfile, sizeof(d_scfile));
 
 #ifdef D_LOG
     d_log ("d_scopen", "script file '%s' being used", scriptfile);
@@ -110,7 +110,7 @@ d_scclose()
     {
 	index = d_nopen - 1;
 	d_scfp = d_files[index]->o_chan;
-	(void) strcpy (d_scfile, d_files[index]->o_fname);
+	(void) strncpy (d_scfile, d_files[index]->o_fname, sizeof(d_scfile));
 	d_scline = d_files[index]->o_line;
 	d_nfields = d_files[index]->o_nfields;
 	for (i = 0; i < d_nfields; i++)

@@ -47,7 +47,7 @@ register char *arg;
 		return(0);
 	}
 
-	strcpy(alstr, arg);
+	strncpy(alstr, arg, sizeof(alstr));
 	if (((flags & AL_PUBLIC) != AL_PUBLIC) && (getuid() != 0)) {
 		printf("%s is a private alias\n", alstr);
 		return(1);

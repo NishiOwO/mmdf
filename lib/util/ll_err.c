@@ -17,7 +17,7 @@ char *fmt, *a0, *a1, *a2, *a3, *a4, *a5, *a6, *a7, *a8, *a9;
 {
 	char	newfmt[128];
 
-	(void)sprintf(newfmt,  "%s%s",  "[SYSERR(%d)%s]  ",  fmt);
+	(void)snprintf(newfmt, sizeof(newfmt),  "%s%s",  "[SYSERR(%d)%s]  ",  fmt);
 
 	return(ll_log(loginfo,  level,  newfmt, errno,
 		(errno >= 0 && errno <= sys_nerr)

@@ -213,7 +213,7 @@ char  **argv;
      || (cp = getmailid (pwdptr -> pw_name)) == NULL)
     report( FATAL, "Can't Identify user %d", realid);
   else
-    strcpy (username, cp);
+    strncpy (username, cp, sizeof(username));
  
   if ((names_file = fopen (alter_egos, "r")) != (FILE *) 0)
     {
@@ -339,7 +339,7 @@ AP_ptr aptr;
 	}
 	buffer[0] = '\0';
 	if( ! prefix("re:", subj_field) )
-		strcpy( buffer, "Re: ");
+		strncpy( buffer, "Re: ", sizeof(buffer));
 
 	strcat( buffer, subj_field);
 
@@ -353,7 +353,7 @@ AP_ptr aptr;
 	if( person != NILC)
 	{
 		compress(person, person);
-		sprintf( buffer, "\nDear %s,\n", person);
+		snprintf( buffer, sizeof(buffer), "\nDear %s,\n", person);
 #ifdef	DEBUG
 		report( TRACE, "1st line %s", buffer);
 #endif	DEBUG

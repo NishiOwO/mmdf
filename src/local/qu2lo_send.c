@@ -55,7 +55,7 @@
 char    lo_info[2 * LINESIZE],
 	lo_sender[2 * LINESIZE],
 	lo_adr[2 * LINESIZE],
-	lo_replyto[2 * LINESIZE],
+  lo_replyto[2 * LINESIZE], /* don't forget to change strncpy() cmd in lo_wtmail.c */
 	lo_size[16],
 	*lo_parm;
 
@@ -109,7 +109,7 @@ qu2lo_send ()                       /* overall mngmt for batch of msgs    */
 			break;
 		phs_note (chanptr, PHS_WRSTRT);
 
-		sprintf (lo_size, "%ld", qu_msglen);
+		snprintf (lo_size, sizeof(lo_size), "%ld", qu_msglen);
 		result = qu2lo_each ();
 		qu_rend();
 		if (rp_isbad (result))

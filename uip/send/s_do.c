@@ -132,7 +132,8 @@ do_hdr (name, data)               /* send out a header field            */
 	if ((ind = strindex ("\n", curptr)) >= 0)
 	    curptr[ind] = '\0';   /* format lines properly              */
 
-	sprintf (bigbuf, hdrfmt, (curptr == data) ? name : "", curptr);
+	snprintf (bigbuf, sizeof(bigbuf), hdrfmt, 
+                  (curptr == data) ? name : "", curptr);
 				  /* begin with blank on added lines    */
 	if (rp_isbad (retval = mm_wtxt (bigbuf, (thesize = strlen (bigbuf)))))
 	    snd_abort ("Problem with writing header buffer [%s].\n", rp_valstr (retval));

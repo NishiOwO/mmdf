@@ -229,7 +229,7 @@ main (argc, argv)
 
 	if (ch_tbsrch[i] != (Chan *)NULL)
 	{
-	    (void) sprintf (tmpname, "%s%s", squepref, ch_tbsrch[i]->ch_queue);
+	    (void) snprintf (tmpname, sizeof(tmpname), "%s%s", squepref, ch_tbsrch[i]->ch_queue);
 	    printf ("Queue directory '%s'\n\t[protected at 0777]\n", tmpname);
 	    my_drcreat (tmpname, 0777, mmdfuid, mmdfgid);
 	}
