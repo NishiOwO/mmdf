@@ -9,6 +9,10 @@
 #  ifdef HAVE_LASTLOG_H
 #    include <lastlog.h>
 
+#if !defined(__STDC__) || defined(DECLARE_GETPWUID)
+extern struct passwd *getpwuid ();
+#endif /* DECLARE_GETPWUID */
+
 /* get informtion about who is logged in */
 
 extern char *blt();
@@ -41,8 +45,7 @@ getllog()
 	    char        io[sizeof (struct lastlog)];
 	    struct lastlog entry;
 	}       llogbuf;
-	struct passwd *pwdptr,
-		      *getpwuid ();
+	struct passwd *pwdptr;
 
 	if (llogfp == NULL) {
 		if( (llogfp = fopen( LLPATH, "r" )) == NULL )

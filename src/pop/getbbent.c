@@ -9,7 +9,7 @@
 #else /* MMDFONLY */
 #include "util.h"
 #include "mmdf.h"
-#include "strings.h"
+/*#include "strings.h"*/
 #endif /* MMDFONLY */
 #include <ctype.h>
 #include <pwd.h>
@@ -75,11 +75,32 @@ static char BBErrors[BUFSIZ];
 extern LLog *logptr;
 #endif /* MMDFONLY */
 
-char   *bbskip (), *getcpy ();
-
 char   *crypt (), *getpass ();
 struct group  *getgrnam ();
 struct passwd *getpwnam (), *getpwuid ();
+
+int     setbbfile ();
+int	setbbinfo ();
+int	setpwinfo ();
+static int  setbbaux ();
+static int  setpwaux ();
+int     setbbent ();
+int     endbbent ();
+long    getbbtime ();
+struct bboard  *getbbent ();
+struct bboard  *getbbnam ();
+struct bboard  *getbbaka ();
+static int  BBread ();
+int     ldrbb ();
+int     ldrchk ();
+struct bboard  *getbbcpy ();
+int     getbbdist ();
+static int  getbbitem ();
+static int  bblose ();
+void	make_lower ();
+static char *bbskip ();
+static	char   *getcpy ();
+
 
 /*  */
 
@@ -90,7 +111,7 @@ register int    f;
     if (BBuid == -1)
 	return setbbinfo (BBOARDS, file, f);
 
-    (void) strncpy (BBData, file, BBDatasizeof());
+    (void) strncpy (BBData, file, sizeof(BBData));
 
     BBflags = SB_NULL;
     (void) endbbent ();
@@ -154,7 +175,7 @@ register char  *file;
     (void) strncpy (BBName, pw -> pw_name, sizeof(BBName));
     BBuid = pw -> pw_uid;
     (void) strncpy (BBDir, pw -> pw_dir, sizeof(BBDir));
-    (void) snprintf (BBData, sizeof(BBDAta), "%s/%s",
+    (void) snprintf (BBData, sizeof(BBData), "%s/%s",
 	    *file != '/' ? BBDir : "",
 	    *file != '/' ? file : file + 1);
 
@@ -683,7 +704,7 @@ register char   *s1,
 
     for (; *s2; s2++)
 	*s1++ = isupper (*s2) ? tolower (*s2) : *s2;
-    *s1 = NULL;
+    *s1 = 0 /*NULL*/;
 }
 
 /*  */
@@ -698,7 +719,7 @@ register char  *p,
     while (*p && *p != c)
 	p++;
     if (*p)
-	*p++ = NULL;
+      *p++ = 0 /*NULL*/;
 
     return p;
 }

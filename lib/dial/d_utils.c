@@ -5,6 +5,10 @@
 # include  "d_proto.h"
 # include  "d_structs.h"
 
+#ifdef DECLARE_GETPWUID
+extern struct passwd *getpwuid ();
+#endif /* DECLARE_GETPWUID */
+
 /*  4 Sept 81   D. Krafft (Cornell) & D. Crocker
  *                              getuser log calls didn't name routine
  *                              also converted to using getpwuid()
@@ -20,7 +24,6 @@ d_getuser(uid, name, path)
   int  uid;
   char  *name, *path;
     {
-    extern struct passwd *getpwuid ();
     register struct passwd *pwdptr;
 
 /*  if we did this once, just used the stuff we saved  */

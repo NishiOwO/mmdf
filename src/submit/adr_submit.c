@@ -729,7 +729,7 @@ lc_afin ()                /* alst_proc input routine for file   */
 {                         /* parse already-read line            */
     char    c;
 
-    switch ((char )(c = *(lc_cralias->abufpos)))
+    switch ((unsigned char )(c = *(lc_cralias->abufpos)))
     {
 	case 0377:
 	case 0:

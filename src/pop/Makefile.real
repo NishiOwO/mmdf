@@ -12,6 +12,8 @@ SOURCES =	ch_pop.c qu2po_send.c po_wtmail.c \
 ZOTLIBS	=	getbbent.o dropsbr.o lock.o r1bindex.o strindex.o uprf.o \
 		mmdfonly.o
 
+LDFLAGS+=-lcrypt
+
 .c.o:;		$(CC) $(CFLAGS) -DPOP -DMMDFONLY -c $*.c
 
 real-default:	pop

@@ -40,6 +40,10 @@
 #include <pwd.h>
 #include "ap.h"
 
+#if !defined(__STDC__) || defined(DECLARE_GETPWUID)
+extern struct passwd *getpwuid ();
+#endif /* DECLARE_GETPWUID */
+
 extern struct ll_struct    *logptr;
 
 extern char *mmdflogin;
@@ -396,7 +400,6 @@ LOCFUN
 LOCFUN
 	q2p_gcinfo ()             /* who is the caller?                 */
 {
-    struct passwd *getpwuid ();
     int   effecid;
     register struct passwd  *pwdptr;
 

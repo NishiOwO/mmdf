@@ -1044,9 +1044,7 @@ int	in;		/* file descriptor */
 int	out;		/* file descriptor */
 int	names;		/* non-zero for listing recipient names */
 {
-	int     (*old1) ();
-	int	(*old2) ();
-	int	(*old3) ();
+  RETSIGTYPE  (*old1) (), (*old2) (), (*old3) ();
 	int	pid;
 	int	stat;
 	int	i;

@@ -81,9 +81,10 @@
 
 extern struct ll_struct   *logptr;
 extern char *locfullname;
-#ifndef __STDC__
+
+#if !defined(__STDC__) || defined(DECLARE_GETPWUID)
 extern struct passwd *getpwuid ();
-#endif
+#endif /* DECLARE_GETPWUID */
 extern char *getmailid ();
 
 int ml_state = ML_FRESH;

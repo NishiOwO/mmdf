@@ -1,7 +1,10 @@
 /*
- * $Id: fs.c,v 1.3 1999/08/25 09:39:00 krueger Exp $
+ * $Id: fs.c,v 1.4 2000/04/04 20:50:05 krueger Exp $
  *
  * $Log: fs.c,v $
+ * Revision 1.4  2000/04/04 20:50:05  krueger
+ * Merged patch for netBSD (better check for timezone, declaration of sprintf(), getpwnam(), some minor bug fixes
+ *
  * Revision 1.3  1999/08/25 09:39:00  krueger
  * Added check for free disc space to local-channel and appropriated returnvalue
  *
@@ -23,6 +26,7 @@ extern LLog *logptr;
 #endif /* __MAIN__ */
 
 #include <sys/types.h>
+#include <sys/param.h>
 
 #ifdef HAVE_STATFS
 #  ifdef HAVE_SYS_STATVFS_H

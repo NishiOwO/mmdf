@@ -9,6 +9,10 @@
 #include <stdio.h>
 #include <pwd.h>
 
+#if !defined(__STDC__) || defined(DECLARE_GETPWUID)
+extern struct passwd *getpwuid ();
+#endif /* DECLARE_GETPWUID */
+
 main (argc, argv)
 int	argc;
 char	**argv;
@@ -20,7 +24,6 @@ char	**argv;
 	mmdf_init(argv[0]);
 	if (argc < 2) {
 		register struct passwd *pw;
-		struct passwd *getpwuid();
 
 		if ((pw = getpwuid (getuid())) == NULL) {
 			fprintf (stderr, "prmailid: No user with uid %d.\n",

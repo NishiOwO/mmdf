@@ -24,6 +24,10 @@
  *   19 May 83 Doug Kingston: fix -r to pass a flag to submit
  */
 
+#if !defined(__STDC__) || defined(DECLARE_GETPWUID)
+extern struct passwd *getpwuid ();
+#endif /* DECLARE_GETPWUID */
+
 long int    curnewpos,
 	    poshack;              /* keep track of current position     */
 				  /*   because ftell isn't on V6        */
@@ -126,7 +130,6 @@ RETSIGTYPE pipsig ()
 
 pgminit ()
 {
-    extern struct passwd *getpwuid ();
     extern char *getmailid ();
     struct passwd  *pwdptr;
     int     realid,

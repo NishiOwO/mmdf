@@ -10,6 +10,10 @@ static char *sccsid = "@(#)getname.c	5.2 (Berkeley) 6/21/85";
 
 #include <pwd.h>
 
+#if !defined(__STDC__) || defined(DECLARE_GETPWUID)
+extern struct passwd *getpwuid ();
+#endif /* DECLARE_GETPWUID */
+
 /*
  * Getname / getuserid for those with
  * hashed passwd data base).

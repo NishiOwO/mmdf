@@ -9,15 +9,20 @@
 #include "cnvtdate.h"
 #include "mm_io.h"
 
+#if !defined(__STDC__) || defined(DECLARE_GETPWUID)
+extern struct passwd *getpwuid ();
+#endif /* DECLARE_GETPWUID */
+#ifdef DECLARE_EXIT
+extern int exit();
+#endif /* DECLARE_EXIT */
+
 extern	char	*locname, *locdomain;
 extern	char	*chndfldir;
 
-extern struct passwd *getpwuid ();
 extern char *getmailid ();
 extern char *getenv();
 extern char *dupfpath();
 extern char *multcat();
-extern int exit();
 
 char	*SMTPSRVR = "smtpsrvr";
 

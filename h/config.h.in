@@ -1,6 +1,6 @@
 /* h/config.h.in.  Generated automatically from configure.in by autoheader.  */
 /*
- * $Id: config.h.in,v 1.43 2000/01/12 15:14:36 krueger Exp $
+ * $Id: config.h.in,v 1.44 2000/04/04 20:50:05 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -141,6 +141,7 @@
 
 /* Define if sprintf does not return number of printed chars */
 #undef BSD_SPRINTF
+#undef SPRINTF_TYPE
 
 /* Define if you have the flock function.  */
 #undef HAVE_FLOCK
@@ -353,6 +354,14 @@ yourdomain".  Since % or
 #undef MMDFLOGIN
 #undef MMDFGROUP
 
+#undef DECLARE_SPRINTF
+#undef HAVE_STRUCT_TIMEZONE
+
+/* Leave that blank line there!!  Autoheader needs it.
+   If you're adding to this file, keep in mind:
+   The entries are in sort -df order: alphabetical, case insensitive,
+   ignoring punctuation (such as underscores).  */
+
 /* Define if you have the bcopy function.  */
 #undef HAVE_BCOPY
 
@@ -500,6 +509,9 @@ yourdomain".  Since % or
 /* Define if you have the <sys/ndir.h> header file.  */
 #undef HAVE_SYS_NDIR_H
 
+/* Define if you have the <sys/param.h> header file.  */
+#undef HAVE_SYS_PARAM_H
+
 /* Define if you have the <sys/quota.h> header file.  */
 #undef HAVE_SYS_QUOTA_H
 
@@ -571,6 +583,13 @@ yourdomain".  Since % or
 
 /* Define if you have the wrap library (-lwrap).  */
 #undef HAVE_LIBWRAP
+/*****************************************************************************/
+#undef DECLARE_GETPWNAM
+#undef DECLARE_GETPWUID
+#undef DECLARE_EXIT
+#undef DECLARE_ABORT
+
+/*****************************************************************************/
 
 #undef HAVE_ESMTP_DSN
 #undef HAVE_ESMTP_8BITMIME

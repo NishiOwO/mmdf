@@ -57,6 +57,13 @@
 #include "ml_send.h"
 #include "mm_io.h"
 
+#ifdef DECLARE_GETPWUID
+extern struct passwd *getpwuid ();
+#endif /* DECLARE_GETPWUID */
+#ifdef DECLARE_GETPWNAM
+extern struct passwd *getpwnam ();
+#endif /* DECLARE_GETPWNAM */
+
 #define	VERSION		"4.0"
 
 /*#define	CITATION	6	/* Added Peter C March 1987 */
@@ -155,7 +162,7 @@ char *get_official();
 main(argc, argv)
 char **argv;
 {
-	struct	passwd	*pw, *getpwnam(), *getpwuid();
+	struct	passwd	*pw;
 	char		*fromptr, *cp, *d;
 	char		fromwhom[NAMESZ];	/* user on remote system */
 	char		sys[NAMESZ];	/* an element in the uucp path */

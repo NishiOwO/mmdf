@@ -42,8 +42,11 @@
 #include "./s.h"
 #include "./s_externs.h"
 
-extern char *getmailid();
+#if !defined(__STDC__) || defined(DECLARE_GETPWUID)
 extern struct passwd *getpwuid();
+#endif /* DECLARE_GETPWUID */
+
+extern char *getmailid();
 extern char *getenv();
 
 extern char *dflveditor;

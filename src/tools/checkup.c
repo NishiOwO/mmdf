@@ -144,8 +144,12 @@ extern struct ll_struct	ph_log;
 extern struct dialports *d_prts;
 extern struct directlines *d_lines;
 #endif /* HAVE_DIAL */
+#ifdef DECLARE_GETPWUID
 extern struct passwd *getpwuid ();
+#endif /* DECLARE_GETPWUID */
+#ifdef DECLARE_GETPWNAM
 extern struct passwd *getpwnam ();
+#endif /* DECLARE_GETPWNAM */
 
 struct stat statbuf;
 

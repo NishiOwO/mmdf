@@ -6,6 +6,10 @@
 #include <sys/stat.h>
 #include "mm_io.h"
 
+#if !defined(__STDC__) || defined(DECLARE_GETPWUID)
+extern struct passwd *getpwuid ();
+#endif /* DECLARE_GETPWUID */
+
 extern char     *locname;
 extern char     *locdomain;
 
@@ -45,7 +49,6 @@ RETSIGTYPE pipsig ()
 
 pgminit ()
 {
-	extern struct passwd *getpwuid ();
 	extern char *getmailid ();
 	struct passwd  *pwdptr;
 	int     realid,
@@ -73,7 +76,7 @@ get_aliasfile ()
 	char	rcfilename[128];
 	char	linebuf[128];
 	char	*rcname = ".sendrc";
-	char 	*av[NARGS+1], *aliasfile[128];
+	char 	*av[NARGS+1], aliasfile[256];
 	FILE 	*fp;
 	int 	realid, effecid;
 
@@ -98,7 +101,8 @@ get_aliasfile ()
 			if ( strncmp(linebuf,"aliases",7) == 0 )  {
 
 				if (av[1][0] != '/')  {
-					sprintf( aliasfile, "%s/%s", pwdptr->pw_dir, av[1]);
+					snprintf( aliasfile, sizeof(aliasfile), "%s/%s",
+                              pwdptr->pw_dir, av[1]);
 					aliasinit ( aliasfile );
 				} else
 					aliasinit ( av[1] );

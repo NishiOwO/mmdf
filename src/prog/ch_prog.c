@@ -113,7 +113,7 @@ err_abrt (code, f, a0, a1, a2)
 	    /* don't worry about minor stuff */
 	    snprintf (buf, sizeof(buf), "%s%s", "err [ ABEND (%s) ]\t", f);
 	    ll_log (logptr, LLOGFAT, buf, rp_valstr (code), a0, a1, a2);
-	    abort (code);
+	    exit (code);
 	}
     }
 #endif /* DEBUG */

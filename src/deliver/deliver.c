@@ -148,13 +148,16 @@
 
 /**/
 
+#if !defined(__STDC__) || defined(DECLARE_GETPWUID)
+extern struct passwd *getpwuid ();
+#endif /* DECLARE_GETPWUID */
+
 extern LLog msglog;
 extern char *logdfldir;
 LLog *logptr = &msglog;
 
 extern char *blt ();
 extern time_t time ();
-extern struct passwd *getpwuid();
 
 
 time_t   curtime;                 /* Current time secconds              */

@@ -81,6 +81,10 @@ extern char *verdate;
 #endif /* HAVE_SYS_IOCTL_H */
 #include "./msg.h"
 
+#if !defined(__STDC__) || defined(DECLARE_GETPWUID)
+extern struct passwd *getpwuid ();
+#endif /* DECLARE_GETPWUID */
+
 extern	int Nmsgs;
 
 char    lastc = '\n';
@@ -141,7 +145,6 @@ char   *argv[];
 	int	j;
 	char    tb[1024];
 	register struct message **mp;
-	extern struct passwd *getpwuid();
 	extern RETSIGTYPE onhangup();
 	struct passwd  *pwdptr;
 	struct group  *grpptr;

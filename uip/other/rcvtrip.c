@@ -90,6 +90,10 @@
 # include	<pwd.h>
 # include	<stdio.h>
 
+#if !defined(__STDC__) || defined(DECLARE_GETPWUID)
+extern struct passwd *getpwuid ();
+#endif /* DECLARE_GETPWUID */
+
 # define	ANIL		((AP_ptr)0)
 # define	NILC		((char *)0)
 
@@ -135,8 +139,6 @@ AP_ptr  sndr_adr=	ANIL;		/*     - " -	    sender	   */
 AP_ptr  repl_adr=	ANIL;		/*     - " -	    reply-to	   */
 
 char	*find_sig();
-
-struct passwd	*getpwuid();
 
 /*
  *	This message is output before the users file message

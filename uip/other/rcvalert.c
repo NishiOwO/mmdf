@@ -24,6 +24,10 @@
 #include "mmdf.h"
 #include <pwd.h>
 
+#if !defined(__STDC__) || defined(DECLARE_GETPWUID)
+extern struct passwd *getpwuid ();
+#endif /* DECLARE_GETPWUID */
+
 #define TOSHORT 16		  /* subject shorter than this => search  */
 				  /*   body for chars to add to subject   */
 #define SUBLEN  37		  /* length of subject & from fields      */
@@ -92,7 +96,6 @@ char **argv;
 
 guinfo ()			  /* get user name & login directory    */
 {
-    extern struct passwd *getpwuid ();
     register struct passwd *pwdptr;
     int     realid,
 	    effecid;

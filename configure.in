@@ -656,12 +656,11 @@ AC_HEADER_DIRENT
 AC_HEADER_SYS_WAIT
 AC_HEADER_TIME
 AC_STRUCT_TM
-AC_STRUCT_TIMEZONE
 AC_VAR_TIMEZONE
 
 AC_CHECK_HEADERS(arpa/nameser.h lastlog.h libio.h malloc.h memory.h netdb.h \
  netinet/in.h resolv.h termio.h string.h strings.h syslog.h \
- sys/file.h sys/ioctl.h sys/mount.h sys/quota.h \
+ sys/file.h sys/ioctl.h sys/mount.h sys/param.h sys/quota.h \
  sys/fs/ufs_quota.h sys/socket.h sys/statfs.h \
  sys/statvfs.h sys/time.h sys/termio.h sys/vfs.h \
  sys/termios.h sys/unistd.h unistd.h utmp.h utmpx.h varargs.h)
@@ -671,6 +670,7 @@ if test "$ac_cv_header_varargs_h" != "yes"; then
     AC_MSG_WARN(          lib/util/multcat.c will not compile)
     AC_MSG_WARN(          lib/util/multcpy.c will not compile)
 fi
+AC_STRUCT_TIMEZONE
 
 AC_CHECK_FUNCS(bcopy dbmcachedump dup2 fcntl ftime getcwd getdtablesize \
  gethostname gettimeofday getwd index initgroups \
@@ -733,18 +733,19 @@ AC_CACHE_VAL(ac_cv_returns_n_of_chars, AC_TRY_RUN(
    ac_cv_returns_n_of_chars=no))
 if test "$ac_cv_returns_n_of_chars" = yes; then
   AC_MSG_RESULT(yes)
+  AC_DEFINE_UNQUOTED(SPRINTF_TYPE, int)
 else
   AC_MSG_RESULT(no)
   AC_DEFINE(BSD_SPRINTF)
+  AC_DEFINE_UNQUOTED(SPRINTF_TYPE, char *)
 fi
+AC_MYCHECK_SPRINTF
 
 dnl check if we have SIGSYS
 AC_MSG_CHECKING(whether have SIGSYS)
-AC_CACHE_VAL(ac_cv_have_SIGSYS, AC_TRY_RUN( 
- [#include <signal.h> 
- main() { if(SIGSYS>0) exit(0); else exit(1);}],
+AC_CACHE_VAL(ac_cv_have_SIGSYS, AC_TRY_COMPILE( 
+ [#include <signal.h>],[ return SIGSYS; ],
    ac_cv_have_SIGSYS=yes,
-   ac_cv_have_SIGSYS=no,
    ac_cv_have_SIGSYS=no))
 if test "$ac_cv_have_SIGSYS" = yes; then
   AC_MSG_RESULT(yes)
@@ -825,15 +826,15 @@ fi
 dnl check arguments of mkdir()
 if test "$ac_cv_func_mkdir" = "yes"; then
   AC_MSG_CHECKING(what argument mkdir() takes a second argument)
-  AC_CACHE_VAL(ac_cv_have_MKDIR_LNX, AC_TRY_RUN( 
+  AC_CACHE_VAL(ac_cv_have_MKDIR_LNX, [AC_TRY_COMPILE( 
    [#include <sys/stat.h>
      main() { 
-	mkdir("dummy", 0577);
+	mkdir("dummy");
 	exit(0);
-   }],
-     ac_cv_have_MKDIR_LNX=yes,
-     ac_cv_have_MKDIR_LNX=no,
-     ac_cv_have_MKDIR_LNX=no))
+   }],[], ac_cv_have_MKDIR_LNX=no,
+     ac_cv_have_MKDIR_LNX=yes)])
+
+echo "#### > ac_cv_have_MKDIR_LNX=$ac_cv_have_MKDIR_LNX"
   if test "$ac_cv_have_MKDIR_LNX" = yes; then
     AC_MSG_RESULT(yes)
     AC_DEFINE(MKDIR_HAVE_SECOND_ARG)
@@ -890,17 +891,9 @@ fi
 dnl check some defines on HP machine
 if test "$ac_cv_header_sgtty_h" = "yes"; then
   AC_MSG_CHECKING(whether CBREAK is defined in <sgtty.h>)
-  AC_CACHE_VAL(ac_cv_have_CBREAK, AC_TRY_RUN( 
-   [#include <sgtty.h>
-     main() { 
-#ifdef CBREAK
-	exit(0);
-#else
-	exit(1);
-#endif
-   }],
+  AC_CACHE_VAL(ac_cv_have_CBREAK, AC_TRY_COMPILE( 
+   [#include <sgtty.h>],[return CBREAK;],
      ac_cv_have_CBREAK=yes,
-     ac_cv_have_CBREAK=no,
      ac_cv_have_CBREAK=no))
   if test "$ac_cv_have_CBREAK" = yes; then
     AC_MSG_RESULT(yes)
@@ -1035,7 +1028,13 @@ if test "$ac_cv_enable_ucbmail" = "yes" -o \
   fi
 fi
 
+AC_MYCHECK_FUNCTION(, SPRINTF_TYPE sprintf(int);,sprintf)
+AC_MYCHECK_FUNCTION(pwd.h, extern char *getpwnam();,getpwnam)
+AC_MYCHECK_FUNCTION(pwd.h, extern char *getpwuid();,getpwuid)
+AC_MYCHECK_FUNCTION(stdlib.h, extern char *exit();,exit)
+AC_MYCHECK_FUNCTION(stdlib.h, extern char *abort();,abort)
 echo
+
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 AC_SET_DEFINE(DEBUG, $mmdfdebug)

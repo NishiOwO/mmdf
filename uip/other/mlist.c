@@ -14,6 +14,10 @@
  *  Feb 84 Steve Kille    - initial coding
  */
 
+#if !defined(__STDC__) || defined(DECLARE_GETPWUID)
+extern struct passwd *getpwuid ();
+#endif /* DECLARE_GETPWUID */
+
 FILE *curfp;                             /* for alias file */
 char *basehelpfile = "mlist.help";
 char *helpfile;
@@ -87,7 +91,6 @@ main (argc, argv)
 
 user_init ()
 {
-    struct passwd *pwd, *getpwuid();
     char *getmailid();
     int effid;
 

@@ -3,7 +3,7 @@
 #ifndef	MMDFONLY
 #include "../h/strings.h"
 #else /* MMDFONLY */
-#include "strings.h"
+/*#include "strings.h"*/
 #include "mmdfonly.h"
 #endif /* MMDFONLY */
 #include <stdio.h>

@@ -54,6 +54,13 @@
 #endif /* HAVE_SGTTY_H */
 #include "./msg.h"
 
+#ifdef DECLARE_GETPWUID
+extern struct passwd *getpwuid ();
+#endif /* DECLARE_GETPWUID */
+#ifdef DECLARE_GETPWNAM
+extern struct passwd *getpwnam ();
+#endif /* DECLARE_GETPWNAM */
+
 extern FILE *popen();
 static int	curline;
 static int	pcntdn;		/* percent done */
@@ -159,7 +166,6 @@ char	*def;		/* optional default */
 {
 	char    tmpbuf[LINESIZE];
 	char	name[LINESIZE];
-	struct passwd *getpwuid(), *getpwnam();
 	register char *t, *n;
 	register struct passwd *pw;
 

@@ -29,6 +29,10 @@
 #include <sys/stat.h>
 #include "ml_send.h"
 
+#if !defined(__STDC__) || defined(DECLARE_GETPWUID)
+extern struct passwd *getpwuid ();
+#endif /* DECLARE_GETPWUID */
+
 extern int errno;
 extern int sentprotect;
 extern char *locname;
@@ -200,7 +204,6 @@ notify (thedate, thefrom, file, size)
 char	*thedate, *thefrom, *file;
 long	size;
 {
-    extern struct passwd *getpwuid ();
     struct stat statbuf;
     struct passwd *owner;
     char linebuf[2*LINESIZE];

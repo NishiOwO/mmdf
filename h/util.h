@@ -19,12 +19,10 @@
 
 /* declarations that should have been in the system files */
 
-#if !defined(BSD_SPRINTF) || defined(ULTRIX)
-/*extern int sprintf ();*/
-#else
-extern char *sprintf ();
-#endif
-#ifndef __STDC__
+#ifdef DECLARE_SPRINTF
+extern SPRINTF_RETURN sprintf ();
+#endif /* DECLARE_SPRINTF */
+#if !defined(__STDC__) || defined(DECLARE_GETPWNAM)
 extern struct passwd *getpwnam(), *getpwuid();
 #else
 #  ifdef HAVE_LIBIO_H
@@ -32,7 +30,7 @@ extern struct passwd *getpwnam(), *getpwuid();
 #  endif /* HAVE_LIBIO_H */
 #endif /* not LINUX */
 
-#if !defined(HAVE_DEF_SIGSYS) || defined(LINUX)
+#if !defined(HAVE_DEF_SIGSYS)
 #  define SIGSYS SIGUNUSED
 #endif
 

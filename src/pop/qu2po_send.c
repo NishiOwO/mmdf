@@ -15,6 +15,9 @@
 extern LLog *logptr;
 extern char *supportaddr;
 
+LOCFUN qu2bb_each ();
+int qu2bb_send ();
+
 struct rp_construct rp_hend  = { /* end of host list */
     RP_NOOP,
     'e', 'n', 'd', ' ', 'o', 'f', ' ', 'h', 'o', 's', 't', ' ',
@@ -52,7 +55,7 @@ struct rp_construct rp_err = {	/* error, retry later */
 
 /*  */
 
-qu2bb_send (chanptr)
+int qu2bb_send (chanptr)
 Chan *chanptr;
 {
     short   result;

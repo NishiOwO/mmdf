@@ -59,6 +59,10 @@
 #include "ap.h"
 #include "ns.h"
 
+#if !defined(__STDC__) || defined(DECLARE_GETPWUID)
+extern struct passwd *getpwuid ();
+#endif /* DECLARE_GETPWUID */
+
 extern LLog msglog;
 LLog *logptr = &msglog;
 extern struct ap_prevstruct   *ap_fle; /* parse state top of stack       */
@@ -87,7 +91,6 @@ extern char *mgt_parm();
 extern char *dupfpath();
 extern char *multcat();
 extern char *getmailid();
-extern struct passwd *getpwuid();
 extern ap_flget();
 
 extern char *namdeliver;      /* name of mailer process             */

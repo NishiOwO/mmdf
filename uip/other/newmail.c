@@ -19,6 +19,10 @@
 #include <pwd.h>
 #include "../msg/msg.h"
 
+#if !defined(__STDC__) || defined(DECLARE_GETPWUID)
+extern struct passwd *getpwuid ();
+#endif /* DECLARE_GETPWUID */
+
 char	mboxbuf[BUFSIZ], binboxbuf[BUFSIZ];
 
 main()
