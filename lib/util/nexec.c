@@ -72,9 +72,9 @@ char	*pgm,
 	register	int	fd;
 			int	status;
 			int	childid;
-	sigtype		(*(osig1))();
-	sigtype		(*(osig2))();
-	sigtype		(*(osig3))();
+	RETSIGTYPE		(*(osig1))();
+	RETSIGTYPE		(*(osig2))();
+	RETSIGTYPE		(*(osig3))();
 
 	if (proctyp != PUREXEC) {
 		/* printf("This is a forking call.\n"); */

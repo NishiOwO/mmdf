@@ -56,7 +56,7 @@ called by:
 
 extern  char *verdate;
 extern  int errno;
-extern	sigtype onint (), onint2(), onint3 ();
+extern	RETSIGTYPE onint (), onint2(), onint3 ();
 int    bccflag;
 
 input ()

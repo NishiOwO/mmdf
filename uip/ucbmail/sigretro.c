@@ -28,9 +28,9 @@ static char *sccsid = "@(#)sigretro.c	5.2 (Berkeley) 6/21/85";
  *		child process after fork(2)
  */
 
-typedef	int	(*sigtype)();
+typedef	int	(*RETSIGTYPE)();
 
-sigtype	sigdisp(), sighold(), sigignore();
+RETSIGTYPE	sigdisp(), sighold(), sigignore();
 
 /*
  * The following helps us keep the extended signal semantics together.
@@ -38,7 +38,7 @@ sigtype	sigdisp(), sighold(), sigignore();
  * supposed to call.  s_func is SIG_DFL / SIG_IGN if appropriate.
  */
 struct sigtable {
-	sigtype	s_func;			/* What to call */
+	RETSIGTYPE	s_func;			/* What to call */
 	int	s_flag;			/* Signal flags; see below */
 } sigtable[NSIG + 1];
 
@@ -60,11 +60,11 @@ jmp_buf	_pause;				/* For doing sigpause() */
  * the real sigset() library.  We don't bother here, assuming that
  * you are either ignoring or defaulting a signal in the child.
  */
-sigtype
+RETSIGTYPE
 sigsys(sig, func)
-	sigtype func;
+	RETSIGTYPE func;
 {
-	sigtype old;
+	RETSIGTYPE old;
 
 	old = sigdisp(sig);
 	signal(sig, func);
@@ -76,11 +76,11 @@ sigsys(sig, func)
  * If the signal is subsequently (or even now) held,
  * the action you set here can be enabled using sigrelse().
  */
-sigtype
+RETSIGTYPE
 sigset(sig, func)
-	sigtype func;
+	RETSIGTYPE func;
 {
-	sigtype old;
+	RETSIGTYPE old;
 	int _sigtramp();
 	extern int errno;
 
@@ -128,10 +128,10 @@ sigset(sig, func)
  * In that case, we still catch the signal so we can note it
  * happened and do something crazy later.
  */
-sigtype
+RETSIGTYPE
 sighold(sig)
 {
-	sigtype old;
+	RETSIGTYPE old;
 	extern int errno;
 
 	if (sig < 1 || sig > NSIG) {
@@ -157,10 +157,10 @@ sighold(sig)
  * Release a signal
  * If the signal occurred while we had it held, cause the signal.
  */
-sigtype
+RETSIGTYPE
 sigrelse(sig)
 {
-	sigtype old;
+	RETSIGTYPE old;
 	extern int errno;
 	int _sigtramp();
 
@@ -186,7 +186,7 @@ sigrelse(sig)
 /*
  * Ignore a signal.
  */
-sigtype
+RETSIGTYPE
 sigignore(sig)
 {
 
@@ -236,11 +236,11 @@ sigchild()
  * If we have not set this signal before, we have to
  * ask the system
  */
-sigtype
+RETSIGTYPE
 sigdisp(sig)
 {
 	extern int errno;
-	sigtype old;
+	RETSIGTYPE old;
 
 	if (sig < 1 || sig > NSIG) {
 		errno = EINVAL;
@@ -272,7 +272,7 @@ sigdisp(sig)
 _sigtramp(sig)
 {
 	extern int errno;
-	sigtype old;
+	RETSIGTYPE old;
 
 	if (sig < 1 || sig > NSIG) {
 		errno = EINVAL;

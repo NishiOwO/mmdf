@@ -144,7 +144,7 @@ extern char lstmore;		    /* second, or more listed message  */
 extern char autoconfirm;	    /* bypass asking user confirmation */
 extern char anstype;		    /* what addresses to send answers to  */
 extern char binaryvalid;	    /* TRUE if incore binary box is valid */
-extern sigtype (*orig) ();	    /* DEL interrupt value on entry */
+extern RETSIGTYPE (*orig) ();	    /* DEL interrupt value on entry */
 extern int  verbose;
 
 extern int  outfd;

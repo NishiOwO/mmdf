@@ -63,9 +63,9 @@ LOCVAR FILE *ch_outfp,            /* output file handle for chan */
 	   *ch_infp;              /* input file handle for channel */
 
 LOCVAR int    ch_child;           /* Process id of channel program      */
-LOCVAR sigtype (* ch_opipe) ();   /* old pipe action value              */
+LOCVAR RETSIGTYPE (* ch_opipe) ();   /* old pipe action value              */
 
-LOCFUN sigtype
+LOCFUN RETSIGTYPE
 ch_catch ()			  /* catch interrupt                    */
 {
 }

@@ -80,7 +80,7 @@ msgreview (curline)
     fclose (fp);
 }
 
-sigtype
+RETSIGTYPE
 onint ()
 {
     write(1, " XXX\n", 5);
@@ -91,14 +91,14 @@ onint ()
 	longjmp (savej, 1);
 }
 
-sigtype
+RETSIGTYPE
 onint2 ()
 {
     write(1, " XXX\n", 5);
     s_exit (-1);
 }
 
-sigtype
+RETSIGTYPE
 onint3 ()
 {
     signal (SIGINT, onint3);

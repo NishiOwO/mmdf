@@ -130,8 +130,8 @@ static qu2pr_each (sender)
     short     rp;
     char      host [ADDRSIZE];
     char      adr  [ADDRSIZE];
-    extern sigtype brpipe ();
-    sigtype   (*oldsig) ();
+    extern RETSIGTYPE brpipe ();
+    RETSIGTYPE   (*oldsig) ();
 
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "qu2pr_each()");
@@ -208,7 +208,7 @@ static qu2pr_each (sender)
 }
 
 
-sigtype
+RETSIGTYPE
 brpipe ()
 {
     pipebroken = 1;

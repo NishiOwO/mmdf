@@ -85,9 +85,9 @@ extern	int Nmsgs;
 char    lastc = '\n';
 char	ascending = TRUE;
 
-extern	sigtype	(*old3)();
-extern	sigtype	(*old13)();
-extern	sigtype	(*old18)();
+extern	RETSIGTYPE	(*old3)();
+extern	RETSIGTYPE	(*old13)();
+extern	RETSIGTYPE	(*old18)();
 
 extern	int	pagesize;
 extern	int	linelength;

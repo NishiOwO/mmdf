@@ -44,7 +44,7 @@ char    lstmore;		/* second, or more listed message  */
 char	autoconfirm;		/* bypass asking user confirmation */
 char	anstype;		/* what addresses to send answers to  */
 char	binaryvalid;		/* TRUE if incore binary box is valid */
-sigtype	(*orig) ();		/* DEL interrupt value on entry */
+RETSIGTYPE	(*orig) ();		/* DEL interrupt value on entry */
 
 int     outfd;
 

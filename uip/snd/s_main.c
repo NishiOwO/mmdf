@@ -121,7 +121,7 @@ main (argc, argv)
 int     argc;
 char   *argv[];
 {
-    extern sigtype  onint2 ();
+    extern RETSIGTYPE  onint2 ();
     int     retval;
 
     mmdf_init( argv[0] );

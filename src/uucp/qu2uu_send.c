@@ -157,8 +157,8 @@ LOCFUN
     short     result;
     char      host[ADDRSIZE];
     char      adr[ADDRSIZE];
-    extern sigtype brpipe();
-    sigtype   (*oldsig)();
+    extern RETSIGTYPE brpipe();
+    RETSIGTYPE   (*oldsig)();
 
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "qu2uu_each()");
@@ -244,7 +244,7 @@ LOCFUN
     }
 }
 
-sigtype
+RETSIGTYPE
 brpipe()
 {
 	pbroke = 1;

@@ -14,7 +14,7 @@ extern struct ll_struct   *logptr;
 /* *******************  SOFTWARE INTERRUPT TRAPS  ********************* */
 
 #ifndef DEBUG
-sigtype
+RETSIGTYPE
 sig10 ()			  /* signal 10 interrupts to here       */
 {
     signal (SIGBUS, SIG_DFL);
@@ -22,7 +22,7 @@ sig10 ()			  /* signal 10 interrupts to here       */
     sigabort ("sig10");
 }
 
-sigtype
+RETSIGTYPE
 sig12 ()			  /* signal 12 interrupts to here       */
 {
     signal (SIGSYS, SIG_DFL);
@@ -31,7 +31,7 @@ sig12 ()			  /* signal 12 interrupts to here       */
 }
 #endif /* DEBUG */
 
-sigtype
+RETSIGTYPE
 sig13 ()			  /* signal 13 interrupts to here       */
 {
     signal (SIGPIPE, SIG_DFL);
@@ -42,7 +42,7 @@ sig13 ()			  /* signal 13 interrupts to here       */
 
 siginit ()			  /* setup interrupt locations          */
 {
-    extern sigtype timeout();
+    extern RETSIGTYPE timeout();
 
 #ifndef DEBUG
     signal (SIGBUS, sig10);
@@ -60,7 +60,7 @@ jmp_buf timerest;                 /* where to restore to, from timeout  */
 				  /* otherwise, set by return routine   */
 int     flgtrest;                 /* TRUE, if timerest has been set     */
 
-sigtype
+RETSIGTYPE
 timeout ()			  /* alarm timeouts/interrupts to here  */
 {
     extern int errno;
@@ -80,7 +80,7 @@ timeout ()			  /* alarm timeouts/interrupts to here  */
 s_alarm(n)
 unsigned int n;
 {
-    extern sigtype timeout();
+    extern RETSIGTYPE timeout();
 
     flgtrest = ((n == 0) ? 0 : 1);
 /* for masscomp til bugfix */

@@ -43,9 +43,9 @@
 #endif V4_2BSD
 
 #ifndef V4_2BSD
-sigtype	(*oldhup)();
-sigtype	(*oldintr)();
-sigtype	(*oldquit)();
+RETSIGTYPE	(*oldhup)();
+RETSIGTYPE	(*oldintr)();
+RETSIGTYPE	(*oldquit)();
 #endif
 
 #ifndef W_OK

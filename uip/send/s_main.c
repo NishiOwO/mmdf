@@ -70,7 +70,7 @@ jmp_buf savej;
 int     drffd;                  /* handle on the draft file */
 int     nsent;
 int     badflg;			  /* true if at least one bad address */
-sigtype (*orig) ();               /* to save old signal values */
+RETSIGTYPE (*orig) ();               /* to save old signal values */
 
 char   *adrptr;                   /* field currently getting addresses  */
 char    bigbuf[BBSIZE],              /* buffer for text of msg */
@@ -114,7 +114,7 @@ main (argc, argv)
 int     argc;
 char   *argv[];
 {
-    extern  sigtype onint2 ();
+    extern  RETSIGTYPE onint2 ();
     int     retval;
 
     mmdf_init( argv[0] );

@@ -59,7 +59,7 @@ extern	char	*strdup();
 extern	char	*expand();
 
 int	sigpipe;		/* has pipe gone bad? */
-sigtype	onpipe();		/* catch that pipe write failure */
+RETSIGTYPE	onpipe();		/* catch that pipe write failure */
 LOCVAR char mbx_wasclear;	/* this message the first in mbox?	*/
 
 LOCFUN lo_dofile(), qu2lo_txtcpy(), lo_pwait(), mbx_create(), mbx_close(),
@@ -312,7 +312,7 @@ char	*prog;
 	int	ofd;			/* what to write on */
 	char	tmpbuf[LINESIZE];
 	char	buffer[BUFSIZ];
-	sigtype	(*savepipe)();
+	RETSIGTYPE	(*savepipe)();
 	Pip	pipdes;
 	int	result;
 	int	len;
@@ -1145,7 +1145,7 @@ LOCFUN setupenv()
 	envp[2] = userstr;
 }
 
-sigtype
+RETSIGTYPE
 onpipe()
 {
 	signal(SIGPIPE, onpipe);

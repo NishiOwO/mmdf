@@ -51,14 +51,14 @@ called by:
 
 extern  char *verdate;
 extern  int errno;
-extern	sigtype onint (), onint2(), onint3 ();
+extern	RETSIGTYPE onint (), onint2(), onint3 ();
 
 input ()
 {
     int     infile;
     int     stat;
     char    tempbuf[80];
-    sigtype (*old1) (),
+    RETSIGTYPE (*old1) (),
 	    (*old2) (),
 	    (*old3) ();
     register int    i;

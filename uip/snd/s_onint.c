@@ -27,7 +27,7 @@ called by:
 #include "./s.h"
 #include "./s_externs.h"
 
-sigtype
+RETSIGTYPE
 onint ()
 {
     printf (" XXX\n");
@@ -40,7 +40,7 @@ onint ()
 	longjmp (savej, 1);
 }
 
-sigtype
+RETSIGTYPE
 onint2 ()
 {
     printf (" XXX\n");
@@ -48,7 +48,7 @@ onint2 ()
     s_exit (-1);
 }
 
-sigtype
+RETSIGTYPE
 onint3 ()
 {
     signal (SIGINT, onint3);

@@ -43,10 +43,10 @@
  *
  *  Execute some program, such as SEND or the Shell.
  */
-sigtype (*old2)();
-sigtype (*old3)();
-sigtype (*old13)();
-sigtype (*old18)();
+RETSIGTYPE (*old2)();
+RETSIGTYPE (*old3)();
+RETSIGTYPE (*old13)();
+RETSIGTYPE (*old18)();
 
 xeq( exflag)
 char exflag;
