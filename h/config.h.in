@@ -1,6 +1,6 @@
 /* h/config.h.in.  Generated automatically from configure.in by autoheader.  */
 /*
- * $Id: config.h.in,v 1.51 2001/10/26 13:39:34 krueger Exp $
+ * $Id: config.h.in,v 1.52 2002/09/30 19:42:11 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -267,11 +267,9 @@
  */
 #undef NODOMLIT
 
-/*             Enables intpretation of dots as delimiters on
- *             the  LHS  of an 
- in addresses.  For  example,
- *             "user.host\
-yourdomain".  Since % or
+/*             Enables interpretation of dots as delimiters on
+ *             the  LHS  of an  in addresses.  For  example,
+ *             "user.host@yourdomain".  Since % or
  *             822-routing  is  preferred  here, only enable
  *             LEFTDOTS if you have historical need to. 
  */

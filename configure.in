@@ -8,7 +8,6 @@ AC_CONFIG_HEADER(h/config.h)
 dnl AC_INIT_VAR(mmdfdebug,1)
 dnl AC_INIT_VAR(mmdfdlog,1)
 dnl AC_INIT_VAR(mmdfdbglog,1)
-dnl AC_INIT_VAR(mmdfleftdots,1)
 dnl AC_INIT_VAR(mmdfcitation,1)
 AC_INIT_VAR(mmdfnodomlit,1)
 AC_INIT_VAR(mmdfstatsort,1)
@@ -77,6 +76,11 @@ AC_SUBST(ROOTLOGIN)
 if test "${with_ldap+set}" = set; then
   ldapdir=${with_ldap}
 fi
+
+if test "${with_ssl+set}" = set; then
+  ldapdir=${with_ssl}
+fi
+
 dnl PGMPROT=755
 PGMPROT=511
 MMDFLIBS="\${top_srcdir}/lib/libmmdf.a"
@@ -130,15 +134,15 @@ else
     AC_MSG_RESULT(no)
     AC_MSG_WARN("directory conf/$target doesn\'t exists.")
     AC_MSG_WARN(cannot finish configuration with 'sitesetup $target')
-    if test "$create_target" = "yes"; then
+    dnl if test "$create_target" = "yes"; then
       AC_CREATE_TARGET($target)
       MMDF_TARGET=yes
-    else
-      AC_MSG_WARN(Please run one of:)
-      AC_MSG_WARN('configure --target=<existing target>')
-      AC_MSG_WARN('configure --create-target')
-      AC_MSG_ERROR(Cannot continue with configure until target exits)
-    fi
+    dnl else
+    dnl   AC_MSG_WARN(Please run one of:)
+    dnl   AC_MSG_WARN('configure --target=<existing target>')
+    dnl   AC_MSG_WARN('configure --create-target')
+    dnl   AC_MSG_ERROR(Cannot continue with configure until target exits)
+    dnl fi
 fi
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -267,12 +271,18 @@ AC_ARG_WITH(
 AC_ARG_WITH(
   ldap,
   [  --with-ldap[=PATH]      enable ldap-support          (developpment)])
+AC_ARG_WITH(
+  ssl,
+  [  --with-ssl[=PATH]       enable ssl-support           (experimental)])
 
 AC_ARG_ENABLE(nameserver, \
   [--enable-FEATURE        configure and build FEATURE
   --disable-FEATURE       do not configure and build FEATURE
  where FEATURE can be:
        nameserver         nameserver-code]                          \
+ (enabled))
+AC_ARG_ENABLE(leftdots, \
+  [     leftdots           Enables interpretation of dots as delimiters on the LHS of an  in addresses]     \
  (enabled))
 AC_ARG_ENABLE(dbm, \
   [     dbm                tables via dbm, sequential otherwise]     \
@@ -719,6 +729,9 @@ AC_CHECK_HEADER(sgtty.h,ac_cv_header_sgtty_h="yes")
 AC_CHECK_HEADERS(stdarg.h)
 if test "$ac_cv_header_stdarg_h" != "yes"; then
   AC_CHECK_HEADERS(varargs.h)
+else
+  ac_cv_header_varargs_h="yes"
+  AC_DEFINE_UNQUOTED(HAVE_VARARGS_H, "1")
 fi
 if test "$ac_cv_header_varargs_h" != "yes"; then
     AC_MSG_WARN(you don't have varargs.h)
@@ -1118,11 +1131,27 @@ echo
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl if test "$enable_nodomlit" = "yes"; then
+dnl    ac_cv_enable_nodomlit=$enable_nodomlit
+dnl    AC_DEFINE(NODOMLIT)
+dnl fi
+if test "$enable_leftdots" = "yes"; then
+   ac_cv_enable_leftdot=$enable_leftdots
+   AC_DEFINE(LEFTDOTS)
+fi
+dnl if test "$enable_statsort" = "yes"; then
+dnl    ac_cv_enable_statsort=$enable_statsort
+dnl    AC_DEFINE(STATSORT)
+dnl fi
+dnl AC_CHECK_DEFINE($enable_nodomlit, NODOMLIT)
+AC_CHECK_DEFINE($enable_leftdots, LEFTDOTS)
+dnl AC_CHECK_DEFINE($enable_statsort, STATSORT)
+
 AC_SET_DEFINE(DEBUG, $mmdfdebug)
 AC_SET_DEFINE(D_LOG, $mmdfdlog)
 AC_SET_DEFINE(D_DBGLOG, $mmdfdbglog)
 AC_SET_DEFINE(NODOMLIT, $mmdfnodomlit)
-AC_SET_DEFINE(LEFTDOTS, $mmdfleftdots)
+dnl AC_SET_DEFINE(LEFTDOTS, $enable_leftdots)
 AC_SET_DEFINE(STATSORT, $mmdfstatsort)
 AC_SET_DEFINE(CITATION, $mmdfcitation)
 
@@ -1151,21 +1180,6 @@ fi
 if test "$enable_8bit" = "yes"; then
    AC_DEFINE(HAVE_8BIT)
 fi
-dnl if test "$enable_nodomlit" = "yes"; then
-dnl    ac_cv_enable_nodomlit=$enable_nodomlit
-dnl    AC_DEFINE(NODOMLIT)
-dnl fi
-dnl if test "$enable_leftdots" = "yes"; then
-dnl    ac_cv_enable_leftdot=$enable_leftdot
-dnl    AC_DEFINE(LEFTDOTS)
-dnl fi
-dnl if test "$enable_statsort" = "yes"; then
-dnl    ac_cv_enable_statsort=$enable_statsort
-dnl    AC_DEFINE(STATSORT)
-dnl fi
-dnl AC_CHECK_DEFINE($enable_nodomlit, NODOMLIT)
-dnl AC_CHECK_DEFINE($enable_leftdots, LEFTDOTS)
-dnl AC_CHECK_DEFINE($enable_statsort, STATSORT)
 
 dnl if test "$ac_cv_lib_gdbm_gdbm_open" = "yes" || \
 dnl 	test "$ac_cv_lib_ndbm" = "yes" || \

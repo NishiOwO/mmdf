@@ -1,5 +1,5 @@
 dnl
-dnl $Id: aclocal.m4,v 1.11 2001/10/06 21:27:17 krueger Exp $
+dnl $Id: aclocal.m4,v 1.12 2002/09/30 19:42:11 krueger Exp $
 dnl
 dnl
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -230,6 +230,9 @@ dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl AC_SET_FHS_PATHNAME
 AC_DEFUN(AC_SET_FHS_PATHNAME,
 [
+if test "$varprefix" = ""; then
+   varprefix="/var"
+fi
 if test "x$prefix" = "xNONE"; then
    prefix=$ac_default_prefix
 fi
@@ -473,4 +476,5 @@ AC_SUBST(mphsdir)dnl
 AC_SUBST(mlogdir)dnl
 AC_SUBST(d_calllog)dnl
 AC_SUBST(mquedir)dnl
+AC_SUBST(varprefix)dnl
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
