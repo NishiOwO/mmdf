@@ -26,9 +26,15 @@ char *datbuf;
 	register	struct	tm	*i;
 			time_t		tsec;
     int tz_num;
+#if !defined(HAVE_VAR_TIMEZONE)
+    long timezone;
+#endif
 
     time(&tsec);
 	i = localtime(&tsec);
+#if !defined(HAVE_VAR_TIMEZONE)
+    timezone = i->tm_gmtoff;
+#endif
     tz_num = timezone/3600;
 
     tz_num -= i->tm_isdst;

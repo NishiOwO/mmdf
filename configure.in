@@ -657,6 +657,7 @@ AC_HEADER_SYS_WAIT
 AC_HEADER_TIME
 AC_STRUCT_TM
 AC_STRUCT_TIMEZONE
+AC_VAR_TIMEZONE
 
 AC_CHECK_HEADERS(arpa/nameser.h lastlog.h libio.h malloc.h memory.h netdb.h \
  netinet/in.h resolv.h termio.h string.h strings.h syslog.h \
