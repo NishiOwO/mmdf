@@ -316,7 +316,9 @@ char    *cmd;
 int     time;                   /* Max time for sending and getting reply */
 {
     short     retval;
-/*    extern char *sys_errlist[];*/
+#ifndef HAVE_SYS_ERRLIST
+    extern  char    *sys_errlist[];
+#endif /* HAVE_SYS_ERRLIST */
     extern int errno;
 
     ll_log (logptr, LLOGPTR, "sm_cmd (%s)", cmd);

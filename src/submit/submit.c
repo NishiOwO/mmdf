@@ -97,7 +97,9 @@ extern char *pathdeliver;     /* file path to mailer proc.          */
 extern int  *regfdary;
 extern int  errno;
 extern int  sys_nerr;
-/*extern char *sys_errlist[];*/
+#ifndef HAVE_SYS_ERRLIST
+extern  char    *sys_errlist[];
+#endif /* HAVE_SYS_ERRLIST */
 
 char *prm_dupval();
 

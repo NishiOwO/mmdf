@@ -4,7 +4,9 @@
 /* Augment ll_io routines to print system call errno value */
 
 extern	int	sys_nerr;
-/* extern	char	*sys_errlist[]; */
+#ifndef HAVE_SYS_ERRLIST
+extern	char	*sys_errlist[];
+#endif /* HAVE_SYS_ERRLIST */
 extern	int	errno;
 
 /* VARARGS3 */
