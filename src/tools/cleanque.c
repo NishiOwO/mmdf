@@ -1,4 +1,4 @@
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.2 1985/04/05 13:42:00 long Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.6 1985/04/05 13:42:13 long Exp $ */
 /*
  *     MULTI-CHANNEL MEMO DISTRIBUTION FACILITY  (MMDF)
  *     
