@@ -412,6 +412,9 @@ EOF
     Night_Hawk:Power_UNIX:*:*)
 	echo powerpc-harris-powerunix
 	exit 0 ;;
+    Power\ Macintosh:Darwin:*:*)
+	echo macppc-darwin-none
+	exit 0 ;;
     m88k:CX/UX:7*:*)
 	echo m88k-harris-cxux7
 	exit 0 ;;
