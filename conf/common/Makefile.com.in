@@ -6,7 +6,7 @@ MMDF_MINOR_VERSION  = @MMDF_MINOR_VERSION@
 MMDF_PATCH_LEVEL    = @MMDF_PATCH_LEVEL@
 VERSION_DATE        = @VERSION_DATE@
 
-HOST		= @UNAME_NODE@
+HOST		= @UNAME_NODE@ @D_LOCNAME@ @DEBUG@
 a1 = @UNAME_MACHINE@, @UNAME_RELEASE@, @UNAME_SYSTEM@, \
 	@UNAME_VERSION@
 
@@ -19,7 +19,7 @@ exec_prefix     = @exec_prefix@
 mmdf_prefix     = @mmdf_prefix@
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
-LIBDIR          = @libdir@
+LIBDIR          = @libexecdir@
 CHANDIR         = @chandir@
 TBLDIR          = @tbldir@
 BINDIR          = @bindir@
