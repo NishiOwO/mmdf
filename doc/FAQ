@@ -1,0 +1,34 @@
+Q: No valid author specification present
+R: there are different reasons possible
+1) try 
+mmdf$ echo | v6mail mmdf
+No valid author specification present
+Message posting aborted
+
+-> is MLNAME in channel-table from the local channel?
+
+---------------------------------------------------------------------------
+Q: checkque -z returns
+
+Tue Apr 21 08:14:  5 queued msgs / 1024 byte queue directory
+                   5 Kbytes in msg dir
+
+Does '/tmp/mmdf' exists?
+mkdir -p -m 777 /tmp/mmdf
+
+---------------------------------------------------------------------------
+krueger@galadriel 8:14 [doc] echo | /usr/mmdf/lib/v6mail mmdf
+[ Permission denied ] Unable to change directory.
+Message posting aborted
+
+has lib/submit an SUID-bit to mmdf?
+
+---------------------------------------------------------------------------
+krueger@galadriel 8:15 [doc] echo | /usr/mmdf/lib/v6mail mmdf
+Unable to locate user's mailid
+Message posting aborted
+but mmdf@galadriel 8:17am [~/table] echo | v6mail mmdf
+
+are table/mailids and table/users readable for others?
+
+---------------------------------------------------------------------------
