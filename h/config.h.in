@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.24 1998/05/26 11:48:00 mmdf Exp $
+ * $Id: config.h.in,v 1.25 1998/05/26 12:20:57 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -81,6 +81,9 @@
 
 /* Define vfork as fork if vfork does not work.  */
 #undef vfork
+
+/* Define if you have the bcopy function.  */
+#undef HAVE_BCOPY
 
 /* Define if you have the getcwd function.  */
 #undef HAVE_GETCWD

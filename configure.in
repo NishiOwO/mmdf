@@ -570,7 +570,7 @@ if test "$ac_cv_header_varargs_h" != "yes"; then
     AC_MSG_WARN(          lib/util/multcpy.c will not compile)
 fi
 
-AC_CHECK_FUNCS(dup2 fcntl ftime getcwd getdtablesize gethostname)
+AC_CHECK_FUNCS(bcopy dup2 fcntl ftime getcwd getdtablesize gethostname)
 AC_CHECK_FUNCS(gettimeofday getwd index initgroups killpg memcpy)
 AC_CHECK_FUNCS(mkdir res_mkquery)
 AC_CHECK_FUNCS(setpgrp sigsetmask socket strchr strdup truncate)
