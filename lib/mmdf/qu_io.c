@@ -226,10 +226,10 @@ int     dohdr;                    /* perform address massaging          */
     qu_nadrs = 0;
     qu_hdr = FALSE;
 #ifdef DEBUG
-    ll_log (logptr, LLOGBTR, "basic msglen = %D", qu_msglen);
+    ll_log (logptr, LLOGBTR, "basic msglen = %d", qu_msglen);
 #endif
 
-    if (dohdr != AP_SAME)          /* fix up the addresses               */
+    if ((dohdr&AP_MASK) != AP_SAME)          /* fix up the addresses               */
     {
 	ap_outtype = dohdr;
 	qu_seek = hd_init (qu_chptr, qu_fileno ());
@@ -250,7 +250,7 @@ int     dohdr;                    /* perform address massaging          */
 	    fstat (fileno (hd_fmtfp), &statbuf);
 	    qu_msglen += st_gsize (&statbuf);
 #ifdef DEBUG
-	    ll_log (logptr, LLOGBTR, "modified msglen = %D, qu_seek = %ld",
+	    ll_log (logptr, LLOGBTR, "modified msglen = %d, qu_seek = %ld",
 					qu_msglen, qu_seek);
 #endif
 	}

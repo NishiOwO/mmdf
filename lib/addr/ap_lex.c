@@ -135,7 +135,7 @@ char    lexval[];
 			ap_peek = c;
 			lexptr--;
 #ifdef notdef /* no more " at " == '@' */
-			if (ap_intype == AP_733 &&
+			if ((ap_intype & AP_MASK)== AP_733 &&
 			      lexptr == &lexval[2] &&
 				uptolow (lexval[0]) == 'a' &&
 				uptolow (lexval[1]) == 't'   )

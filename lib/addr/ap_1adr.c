@@ -273,7 +273,7 @@ int ap_1adr ()
 			break;
 		    case LV_COLON:
 				  /* GROUP NAME end                       */
-			if (ap_grplev++ >= 1 && ap_intype == AP_822)
+			if (ap_grplev++ >= 1 && (ap_intype & AP_MASK) == AP_822)
 			{        /* may not be nested */
 #if DEBUG > 1
 			    if (debug)
@@ -315,7 +315,7 @@ int ap_1adr ()
 /* ***********************  ADDRESS LISTS  **************************** */
 
 	    case STSTPER:         /* PERSONAL address list; NO empty node */
-		if (ap_perlev++ > 0 && ap_intype == AP_822)
+		if (ap_perlev++ > 0 && (ap_intype & AP_MASK) == AP_822)
 		{        /* may not be nested */
 #if DEBUG > 1
 		    if (debug)
@@ -362,7 +362,7 @@ int ap_1adr ()
 /* **************************  DATA TYPE  ******************************* */
 
 	    case STDTYPE:          /* DATA TYPE name; empty node           */
-		if (ap_intype == AP_822)
+		if ((ap_intype & AP_MASK)== AP_822)
 		{        /* data types not legal in 822 */
 #if DEBUG > 1
 		    if (debug)
