@@ -1,7 +1,7 @@
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 /** 
  *
- * $Id: ap_lex.c,v 1.7 2001/10/03 18:08:23 krueger Exp $
+ * $Id: ap_lex.c,v 1.8 2003/03/02 15:08:46 krueger Exp $
  *
  *  < 1978  B. Borden       Wrote initial version of parser code
  *  78-80   D. Crocker      Reworked parser into current form
@@ -117,18 +117,17 @@ int ap_char ();
 int ap_lex (lexval)
 char    lexval[];
 {
-    register char   c,
-		   *lexptr;
-    register int    retval;
+  register char   c;
+  register char   *lexptr;
+  register int    retval;
 
-    while ((retval = ap_lxtable[(int)(c = ap_char ())]) == LT_SPC)
-	;                         /* Skip space, tab and newline          */
-    lexptr = lexval;
-    *lexptr++ = c;
+  /* Skip space, tab and newline          */
+  while ((retval = ap_lxtable[(int)(c = ap_char ())]) == LT_SPC);
+  lexptr = lexval;
+  *lexptr++ = c;
 
-    switch (retval)
-    {
-	case LT_ERR:              /* Bad Character */
+  switch (retval) {
+      case LT_ERR:              /* Bad Character */
 	    retval = LV_ERROR;
 	    break;
 
@@ -305,23 +304,27 @@ char    lexval[];
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 int ap_char ()
 {                                 /* handle lookahead and 8th bit         */
-    register int    i;
+  register int    i;
 
-    if (ap_peek == 0)
+  if(ap_gfunc==0) {
+    return 0;
+  }
+  
+  if (ap_peek == 0)
 	return (0);
-    if ((i = ap_peek) > 0) {
+  if ((i = ap_peek) > 0) {
 	ap_peek = -1;
 	return (i);
-    }
+  }
 
-    if ((i = ((*ap_gfunc) ())) == -1)
+  if ((i = ((*ap_gfunc) ())) == -1)
 	return (0);               /*  EOD                                 */
 
 #ifdef HAVE_8BIT
-    return(i);
+  return(i);
 #else /* HAVE_8BIT */
-    return ((isascii (i)) ? i : '\177');
-				  /* force error, if eighth bit is on     */
+  return ((isascii (i)) ? i : '\177');
+  /* force error, if eighth bit is on     */
 #endif /* HAVE_8BIT */
 }
 
