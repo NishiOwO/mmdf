@@ -254,7 +254,7 @@ char **argv;
 		/*
 		 * Is this a valid host for this channel ?
 		 */
-		switch(tb_k2val (curchan -> ch_table, TRUE, them, tmpstr)){
+		switch(tb_wk2val (curchan -> ch_table, TRUE, them, tmpstr)){
 		default:        /* Either NOTOK or MAYBE */
 			if ((n != (Agc-1)) || stricked)
 				continue;
