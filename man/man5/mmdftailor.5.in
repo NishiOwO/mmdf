@@ -295,6 +295,8 @@ To be able to get really all trace information DEBUG must be set to 2
 .RS
 .IP \fBname\fR 7
 A name by which the table is known.
+.sp
+The name \fImboxquota\fR is reserverd.
 .PP
 .B file=
 .RS
@@ -336,7 +338,7 @@ queries on a nis-server.
 .RE
 
 .B flags=
-<\fIabort\fR | \fIchannel\fR |\fIdomain\fR |\fIpartial\fR |\fIroute\fR>
+<\fIabort\fR | \fIchannel\fR |\fIdomain\fR |\fIpartial\fR |\fIroute\fR  | \fIreject\fR>
 .RS
 The flags parameter is used to indicate additional
 properties about the table being defined.
@@ -344,6 +346,9 @@ This can be specified more than once for a given table to set
 more than one flag.
 Currently this is used to specify various table options - source type,
 nameserver lookup parameters, and control of partial lookups.
+.sp
+\fIreject\fR is used within the smtp channel (incoming) to reject
+blacklisted host. See also \fIrbl\fR see mmdf_rbl(5)
 .sp
 In the case of an ns-type table,
 the ``flags'' field will also specify the type of nameserver lookup.
