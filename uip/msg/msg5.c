@@ -37,7 +37,11 @@
 #include "./msg.h"
 #ifdef HAVE_SYS_FILE_H
 #include <sys/file.h>
-#include <strings.h>
+#  ifdef HAVE_STRINGS_H
+#    include <strings.h>
+#  else /* HAVE_STRINGS_H */
+#    include <string.h>
+#  endif /* HAVE_STRINGS_H */
 #else /* HAVE_SYS_FILE_H */
 #include <string.h>
 #endif /* HAVE_SYS_FILE_H */

@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.2 1998/05/25 07:45:20 krueger Exp $
+ * $Id: config.h,v 1.3 1998/05/26 11:47:59 mmdf Exp $
  *
  * please set every configuration-switch here
  *
@@ -79,7 +79,7 @@
  *             als  properly, use of this option is strongly
  *             advised.
  */
-#define NODOMLIT
+/* #define NODOMLIT */
 
 /*             Enables intpretation of dots as delimiters on
  *             the  LHS  of an @ in addresses.  For example,
@@ -145,7 +145,7 @@
 
 /*             Enable 8bit-clean mode when getting messages over smtp.
  */
-#define EIGHT_BIT_CLEAN
+/* #define EIGHT_BIT_CLEAN */
 
 /*             Enable tcp_wrapper implementation in smtpsrvr. With the 
  *             tcp_wrapper package you can monitor and filter incoming request

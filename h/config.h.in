@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.23 1998/05/26 08:00:20 krueger Exp $
+ * $Id: config.h.in,v 1.24 1998/05/26 11:48:00 mmdf Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -188,6 +188,9 @@
 
 /* Define if ioctl(1, TIOCSBRK, 0) works */
 #undef HAVE_IOCTL_TIOCSBRK
+
+/* Define if you have the <strings.h> header file.  */
+#undef HAVE_STRINGS_H
 
 /* Define if you have the <syslog.h> header file.  */
 #undef HAVE_SYSLOG_H
@@ -440,19 +443,22 @@
 #if STDC_HEADERS
 #  include <string.h>
 #else
-#  ifndef HAVE_INDEX
-#    define index strchr
-#    define rindex strrchr
-#  endif /* not HAVE_INDEX */
-#  ifndef HAVE_STRCHR
-#    define strchr index
-#    define strrchr rindex
-#  endif /* not HAVE_STRCHR */
 char *strchr (), *strrchr ();
-#  ifndef HAVE_MEMCPY
-#    define memcpy(d, s, n) bcopy ((s), (d), (n))
-#    define memmove(d, s, n) bcopy ((s), (d), (n))
-#  endif
+#endif
+#ifndef HAVE_INDEX
+#  define index strchr
+#  define rindex strrchr
+#endif /* not HAVE_INDEX */
+#ifndef HAVE_STRCHR
+#  define strchr index
+#  define strrchr rindex
+#endif /* not HAVE_STRCHR */
+#ifndef HAVE_MEMCPY
+#  define memcpy(d, s, n) bcopy ((s), (d), (n))
+#  define memmove(d, s, n) bcopy ((s), (d), (n))
+#endif
+#ifndef HAVE_BCOPY
+#  define bcopy(d, s, n) memcpy ((s), (d), (n))
 #endif
 
 #if TIME_WITH_SYS_TIME

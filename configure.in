@@ -561,7 +561,7 @@ AC_STRUCT_TIMEZONE
 
 AC_CHECK_HEADERS(lastlog.h libio.h malloc.h memory.h termio.h)
 AC_CHECK_HEADER(sgtty.h,ac_cv_header_sgtty_h="yes")
-AC_CHECK_HEADERS(syslog.h)
+AC_CHECK_HEADERS(strings.h syslog.h)
 AC_CHECK_HEADERS(sys/file.h sys/ioctl.h sys/time.h sys/termio.h sys/termios.h)
 AC_CHECK_HEADERS(utmp.h varargs.h)
 if test "$ac_cv_header_varargs_h" != "yes"; then

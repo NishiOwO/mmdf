@@ -52,6 +52,7 @@
  * Mon Nov 16 17:39:18 EST 1987
  */
 
+#include "config.h"
 #include <stdio.h>
 #include <ctype.h>
 

@@ -14,12 +14,13 @@
  * Author
  *	Edward C. Bennett <edward@engr.uky.edu>
  */
+#include "config.h"
 #include	<stdio.h>
-#ifdef SYS5
-#include	<string.h>
-#else	/* SYS5 */
-#include	<strings.h>
-#endif	/* SYS5 */
+#ifdef HAVE_STRINGS_H
+#  include <strings.h>
+#else /* HAVE_STRINGS_H */
+#  include <string.h>
+#endif /* HAVE_STRINGS_H */
 #include	<ctype.h>
 
 main(argc, argv)
