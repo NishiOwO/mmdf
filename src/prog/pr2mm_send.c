@@ -114,7 +114,7 @@ char *signame (sig)
     int sig;
 {
     static char buff[24];
-#ifdef V4_2BSD
+#ifdef SYS_SIGLIST_DECLARED
     /* I know that the following code does not work on SysVr3 since
      * libc.a doesn't have a "sys_siglist".  Possibly this only works
      * on 4.[23]BSD? -- David Herron <david@ms.uky.edu>
@@ -129,10 +129,10 @@ char *signame (sig)
 	sprintf (buff, "unknown signal %d", sig);
 	return (buff);
     }
-#else
+#else /* SYS_SIGLIST_DECLARED */
     sprintf(buff, "Signal %d", sig);
     return(buff);
-#endif
+#endif /* SYS_SIGLIST_DECLARED */
 }
 
 
@@ -171,13 +171,13 @@ main (argc, argv)
 	int rc, stopped;
 	int do_msg = 0;
 #ifdef V4_2BSD	/* WIFSTOPPED instead? -- DSH */
-#ifndef SYS5
+#  ifndef SYS5
 	union wait status;
-#else
+#  else /* SYS5 */
       int status;
-#undef WIFSTOPPED
-#endif /* SYS5 */
-#else
+#    undef WIFSTOPPED
+#  endif /* SYS5 */
+#else /* V4_2BSD */
     	int status;
 #endif /* V4_2BSD */
 
