@@ -26,6 +26,10 @@
 #ifdef HAVE_LIBWRAP
 #  include <tcpd.h>
 #  include <syslog.h>
+#else /* HAVE_LIBWRAP */
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
 #endif /* HAVE_LIBWRAP */
 
 #include "ns.h"
@@ -156,6 +160,9 @@ char **argv;
 	int     n, Agc;
 #ifdef HAVE_LIBWRAP
         struct request_info  request;   
+#else  /* HAVE_LIBWRAP */
+	struct sockaddr_in rmtaddr;
+	int    len_rmtaddr = sizeof rmtaddr;
 #endif /* HAVE_LIBWRAP */
 
 	progname = argv[0];
@@ -213,9 +220,20 @@ char **argv;
 	ll_log( logptr, LLOGGEN, "connection from: %s",eval_client(&request));
 #else /* HAVE_LIBWRAP */
 	/* sprintf(from_host, "%s [IP]", strdup(them));*/
-	sprintf(from_host, "%s", strdup(them));
+	if (getpeername (0, (struct sockaddr *)&rmtaddr, &len_rmtaddr)>=0) {
+	  struct	hostent	*hp;
+	  hp = gethostbyaddr ( (char *)&rmtaddr.sin_addr,
+			       sizeof(rmtaddr.sin_addr), AF_INET );
+	  if ((hp == NULL) || !isstr(hp->h_name)) {
+	    sprintf(from_host, "[%s]",
+		    (char *)inet_ntoa(rmtaddr.sin_addr));
+	  } else
+	    sprintf(from_host, "%s [%s]", hp->h_name,
+		    (char *)inet_ntoa(rmtaddr.sin_addr));
+	} else
+	  sprintf(from_host, "%s", strdup(them));
 #endif /* HAVE_LIBWRAP */
-	    
+
 	/*
 	 * found out who you are I might even believe you.
 	 */
