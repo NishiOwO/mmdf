@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.5 1997/12/29 20:01:24 krueger Exp $
+ * $Id: config.h,v 1.6 1997/12/29 20:16:30 krueger Exp $
  *
  * please set every configuration-switch here
  *
@@ -206,5 +206,10 @@
  *             get the calling username.
  */
 /* #undef HAVE_TCP_WRAPPER */
+
+/*             Enable the yp_match lookup code for accessing tables over
+ *             NIS.
+ */
+/* #undef HAVE_NIS */
 
 #endif /* CONFIG_H */
