@@ -323,7 +323,7 @@ out:
 	if (fromwhom[0] == '\0')		/* No from line, illegal */
 		bomb("No from lines in message\n");
 
-	/*ungetline(linebuf);*//* This was bug!! -u@q.net */
+	ungetline(linebuf);/* This was bug!! -u@q.net */
 
 	if (debug) printf("rmail: fromwhom \"%s\", rm_from \"%s\"\n", fromwhom, rm_from);
 
