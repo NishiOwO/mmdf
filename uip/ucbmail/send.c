@@ -8,11 +8,12 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  *
  *  $Log: send.c,v $
- *  Revision 1.2  1985/12/18 03:00:41  galvin
- *  Added comment header for revision history.
+ *  Revision 1.3  1986/01/02 14:29:57  galvin
+ *  Add another parameter to send to indicate whether or not this message
+ *  should be delimited by MMDF message delimiters.
  *
  * Revision 1.4  86/01/14  16:29:24  galvin
  * Change send() to check for From line instead of believing it is there.
