@@ -1,4 +1,4 @@
-static char Id[] = "$Id: smtpsrvr.c,v 1.37 2001/05/02 21:27:52 krueger Exp $";
+static char Id[] = "$Id: smtpsrvr.c,v 1.38 2001/07/15 15:42:59 krueger Exp $";
 /*
  *                      S M T P S R V R . C
  *
@@ -799,7 +799,7 @@ int cmdnr;
     int	len, infolen=0, infoboo=0;
     AP_ptr  domain, route, mbox, themap, ap_sender;
     char           *argv[25];
-    char           *subargv[5];
+    char           *subargv[10];
     int            Agc, SubAgc, i;
 #ifdef HAVE_ESMTP
     register struct comarr2 *comp;
@@ -853,7 +853,7 @@ int cmdnr;
 #ifdef HAVE_ESMTP
     i=0;
     for(i=0; i<Agc; i++) {
-      SubAgc = sstr2arg(argv[i], 5, subargv, "=");
+      SubAgc = sstr2arg(argv[i], 10, subargv, "=");
       if(SubAgc==NOTOK) {
         netreply("451 internal error\r\n");
         return;
