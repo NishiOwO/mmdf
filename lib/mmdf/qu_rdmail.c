@@ -52,7 +52,7 @@ LOCVAR struct rp_construct
 /* *************  (qu_)  DELIVER MAIL-READING SUB-MODULE  ************* */
 
 
-qu_rinit (info, retadr, dohdr)   /* ready to get a message             */
+int qu_rinit (info, retadr, dohdr)   /* ready to get a message             */
 char   *info;			  /* where to stuff init ifno           */
 char   *retadr;			  /* where to stuff return address      */
 int     dohdr;                    /* massage address headers            */
