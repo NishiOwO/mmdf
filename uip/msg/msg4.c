@@ -48,6 +48,9 @@
 #if defined(HAVE_SGTTY_H) && !defined(SYS5)
 #  include <sgtty.h>
 #  include <strings.h>
+#  ifdef HAVE_SYS_STRTIO_H
+#    include <sys/strtio.h>
+#  endif
 #else HAVE_SGTTY_H
 #  include <termio.h>
 #  include <string.h>

@@ -6,7 +6,10 @@
 # include  "d_returns.h"
 # include  "d_structs.h"
 #if defined(HAVE_SGTTY_H) && !defined(SYS5)
-# include  <sgtty.h>
+#  include  <sgtty.h>
+#  ifdef HAVE_SYS_STRTIO_H
+#    include <sys/strtio.h>
+#  endif
 #else HAVE_SGTTY_H
 # include <termio.h>
 # include <fcntl.h>
@@ -144,9 +147,9 @@ register char  *linename;
 #ifdef D_LOG
     register int    i;
 #endif D_LOG
-#ifdef SYS5
+#ifndef HAVE_SGTTY_H
     struct termio hupbuf;
-#endif SYS5
+#endif HAVE_SGTTY_H
 
 /*  see if a direct line with the given name is available  */
 
@@ -177,22 +180,22 @@ register char  *linename;
     }
     s_alarm (CONNWAIT);
 #ifndef V4_2BSD
-#ifdef SYS5
+#ifndef HAVE_SGTTY_H
     if ((fd = open (d_ptline -> l_tty, O_RDWR | O_NDELAY)) >= 0) {
 #else
     if ((fd = open (d_ptline -> l_tty, 2)) >= 0) {
-#endif SYS5
+#endif HAVE_SGTTY_H
 #else V4_2BSD
     if ((fd = open (d_ptline -> l_tty, O_RDWR | O_NDELAY)) >= 0) {
 #endif V4_2BSD
 
-#ifdef SYS5
+#ifndef HAVE_SGTTY_H
 	ioctl (fd, TCGETA, &hupbuf);
 	hupbuf.c_cflag |= HUPCL;
 	if (ioctl (fd, TCSETA, &hupbuf) < OK) {
 #else
 	if (ioctl (fd, TIOCHPCL, 0) < OK) {
-#endif SYS5
+#endif HAVE_SGTTY_H
 #ifdef D_LOG
 	    d_log ("d_direct", "problem setting close-on-hangup; errno = %d", errno);
 #endif D_LOG
@@ -242,9 +245,9 @@ register char  *linename;
 	return (D_FATAL);
     }
 
-#ifdef SYS5
+#ifndef HAVE_SGTTY_H
     fcntl (fd, F_SETFL, (fcntl (fd, F_GETFL, 0) & ~O_NDELAY));
-#endif SYS5
+#endif HAVE_SGTTY_H
 
 #ifdef D_LOG
     d_log ("d_direct", "Open");
@@ -486,9 +489,9 @@ char   *number;
                     childpid;
     int     fd;
     int     errcode;
-#ifdef SYS5
+#ifndef HAVE_SGTTY_H
     struct termio hupbuf;
-#endif SYS5
+#endif HAVE_SGTTY_H
 
 #ifdef D_DBGLOG
     d_dbglog ("d_dodial", "about to attempt to call '%s'", number);
@@ -546,13 +549,13 @@ char   *number;
 	}
 	else
 	{
-#ifdef SYS5
+#ifndef HAVE_SGTTY_H
 	    ioctl(fd, TCGETA, &hupbuf);
 	    hupbuf.c_cflag |= HUPCL;
 	    if (ioctl (fd, TCSETA, &hupbuf) < OK)
 #else
 	    if (ioctl (fd, TIOCHPCL, 0) < OK)
-#endif SYS5
+#endif HAVE_SGTTY_H
 	    {
 #ifdef D_LOG
 		d_log ("d_dodial",
@@ -688,7 +691,7 @@ char   *number;
 	{
  
 	     /* set the acu baud rate in case it's a serial interface */
-#ifdef SYS5
+#ifndef HAVE_SGTTY_H
 	    if ( ioctl(acufd, TCGETA, &acubuf) >= 0) {
 		acubuf.c_cflag = (B2400 & CBAUD);
         	acubuf.c_cflag |= HUPCL;
@@ -701,7 +704,7 @@ char   *number;
 		(void) ioctl(acufd, TIOCSETP, &acubuf);
 		(void) ioctl(acufd, TIOCHPCL, 0);
 	    }
-#endif SYS5		   
+#endif HAVE_SGTTY_H		   
 
 	    sleep ((unsigned) 1);  /* let things settle down           */
 #ifdef D_LOG
@@ -801,9 +804,9 @@ char   *number;
 
 d_drop ()
 {
-#ifdef SYS5
+#ifndef HAVE_SGTTY_H
     struct termio hupbuf;
-#endif SYS5
+#endif HAVE_SGTTY_H
 
 #ifdef D_DBGLOG
     d_dbglog ("d_drop", "dropping connection.");
@@ -820,11 +823,11 @@ d_drop ()
     	}
 	s_alarm (CONNWAIT);
 
-#ifdef SYS5
+#ifndef HAVE_SGTTY_H
 	ioctl (fileno(d_prtfp), TCGETA, &hupbuf);
 	hupbuf.c_cflag &= ~CBAUD;	/* set 0 baud -- hangup */
 	ioctl (fileno(d_prtfp), TCSETA, &hupbuf);
-#endif SYS5
+#endif HAVE_SGTTY_H
 
 	fclose (d_prtfp);
 	s_alarm (0);
