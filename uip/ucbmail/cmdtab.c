@@ -8,11 +8,12 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  *
  *  $Log: cmdtab.c,v $
- *  Revision 1.2  1985/11/20 14:29:22  galvin
- *  Added comment header for revision history.
+ *  Revision 1.3  1985/11/20 14:32:21  galvin
+ *  Changed the name of the command table (cmdtab) to CmdTab so as not
+ *  to conflict with the command table of MMDF.
  *
  * Revision 1.3  85/11/20  14:32:21  galvin
  * Changed the name of the command table (cmdtab) to CmdTab so as not

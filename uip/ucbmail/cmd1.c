@@ -8,11 +8,12 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  *
  *  $Log: cmd1.c,v $
- *  Revision 1.2  1985/11/20 14:24:51  galvin
- *  Added comment header for revision history.
+ *  Revision 1.3  1985/11/20 14:31:24  galvin
+ *  Changed the name of the command table (cmdtab) to CmdTab so as not
+ *  to conflict with the command table of MMDF.
  *
  * Revision 1.6  86/01/14  14:09:45  galvin
  * Let's not be lazy and use MMDF's smtpdate and makedate to parse the
