@@ -8,11 +8,11 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  *
  *  $Log: popen.c,v $
- *  Revision 1.2  1985/11/16 14:43:38  galvin
- *  Added comment header for revision history.
+ *  Revision 1.3  1985/11/16 15:19:15  galvin
+ *  Added define for sigmask for backward compatibility from 4.3bsd to 4.2bsd.
  *
  * Revision 1.3  85/11/16  15:19:15  galvin
  * Added define for sigmask for backward compatibility from 4.3bsd to 4.2bsd.
