@@ -12,11 +12,11 @@ mmdf_fdinit()
 
 #ifdef HAVE_GETDTABLESIZE
 	numfds = getdtablesize();
-#else
-#ifdef _NFILE
+#else	/* HAVE_GETDTABLESIZE */
+#  ifdef _NFILE
 	numfds = _NFILE;
-#endif	/* _NFILE */
-#endif	/* V4_2BSD */
+#  endif	/* _NFILE */
+#endif	/* HAVE_GETDTABLESIZE */
 	/*NOSTRICT*/
 	regfdary =(int *)malloc(numfds * sizeof(int));
 	regfdary[0] = 0; 
