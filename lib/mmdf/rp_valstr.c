@@ -38,126 +38,51 @@ char   *
 	rp_valstr (val)           /* return text string for reply value */
     int    val;
 {
-    static char noval[] = "*** Illegal:  0000";
-				  /* (noval[0] == '*') => illegal       */
+  static char noval[] = "*** Illegal:  0000";
+  /* (noval[0] == '*') => illegal       */
 
-    switch (rp_gval (val))
-    {
-	case RP_DONE:
-	    return ("DONE");
+  switch (rp_gval (val)) {
+      case RP_DONE:   return ("DONE");
+      case RP_OK:     return ("OK");
+      case RP_MOK:    return ("MOK");
+      case RP_HOK:    return ("HOK");
+      case RP_DOK:    return ("DOK");
+      case RP_MAST:   return ("MAST");
+      case RP_SLAV:   return ("SLAV");
+      case RP_AOK:    return ("AOK");
+      case RP_NET:	  return ("NET");
+      case RP_BHST:   return ("BHST");
+      case RP_DHST:   return ("DHST");
+      case RP_LIO:    return ("LIO");
+      case RP_NIO:    return ("NIO");
+      case RP_LOCK:   return ("LOCK");
+      case RP_EOF:    return ("EOF");
+      case RP_NS:     return ("NS");
+      case RP_AGN:    return ("AGN");
+      case RP_TIME:   return ("TIME");
+      case RP_NOOP:   return ("NOOP");
+      case RP_FIO:    return ("FIO");
+      case RP_FCRT:   return ("FCRT");
+      case RP_FSPC:   return ("FSPC");
+      case RP_PROT:   return ("PROT");
+      case RP_RPLY:   return ("RPLY");
+      case RP_MECH:   return ("MECH");
+      case RP_NO:     return ("NO");
+      case RP_NDEL:   return ("NDEL");
+      case RP_HUH:    return ("HUH");
+      case RP_NCMD:   return ("NCMD");
+      case RP_PARM:   return ("PARM");
+      case RP_UCMD:   return ("UCMD");
+      case RP_USER:   return ("USER");
+      case RP_FOPN:   return ("FOPN");
+      case RP_NAUTH:  return ("NAUTH");
+      case RP_BADR:   return ("BADR");
+      case RP_BCHN:   return ("BCHN");
+      case RP_DATA:   return ("DATA");
+      case RP_QUOT:   return ("QUOT");
+      case RP_FSIZ:   return ("FSIZ");
 
-	case RP_OK:
-	    return ("OK");
-
-	case RP_MOK:
-	    return ("MOK");
-
-	case RP_HOK:
-	    return ("HOK");
-
-	case RP_DOK:
-	    return ("DOK");
-
-	case RP_MAST:
-	    return ("MAST");
-
-	case RP_SLAV:
-	    return ("SLAV");
-
-	case RP_AOK:
-	    return ("AOK");
-
-	case RP_NET:
-	    return ("NET");
-
-	case RP_BHST:
-	    return ("BHST");
-
-	case RP_DHST:
-	    return ("DHST");
-
-	case RP_LIO:
-	    return ("LIO");
-
-	case RP_NIO:
-	    return ("NIO");
-
-	case RP_LOCK:
-	    return ("LOCK");
-
-	case RP_EOF:
-	    return ("EOF");
-
-	case RP_NS:
-	    return ("NS");
-
-	case RP_AGN:
-	    return ("AGN");
-
-	case RP_TIME:
-	    return ("TIME");
-
-	case RP_NOOP:
-	    return ("NOOP");
-
-	case RP_FIO:
-	    return ("FIO");
-
-	case RP_FCRT:
-	    return ("FCRT");
-
-	case RP_FSPC:
-	    return ("FSPC");
-
-	case RP_PROT:
-	    return ("PROT");
-
-	case RP_RPLY:
-	    return ("RPLY");
-
-	case RP_MECH:
-	    return ("MECH");
-
-	case RP_NO:
-	    return ("NO");
-
-	case RP_NDEL:
-	    return ("NDEL");
-
-	case RP_HUH:
-	    return ("HUH");
-
-	case RP_NCMD:
-	    return ("NCMD");
-
-	case RP_PARM:
-	    return ("PARM");
-
-	case RP_UCMD:
-	    return ("UCMD");
-
-	case RP_USER:
-	    return ("USER");
-
-	case RP_FOPN:
-	    return ("FOPN");
-
-	case RP_NAUTH:
-	    return ("NAUTH");
-
-	case RP_BADR:
-	    return ("BADR");
-
-	case RP_BCHN:
-	    return ("BCHN");
-
-	case RP_DATA:
-	    return ("DATA");
-
-    case RP_QUOT:
-	    return ("QUOT");
-
-	default:                  /* print illegal octal value          */
+      default:                  /* print illegal octal value          */
 	    noval[15] = rp_gbbit (val) + '0';
 	    noval[16] = rp_gcbit (val) + '0';
 	    noval[17] = rp_gsbit (val) + '0';

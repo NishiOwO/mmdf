@@ -251,7 +251,8 @@ int       argc;
 char   *argv[];
 {
 
-    mmdf_init (argv[0], 0);
+  mmdf_init (argc, argv);
+  //mmdf_init (argv[0], mmdf_parse_args(argc, argv));
     setbuf( stdout, obuf );
     siginit ();                   /* standard interrupt initialization  */
 				  /* distinguish different delivers     */
@@ -534,7 +535,7 @@ prm_end ()                        /* cleanup vals after user settings   */
 	    ioctl (fd, TIOCNOTTY, 0);
 	    close(fd);
 	}
-#endif TIOCNOTTY
+#endif /* TIOCNOTTY */
     }
     if (!ovr_pickup && !domsg)
 	(void) signal (SIGHUP, SIG_IGN); /* Ignore hangups               */
@@ -1590,151 +1591,154 @@ adr_rrply (therply, chan, themsg, theadr) /* tell channel of address   */
     Msg *themsg;
     struct adr_struct *theadr;
 {                                 /* channel must prshortx addr to user   */
-    int     rplen;
-    register int    retval;
+  int     rplen;
+  register int    retval;
 
 #ifdef DEBUG
-    ll_log (logptr, LLOGBTR, "adr_rrply ()");
+  ll_log (logptr, LLOGBTR, "adr_rrply ()");
 #endif
 
-    if (rp_isbad (retval = ch_rrply (therply, &rplen)))
-    {
+  if (rp_isbad (retval = ch_rrply (therply, &rplen))) {
 	adr_more = TRUE;
 	therply -> rp_val = retval;
 	return;
-    }
+  }
 
-    retval = therply -> rp_val;
-    if (rp_gval (retval) == RP_MOK || rp_gbval (retval) == RP_BNO)
-				   /* note final status of address       */
+  retval = therply -> rp_val;
+  if (rp_gval (retval) == RP_MOK || rp_gbval (retval) == RP_BNO)
+    /* note final status of address       */
 	adr_log (rp_valstr (retval), chan, themsg, theadr);
 #ifdef DEBUG
-    else                          /* note temp errors except DHST */
+  else                          /* note temp errors except DHST */
 	if (rp_gval (retval) != RP_DHST)
-	    ll_log (logptr, LLOGBTR, "%s (%s) %s %s %s",
-		    themsg -> mg_mname, rp_valstr (retval),
-		    theadr -> adr_que, theadr -> adr_host,
-		    theadr -> adr_local);
+      ll_log (logptr, LLOGBTR, "%s (%s) %s %s %s",
+              themsg -> mg_mname, rp_valstr (retval),
+              theadr -> adr_que, theadr -> adr_host,
+              theadr -> adr_local);
 #endif
 
-    switch (rp_gval (retval))
-    {                             /* map reply into final meaning       */
-	case RP_RPLY:             /* host sent bad reply                */
-	case RP_PROT:             /* host send other bad reply          */
-	case RP_BHST:             /* Can't handle host behavior         */
-	    adr_more = TRUE;
-	    printx ("error at destination, ");
-	    deadhost (&chan -> ch_dead, theadr -> adr_host, RP_BHST,
-			chan -> ch_ttl);
-	    retval = RP_NO;       /* sometimes recoverable...           */
-	    break;
+  /* map reply into final meaning       */
+  switch (rp_gval (retval)) {
+      case RP_RPLY:             /* host sent bad reply                */
+      case RP_PROT:             /* host send other bad reply          */
+      case RP_BHST:             /* Can't handle host behavior         */
+        adr_more = TRUE;
+        printx ("error at destination, ");
+        deadhost (&chan -> ch_dead, theadr -> adr_host, RP_BHST,
+                  chan -> ch_ttl);
+        retval = RP_NO;       /* sometimes recoverable...           */
+        break;
 
-	case RP_DATA:             /* Can't handle host behavior         */
-	    printx ("reject on data command, ");
-	    retval = RP_NDEL;
-	    break;
+      case RP_DATA:             /* Can't handle host behavior         */
+        printx ("reject on data command, ");
+        retval = RP_NDEL;
+        break;
 
-	case RP_USER:             /* bad address                        */
-	    printx ("unknown address, ");
-	    retval = RP_NDEL;
-	    break;
+      case RP_USER:             /* bad address                        */
+        printx ("unknown address, ");
+        retval = RP_NDEL;
+        break;
 
-	case RP_QUOT:            /* mbox quota exeeded, return to sender */
-	    adr_more = TRUE;
-	    printx ("quota execceded, ");
+      case RP_QUOT:            /* mbox quota exeeded, return to sender */
+        adr_more = TRUE;
+        printx ("quota execceded, ");
         strcpy(therply->rp_line, "mailbox quota execceded");
-	    retval = RP_NDEL;
-	    break;
+        retval = RP_NDEL;
+        break;
 
-	case RP_NDEL:             /* Permanent failure                  */
-	    retval = RP_NDEL;     /* have to give up on the message     */
-	    break;
+      case RP_NDEL:             /* Permanent failure                  */
+        retval = RP_NDEL;     /* have to give up on the message     */
+        break;
 
-	case RP_AOK:              /* only address accepted, so far      */
-	    adr_tok = TRUE;
-	    printx ("address ok");
-	    retval = RP_AOK;
-	    break;
+      case RP_AOK:              /* only address accepted, so far      */
+        adr_tok = TRUE;
+        printx ("address ok");
+        retval = RP_AOK;
+        break;
 
-	case RP_MOK:              /* all of message sent                  */
-	    printx ("sent");
-	    retval = RP_DONE;
-	    break;
+      case RP_MOK:              /* all of message sent                  */
+        printx ("sent");
+        retval = RP_DONE;
+        break;
 
-	case RP_LOCK:             /* mailbox locked                       */
-	    adr_more = TRUE;
-	    printx ("mailbox busy, ");
-	    retval = RP_NO;
-	    break;
+      case RP_LOCK:             /* mailbox locked                       */
+        adr_more = TRUE;
+        printx ("mailbox busy, ");
+        retval = RP_NO;
+        break;
 
-	case RP_FSPC:            /* not enough disk space left, try again later */
-	    adr_more = TRUE;
-	    printx ("not enough space, ");
-	    retval = RP_NO;
-	    break;
+      case RP_FSPC:            /* not enough disk space left, try again later */
+        adr_more = TRUE;
+        printx ("not enough space, ");
+        retval = RP_NO;
+        break;
 
-	case RP_AGN:              /* Temporary failure                    */
-	    adr_more = TRUE;
-	    printx ("not deliverable now, ");
-	    retval = RP_NO;
-	    break;
+      case RP_AGN:              /* Temporary failure                    */
+        adr_more = TRUE;
+        printx ("not deliverable now, ");
+        retval = RP_NO;
+        break;
 
-	case RP_NS:               /* Temporary NS failure                 */
-	    adr_more = TRUE;
-	    printx ("NameServer timed out, ");
-	    deadhost (&chan -> ch_dead, theadr -> adr_host, RP_NS,
-			chan -> ch_ttl);
-	    retval = RP_NO;
-	    break;
+      case RP_NS:               /* Temporary NS failure                 */
+        adr_more = TRUE;
+        printx ("NameServer timed out, ");
+        deadhost (&chan -> ch_dead, theadr -> adr_host, RP_NS,
+                  chan -> ch_ttl);
+        retval = RP_NO;
+        break;
 
-	case RP_TIME:             /* Host timed out                       */
-	    adr_more = TRUE;
-	    printx ("destination took too long, ");
-	    deadhost (&chan -> ch_dead, theadr -> adr_host, RP_TIME,
-			chan -> ch_ttl);
-	    retval = RP_NO;
-	    break;
+      case RP_TIME:             /* Host timed out                       */
+        adr_more = TRUE;
+        printx ("destination took too long, ");
+        deadhost (&chan -> ch_dead, theadr -> adr_host, RP_TIME,
+                  chan -> ch_ttl);
+        retval = RP_NO;
+        break;
 
-	case RP_NET:              /* Sockets closed or something          */
-	    adr_more = TRUE;
-	    printx ("transmission error, ");
-	    deadhost (&chan -> ch_dead, theadr -> adr_host, RP_NET,
-			chan -> ch_ttl);
-	    retval = RP_NO;
-	    break;
+      case RP_NET:              /* Sockets closed or something          */
+        adr_more = TRUE;
+        printx ("transmission error, ");
+        deadhost (&chan -> ch_dead, theadr -> adr_host, RP_NET,
+                  chan -> ch_ttl);
+        retval = RP_NO;
+        break;
 
-	case RP_DHST:             /* Couldn't open                        */
-	    adr_more = TRUE;
-	    printx ("destination not available, ");
-	    deadhost (&chan -> ch_dead, theadr -> adr_host, RP_DHST,
-			chan -> ch_ttl);
-	    retval = RP_NO;
-	    break;
+      case RP_DHST:             /* Couldn't open                        */
+        adr_more = TRUE;
+        printx ("destination not available, ");
+        deadhost (&chan -> ch_dead, theadr -> adr_host, RP_DHST,
+                  chan -> ch_ttl);
+        retval = RP_NO;
+        break;
 
-	case RP_NOOP:             /* Skip over this one                   */
-	    adr_more = TRUE;
-	    printx ("skipping address, ");
-	    retval = RP_NOOP;
-	    break;
+      case RP_FSIZ:             /* rmote message-size limit exceeded    */
+        printx ("size limit exceeded, ");
+        retval = RP_NDEL;
+        break;
 
-	default: 
-	    printx ("unknown problem, ");
-	    if (*rp_valstr (retval) == '*')
-	    {
-		ll_log (logptr, LLOGTMP, "%s", rp_valstr (retval));
-		adr_more = TRUE;
-		retval = RP_NO;   /* illegal return value               */
-	    }
-	    else
-	    if (rp_gbval (retval) == RP_BNO)
-		retval = RP_NDEL; /* some sort of permanent error       */
-	    else
-	    {
-		deadhost (&chan -> ch_dead, theadr->adr_host, RP_RPLY,
-				chan -> ch_ttl);
-		adr_more = TRUE;
-		retval = RP_NO;
-	    }
+      case RP_NOOP:             /* Skip over this one                   */
+        adr_more = TRUE;
+        printx ("skipping address, ");
+        retval = RP_NOOP;
+        break;
+
+      default: 
+        printx ("unknown problem, ");
+        if (*rp_valstr (retval) == '*') {
+          ll_log (logptr, LLOGTMP, "%s", rp_valstr (retval));
+          adr_more = TRUE;
+          retval = RP_NO;   /* illegal return value               */
+        } else {
+          if (rp_gbval (retval) == RP_BNO)
+            retval = RP_NDEL; /* some sort of permanent error       */
+          else {
+            deadhost (&chan -> ch_dead, theadr->adr_host, RP_RPLY,
+                      chan -> ch_ttl);
+            adr_more = TRUE;
+            retval = RP_NO;
+          }
+        }
+        break;
     }
 
     therply -> rp_val = retval;

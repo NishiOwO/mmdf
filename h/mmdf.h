@@ -178,6 +178,9 @@ typedef enum { PRK_UNKNOWN, PRK_SMTP, PRK_ESMTP } smtp_protocol;
 #define RP_BCHN (RP_BNO | RP_CMAI | '\002')
 				  /* address invalid on that channel    */
 
+#define RP_FSIZ (RP_BNO | RP_CFIL | '\003')
+				  /* not enough disc space (remote)     */
+
 /*                      STRUCTURE OF A REPLY STRING                     */
 
 struct rp_construct               /* for constant reply conditions      */

@@ -1,3 +1,10 @@
+/***********************************************************************/
+/** 
+ *
+ * $Id: sm_wtmail.c,v 1.14 2003/03/02 17:58:48 krueger Exp $
+ **/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
 /*
  *     MULTI-CHANNEL MEMO DISTRIBUTION FACILITY  (MMDF)
  *
@@ -38,6 +45,22 @@
  *  Feb 83 Doug Kingston  major rewrite, some fragments kept
  */
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Feature test switches
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+//#define _POSIX_SOURCE 1
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * System headers
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+#include <netinet/in.h>
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Local headers
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #include "util.h"
 #include "mmdf.h"
 #include "ch.h"
@@ -46,17 +69,25 @@
 #include "ap.h"
 #include "dm.h"
 #include "smtp.h"
-#include <netinet/in.h>
 
-extern LLog     *logptr;
-extern Chan     *chanptr;
-extern char     *blt();
-extern long	qu_msglen;      /* message length */
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Macros
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+#define STRCAP(STRCAP_STRINGX)        STRCAP_STRINGX[sizeof(STRCAP_STRINGX)-1]='\0'
+#define INFOBOO if(infoboo<0) STRCAP(linebuf); else infolen+=infoboo
 
-LOCFUN sm_rrec();
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Structures and unions
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * File scope Variables (Variables share by several functions in
+ *                       the same file )
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 char    *sm_curname;
-
 struct sm_rstruct sm_rp;            /* save last reply obtained           */
 LOCVAR Chan     *sm_chptr;      /* structure for channel that we are  */
 FILE    *sm_rfp, *sm_wfp;
@@ -64,157 +95,187 @@ LOCVAR char     sm_rnotext[] = "No reply text given";
 LOCVAR  char    netobuf[BUFSIZ];
 LOCVAR  char    netibuf[BUFSIZ];
 LOCVAR smtp_protocol smtp_mode = PRK_SMTP;
-#  define STRCAP(STRCAP_STRINGX)        STRCAP_STRINGX[sizeof(STRCAP_STRINGX)-1]='\0'
-#  define INFOBOO       if(infoboo<0) STRCAP(linebuf); else infolen+=infoboo
 int	infolen=0, infoboo=0;
+
 #ifdef HAVE_ESMTP
-char smtp_use_size = FALSE;
-char smtp_use_dsn = FALSE;
-char smtp_use_8bitmime = FALSE;
+char smtp_use_size       = FALSE;
+char smtp_use_dsn        = FALSE;
+char smtp_use_8bitmime   = FALSE;
 char smtp_use_pipelining = FALSE;
 #endif /* HAVE_ESMTP */
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * External Variables
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+extern LLog     *logptr;
+extern Chan     *chanptr;
+extern long	qu_msglen;      /* message length */
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Extern Functions declarations
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+extern char     *blt();
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Functions declarations
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+LOCFUN sm_rrec();
+
+
+
 
 /**/
-
-sm_wfrom (sender)
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/** 
+ * @param   sender
+ * @return  0 on success, -1 on failure
+ * @brief   
+ **/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+int sm_wfrom (sender)
 char    *sender;
 {
-	char    linebuf[LINESIZE];
+  char    linebuf[LINESIZE];
 
-    infolen=0;
-    infoboo=0;
+  infolen=0;
+  infoboo=0;
     
-    infoboo=snprintf(linebuf, sizeof(linebuf), "MAIL FROM:<%s>", sender);
-    INFOBOO;
+  infoboo=snprintf(linebuf, sizeof(linebuf), "MAIL FROM:<%s>", sender);
+  INFOBOO;
 #  ifdef HAVE_ESMTP
-    if (smtp_use_size)
-      if (sm_chptr->ch_access & CH_ESMTP /*smtp_use_size || 1*/)
-      {
-        infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen,
-                          " SIZE=%ld", qu_msglen
-                          /*+ message_linecount + ob->size_addition*/);
-        INFOBOO;
-      }
+  if (smtp_use_size)
+    if (sm_chptr->ch_access & CH_ESMTP /*smtp_use_size || 1*/) {
+      infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen,
+                        " SIZE=%ld", qu_msglen
+                        /*+ message_linecount + ob->size_addition*/);
+      INFOBOO;
+    }
 #endif /* HAVE_ESMTP */
 #ifdef HAVE_ESMTP_DSN
-    if (smtp_use_dsn)
-    {
-      extern char *qu_msgfile;
-      char dsn_envid[16], *p;
-      memset(dsn_envid, 0, sizeof(dsn_envid));
-      p = strrchr(qu_msgfile, '/');
-      if(p == NULL) p = qu_msgfile;
-      else p++;
+  if (smtp_use_dsn) {
+    extern char *qu_msgfile;
+    char dsn_envid[16], *p;
+    memset(dsn_envid, 0, sizeof(dsn_envid));
+    p = strrchr(qu_msgfile, '/');
+    if(p == NULL) p = qu_msgfile;
+    else p++;
       
-      sscanf(p, "msg.%s", dsn_envid);
-      printx(">%s;%s;\n", qu_msgfile, dsn_envid);
+    sscanf(p, "msg.%s", dsn_envid);
+    printx(">%s;%s;\n", qu_msgfile, dsn_envid);
       
 #if notdef
-      if (dsn_ret == dsn_ret_hdrs)
-      {
-        infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen, " RET=HDRS");
-        INFOBOO;
-      }
-      else if (dsn_ret == dsn_ret_full)
-      {
-        infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen, " RET=FULL");
-        INFOBOO;
-      }
-#endif
-      if (strlen(dsn_envid)>0)
+    if (dsn_ret == dsn_ret_hdrs) {
+      infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen, " RET=HDRS");
+      INFOBOO;
+    } else {
+      if (dsn_ret == dsn_ret_full) {
         infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen,
-                          " ENVID=%s", dsn_envid);
+                          " RET=FULL");
         INFOBOO;
+      }
     }
+#endif
+    if (strlen(dsn_envid)>0)
+      infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen,
+                        " ENVID=%s", dsn_envid);
+    INFOBOO;
+  }
 #endif /* HAVE_ESMTP_DSN */
 
-    if (rp_isbad (sm_cmd (linebuf, SM_STIME)))
-	    return (RP_DHST);
+  if (rp_isbad (sm_cmd (linebuf, SM_STIME)))
+    return (RP_DHST);
 
-	switch( (int)(sm_rp.sm_rval/100) ) {
-        case 2:
-          switch(sm_rp.sm_rval) {
-              case 250:
-                break;          /* We're off and running! */
-          }
-          break;
+  switch( (int)(sm_rp.sm_rval/100) ) {
+      case 2:
+        switch(sm_rp.sm_rval) {
+            case 250:
+              break;          /* We're off and running! */
+        }
+        break;
           
-        case 4:
-          switch(sm_rp.sm_rval) {
-              case 452: /* disk size limit exceeded, try again later */
-                return( sm_rp.sm_rval = RP_FSPC);
-              case 421:
-              case 450:
-              case 451:
-              default:
-                return( sm_rp.sm_rval = RP_AGN);
-          }
-          break;
+      case 4:
+        switch(sm_rp.sm_rval) {
+            case 452: /* disk size limit exceeded, try again later */
+              return( sm_rp.sm_rval = RP_FSPC);
+            case 421:
+            case 450:
+            case 451:
+            default:
+              return( sm_rp.sm_rval = RP_AGN);
+        }
+        break;
           
-        case 5:
-          switch(sm_rp.sm_rval) { 
-              case 552: /* size limit exceeded */
-                return( sm_rp.sm_rval = RP_PARM );
-              case 500:
-              case 501:
-              case 550:
-              case 551:
-              case 553:
-              case 571:
-              default:
-                return( sm_rp.sm_rval = RP_PARM );
-          }
-          break;
+      case 5:
+        switch(sm_rp.sm_rval) { 
+            case 552: /* size limit exceeded */
+              return( sm_rp.sm_rval = RP_FSIZ );
+            case 500:
+            case 501:
+            case 550:
+            case 551:
+            case 553:
+            case 571:
+            default:
+              return( sm_rp.sm_rval = RP_PARM );
+        }
+        break;
 
-	    default:
-          return( sm_rp.sm_rval = RP_BHST);
-	}
-	return( RP_OK );
+      default:
+        return( sm_rp.sm_rval = RP_BHST);
+  }
+  return( RP_OK );
 }
 
-sm_wto (host, adr)         /* send one address spec to local     */
-char    host[];                   /* "next" location part of address    */
-char    adr[];                    /* rest of address                    */
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/** 
+ * @ingroup xyz
+ * @param   host     "next" location part of address
+ * @param   adr      rest of address
+ * @return  0 on success, -1 on failure
+ * @brief   send one address spec to local
+ **/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+int sm_wto (host, adr)
+char    host[];
+char    adr[];
 {
-    char linebuf[LINESIZE];
-    infolen=0;
-    infoboo=0;
+  char linebuf[LINESIZE];
+  infolen=0;
+  infoboo=0;
     
 #ifdef DEBUG
-    ll_log (logptr, LLOGBTR, "sm_wto(%s, %s)", host, adr);
+  ll_log (logptr, LLOGBTR, "sm_wto(%s, %s)", host, adr);
 #endif
 
-    infoboo=snprintf(linebuf, sizeof(linebuf), "RCPT TO:<%s>", adr);
-    INFOBOO;
+  infoboo=snprintf(linebuf, sizeof(linebuf), "RCPT TO:<%s>", adr);
+  INFOBOO;
 #if notdef
 #ifdef HAVE_ESMTP_DSN
-    if (smtp_use_dsn)
-    {
-      if ((addr->dsn_flags & rf_dsnflags) != 0)
-      {
-        int i;
-        BOOL first = TRUE;
-        infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen, " NOTIFY=");
-        INFOBOO;
-        for (i = 0; i < 4; i++)
-        {
-          if ((addr->dsn_flags & rf_list[i]) != 0)
-          {
-            if (!first) *p++ = ',';
-            first = FALSE;
-            infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen, rf_names[i]);
-            INFOBOO;
-          }
+  if (smtp_use_dsn) {
+    if ((addr->dsn_flags & rf_dsnflags) != 0) {
+      int i;
+      BOOL first = TRUE;
+      infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen, " NOTIFY=");
+      INFOBOO;
+      for (i = 0; i < 4; i++) {
+        if ((addr->dsn_flags & rf_list[i]) != 0) {
+          if (!first) *p++ = ',';
+          first = FALSE;
+          infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen, rf_names[i]);
+          INFOBOO;
         }
       }
-
-      if (addr->dsn_orcpt != NULL) {
-        infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen, " ORCPT=%s",
-                      addr->dsn_orcpt);
-        INFOBOO;
-      }
     }
+
+    if (addr->dsn_orcpt != NULL) {
+      infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen, " ORCPT=%s",
+                        addr->dsn_orcpt);
+      INFOBOO;
+    }
+  }
 #endif /* HAVE_ESMTP_DSN */
 #endif
 
