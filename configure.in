@@ -519,10 +519,9 @@ if test "$ac_cv_enable_code_wrap" != "no"; then
    fi
 fi
 
-AC_CHECK_HEADER(fcntl.h,ac_cv_header_fcntl_h="yes")
-if test "$ac_cv_header_fcntl_h" != "yes"; then
-   AC_CHECK_HEADER(sys/fcntl.h,ac_cv_header_sys_fcntl_h="yes")
-fi
+AC_CHECK_HEADER(fcntl.h,[
+ac_cv_header_fcntl_h="yes"
+AC_DEFINE_UNQUOTED(HAVE_FCNTL_H, 1)])
 echo "===>"$enable_lock_files
 if test "$enable_lock_files" != "yes" && test "$ac_cv_header_fcntl_h" = "yes"; then
    AC_CHECK_FUNC(flock,ac_cv_flock="yes",[
