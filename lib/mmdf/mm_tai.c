@@ -144,67 +144,67 @@ extern char
  */
 Cmd cmdtab[] =
 {
-    "",            MMNOOP,     0,
-    "alias",	   ALIAS,      1,
-    "authlog",     AUTHLOG,    1,
-    "authrequest", AUTHREQUEST,1,
-    "maddid",	   MADDID,     1,
-    "maddipaddr",  MADDIPADDR, 1,
-    "maddipname",  MADDIPNAME, 1,
-    "maddrq",      MMADDRQ,    1,
-    "mchanlog",    MMCHANLOG,  1,
-    "mchn",        MMCHAN,     1,
-    "mchndir",     MMCHANDIR,  1,
-    "mcmddir",     MMCMDDIR,   1,
-    "mdbm",        MMDBM,      1,
-    "mdeliver",    MMDELIVER,  1,
-    "mdflchan",    MMDFLCHAN,  1,
-    "mdlv",        MMDLVFILE,  1,
-    "mdlvrdir",    MMDLVRDIR,  1,
-    "mdmn",        MMDOMAIN,   1,
-    "mfailtime",   MMFAILTIME, 1,
-    "mlckdir",     MMLCKDIR,   1,
-    "mldomain",    MMLOCDOMAIN, 1,
-    "mlistsize",   MLISTSIZE,  1,
-    "mlname",      MMLOCHOST,  1,
-    "mlochost",    MMLOCHOST,  1,
-    "mlocmachine", MMLOCMACHINE, 1,
-    "mlogdir",     MMLOGDIR,   1,
-    "mlogin",      MMLOGIN,    1,
-    "mmailid",     MMMAILIDS,  1,
-    "mmaxhops",    MMAXHOPS,   1,
-    "mmaxsort",    MMMAXSORT,  1,
-    "mmbxname",    MMMBXNAME,  1,
-    "mmbxpref",    MMMBXPREF,  1,
-    "mmbxprot",    MMMBXPROT,  1,
-    "mmbxsuff",    MMMBXSUFF,  1,
-    "mmsglog",     MMMSGLOG,   1,
-    "mmsgq",       MMMSGQ,     1,
-    "mphsdir",     MMPHSDIR,   1,
-    "mpkup",       MMPICKUP,   1,
-    "mquedir",     MMQUEDIR,   1,
-    "mqueprot",    MMQUEPROT,  1,
-    "msig",        MMSIGN,     1,
-    "msleep",      MMSLEEP,    1,
-    "msubmit",     MMSUBMIT,   1,
-    "msupport",    MMSUPPORT,  1,
-    "mtbl",        MMTBL,      1,
-    "mtbldir",     MMTBLDIR,   1,
-    "mtempt",      MMTEMPT,    1,
-    "mtmpt",       MMTEMPT,    1,
-    "mv6mail",     MMV6MAIL,   1,
-    "mwarntime",   MMWARNTIME, 1,
-    "niquedir",    NIQUEDIR,   1,
-    "uuname",      UUname,     1,
-    "uuxstr",      UUxstr,     1,
-    0,             0,          0
+    {"",            MMNOOP,     0},
+    {"alias",	    ALIAS,      1},
+    {"authlog",     AUTHLOG,    1},
+    {"authrequest", AUTHREQUEST,1},
+    {"maddid",	    MADDID,     1},
+    {"maddipaddr",  MADDIPADDR, 1},
+    {"maddipname",  MADDIPNAME, 1},
+    {"maddrq",      MMADDRQ,    1},
+    {"mchanlog",    MMCHANLOG,  1},
+    {"mchn",        MMCHAN,     1},
+    {"mchndir",     MMCHANDIR,  1},
+    {"mcmddir",     MMCMDDIR,   1},
+    {"mdbm",        MMDBM,      1},
+    {"mdeliver",    MMDELIVER,  1},
+    {"mdflchan",    MMDFLCHAN,  1},
+    {"mdlv",        MMDLVFILE,  1},
+    {"mdlvrdir",    MMDLVRDIR,  1},
+    {"mdmn",        MMDOMAIN,   1},
+    {"mfailtime",   MMFAILTIME, 1},
+    {"mlckdir",     MMLCKDIR,   1},
+    {"mldomain",    MMLOCDOMAIN, 1},
+    {"mlistsize",   MLISTSIZE,  1},
+    {"mlname",      MMLOCHOST,  1},
+    {"mlochost",    MMLOCHOST,  1},
+    {"mlocmachine", MMLOCMACHINE, 1},
+    {"mlogdir",     MMLOGDIR,   1},
+    {"mlogin",      MMLOGIN,    1},
+    {"mmailid",     MMMAILIDS,  1},
+    {"mmaxhops",    MMAXHOPS,   1},
+    {"mmaxsort",    MMMAXSORT,  1},
+    {"mmbxname",    MMMBXNAME,  1},
+    {"mmbxpref",    MMMBXPREF,  1},
+    {"mmbxprot",    MMMBXPROT,  1},
+    {"mmbxsuff",    MMMBXSUFF,  1},
+    {"mmsglog",     MMMSGLOG,   1},
+    {"mmsgq",       MMMSGQ,     1},
+    {"mphsdir",     MMPHSDIR,   1},
+    {"mpkup",       MMPICKUP,   1},
+    {"mquedir",     MMQUEDIR,   1},
+    {"mqueprot",    MMQUEPROT,  1},
+    {"msig",        MMSIGN,     1},
+    {"msleep",      MMSLEEP,    1},
+    {"msubmit",     MMSUBMIT,   1},
+    {"msupport",    MMSUPPORT,  1},
+    {"mtbl",        MMTBL,      1},
+    {"mtbldir",     MMTBLDIR,   1},
+    {"mtempt",      MMTEMPT,    1},
+    {"mtmpt",       MMTEMPT,    1},
+    {"mv6mail",     MMV6MAIL,   1},
+    {"mwarntime",   MMWARNTIME, 1},
+    {"niquedir",    NIQUEDIR,   1},
+    {"uuname",      UUname,     1},
+    {"uuxstr",      UUxstr,     1},
+    {0,             0,          0}
 };
 
 #define CMDTABENT ((sizeof(cmdtab)/sizeof(Cmd))-1)
 
 /**/
 
-mm_tai (argc, argv)     /* process mmdf tailor info     */
+int mm_tai (argc, argv)     /* process mmdf tailor info     */
     int argc;
     char *argv[];
 {
@@ -447,13 +447,13 @@ extern int  tb_numtables;
 LOCVAR Cmd
 	    cmdtbl[] =
 {
-    "",         CMDTNOOP,   0,
-    "base",     CMDTBASE,   1,
-    "file",     CMDTFILE,   1,
-    "flags",	CMDTFLAGS,  1,
-    "name",     CMDTNAME,   1,
-    "show",     CMDTSHOW,   1,
-    0,          0,          0
+    {"",         CMDTNOOP,   0},
+    {"base",     CMDTBASE,   1},
+    {"file",     CMDTFILE,   1},
+    {"flags",	 CMDTFLAGS,  1},
+    {"name",     CMDTNAME,   1},
+    {"show",     CMDTSHOW,   1},
+    {0,          0,          0}
 };
 
 #define CMDTBENT ((sizeof(cmdtbl)/sizeof(Cmd))-1)
@@ -473,23 +473,23 @@ LOCVAR Cmd
 LOCVAR Cmd
 	tbflags [] =
 {
-    "abort",    CMDTFABORT,     0,
-    "channel",  CMDTFCHANNEL,   0,
-    "dbm",	CMDTFDBM,	0,
-    "domain",   CMDTFDOMAIN,    0,
-    "file",	CMDTFFILE,	0,
+    {"abort",    CMDTFABORT,     0},
+    {"channel",  CMDTFCHANNEL,   0},
+    {"dbm",	     CMDTFDBM,	0},
+    {"domain",   CMDTFDOMAIN,    0},
+    {"file",	 CMDTFFILE,	0},
 #ifdef HAVE_NIS
-    "nis",      CMDTFNIS,       0,
+    {"nis",      CMDTFNIS,       0},
 #endif /* HAVE_NIS */
-    "ns",	CMDTFNS,	0,
-    "partial",  CMDTFPARTIAL,   0,
-    "route",    CMDTFROUTE,     0,
-    0,          0,              0
+    {"ns",  	 CMDTFNS,	0},
+    {"partial",  CMDTFPARTIAL,   0},
+    {"route",    CMDTFROUTE,     0},
+    {0,          0,              0}
 };
 
 #define TBENT ((sizeof(tbflags)/sizeof(Cmd))-1)
 
-tb_tai (argc, argv)
+int tb_tai (argc, argv)
     int argc;
     char *argv[];
 {
@@ -678,18 +678,18 @@ extern int  dm_numtables;
 LOCVAR Cmd
 	    dmntbl[] =
 {
-    "",         CMDDNOOP,   0,
-    "base",     CMDDBASE,   1,
-    "dmn",      CMDDDMN,    1,
-    "name",     CMDDNAME,   1,
-    "show",     CMDDSHOW,   1,
-    "table",    CMDDTABLE,  1,
-    0,          0,          0
+    {"",         CMDDNOOP,   0},
+    {"base",     CMDDBASE,   1},
+    {"dmn",      CMDDDMN,    1},
+    {"name",     CMDDNAME,   1},
+    {"show",     CMDDSHOW,   1},
+    {"table",    CMDDTABLE,  1},
+    {0,          0,          0}
 };
 
 #define DMTABENT ((sizeof(dmntbl)/sizeof(Cmd))-1)
 
-dm_tai (argc, argv)
+int dm_tai (argc, argv)
     int argc;
     char *argv[];
 {
@@ -833,7 +833,7 @@ dm_tai (argc, argv)
 /**/
 extern Alias   *al_list;
 
-al_tai (argc, argv)
+int al_tai (argc, argv)
     int argc;
     char *argv[];
 {
@@ -916,7 +916,7 @@ extern int  ch_numchans;
 #define CMDCBASE    1
 #define CMDCNAME    2
 #define CMDCSHOW    3
-#undef	Gonzo      /*  4    /* OBSOLETE */
+#undef	Gonzo      /*  4    / * OBSOLETE */
 #define CMDCQUE     5
 #define CMDCTBL     6
 #define CMDCPGM     7
@@ -947,35 +947,35 @@ extern int  ch_numchans;
 LOCVAR Cmd
 	    cmdchan[] =
 {
-    "",         CMDCNOOP,   0,
-    "ap",       CMDCAP,     1,
-    "auth",     CMDCAUTH,   1,
-    "base",     CMDCBASE,   1,
-    "confstr",  CMDCCONFSTR,1,
-    "failtime", CMDCFAILTIM,1,
-    "host",     CMDCHOST,   1,
-    "indest",   CMDCLIDEST, 1,
-    "insrc",    CMDCLISRC,  1,
-    "known",    CMDCKNOWN,  1,
-    "ldomain",  CMDCLDOMN,  1,
-    "level",    CMDCLLEV,   1,
-    "lname",    CMDCLNAME,  1,
-    "log",      CMDCLLOG,   1,
-    "mod",      CMDCACCESS, 1,
-    "name",     CMDCNAME,   1,
-    "outdest",  CMDCLODEST, 1,
-    "outsrc",   CMDCLOSRC,  1,
-    "pgm",      CMDCPGM,    1,
-    "poll",     CMDCPOLL,   1,
-    "que",      CMDCQUE,    1,
-    "scr",      CMDCSCRIPT, 1,
-    "show",     CMDCSHOW,   1,
-    "tbl",      CMDCTBL,    1,
-    "trn",      CMDCTRANS,  1,
-    "ttl",      CMDCTTL,    1,
-    "user",     CMDCUSER,   1,
-    "warntime", CMDCWARNTIM,1,
-    0,          0,          0
+    {"",         CMDCNOOP,   0},
+    {"ap",       CMDCAP,     1},
+    {"auth",     CMDCAUTH,   1},
+    {"base",     CMDCBASE,   1},
+    {"confstr",  CMDCCONFSTR,1},
+    {"failtime", CMDCFAILTIM,1},
+    {"host",     CMDCHOST,   1},
+    {"indest",   CMDCLIDEST, 1},
+    {"insrc",    CMDCLISRC,  1},
+    {"known",    CMDCKNOWN,  1},
+    {"ldomain",  CMDCLDOMN,  1},
+    {"level",    CMDCLLEV,   1},
+    {"lname",    CMDCLNAME,  1},
+    {"log",      CMDCLLOG,   1},
+    {"mod",      CMDCACCESS, 1},
+    {"name",     CMDCNAME,   1},
+    {"outdest",  CMDCLODEST, 1},
+    {"outsrc",   CMDCLOSRC,  1},
+    {"pgm",      CMDCPGM,    1},
+    {"poll",     CMDCPOLL,   1},
+    {"que",      CMDCQUE,    1},
+    {"scr",      CMDCSCRIPT, 1},
+    {"show",     CMDCSHOW,   1},
+    {"tbl",      CMDCTBL,    1},
+    {"trn",      CMDCTRANS,  1},
+    {"ttl",      CMDCTTL,    1},
+    {"user",     CMDCUSER,   1},
+    {"warntime", CMDCWARNTIM,1},
+    {0,          0,          0}
 };
 
 #define CMDCHANENT ((sizeof(cmdchan)/sizeof(Cmd))-1)
@@ -993,15 +993,15 @@ LOCVAR Cmd
 LOCVAR Cmd
 	    parmchan[] =
 {
-    "",         CMDPNOOP,   0,
-    "bak",      CMDPBAK,    0,
-    "host",     CMDPHOST,   0,
-    "imm",      CMDPIMM,    0,
-    "pick",     CMDPPICK,   0,
-    "psv",      CMDPPSV,    0,
-    "reg",      CMDPREG,    0,
-    "send",     CMDPSEND,   0,
-    0,          0,          0
+    {"",         CMDPNOOP,   0},
+    {"bak",      CMDPBAK,    0},
+    {"host",     CMDPHOST,   0},
+    {"imm",      CMDPIMM,    0},
+    {"pick",     CMDPPICK,   0},
+    {"psv",      CMDPPSV,    0},
+    {"reg",      CMDPREG,    0},
+    {"send",     CMDPSEND,   0},
+    {0,          0,          0}
 };
 
 #define PARMENT ((sizeof(parmchan)/sizeof(Cmd))-1)
@@ -1024,18 +1024,18 @@ LOCVAR Cmd
 LOCVAR Cmd
 	parmap [] =
 {
-    "733",      CMDA733,        0,
-    "822",      CMDA822,        0,
-    "big",      CMDABIG,        0,
-    "jnt",      CMDAJNT,        0,
-    "nodots",   CMDANODOTS,     0,
+    {"733",      CMDA733,        0},
+    {"822",      CMDA822,        0},
+    {"big",      CMDABIG,        0},
+    {"jnt",      CMDAJNT,        0},
+    {"nodots",   CMDANODOTS,     0},
 #ifdef HAVE_NOSRCROUTE
-    "nosrcrt",  CMDANOSRCRT,    0,
-    "rejsrcrt", CMDAREJSRCRT,   0,
+    {"nosrcrt",  CMDANOSRCRT,    0},
+    {"rejsrcrt", CMDAREJSRCRT,   0},
 #endif
-    "same",     CMDASAME,       0,
-    "try",	CMDATRY,	0,
-    0,          0,              0
+    {"same",     CMDASAME,       0},
+    {"try",	     CMDATRY,	0},
+    {0,          0,              0}
 };
 
 #define PARMAPENT ((sizeof(parmap)/sizeof(Cmd))-1)
@@ -1053,21 +1053,21 @@ LOCVAR Cmd
 LOCVAR  Cmd
 	authmap [] =
 {
-    "dho",      CMDTDHO,        0,
-    "free",     CMDTFREE,       0,
-    "hau",      CMDTHAU,        0,
-    "inblock",  CMDTINBLOCK,    0,
-    "inlog",    CMDTINLOG,      0,
-    "inwarn",   CMDTINWARN,     0,
-    "outblock", CMDTOUTBLOCK,   0,
-    "outlog",   CMDTOUTLOG,     0,
-    "outwarn",  CMDTOUTWARN,    0,
-    0,          0,              0
+    {"dho",      CMDTDHO,        0},
+    {"free",     CMDTFREE,       0},
+    {"hau",      CMDTHAU,        0},
+    {"inblock",  CMDTINBLOCK,    0},
+    {"inlog",    CMDTINLOG,      0},
+    {"inwarn",   CMDTINWARN,     0},
+    {"outblock", CMDTOUTBLOCK,   0},
+    {"outlog",   CMDTOUTLOG,     0},
+    {"outwarn",  CMDTOUTWARN,    0},
+    {0,          0,              0}
 };
 
 #define AUTHMAPENT	((sizeof(authmap)/sizeof(Cmd))-1)
 
-ch_tai (argc, argv)
+int ch_tai (argc, argv)
     int argc;
     char *argv[];
 {
@@ -1125,8 +1125,8 @@ ch_tai (argc, argv)
     chptr -> ch_ttl = (time_t)7200;  /* dead cache TimeToLive, two hours */
     chptr -> ch_logfile = chanlog.ll_file;
     chptr -> ch_loglevel = chanlog.ll_level;
-    chptr -> ch_warntime = warntime;
-    chptr -> ch_failtime = failtime;
+    chptr -> ch_warntime = -1;
+    chptr -> ch_failtime = -1;
     tbind = -1;
     showind = -1;
 
@@ -1322,18 +1322,18 @@ ch_tai (argc, argv)
 
 		case CMDCAP:
 #ifdef DEBUG
-		    ll_log (logptr, LLOGFST, "Ap style '%s'", argv[ind]);
+		    ll_log (logptr, LLOGFTR, "Ap style '%s'", argv[ind]);
 #endif
 		    switch (cmdbsrch (argv[ind], 0, parmap, PARMAPENT))
 		    {
 			case CMDASAME:
-			    chptr -> ch_apout = AP_SAME;
+			    chptr -> ch_apout = (chptr -> ch_apout&0700)|AP_SAME;
 			    break;
 			case CMDA733:
-			    chptr -> ch_apout = AP_733;
+			    chptr -> ch_apout = (chptr -> ch_apout&0700)|AP_733;
 			    break;
 			case CMDA822:
-			    chptr -> ch_apout = AP_822;
+			    chptr -> ch_apout = (chptr -> ch_apout&0700)|AP_822;
 			    break;
 			case CMDABIG:
 			    chptr -> ch_apout |= AP_BIG;
@@ -1360,7 +1360,7 @@ ch_tai (argc, argv)
 			    continue;
 		    }
 #ifdef DEBUG
-		    ll_log (logptr, LLOGFST, "Ap style %s '%o'",
+		    ll_log (logptr, LLOGFTR, "Ap style %s '%o'",
 			    chptr -> ch_name, chptr -> ch_apout);
 #endif
 		    break;
@@ -1504,7 +1504,7 @@ ch_tai (argc, argv)
  *      into a number.  Yuch.  (Dave Crocker)
  */
 
-tai_llev (argc, argv)            /* return logging level value */
+int tai_llev (argc, argv)            /* return logging level value */
      int argc;
      char *argv[];
 {

@@ -6,7 +6,7 @@ extern int debug;
 extern char *typtab[];
 #endif
 
-/*  Standard routines for handling address list element nodes
+/*  Standard routines for handling address list element nodes */
 
 /*  < 1978  B. Borden       Wrote initial version of parser code
  *  78-80   D. Crocker      Reworked parser into current form
@@ -45,7 +45,7 @@ AP_ptr
     return (ap);
 }
 
-ap_ninit (ap)
+void ap_ninit (ap)
     register AP_ptr ap;
 {
     ap -> ap_obtype = APV_NIL;
@@ -54,7 +54,7 @@ ap_ninit (ap)
     ap -> ap_chain = (AP_ptr) 0;
 }
 
-ap_free (ap)                      /* free node's storage                */
+void ap_free (ap)                      /* free node's storage                */
 register AP_ptr ap;
 {
     switch ((int)ap)
@@ -77,7 +77,7 @@ register AP_ptr ap;
     }
 }
 
-ap_fllnode (ap, obtype, obvalue)     /* add data to node at end of chain     */
+void ap_fllnode (ap, obtype, obvalue)     /* add data to node at end of chain     */
 register AP_ptr ap;
 char   obtype;
 register char  *obvalue;
@@ -107,7 +107,7 @@ char   *obvalue;
 
 /* ***************  LIST MANIPULATION PRIMITIVES  ******************* */
 
-ap_insert (cur, ptrtype, new)     /* create/fill/insert node in list    */
+void ap_insert (cur, ptrtype, new)     /* create/fill/insert node in list    */
 register AP_ptr cur;              /* where to insert after              */
 char ptrtype;                     /* inserted is more or new address    */
 register AP_ptr new;              /* where to insert after              */
@@ -156,7 +156,7 @@ AP_ptr
     return (new);
 }
 
-ap_delete (ap)                    /* remove next node in sequence       */
+void ap_delete (ap)                    /* remove next node in sequence       */
 register AP_ptr ap;
 {
     register AP_ptr next;
@@ -256,7 +256,7 @@ register AP_ptr ap;               /* starting node                      */
     return ((AP_ptr) 0);                   /* end of chain              */
 }
 
-ap_sqtfix (strt, end, obtype)     /* alter obtype of a node subsequence */
+void ap_sqtfix (strt, end, obtype)     /* alter obtype of a node subsequence */
 register AP_ptr strt;
 register AP_ptr end;
 register char   obtype;
@@ -317,14 +317,14 @@ AP_ptr
 AP_ptr ap_pstrt,                  /* current last node in parse tree    */
        ap_pcur;                   /* current last node in parse tree    */
 
-ap_iinit (gfunc)                   /* input function initialization     */
+void ap_iinit (gfunc)                   /* input function initialization     */
 int     (*gfunc) ();
 {
     ap_gfunc = gfunc;             /* Set character fetch func           */
     ap_peek = -1;                 /* No lex peek char                   */
 }
 
-ap_clear ()                     /* Clear out the parser state           */
+void ap_clear ()                     /* Clear out the parser state           */
 {
     ap_grplev = 0;                 /* Zero group nesting depth          */
     ap_perlev = 0;                 /* Zero <> nesting depth             */
@@ -343,7 +343,7 @@ int     (*gfunc) ();
  *  the list is manipulated as a simple stack.
  */
 
-ap_ppush (gfunc)                  /* save parse context, ap_iinit    */
+int ap_ppush (gfunc)                  /* save parse context, ap_iinit    */
 int     (*gfunc) ();
 {
     extern char *malloc ();
@@ -364,7 +364,7 @@ int     (*gfunc) ();
     return (OK);
 }
 
-ap_ppop ()                        /* restore previous parse state       */
+void ap_ppop ()                        /* restore previous parse state       */
 {
     register struct ap_prevstruct  *tfil;
 
@@ -382,7 +382,7 @@ ap_ppop ()                        /* restore previous parse state       */
  *  the address list from a file.
  */
 
-ap_flget ()                      /* get character from included file   */
+int ap_flget ()                      /* get character from included file   */
 {
     register int c;
 
@@ -394,7 +394,7 @@ ap_flget ()                      /* get character from included file   */
     return (c);
 }
 
-ap_fpush (file)                  /* indirect input from file           */
+int ap_fpush (file)                  /* indirect input from file           */
 char   file[];
 {
     if (ap_ppush (ap_flget) == NOTOK)   /* save current & set for file input */
@@ -408,7 +408,7 @@ char   file[];
     return (OK);
 }
 
-ap_fpop ()                       /* pop the stack, if any input nested */
+void ap_fpop ()                       /* pop the stack, if any input nested */
 {
     if (ap_fle -> ap_curfp != NULL)
 	fclose (ap_fle -> ap_curfp);
@@ -423,12 +423,12 @@ ap_fpop ()                       /* pop the stack, if any input nested */
  *  to point to the new node.
  */
 
-ap_palloc ()                      /* alloc, insert after pcur           */
+void ap_palloc ()                      /* alloc, insert after pcur           */
 {
     ap_pnsrt (ap_alloc (), APP_ETC);
 }
 
-ap_pfill (obtype, obvalue)        /* add data to node at end of chain     */
+void ap_pfill (obtype, obvalue)        /* add data to node at end of chain     */
 char   obtype;
 register char  *obvalue;
 {
@@ -443,7 +443,7 @@ register char  *obvalue;
 #endif
 }
 
-ap_pnsrt (ap, ptrtype)          /* add node to end of parse chain     */
+void ap_pnsrt (ap, ptrtype)          /* add node to end of parse chain     */
 register AP_ptr ap;
 char    ptrtype;
 {
@@ -462,7 +462,7 @@ char    ptrtype;
     }
 }
 
-ap_pappend (obtype, obvalue)      /* alloc, fill, append at end         */
+void ap_pappend (obtype, obvalue)      /* alloc, fill, append at end         */
 char    obtype;
 char   *obvalue;
 {
@@ -470,7 +470,7 @@ char   *obvalue;
     ap_fllnode (ap_pcur, obtype, obvalue);
 }
 
-ap_padd (obtype, obvalue)         /* try to append data to current node */
+void ap_padd (obtype, obvalue)         /* try to append data to current node */
 char    obtype;
 char  *obvalue;
 {

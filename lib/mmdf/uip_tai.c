@@ -6,7 +6,7 @@
  * call mmdf_init().
  */
 
-uip_tai (argc, argv)            /* tailor some uip parameter */
+int uip_tai (argc, argv)            /* tailor some uip parameter */
     int argc;                   /* number of values     */
     char *argv[];               /* list of values       */
 {

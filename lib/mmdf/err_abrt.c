@@ -47,7 +47,7 @@
 extern struct ll_struct *logptr;
 
 /* VARARGS2 */
-err_abrt (code, fmt, b, c, d)     /* terminate ourself                  */
+void err_abrt (code, fmt, b, c, d)     /* terminate ourself                  */
 int     code;
 char    fmt[],
         b[],

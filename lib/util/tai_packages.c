@@ -7,7 +7,7 @@ extern char *tai_eptr;          /* pointer to error text  */
 
 /*      tailor other packages   */
 
-tai_pgm (argc, argv, nam, path) /* get name&path of a program */
+int tai_pgm (argc, argv, nam, path) /* get name&path of a program */
     int argc;                   /* number of values     */
     char *argv[];               /* list of values       */
     char **nam,                 /* where to put the name of the program */
@@ -57,11 +57,11 @@ tai_pgm (argc, argv, nam, path) /* get name&path of a program */
 LOCVAR Cmd
 	    cmdlog[] =
 {
-    "hdr",      CMDLHDR,    1,
-    "level",    CMDLLEVEL,  1,
-    "size",     CMDLSIZE,   1,
-    "stat",     CMDLSTAT,   1,
-    0,          0,          0
+    {"hdr",      CMDLHDR,    1},
+    {"level",    CMDLLEVEL,  1},
+    {"size",     CMDLSIZE,   1},
+    {"stat",     CMDLSTAT,   1},
+    {0,          0,          0}
 };
 
 #define CMDLPFAT    1
@@ -76,27 +76,27 @@ LOCVAR Cmd
 LOCVAR Cmd
 	    cmdlevel[] =
 {
-    "fat",      CMDLPFAT,   0,
-    "tmp",      CMDLPTMP,   0,
-    "gen",      CMDLPGEN,   0,
-    "bst",      CMDLPBST,   0,
-    "fst",      CMDLPFST,   0,
-    "ptr",      CMDLPPTR,   0,
-    "btr",      CMDLPBTR,   0,
-    "ftr",      CMDLPFTR,   0,
+    {"fat",      CMDLPFAT,   0},
+    {"tmp",      CMDLPTMP,   0},
+    {"gen",      CMDLPGEN,   0},
+    {"bst",      CMDLPBST,   0},
+    {"fst",      CMDLPFST,   0},
+    {"ptr",      CMDLPPTR,   0},
+    {"btr",      CMDLPBTR,   0},
+    {"ftr",      CMDLPFTR,   0},
 #ifdef NVRCOMPIL
 	these are commented out in order to save a trivial amount of
 	space.  if you really want the synonyms, add them.  (dhc)
-    "llogfat",  CMDLPFAT,   0,
-    "llogtmp",  CMDLPTMP,   0,
-    "lloggen",  CMDLPGEN,   0,
-    "llogbst",  CMDLPBST,   0,
-    "llogfst",  CMDLPFST,   0,
-    "llogptr",  CMDLPPTR,   0,
-    "llogbtr",  CMDLPBTR,   0,
-    "llogftr",  CMDLPFTR,   0,
+    {"llogfat",  CMDLPFAT,   0},
+    {"llogtmp",  CMDLPTMP,   0},
+    {"lloggen",  CMDLPGEN,   0},
+    {"llogbst",  CMDLPBST,   0},
+    {"llogfst",  CMDLPFST,   0},
+    {"llogptr",  CMDLPPTR,   0},
+    {"llogbtr",  CMDLPBTR,   0},
+    {"llogftr",  CMDLPFTR,   0},
 #endif
-    0,          0,          0
+    {0,          0,          0}
 };
 
 #define CMDLSCLS    1
@@ -107,24 +107,24 @@ LOCVAR Cmd
 LOCVAR Cmd
 	    cmdlstat[] =
 {
-    "close",    CMDLSCLS,   0,
-    "wait",     CMDLSWAT,   0,
-    "cycle",    CMDLSCYC,   0,
-    "some",     CMDLSSOME,  0,
+    {"close",    CMDLSCLS,   0},
+    {"wait",     CMDLSWAT,   0},
+    {"cycle",    CMDLSCYC,   0},
+    {"some",     CMDLSSOME,  0},
 #ifdef NVRCOMPIL
-    "llogcls",  CMDLSCLS,   0,
-    "cls",      CMDLSCLS,   0,
-    "wat",      CMDLSWAT,   0,
-    "llogwat",  CMDLSWAT,   0,
-    "cyc",      CMDLSCYC,   0,
-    "llogcyc",  CMDLSCYC,   0,
-    "llogsome", CMDLSSOME,  0,
+    {"llogcls",  CMDLSCLS,   0},
+    {"cls",      CMDLSCLS,   0},
+    {"wat",      CMDLSWAT,   0},
+    {"llogwat",  CMDLSWAT,   0},
+    {"cyc",      CMDLSCYC,   0},
+    {"llogcyc",  CMDLSCYC,   0},
+    {"llogsome", CMDLSSOME,  0},
 #endif
-    0,          0,          0
+    {0,          0,          0}
 };
 
 
-tai_log (argc, argv, thelog)    /* get ll_log structure values */
+int tai_log (argc, argv, thelog)    /* get ll_log structure values */
     int argc;                   /* number of values     */
     char *argv[];               /* list of values       */
     LLog *thelog;               /* the ll_log struct to modify */

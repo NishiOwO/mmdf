@@ -330,7 +330,7 @@ int
  *      itmbuf and itmlen will be set.
  * Return false when ready to copy message text.
  */
-getaitm ()
+int getaitm ()
 {
     register int    c;
     register char  *cp,
@@ -443,7 +443,7 @@ AP_ptr
 }
 
 #if DEBUG > 1
-pretty (ap)
+void pretty (ap)
 register AP_ptr ap;
 {
     register int    depth;
@@ -491,7 +491,7 @@ register AP_ptr ap;
 
 
 
-out_init (len)
+void out_init (len)
 short len;
 {
 #ifdef DEBUG
@@ -503,7 +503,7 @@ short len;
     pcol = len + 1;
 }
 
-out_adr (chanptr, dflsite, dfldomain, ap)
+int out_adr (chanptr, dflsite, dfldomain, ap)
 Chan *chanptr;
 char *dflsite, *dfldomain;
 register AP_ptr ap;

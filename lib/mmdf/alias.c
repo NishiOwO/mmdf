@@ -15,7 +15,7 @@ int aflag;
 char *adrptr;
 char *malloc();
 
-aliasinit( aliasfile )
+void aliasinit( aliasfile )
 char *aliasfile;
 {
 	char alsfilename[128];
@@ -64,7 +64,7 @@ char *aliasfile;
 
 int linelen, destlen, addrlen;
 
-aliasmap(dest, src, thehost)
+void aliasmap(dest, src, thehost)
 char *dest, *src, thehost[];
 {
     char addr[BSIZE],
@@ -205,7 +205,7 @@ doaddr:
     }
 }
 
-get_key( s, okey, olist )
+int get_key( s, okey, olist )
 char *s, **okey, **olist;
 {
 	char tmps[512];
@@ -257,7 +257,8 @@ char *s, **okey, **olist;
 	(void) strcpy( *olist, ptmps );
 	return(0);
 }
-m_next_address (addr)
+
+int m_next_address (addr)
 char    *addr;
 {
     int     i = -1;               /* return -1 = end; 0 = empty         */

@@ -10,7 +10,7 @@
 
 extern Alias *al_list;
 
-aliasfetch (first, key, dest, flags)
+int aliasfetch (first, key, dest, flags)
 int	first;
 char	*key;
 char	*dest;

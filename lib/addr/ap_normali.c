@@ -23,7 +23,8 @@ extern char *strdup ();
 extern char *multcat ();
 Domain *dm_v2route();
 
-LOCFUN logtree(), ap_ptinit();
+LOCFUN void logtree();
+LOCFUN void ap_ptinit();
 
 /**/
 
@@ -297,7 +298,7 @@ AP_ptr
 }
 /**/
 
-LOCFUN
+LOCFUN void
 	ap_ptinit (baseprefptr, perptr, r822prefptr, mbxprefptr, dmprefptr,
 				lstcmntprefptr, lastptr, grpptr)
     AP_ptr baseprefptr;
@@ -421,7 +422,7 @@ LOCFUN
 /**/
 #ifndef	JNTMAIL
 
-ap_locnormalize (obaseptr, or822prefptr, ombxprefptr, odmprefptr)
+void ap_locnormalize (obaseptr, or822prefptr, ombxprefptr, odmprefptr)
     AP_ptr obaseptr,
 	   *or822prefptr,
 	   *ombxprefptr,
@@ -519,7 +520,7 @@ ap_locnormalize (obaseptr, or822prefptr, ombxprefptr, odmprefptr)
 
 /**/
 
-ap_dmnormalize (dmptr, thechan)
+int ap_dmnormalize (dmptr, thechan)
 register AP_ptr dmptr;
 Chan *thechan;
 {
@@ -581,7 +582,7 @@ Chan *thechan;
 /**/
 
 #ifdef DEBUG
-LOCFUN
+LOCFUN void
      logtree(thetree, text)  /* if FTR, convert tree to string & log */
 
 AP_ptr thetree;

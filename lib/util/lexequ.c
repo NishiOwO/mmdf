@@ -4,7 +4,7 @@
 /*      Determine if the two given strings are equivalent.              */
 /*                                                                      */
 
-lexequ (str1, str2)
+int lexequ (str1, str2)
 register char   *str1,
 		*str2;
 {

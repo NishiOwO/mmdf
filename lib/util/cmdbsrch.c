@@ -3,7 +3,7 @@
 
 extern int errno;
 
-cmdbsrch (str, argc, cmd, entries)        /* binary version of cmdsrch */
+int cmdbsrch (str, argc, cmd, entries)        /* binary version of cmdsrch */
     char *str;                  /* test string  */
     int argc;                   /* number of available arguments        */
     Cmd cmd[];                  /* table of known commands */

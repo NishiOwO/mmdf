@@ -13,7 +13,7 @@ extern	Llog	*logptr;
 extern	char	*logdfldir;
 extern	char	*dupfpath();
 
-ch_llinit (curchan)
+void ch_llinit (curchan)
 Chan *curchan;
 {
 	logptr -> ll_file = curchan -> ch_logfile;

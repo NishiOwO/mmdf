@@ -8,7 +8,7 @@ extern	Llog	*logptr;
 extern	char	*strdup();
 extern	char	*malloc();
 
-ca_add (cachep, hostid, value, ttl)	/* add entry to cache */
+int ca_add (cachep, hostid, value, ttl)	/* add entry to cache */
 Cache	**cachep;
 register char	*hostid;
 int	value;
@@ -67,7 +67,7 @@ time_t	ttl;			/* time to live */
 }
 /**/
 
-ca_find (cachep, hostid)	/* is this host in the cache */
+int ca_find (cachep, hostid)	/* is this host in the cache */
 Cache	**cachep;
 register char	*hostid;	/* key to data in cache */
 {

@@ -70,6 +70,7 @@
     away.  It is, of course, possible for the core-limiting heuristic to
     lose if a ridiculous number of groups and personal lists are specified
     in a particular way.  I am assuming that won't happen.
+ */
 /**/
 
 #define STITER     0
@@ -97,7 +98,7 @@ int ap_grplev = 0;                /* Group nesting depth                  */
 int ap_perlev = 0;                /* <> nesting depth                     */
 int ap_routing;                   /* parsing a route                    */
 
-LOCFUN ap_7to8();
+LOCFUN void ap_7to8();
 
 #ifdef DEBUG
 #include "ll_log.h"
@@ -129,7 +130,7 @@ char   *typtab[] =
 #endif
 /**/
 
-ap_1adr ()
+int ap_1adr ()
 {
     struct ap_node basenode;
     AP_ptr ap_sp;        /* Saved ap node ptr                    */
@@ -449,7 +450,7 @@ ap_1adr ()
 
 
 
-LOCFUN
+LOCFUN void
 ap_7to8 (r733prefptr, r822ptr)
     AP_ptr r733prefptr,
 	    r822ptr;

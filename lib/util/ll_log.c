@@ -19,9 +19,9 @@
  *  Probably would be better to totally rewrite this, but that seems
  *  a little dangerous and is probably not good engineering practice
  */
-#ifdef	V4_2BSD
+#ifdef	HAVE_SYS_FILE_H
 #include <sys/file.h>
-#endif
+#endif /* HAVE_SYS_FILE_H */
 
 #define _LLRETRY  5               /* number of retries if log locked    */
 #define _LLSLEEP  5               /* time between tries                 */
@@ -35,7 +35,8 @@ extern char *strdup ();
 extern time_t time();
 extern int errno;
 
-LOCFUN ll_tmout(), ll_cycle(), ll_size(), ll_time();
+LOCFUN int ll_tmout(), ll_cycle(), ll_size();
+LOCFUN void ll_time();
 
 LOCVAR int errno_save;
 
@@ -45,7 +46,7 @@ LOCVAR char
 
 /* *******************  LOG OPENING AND CLOSING  ******************** */
 
-ll_open (loginfo)                /* physically open the file           */
+int ll_open (loginfo)                /* physically open the file           */
 register struct ll_struct *loginfo;
 {
     short     retries;
@@ -55,7 +56,7 @@ register struct ll_struct *loginfo;
 	return (loginfo -> ll_fd = NOTOK);
 				  /* no pathname => no place to log       */
 
-#ifdef V4_2BSD
+#ifdef HAVE_SYS_FILE_H
     opnflg = (loginfo -> ll_stat & LLOGCYC) ? O_WRONLY : (O_WRONLY|O_APPEND);
 #else
     opnflg = 1;
@@ -79,7 +80,7 @@ register struct ll_struct *loginfo;
 }
 
 
-ll_close (loginfo)
+int ll_close (loginfo)
 register struct ll_struct *loginfo;
 {                                 /* maybe close file; always clear fd  */
     register int    fd;
@@ -100,7 +101,7 @@ register struct ll_struct *loginfo;
 }
 /* *********************  LOG INITIALIZATION  *********************** */
 
-ll_hdinit (loginfo, pref)              /* make header field unique           */
+int ll_hdinit (loginfo, pref)              /* make header field unique           */
 register struct ll_struct *loginfo;
 register char *pref;
 {
@@ -122,13 +123,13 @@ register char *pref;
     ll_close (loginfo);          /* start with a clean pointer        */
 }
 
-ll_init (loginfo)                /* position log [print header]        */
+int ll_init (loginfo)                /* position log [print header]        */
 register struct ll_struct *loginfo;
 {
     if (loginfo -> ll_fd < 0)
 	return (NOTOK);
 
-#ifdef V4_2BSD
+#ifdef HAVE_SYS_FILE_H
     if ((loginfo -> ll_stat & LLOGCYC) == 0) /*..... don't fseek */
 #endif
     fseek (loginfo -> ll_fp, 0L, 2);
@@ -154,7 +155,7 @@ register struct ll_struct *loginfo;
 /* *********************  DO THE LOGGING  *************************** */
 
 /* VARARGS3 */
-ll_log (loginfo, verblev, format, a1, a2, a3, a4, a5, a6, a7, a8, a9, a0)
+int ll_log (loginfo, verblev, format, a1, a2, a3, a4, a5, a6, a7, a8, a9, a0)
 register struct ll_struct *loginfo;
 int     verblev;
 char   *format,
@@ -204,7 +205,7 @@ char   *format,
 
 /* *********************  INTERNAL ROUTINES  ************************ */
 
-LOCFUN
+LOCFUN int
     ll_tmout(loginfo)
 register struct ll_struct *loginfo;
 {
@@ -226,7 +227,7 @@ register struct ll_struct *loginfo;
 }
 
 
-LOCFUN
+LOCFUN int
 	ll_cycle (loginfo)        /* file not within limits => cycle     */
 register struct ll_struct *loginfo;
 {
@@ -270,7 +271,7 @@ endit:
 }
 /**/
 
-LOCFUN
+LOCFUN int
 	ll_size (loginfo)       /* how big is log file?               */
 register struct ll_struct *loginfo;
 {
@@ -286,7 +287,7 @@ register struct ll_struct *loginfo;
 }
 /**/
 
-LOCFUN
+LOCFUN void
 	ll_time (loginfo, timtype)
 register struct ll_struct *loginfo;
 int     timtype;

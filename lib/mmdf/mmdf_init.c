@@ -27,7 +27,7 @@ static	char	version[] = "$@(#)MMDFII, Release B, Update 37";
  
 #if UWE
 #if defined(sun) || defined(__svr4__)
-unsetenv (name)
+void unsetenv (name)
      char  * name;
 {
   extern char **environ;
@@ -48,7 +48,7 @@ unsetenv (name)
 #endif
 #endif
  
-mmdf_init (pgmname)            /* initialize an mmdf process           */
+void mmdf_init (pgmname)            /* initialize an mmdf process           */
 char *pgmname;
 {
     extern char *dupfpath ();
@@ -173,7 +173,7 @@ char *pgmname;
 }
 
 
-tai_error (error, errp, argc, argv)
+void tai_error (error, errp, argc, argv)
 char *error, *errp;
 int argc;
 char **argv;

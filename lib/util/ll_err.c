@@ -8,7 +8,7 @@ extern	char	*sys_errlist[];
 extern	int	errno;
 
 /* VARARGS3 */
-ll_err(loginfo, level, fmt, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9)
+int ll_err(loginfo, level, fmt, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9)
 struct ll_struct *loginfo;
 int level;
 char *fmt, *a0, *a1, *a2, *a3, *a4, *a5, *a6, *a7, *a8, *a9;

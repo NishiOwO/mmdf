@@ -7,8 +7,9 @@
 extern LLog *logptr;
 
 LOCVAR char *ap_strptr;
+LOCFUN int getach();
 
-LOCVAR
+LOCFUN int
 	getach ()       /* get next character from string */
 {
     if (*ap_strptr == '\0')  /* end of the string, of course */

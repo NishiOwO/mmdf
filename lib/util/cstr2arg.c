@@ -35,7 +35,7 @@
 
 extern int errno;
 
-cstr2arg (srcptr, max, argv, dlmchar)/* convert srcptr to argument list */
+int cstr2arg (srcptr, max, argv, dlmchar)/* convert srcptr to argument list */
 	register char *srcptr;  /* source data */
 	int max;                /* maximum number of permitted fields */
 	char *argv[];           /* where to put the pointers */

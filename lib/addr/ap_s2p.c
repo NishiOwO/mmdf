@@ -10,7 +10,7 @@
 
 LOCVAR char *s2p_txt;             /* hdr_in() passes to alst()      */
 
-LOCFUN
+LOCFUN int
 	s2p_in ()               /* adrs extracted from component text */
 {
     if (s2p_txt == (char *) 0)  /* nothing to give it                 */

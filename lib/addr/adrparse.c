@@ -17,7 +17,7 @@ extern	char	*compress();
 extern	int	ap_outtype;
 extern	LLog	*logptr;
 
-parsadr(thestr, name, mbox, host)
+void parsadr(thestr, name, mbox, host)
 register char *thestr;		/* string with an address	*/
 char	*name,			/* where to put name part	*/
 	*mbox,			/* where to put mailbox part	*/

@@ -23,7 +23,7 @@ struct tb_struct
 #define TB_TYPE		000030		/* what type of question to ask NS */
 #define TB_DOMAIN	000010		/* ask the nameserver for a domain */
 #define TB_CHANNEL	000020		/* ask the nameserver for a channel */
-/* fine PLACE_HOLDER	000040		/* Used to be TB_ROOT */
+/* fine PLACE_HOLDER	000040		/ * Used to be TB_ROOT */
 #define TB_PARTIAL	000100	/* enable trying partial domain matches */
 #define TB_ABORT        000200 /* don't look at other domains upon NS timeout */
 #define TB_ROUTE        000400 /* enable routing via subdomain matches */

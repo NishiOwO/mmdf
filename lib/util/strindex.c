@@ -1,4 +1,4 @@
-strindex (str, target)           /* return column str starts in target */
+int strindex (str, target)           /* return column str starts in target */
 register char   *str,
 		*target;
 {

@@ -54,7 +54,7 @@ char   *namtab[] =
 
 /**/
 
-ap_lex (lexval)
+int ap_lex (lexval)
 char    lexval[];
 {
     register char   c,
@@ -236,7 +236,7 @@ char    lexval[];
 }
 /* *******************  GET NEXT INPUT CHARACTER  ********************* */
 
-ap_char ()
+int ap_char ()
 {                                 /* handle lookahead and 8th bit         */
     extern int  (*ap_gfunc) ();   /* Ptr to character get fn              */
     register int    i;

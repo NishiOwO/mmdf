@@ -5,7 +5,7 @@ extern LLog *logptr;
 
 /*      fake garbage collection of unused external tailor info  */
 
-post_tai (argc, argv)
+int post_tai (argc, argv)
 	int argc;
 	char *argv[];
 {
