@@ -1,5 +1,5 @@
 /*
- * $Id: rbl_match.c,v 1.3 2000/01/18 06:50:39 krueger Exp $
+ * $Id: rbl_match.c,v 1.4 2000/01/18 14:25:10 krueger Exp $
  *
  *
  */
@@ -13,11 +13,18 @@
 #include <arpa/nameser.h>
 #include <resolv.h>
 #include <string.h>
+#include <netdb.h>
+#include <netinet/in.h>
 
 extern int tb_rbl_tai();
 extern int tb_rbl_fetch();
 
+static unsigned long my_dot_quad_addr();
+
 extern LLog *logptr, chanlog;
+
+static   char h_hostid[32];
+static   char *h_hostname = NULL;
 
 typedef struct tb_rbl_param {
   char *domain;
@@ -93,7 +100,6 @@ int tb_rbl_tai(tbptr, gind, argc, argv)
         tai_error ("unknown table parm", argv[ind], argc, argv);
         break;
   }
-  printf(">>>>%s<<<\n", param->domain);
   
   return 0;
 }
@@ -106,10 +112,25 @@ char   *buf;                      /* O: put value int this buffer          */
 int     first;                    /* I: start at beginning of list?        */
 {
   struct tb_rbl_param *param = (struct tb_rbl_param *)table->tb_parameters;
-
-  rbl_match(param->domain, "192.168.100.11");
-  return (OK);
+  struct in_addr    hp_addr;
+  struct hostent	*hp;
   
+  if(h_hostname != NULL) free(h_hostname);
+  h_hostname = strdup(name);
+  
+  memset(&hp_addr, 0, sizeof(struct in_addr));
+  hp = gethostbyname(h_hostname);
+  
+  if (hp != NULL) {
+    memcpy(&hp_addr, hp->h_addr, sizeof(struct in_addr));
+    snprintf(h_hostid, sizeof(h_hostid), "%s", inet_ntoa(hp_addr));
+    
+    return(rbl_match(param->domain, h_hostid));
+  } else {
+    return(rbl_match(param->domain, h_hostid));
+  }
+
+  return (NOTOK);
 }
 
 int rbl_match(rbl_domain, rbl_hostaddr)
@@ -118,16 +139,14 @@ char   *rbl_hostaddr;                         /* hostaddr */
 {
   char *rbl_name;
   int rbl_size = 0;
-  unsigned long h_addr;
-  int ret = NO;
+  unsigned long hp_addr;
+  int ret = NOTOK;
   extern char *malloc();
  
-  printf(" rbl_match(%s, %s)\n", rbl_domain, rbl_hostaddr);
-  if ((h_addr = dot_quad_addr(rbl_hostaddr)) == INADDR_NONE) {
+  if ((hp_addr = my_dot_quad_addr(rbl_hostaddr)) == NOTOK) {
     /*tcpd_warn("unable to convert %s to address", rbl_hostaddr);*/
-    return (NO);
+    return (MAYBE);
   }
-  printf("2) rbl_match(%s, %s)\n", rbl_domain, rbl_hostaddr);
 
   /*  construct the rbl name to look up */
   rbl_size = strlen(rbl_domain) + (4*4) + 2;
@@ -136,25 +155,20 @@ char   *rbl_hostaddr;                         /* hostaddr */
       tcpd_jump("not enough memory to build RBL name for %s in %s",
               rbl_hostaddr, rbl_domain);
     /* NOTREACHED */
-    return(NO);
+    return(MAYBE);
   }
-  printf("3) rbl_match(%s, %s)\n", rbl_domain, rbl_hostaddr);
   snprintf(rbl_name, rbl_size, "%u.%u.%u.%u.%s",
-          (unsigned int) ((h_addr) & 0xff),
-          (unsigned int) ((h_addr >> 8) & 0xff),
-          (unsigned int) ((h_addr >> 16) & 0xff),
-          (unsigned int) ((h_addr >> 24) & 0xff),
+          (unsigned int) ((hp_addr >> 24) & 0xff),
+          (unsigned int) ((hp_addr >> 16) & 0xff),
+          (unsigned int) ((hp_addr >> 8) & 0xff),
+          (unsigned int) ((hp_addr) & 0xff),
           rbl_domain);
   /* look it up */
-  printf("4) rbl_match(%s, %s) %s\n", rbl_domain, rbl_hostaddr, rbl_name);
   if (gethostbyname(rbl_name) != NULL) {
     /* successful lookup - they're on the RBL list */
-    ret = YES;
+    ret = OK;
   }
-  printf("5) rbl_match(%s, %s)\n", rbl_domain, rbl_hostaddr);
   free(rbl_name);
-  printf("6) rbl_match(%s, %s)\n", rbl_domain, rbl_hostaddr);
-
   return ret;
 }
 
@@ -166,18 +180,46 @@ char *p;
 int size;
 {
   long csize;
+  char *name;
   struct tb_rbl_param *param = (struct tb_rbl_param *)tbptr->tb_parameters;
 
-  snprintf(p, size, "571"); csize+=3;
+  if(h_hostname != NULL) {
+    if(strcmp(h_hostname, host) == 0) name = h_hostid;
+    else name = host;
+  } else name = host;
   
   if(param->link != NULL) {
-    snprintf(p, size-csize, "%s Open spam relay %s; see %s\r\n", p,
-             host, param->link);
-    csize += (strlen(param->link)+7);
+    snprintf(p, size-csize, "571 Open spam relay %s; see %s\r\n",
+             name, param->link);
+    csize += (strlen(param->link)+10);
   } else {
-    snprintf(p, size-csize, "%s rejected due to SPAM list\r\n", p);
-    csize += 28;
+    snprintf(p, size-csize, "571 rejected due to SPAM list\r\n");
+    csize += 31;
   }
+}
+
+/*************************************************************/
+/* my_dot_quad_addr - convert dotted quad to internal form */
+
+unsigned long my_dot_quad_addr(str)
+char   *str;
+{
+    int     in_run = 0;
+    int     runs = 0;
+    char   *cp = str;
+
+    /* Count the number of runs of non-dot characters. */
+
+    while (*cp) {
+        if (*cp == '.') {
+            in_run = 0;
+        } else if (in_run == 0) {
+            in_run = 1;
+            runs++;
+        }
+        cp++;
+    }
+    return (runs == 4 ? inet_addr(str) : NOTOK);
 }
 
 #endif/* not HAVE_NAMESERVER && HAVE_RBL */

@@ -1,4 +1,4 @@
-static char Id[] = "$Id: smtpsrvr.c,v 1.32 2000/01/18 06:50:39 krueger Exp $";
+static char Id[] = "$Id: smtpsrvr.c,v 1.33 2000/01/18 14:25:10 krueger Exp $";
 /*
  *                      S M T P S R V R . C
  *
@@ -312,7 +312,7 @@ char **argv;
 	  snprintf(from_host, sizeof(from_host), "%s", strdup(them));
     }
 #endif /* HAVE_LIBWRAP */
-
+    
 	/*
 	 * found out who you are I might even believe you.
 	 */
@@ -1907,13 +1907,13 @@ void tell_esmtp_options()
 /*************************************************************/
 extern void reject_message();
 
-void rbl_reject(tblptr, them)
+void rbl_reject(tblptr, host)
 Table *tblptr;
-char *them;
+char *host;
 {
   char replybuf[LINESIZE];
   
-  reject_message(tblptr, them, replybuf, sizeof(replybuf));
+  reject_message(tblptr, host, replybuf, sizeof(replybuf));
   netreply(replybuf);
   
 }
