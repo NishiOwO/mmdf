@@ -54,10 +54,10 @@
 #include "msg.h"
 #include "adr_queue.h"
 #include "phs.h"
-#ifdef SYS5
-#include <string.h>
-#else
+#ifdef HAVE_STRINGS_H
 #include <strings.h>
+#else
+#include <string.h>
 #endif
 
 #define WARNTIME	(60L * 60L * 24) /* 1 day */
