@@ -283,12 +283,14 @@ char **argv;
 RETSIGTYPE sig17()
 {
   int	status, pid;
+  logx("sig17(): got SIGCHLD");
   signal( SIGCHLD, sig17);
 #if HAVE_WAIT3
   pid = wait3 (&status, WNOHANG, 0);
 #else /* HAVE_WAIT3 */
   pid = waitpid (-1, &status,  WNOHANG);
 #endif /* HAVE_WAIT3 */
+  logx("sig17():");
   if(pid>0) numconnections--;
 }
 

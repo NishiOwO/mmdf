@@ -2838,7 +2838,7 @@ else
   echo "$ac_t""no" 1>&6
 fi
 
-for ac_hdr in syslog.h
+for ac_hdr in strings.h syslog.h
 do
 ac_safe=`echo "$ac_hdr" | sed 'y%./+-%__p_%'`
 echo $ac_n "checking for $ac_hdr""... $ac_c" 1>&6
