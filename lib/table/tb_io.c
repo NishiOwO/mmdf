@@ -268,7 +268,8 @@ tb_read (table, key, value)       /* read a table's record        */
 	if (index(_hvalend, terminator) > (char *)NULL)
  	    value[0] = '\0';		/* whole line was a key */
         else {
-	    if ((len = gcread (fp, value, LINESIZE, _hvalend)) > 0)
+	  /*if ((len = gcread (fp, value, LINESIZE, _hvalend)) > 0)*/
+	    if ((len = qread (fp, value, LINESIZE, _hvalend, '\\')) > 0)
 	    {
 /*HACK*/	table -> tb_pos += len;
 		value[len - 1] = '\0';
