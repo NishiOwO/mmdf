@@ -4,7 +4,17 @@ dnl
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(h/ap.h)
 AC_CONFIG_HEADER(h/config.h)
+
+dnl AC_INIT_VAR(mmdfdebug,1)
+dnl AC_INIT_VAR(mmdfdlog,1)
+dnl AC_INIT_VAR(mmdfdbglog,1)
+dnl AC_INIT_VAR(mmdfleftdots,1)
+dnl AC_INIT_VAR(mmdfcitation,1)
+AC_INIT_VAR(mmdfnodomlit,1)
+AC_INIT_VAR(mmdfstatsort,1)
+
 AC_PREFIX_DEFAULT('/usr')
+
 OUTPUT_FILES="lib/Makefile src/Makefile uip/Makefile"
 OUTPUT_FILES=$OUTPUT_FILES" conf/common/Makefile.com Makefile"
 
@@ -12,196 +22,14 @@ dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 MMDF_MAJOR_VERSION=2
 MMDF_MINOR_VERSION=44
-MMDF_PATCH_LEVEL=7
-VERSION_DATE="August 1998"
+MMDF_PATCH_LEVEL=9
+VERSION_DATE="September 1998"
 MMDFLOGIN=mmdf
 ROOTLOGIN=root
 PGMPROT=755
 MMDFLIBS="\${top_srcdir}/lib/libmmdf.a"
 MMDF_TARGET=no
 rcvdir="${libexecdir}"
-
-D_DEBUG=0
-D_D_LOG=0
-D_D_DBGLOG=0
-D_NODOMLIT=yes
-D_LEFTDOTS=no
-D_STATSORT=yes
-D_CITATION=0
-
-dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
-dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
-dnl  AC_GET_BOOL(<Variable>, <Text>, <default> [,<d=allways define>])
-AC_DEFUN(AC_GET_BOOL,
-[
-  /bin/echo "Enable $2 (y/n) ("$3") ? : \c"
-  read ans
-  if test "$ans" = ""; then
-    ans=$3
-  fi
-  if test "$ans" = "y" || test "$ans" = "yes"; then
-dnl    ac_def_$1="yes"
-    $1="yes"
-    AC_DEFINE_UNQUOTED($1, 1)
-  else
-dnl    ac_def_$1="no"
-    $1="no"
-dnl    if test "$4" = "d" then
-dnl      AC_DEFINE_UNQUOTED($1, 0)
-dnl    fi
-  fi
-])
-AC_PROVIDE(AC_GET_BOOL)
-
-dnl
-dnl AC_GET_STRING(<Variable>, <Text>, <default>)
-AC_DEFUN(AC_GET_STRING,
-[
-  /bin/echo $2 ("$3") : \c"
-  read ans
-  if test "$ans" = ""; then
-    ans=$3
-  fi
-  AC_DEFINE_UNQUOTED($1, "$ans")
-  ac_string_$1=$ans
-])
-AC_PROVIDE(AC_GET_STRING)
-
-dnl  AC_CHECK_FILE(<Variable>, <file>)
-AC_DEFUN(AC_CHECK_FILE,
-[
-  AC_MSG_CHECKING(for file $2)
-
-  if test -f "$2"; then
-    AC_MSG_RESULT(yes)
-    AC_DEFINE_UNQUOTED(HAVE_$1, 1)
-  else
-    AC_MSG_RESULT(no)
-    dnl AC_DEFINE_UNQUOTED(HAVE_$1, 0)
-  fi
-])
-AC_PROVIDE(AC_CHECK_FILE)
-
-dnl  AC_ENABLE_DEFAULT(<Variable>, <default: yes/no>, <subdirs>)
-dnl
-AC_DEFUN(AC_ENABLE_DEFAULT,
-[
-  AC_MSG_CHECKING(whether compiling $1)
-  if test "$enable_$1" != "yes" && test "$enable_$1" != "no"; then
-    AC_CACHE_VAL(ac_cv_enable_$1, ac_cv_enable_$1="$2")
-    enable_$1=$ac_cv_enable_$1
-  else
-    ac_cv_enable_$1=$enable_$1
-  fi
-  
-  if test "$enable_$1" != yes; then
-    AC_MSG_RESULT(no)
-  else
-    AC_MSG_RESULT(yes)
-    $3="$$3 $1"
-  fi
-])
-AC_PROVIDE(AC_ENABLE_DEFAULT)
-
-dnl  AC_ENABLE_DEFAULT_CODE(<Variable>, <default: yes/no>, <pref>, <string>)
-dnl
-AC_DEFUN(AC_ENABLE_DEFAULT_CODE,
-[
-  AC_MSG_CHECKING(whether using $4)
-  if test "$enable_$1" != "yes" && test "$enable_$1" != "no"; then
-    AC_CACHE_VAL(ac_cv_enable_$3_$1, ac_cv_enable_$3_$1="$2")
-    enable_$1=$ac_cv_enable_$3_$1
-  else
-    ac_cv_enable_$3_$1=$enable_$1
-  fi
-  if test "$enable_$1" != yes; then
-    AC_MSG_RESULT(no)
-  else
-    AC_MSG_RESULT(yes)
-    if test "$3" != "lib"; then
-      var=`echo $1 | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
-      AC_DEFINE_UNQUOTED(HAVE_$var, 1)
-    else
-      if test "$ac_cv_enable_$3_$1" != "yes"; then
-        AC_MSG_WARN("cannot enable $4: library $3$1 not found. disabling");
-        enable_$1="no"
-        ac_cv_enable_$3_$1=no
-      fi
-    fi
-  fi
-])
-AC_PROVIDE(AC_ENABLE_DEFAULT_CODE)
-
-AC_DEFUN(AC_GET_UNAME,
-[
-  UNAME_MACHINE=`(uname -m) 2>/dev/null` || UNAME_MACHINE=unknown
-  UNAME_NODE=`(uname -n) 2>/dev/null` || UNAME_NODE=unknown
-  UNAME_RELEASE=`(uname -r) 2>/dev/null` || UNAME_RELEASE=unknown
-  UNAME_SYSTEM=`(uname -s) 2>/dev/null` || UNAME_SYSTEM=unknown
-  UNAME_VERSION=`(uname -v) 2>/dev/null` || UNAME_VERSION=unknown
-])
-AC_PROVIDE(AC_GET_UNAME)
-
-AC_DEFUN(AC_LOAD_LOCAL_CONFIG,
-[
-  AC_MSG_CHECKING(for local config '$1')
-  if test ! -x "conf"; then
-     mkdir conf
-  fi
-  if test ! -x "conf/sites"; then
-     mkdir conf/sites
-  fi
-  if test -r conf/sites/$1; then
-    AC_MSG_RESULT(yes)
-    echo "loading local configuration '"$1"'"
-    . conf/sites/$1
-    for i in `set | grep CONFIG_SYS_`
-    do
-dnl      var=`echo $i | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'| sed s/config_sys_/enable_/`
-dnl      var=`echo $i | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'| sed s/CONFIG_SYS_//`
-      var=`echo $i | sed s/CONFIG_SYS_//`
-      eval D_$var
-    done
-    for i in `set | grep CONFIG_CODE_`
-    do
-      var=`echo $i | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'| sed s/config_/enable_/`
-      eval ac_cv_$var
-    done
-    for i in `set | grep CONFIG_LIB_`
-    do
-      var=`echo $i | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'| sed s/config_lib_/enable_/`
-      eval ac_cv_$var
-    done
-    for i in `set | grep CONFIG_SRC_`
-    do
-      var=`echo $i | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'| sed s/config_src_/enable_/`
-      eval ac_cv_$var
-    done
-    for i in `set | grep CONFIG_UIP_`
-    do
-      var=`echo $i | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'| sed s/config_uip_/enable_/`
-      eval ac_cv_$var
-    done
-    ac_cv_enable_lib_dbm=$ac_cv_enable_code_dbm
-    ac_cv_enable_lib_wrap=$ac_cv_enable_code_wrap
-  else
-    AC_MSG_RESULT(no)
-  fi
-])
-AC_PROVIDE(AC_LOAD_LOCAL_CONFIG)
-
-AC_DEFUN(AC_LOAD_INTERACTIVE_CONFIG,
-[
-  AC_MSG_CHECKING(for '$1')
-  if test -r $1; then
-    AC_MSG_RESULT(yes)
-    echo "loading local configuration '"$1"'"
-    . $1
-  else
-    AC_MSG_RESULT(no)
-  fi
-])
-AC_PROVIDE(AC_LOAD_INTERACTIVE_CONFIG)
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -227,6 +55,15 @@ else
     AC_MSG_RESULT(no)
     AC_MSG_WARN("directory conf/$target doesn\'t exists.")
     AC_MSG_WARN(cannot finish configuration with 'sitesetup $target')
+    if test "$create_target" = "yes"; then
+      AC_CREATE_TARGET($target)
+      MMDF_TARGET=yes
+    else
+      AC_MSG_WARN(Please run one of:)
+      AC_MSG_WARN('configure --target=<existing target>')
+      AC_MSG_WARN('configure --create-target')
+      AC_MSG_ERROR(Cannot continue with configure until target exits)
+    fi
 fi
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -458,6 +295,7 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PATH_PROG(AR, ar)
 AC_CHECK_PROG(ASSIGN, assign, assign)
+AC_PATH_PROG(XSTR, xstr)
 if test "$ac_cv_prog_ASSIGN" != ""; then
     AC_DEFINE(HAVE_ASSIGN)
 fi
@@ -651,7 +489,8 @@ fi
 AC_CHECK_FUNCS(bcopy dup2 fcntl ftime getcwd getdtablesize gethostname)
 AC_CHECK_FUNCS(gettimeofday getwd index initgroups killpg memcpy)
 AC_CHECK_FUNCS(mkdir res_mkquery)
-AC_CHECK_FUNCS(setpgrp setreuid sigsetmask socket strchr strdup truncate)
+AC_CHECK_FUNCS(setpgrp setreuid sigchild sigset sigsetmask socket)
+AC_CHECK_FUNCS(strchr strdup truncate)
 
 AC_FUNC_UTIME_NULL
 AC_FUNC_VFORK
@@ -983,6 +822,14 @@ if test "$host_os" = "linux"; then
 fi
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+AC_SET_DEFINE(DEBUG, $mmdfdebug)
+AC_SET_DEFINE(D_LOG, $mmdfdlog)
+AC_SET_DEFINE(D_DBGLOG, $mmdfdbglog)
+AC_SET_DEFINE(NODOMLIT, $mmdfnodomlit)
+AC_SET_DEFINE(LEFTDOTS, $mmdfleftdots)
+AC_SET_DEFINE(STATSORT, $mmdfstatsort)
+AC_SET_DEFINE(CITATION, $mmdfcitation)
+
 AC_ENABLE_DEFAULT_CODE(wrap, yes, lib, "tcp wrapper")
 AC_ENABLE_DEFAULT_CODE(nameserver, yes, code, "nameserver")
 AC_ENABLE_DEFAULT_CODE(dbm, yes, lib, "dbm")
@@ -1000,18 +847,21 @@ fi
 if test "$enable_8bit" = "yes"; then
    AC_DEFINE(EIGHT_BIT_CLEAN)
 fi
-if test "$enable_nodomlit" = "yes"; then
-   ac_cv_enable_nodomlit=$enable_nodomlit
-   AC_DEFINE(NODOMLIT)
-fi
-if test "$enable_leftdots" = "yes"; then
-   ac_cv_enable_leftdot=$enable_leftdot
-   AC_DEFINE(LEFTDOTS)
-fi
-if test "$enable_statsort" = "yes"; then
-   ac_cv_enable_statsort=$enable_statsort
-   AC_DEFINE(STATSORT)
-fi
+dnl if test "$enable_nodomlit" = "yes"; then
+dnl    ac_cv_enable_nodomlit=$enable_nodomlit
+dnl    AC_DEFINE(NODOMLIT)
+dnl fi
+dnl if test "$enable_leftdots" = "yes"; then
+dnl    ac_cv_enable_leftdot=$enable_leftdot
+dnl    AC_DEFINE(LEFTDOTS)
+dnl fi
+dnl if test "$enable_statsort" = "yes"; then
+dnl    ac_cv_enable_statsort=$enable_statsort
+dnl    AC_DEFINE(STATSORT)
+dnl fi
+AC_CHECK_DEFINE($enable_nodomlit, NODOMLIT)
+AC_CHECK_DEFINE($enable_leftdots, LEFTDOTS)
+AC_CHECK_DEFINE($enable_statsort, STATSORT)
 
 dnl if test "$ac_cv_lib_gdbm_gdbm_open" = "yes" || \
 dnl 	test "$ac_cv_lib_ndbm" = "yes" || \
@@ -1087,38 +937,15 @@ CFLAGS="-I\${top_srcdir}/h $CFLAGS"
 if test "$ac_cv_prog_gcc" = "yes"; then
   CFLAGS="$CFLAGS -pipe"
 fi
-echo $CFLAGS
-
-if test "$D_DEBUG" != "0"; then
-   AC_DEFINE_UNQUOTED(DEBUG, $D_DEBUG)
-fi
-if test "$D_D_LOG" != "0"; then
-   AC_DEFINE_UNQUOTED(D_LOG, $D_D_LOG)
-fi
-if test "$D_D_DBGLOG" != "0"; then
-   AC_DEFINE_UNQUOTED(D_DBGLOG, $D_D_DBGLOG)
-fi
-if test "$D_NODOMLIT" = "yes"; then
-   AC_DEFINE_UNQUOTED(NODOMLIT, 1)
-fi
-if test "$D_LEFTDOTS" = "yes"; then
-   AC_DEFINE_UNQUOTED(LEFTDOTS, 1)
-fi
-if test "$D_STATSORT" = "yes"; then
-   AC_DEFINE_UNQUOTED(STATSORT, 1)
-fi
-if test "$D_CITATION" != "0"; then
-   AC_DEFINE_UNQUOTED(CITATION, $D_CITATION)
-fi
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 if test "x$prefix" = "xNONE"; then
    prefix=$ac_default_prefix
 fi
-mmdf_prefix="\${prefix}/mmdf"
-mmdflibdir="\${mmdf_prefix}/lib"
-chandir="\${mmdf_prefix}/chans"
-tbldir="\${mmdf_prefix}/table"
+dnl mmdfprefix="\${prefix}/mmdf"
+mmdflibdir="\${mmdfprefix}/lib"
+chandir="\${mmdfprefix}/chans"
+tbldir="\${mmdfprefix}/table"
 if test "x$exec_prefix" = "xNONE"; then
    exec_prefix="\${prefix}/local"
 fi
@@ -1132,16 +959,31 @@ if test "$libexecdir" = "\${exec_prefix}/libexec"; then
    libexecdir="\${exec_prefix}/lib/mh"
 fi
 if test "$datadir" = "\${prefix}/share"; then
-   datadir="\${mmdf_prefix}/table"
+   datadir="\${mmdfprefix}/table"
 fi
-if test "$sharedstatedir" = "\${prefix}/com"; then
-   sharedstatedir="\${prefix}/spool/mmdf/home"
+if test "$sharedstatedir" != "\${prefix}/com"; then
+   dnl sharedstatedir="\${prefix}/spool/mmdf/home"
+   echo "used old syntax --sharedstatedir="
+   if test "$used_mmdfspooldir" = 0; then
+      mmdfspooldir=$sharedstatedir
+   else
+      AC_MSG_WARN("Ignoring option 'sharedstatedir='")
+   fi
 fi
-if test "$localstatedir" = "\${prefix}/var"; then
-   localstatedir="\${prefix}/spool/mmdf/log"
+if test "$localstatedir" != "\${prefix}/var"; then
+   dnl localstatedir="\${prefix}/spool/mmdf/log"
+   echo "used old syntax --localstatedir="
+   if test "$used_mmdflogdir" = 0 && test "$used_mmdfphasedir" = 0 && \
+	test "$used_mmdfdiallog" = 0 ; then
+      mmdflogdir=$localstatedir
+      mmdfphasedir=$localstatedir/phase
+      mmdfdiallog=$localstatedir/dial_log
+   else
+      AC_MSG_WARN("Ignoring option 'localstatedir'")
+   fi
 fi
 if test "$sysconfdir" = "\${prefix}/etc"; then
-   sysconfdir="\${mmdf_prefix}"
+   sysconfdir="\${mmdfprefix}"
 fi
 
 AC_SUBST(SUBDIRS)
@@ -1172,7 +1014,7 @@ AC_SUBST(mmdflibdir)
 AC_SUBST(chandir)
 AC_SUBST(tbldir)
 AC_SUBST(rcvdir)
-AC_SUBST(mmdf_prefix)
+dnl AC_SUBST(mmdf_prefix)
 
 echo "host  ="$host
 echo "cpu   ="$host_cpu
@@ -1201,14 +1043,21 @@ echo "==============================================================="
 echo "Here are your pathname-settings:"
 echo "prefix        = $prefix"
 echo "exec_prefix   = $exec_prefix"
+echo "varprefix     = $varprefix"
 echo "bindir        = $bindir"
 echo "sbindir       = $sbindir"
 echo "libexecdir    = $libexecdir"
-echo "datadir       = $datadir"
-echo "sharedstatedir= $sharedstatedir"
-echo "localstatedir = $localstatedir"
-echo "mmdf_prefix   = $mmdf_prefix"
+echo
+echo "mmdfprefix    = $mmdfprefix"
 echo "mmdflibdir    = $mmdflibdir"
 echo "chandir       = $chandir"
 echo "tbldir        = $tbldir"
+echo "datadir       = $datadir"
 echo "configdir     = $sysconfdir"
+echo
+echo "mmdfspooldir  = $mmdfspooldir"
+echo "mmdfphosedir  = $mmdfphasedir"
+echo "mmdflogdir    = $mmdflogdir"
+echo "mmdfdiallog   = $mmdfdiallog"
+dnl echo "sharedstatedir= $sharedstatedir"
+dnl echo "localstatedir = $localstatedir"
