@@ -57,7 +57,7 @@ salloc(size)
 		sp->s_topFree = (char *) calloc(STRINGSIZE << ind,
 		    (unsigned) 1);
 		if (sp->s_topFree == NOSTR) {
-			fprintf(stderr, "No room for space %d\n", index);
+			fprintf(stderr, "No room for space %d\n", ind);
 			panic("Internal error");
 		}
 		sp->s_nextFree = sp->s_topFree;
