@@ -54,7 +54,7 @@ xMail:	$S $(OBJS)
 install: ${DESTDIR}/${BINDIR}/Mail ${DESTDIR}/${BINDIR}/fmt
 
 ${DESTDIR}/${BINDIR}/Mail: xMail
-	install -c -s xMail ${DESTDIR}/${BINDIR}/Mail
+	install -c -s xMail -m 02755 -g ${MMDFGROUP} ${DESTDIR}/${BINDIR}/Mail
 	cp misc/Mail.help* ${DESTDIR}/usr/lib
 	rm -f ${DESTDIR}/${BINDIR}/mail
 	ln ${DESTDIR}/${BINDIR}/Mail ${DESTDIR}/${BINDIR}/mail

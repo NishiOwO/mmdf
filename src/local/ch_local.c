@@ -66,7 +66,7 @@ char   *argv[];
     short retval;
     int   realid,
 	  effecid;
-
+    
     mmdf_init (argv[0]);
     siginit ();
     signal (SIGINT, SIG_IGN);   /* always ignore interrupts             */

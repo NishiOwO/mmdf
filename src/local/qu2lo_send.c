@@ -45,6 +45,7 @@
 #include "ap.h"
 #include "ch.h"
 #include <pwd.h>
+#include <grp.h>
 #include <sys/stat.h>
 #include <signal.h>
 #ifdef HAVE_SGTTY_H
@@ -60,6 +61,8 @@ char    lo_info[2 * LINESIZE],
 	*lo_parm;
 
 struct passwd *lo_pw;
+
+extern char *mmdfgroup;
 
 extern Chan     *chanptr;
 extern LLog     *logptr;
@@ -228,6 +231,7 @@ LOCFUN
 lo_master()
 {
 	int   childid;                /* child does the real work           */
+    struct group *grp;
 
 	switch (childid = fork ()) {
 	case NOTOK:
@@ -236,26 +240,33 @@ lo_master()
 	case OK:
 		ll_close (logptr);      /* since the process is splitting */
 
+        /* set to mmdf's group-id to be able write to the mail-box directory */
+        if( (grp = getgrnam(mmdfgroup)) == NULL) {
+          ll_err (logptr, LLOGTMP, "Cannot find mmdfgroup (%s)", mmdfgroup);
+          err_abrt(RP_BHST);
+        }
+    
+        /* we want to run with lo_pw user-id and mmdf's group id */
 #ifdef HAVE_INITGROUPS
-		if (initgroups (lo_pw->pw_name, lo_pw->pw_gid) == NOTOK
-		  || setgid (lo_pw->pw_gid) == NOTOK
+        if (initgroups (lo_pw->pw_name, grp->gr_gid) == NOTOK
+            || setgid (grp->gr_gid) == NOTOK
 #else /* HAVE_INITGROUPS */
-		if (setgid (lo_pw->pw_gid) == NOTOK
+        if (setgid (grp->gr_gid) == NOTOK
 #endif /* HAVE_INITGROUPS */
-		  || setuid (lo_pw->pw_uid) == NOTOK) {
-			ll_err (logptr, LLOGTMP, "can't set id's (%d,%d)",
-				lo_pw->pw_uid, lo_pw->pw_gid);
-			exit (RP_BHST);
-		}
+            || setuid (lo_pw->pw_uid) == NOTOK) {
+          ll_err (logptr, LLOGTMP, "can't set id's (%d,%d)",
+                  lo_pw->pw_uid, grp->gr_gid);
+          exit (RP_BHST);
+        }
 
-		if (chdir (lo_pw->pw_dir) == NOTOK) {
-			/* move out of MMDF queue space       */
-			ll_err (logptr, LLOGTMP, "can't chdir to '%s'",
-				lo_pw->pw_dir);
-			exit (RP_LIO);
-		}
+            if (chdir (lo_pw->pw_dir) == NOTOK) {
+              /* move out of MMDF queue space       */
+              ll_err (logptr, LLOGTMP, "can't chdir to '%s'",
+                      lo_pw->pw_dir);
+              exit (RP_LIO);
+            }
 
-		exit (lo_slave());
+            exit (lo_slave());
 
 	default:                  /* parent just waits  */
 		return (pgmwait (childid));

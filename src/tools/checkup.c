@@ -42,6 +42,7 @@
 #include "util.h"
 #include "mmdf.h"
 #include <pwd.h>
+#include <grp.h>
 #include <sys/stat.h>
 #include "ch.h"
 #ifdef HAVE_DIAL
@@ -91,8 +92,10 @@ extern Table **tb_list;        /* full list of known tables */
 
 extern Domain **dm_list;
 extern char *mmdflogin;        /* login name for mmdf processes */
+extern char *mmdfgroup;        /* login name for mmdf processes */
 extern char *mmtailor;        /* external tailoring information */
 char MMDFlogin[32];
+char MMDFgroup[32];
 
 extern char     *lckdfldir,
 	       *pn_quedir;
@@ -167,10 +170,12 @@ main (argc, argv)
 {
     char tmpfile[FILNSIZE];
     struct passwd *pwdptr;
+    struct group *grpptr;
     int ind;
     char postmaster[13];
     strncpy(postmaster, "Postmaster", sizeof(postmaster));
     strncpy(MMDFlogin, mmdflogin, sizeof(MMDFlogin));
+    strncpy(MMDFgroup, mmdfgroup, sizeof(MMDFgroup));
 
     /*  check for the verbosity flag  */
     flaginit (argc, argv);
@@ -232,6 +237,16 @@ main (argc, argv)
     que (LEVEL7, subhdrfmt, "", "alias this to root or systems staff");
     qflush (LEVEL7);
     qflush (LEVEL3);
+
+    /*  get uid & gid for mmdf login, for setting directory ownerships */
+    if ((grpptr = getgrnam (MMDFgroup)) == (struct group *) NULL)
+    {
+	que (LEVEL1, hdrfmt, "** No /etc/group group", MMDFgroup);
+	endit (NOTOK);
+    }
+
+    que (LEVEL3, "\nMMDF group %-11s  : gid (%d)\n",
+		MMDFgroup, grpptr -> gr_gid);
 
     /* check for hashed table, if required */
     if (tbldbm != (char *) 0)
@@ -313,7 +328,7 @@ main (argc, argv)
     if (isstr(mldfldir))
     {                           /* all mail delivered in common dir     */
 	que (LEVEL4, hdrfmt, "Shared receipt directory", mldfldir);
-	chkfile (mldfldir, 0777, 0777, mmdfuid, mmdfgid, MMDFlogin);
+	chkfile (mldfldir, 1775, 1777, mmdfuid, mmdfgid, MMDFlogin);
 	qflush (LEVEL4);
     }
     qflush (LEVEL0);

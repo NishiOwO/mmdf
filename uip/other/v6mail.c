@@ -2,6 +2,7 @@
 #include "mmdf.h"                 /* to get mmdf reply codes            */
 #include "cnvtdate.h"
 #include <pwd.h>
+#include <grp.h>
 #include <signal.h>
 #include <sys/stat.h>
 #include "mm_io.h"
@@ -44,6 +45,7 @@ char    cclist[LINESIZE];
 /* mmdf globals */
 
 extern int sentprotect;           /* default mailbox protection         */
+extern char     *mmdfgroup;
 extern char     *mldflfil;        /* default mailbox file               */
 extern char     *mldfldir;        /* directory containing mailbox file  */
 extern char     *delim1;          /* string delimiting messages         */
@@ -150,6 +152,17 @@ int     argc;
 char   *argv[];
 {
     register int    count;
+    struct group *grpptr;
+    
+    /* set group-id to mmdfgroup */
+    if ( (grpptr = getgrnam(mmdfgroup)) == NULL) {
+      printf("Cannot get groupname '%s'\n", mmdfgroup);
+      exit;
+    }
+    if( setgid (grpptr->gr_gid) == NOTOK ) {
+      printf("Cannot set groupid (%d)\n", grpptr->gr_gid);
+      exit;
+    }
 
     if (argc == 2)
 	qrychar = argv[1][1];

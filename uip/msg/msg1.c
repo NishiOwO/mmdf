@@ -70,6 +70,7 @@ extern char *verdate;
 #include "util.h"
 #include "mmdf.h"
 #include <pwd.h>
+#include <grp.h>
 #include <signal.h>
 #include <sys/stat.h>
 #ifdef HAVE_SGTTY_H
@@ -88,6 +89,8 @@ char	ascending = TRUE;
 extern	RETSIGTYPE	(*old3)();
 extern	RETSIGTYPE	(*old13)();
 extern	RETSIGTYPE	(*old18)();
+
+extern char *mmdfgroup;
 
 extern	int	pagesize;
 extern	int	linelength;
@@ -141,6 +144,7 @@ char   *argv[];
 	extern struct passwd *getpwuid();
 	extern RETSIGTYPE onhangup();
 	struct passwd  *pwdptr;
+	struct group  *grpptr;
 	char *uterm;
 	int realid;
 	int effecid;
@@ -161,6 +165,16 @@ char   *argv[];
 		signal(SIGTSTP,onstop);
 #endif SIGTSTP
 
+    /* set group-id to mmdfgroup */
+    if ( (grpptr = getgrnam(mmdfgroup)) == NULL) {
+      printf("Cannot get groupname '%s'\n", mmdfgroup);
+      exit;
+    }
+    if( setgid (grpptr->gr_gid) == NOTOK ) {
+      printf("Cannot set groupid (%d)\n", grpptr->gr_gid);
+      exit;
+    }
+      
 	printf( "MSG (%s)  Type ? for help.\r\n", verdate);
 	fflush( stdout);
 

@@ -36,10 +36,12 @@
  *  Jan 82  D. Crocker          convert to !traceit before chmod of lockdir
  */
 #include <pwd.h>
+#include <grp.h>
 #include <sys/stat.h>
 #include "ch.h"
 
 extern char *mmdflogin;        /* login name for mmdf processes */
+extern char *mmdfgroup;        /* login name for mmdf processes */
 
 /* logs, programs, delivered mail */
 
@@ -87,6 +89,7 @@ main (argc, argv)
 {
     extern struct passwd *getpwnam ();
     struct passwd *mmdfpwd;
+    struct group *mmdfgrp;
     int realid,
 	effecid;
     register int i;
@@ -148,6 +151,20 @@ main (argc, argv)
     printf ("Login '%s':  uid (%d), gid (%d)\n",
 		mmdflogin, mmdfuid, mmdfgid);
     printf ("***\t Make sure Makefile's $(MMDFLOGIN) specifies this name.\n");
+
+/*  get uid & gid for mmdf login, for setting directory ownerships */
+
+    if ((mmdfgrp = getgrnam (mmdfgroup)) == (struct group *) NULL)
+    {
+	printf ("***\t Group name '%s' not in group file.\n", mmdfgroup);
+	(void) fflush (stdout);
+	exit (NOTOK);
+    }
+    if( mmdfgid != mmdfgrp -> gr_gid) {
+    }
+
+    printf ("Group '%s':  gid (%d)\n",
+		mmdfgroup, mmdfgid);
 /**/
 
 /*  create standard directories */
@@ -190,8 +207,8 @@ main (argc, argv)
 
     if (mldfldir != (char *)0 && !isnull (mldfldir[0]))
     {                           /* all mail delivered in common dir     */
-	printf ("\nRecipient users' mailbox directory '%s'\n\t[protected at 0777]\n", mldfldir);
-	my_drcreat (mldfldir, 0777, mmdfuid, mmdfgid);
+	printf ("\nRecipient users' mailbox directory '%s'\n\t[protected at 0775]\n", mldfldir);
+	my_drcreat (mldfldir, 1775, mmdfuid, mmdfgid);
     }
 /**/
 
