@@ -8,11 +8,13 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  *
  *  $Log: head.c,v $
- *  Revision 1.2  1986/01/07 13:46:02  galvin
- *  Added comment header for revision history.
+ *  Revision 1.3  1986/01/07 13:50:48  galvin
+ *  Change parse to have a return value.  Make it check to be sure the
+ *  line it is passed is a valid "From" line.  If it can determine a
+ *  date then return the date and 0, otherwise return 1.
  *
  * Revision 1.3  86/01/07  13:50:48  galvin
  * Change parse to have a return value.  Make it check to be sure the
