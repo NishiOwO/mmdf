@@ -74,11 +74,11 @@ char exflag;
 		signal( SIGQUIT, old3);
 		signal( SIGPIPE, old13);
 
-#ifndef V4_2BSD
+#ifdef HAVE_NFILE
 		for (fd = _NFILE-1; fd > 2; fd--)
-#else
+#else /* HAVE_NFILE */
 		for (fd = getdtablesize()-1; fd > 2; fd--)
-#endif
+#endif /* HAVE_NFILE */
 			close (fd);
 
 		switch( exflag)  {
