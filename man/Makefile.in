@@ -23,6 +23,7 @@ mmdfprefix	= @mmdfprefix@
 sysconfdir	= @sysconfdir@
 srcdir          = @srcdir@
 varprefix       = @varprefix@
+mandir		= @mandir@
 
 mcmddir         = @mcmddir@
 mchndir         = @mchndir@
@@ -56,7 +57,7 @@ SEDFILE		= sed.file
 INSTALL         = ../../install.sh -c
 INSTALL_PROGRAM = ${INSTALL}
 CHOWN		= @CHOWN@
-MMDFLOGIN	= @mmdflogin@
+MMDFLOGIN	= @MMDFLOGIN@
 ROOTLOGIN	= @ROOTLOGIN@
 PGMPROT		= @PGMPROT@
 
@@ -66,7 +67,7 @@ install:
 	for dir in man?; do \
 		(cd $${dir}; \
 		for page in *.?; do \
-			$(INSTALL) -m 444 $${page} ${install_prefix}/usr/man/$${dir}/$${page}; \
+			$(INSTALL) -m 444 $${page} ${install_prefix}${mandir}/$${dir}/$${page}; \
 		done); done
 
 clean:
