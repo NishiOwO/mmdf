@@ -35,6 +35,7 @@
 #  include <fcntl.h>
 #endif /* HAVE_SYS_FILE_H */
 #include "ml_send.h"
+//   extern long getpid ();
 
 
 #define EX_OK	0 /* everything successful */
@@ -59,7 +60,6 @@ static char sender_buf[256];
 
 errmsg_open () 
 {
-    extern long getpid ();
     char buf[80]; 
     
     rewindable_msg ();
@@ -155,7 +155,6 @@ static mail_support (sender)
 
 rewindable_msg ()
 {
-    long getpid ();
     char buf[1024];
     int f, n;
 

@@ -342,7 +342,7 @@ mn_dirinit ()                     /* current loc? chdir to home; setuid */
 	err_abrt (RP_LIO, "Unable to change directory.");
 
 #ifdef HAVE_SETREUID
-    setreuid (userid);              /* so we have the user's privileges   */
+    setreuid (userid, userid);  /* so we have the user's privileges   */
                                 /*   to access address files          */
 #else /* HAVE_SETREUID */
     setuid (userid);              /* so we have the user's privileges   */
