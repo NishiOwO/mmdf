@@ -581,7 +581,17 @@ AC_CHECK_LIB(termcap, tgetent)
 AC_CHECK_LIB(socket, socket)
 AC_CHECK_LIB(nsl, inet_ntoa)
 
+echo "========================= $host"
 if test "$ac_cv_enable_code_dbm" != "no"; then
+  case "$host" in
+	powerpc-apple-*)
+        AC_CHECK_FUNC(dbm_open)
+	if test "$ac_cv_func_dbm_open" = "yes"; then
+	  AC_DEFINE(HAVE_DBM_OPEN)
+	fi
+	;;
+
+	*)
    AC_CHECK_FUNC(dbminit,[
       AC_CHECK_HEADER(ndbm.h,ac_cv_lib_dbm="yes",[
       AC_MSG_WARN(Grrr. you have libndbm. But no ndbm.h file. courious)
@@ -616,7 +626,9 @@ dnl	   AC_CHECK_LIB(gdbm, gdbm_open)
 dnl	   AC_DEFINE(HAVE_LIBGDBM)
 dnl	   AC_MSG_WARN(*** your libndbm is linked to 2 libgdbm!)
          fi
-      fi
+      fi])
+	;;
+  esac
       if test "$ac_cv_lib_gdbm_gdbm_open" = "yes" || 
 	   test "$ac_cv_lib_ndbm_dbm_open" = "yes" ||
 	   test "$ac_cv_lib_dbm_dbminit" = "yes" ||
@@ -624,7 +636,7 @@ dnl	   AC_MSG_WARN(*** your libndbm is linked to 2 libgdbm!)
          ac_cv_lib_dbm="yes"
       else
          ac_cv_lib_dbm="no"
-      fi])
+      fi
 fi
 
 dnl checking for libwrap
@@ -701,13 +713,19 @@ AC_CHECK_HEADERS(arpa/nameser.h lastlog.h libio.h malloc.h memory.h netdb.h \
  sys/file.h sys/ioctl.h sys/mount.h sys/param.h sys/quota.h \
  sys/fs/ufs_quota.h sys/socket.h sys/statfs.h \
  sys/statvfs.h sys/time.h sys/termio.h sys/vfs.h \
- sys/termios.h sys/unistd.h unistd.h utmp.h utmpx.h varargs.h)
+ sys/termios.h sys/unistd.h unistd.h utmp.h utmpx.h)
 AC_CHECK_HEADER(sgtty.h,ac_cv_header_sgtty_h="yes")
+
+AC_CHECK_HEADERS(stdarg.h)
+if test "$ac_cv_header_stdarg_h" != "yes"; then
+  AC_CHECK_HEADERS(varargs.h)
+fi
 if test "$ac_cv_header_varargs_h" != "yes"; then
     AC_MSG_WARN(you don't have varargs.h)
     AC_MSG_WARN(          lib/util/multcat.c will not compile)
     AC_MSG_WARN(          lib/util/multcpy.c will not compile)
 fi
+
 AC_STRUCT_TIMEZONE
 AC_FIND_SYSTEM_TYPE
 
@@ -1172,7 +1190,7 @@ if test -d man; then
   SUBDIRS="$SUBDIRS man"
 fi
 
-LIBSUBDIRS="popt addr mmdf table util"
+LIBSUBDIRS="addr mmdf table util"
 AC_ENABLE_DEFAULT(dial, no, LIBSUBDIRS)
 
 SRCSUBDIRS="deliver local submit tools"
@@ -1293,7 +1311,7 @@ dnl OUTPUT_C_FILES=$OUTPUT_C_FILES" conf/sample/s_tailor.c"
 dnl OUTPUT_C_FILES=$OUTPUT_C_FILES" conf/sample/s_tailor.h"
 OUTPUT_FILES=$OUTPUT_FILES" "$OUTPUT_C_FILES
 
-AC_CONFIG_SUBDIRS(lib/popt)
+dnl AC_CONFIG_SUBDIRS(lib/popt)
 AC_OUTPUT(${OUTPUT_FILES})
 
 if test "$MMDF_TARGET" = "yes"; then

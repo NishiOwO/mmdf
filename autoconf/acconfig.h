@@ -15,7 +15,7 @@
 
 
 /*
- * $Id: acconfig.h,v 1.13 2001/05/02 21:07:12 krueger Exp $
+ * $Id: acconfig.h,v 1.14 2001/10/26 13:39:34 krueger Exp $
  *
  */
 
@@ -288,6 +288,7 @@
 
 /* Define if you have the gdbm library (-lgdbm).  */
 #undef HAVE_LIBGDBM  /* new */
+#undef HAVE_DBM_OPEN
 
 /************************************************************************/
 /*
