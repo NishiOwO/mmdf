@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.2 1997/12/29 19:27:22 krueger Exp $
+ * $Id: config.h,v 1.3 1997/12/29 19:43:22 krueger Exp $
  *
  * please set every configuration-switch here
  *
@@ -189,5 +189,11 @@
 /*             Enable site depend code
  */
 /* #undef LINUX */
+
+/*             Enable a small fix to slowdown submitm such that the parent
+ *             could finish readring the pipe when submit exits. This is
+ *             needed on RISC-machines like HP9000s700 an newer.
+ */
+/* #undef SUBMIT_TOO_FAST */
 
 #endif /* CONFIG_H */

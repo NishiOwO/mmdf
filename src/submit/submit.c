@@ -271,6 +271,11 @@ char   *argv[];
 	dlv_invoke ();            /* Maybe give the message a mailer    */
 				  /* Will acknowledge message queueing */
     }
+#if defined(SUBMIT_TOO_FAST)
+    fflush(stderr);
+    fflush(stdout);
+    sleep(5);
+#endif /* SUBMIT_TOO_FAST */
     exit (RP_OK);
 }
 /**/
