@@ -117,7 +117,7 @@ char **av;
 	for(;;){
 		printf("dbmedit> ");
 		(void) fflush(stdout);
-		if (gets(ibuf) == NULL)
+		if (fgets(ibuf, sizeof(ibuf), stdin) == NULL)
 			exit(0);
 		if (!isstr(ibuf))
 			continue;

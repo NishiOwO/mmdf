@@ -298,7 +298,7 @@ doincl:
 	{
 	    printf ("Program: ");
 	    fflush (stdout);
-	    if (gets (tempbuf) == NULL)
+	    if (fgets (tempbuf, sizeof (tempbuf), stdin) == NULL)
 		continue;
 	    drclose ();
 

@@ -58,7 +58,7 @@ main (argc, argv)
 	printf ("\nType 'h' for list of lists, 'c' to create a list,\n");      printf ("'q' to quit, or the name of the list you wish to adjust");
 	printf ("\n\n>> ");
 	fflush (stdout);
-	if (gets (buf) == NULL)
+	if (fgets (buf, sizeof (buf), stdin) == NULL)
 		exit(OK);
 	compress (buf, buf);
 	if (strlen (buf) == 0)
@@ -179,19 +179,19 @@ do_create ()
     ml_txt ("Name of list\n");
     printf ("Give name of list: ");
     fflush (stdout);
-    if (gets (buf) == NULL)
+    if (fgets (buf, sizeof (buf), stdin) == NULL)
 	exit(OK);
     ml_txt (buf);
     ml_txt ("\n\nFunction:\n");
     printf ("Give a one line description of the list\n: ");
     fflush (stdout);
-    if (gets (buf) == NULL)
+    if (fgets (buf, sizeof (buf), stdin) == NULL)
 	exit(OK);
     ml_txt (buf);
     ml_txt ("\n\nDistributed from:\n");
     printf ("Where is the list currently distributed from?\n: ");
     fflush (stdout);
-    if (gets (buf) == NULL)
+    if (fgets (buf, sizeof (buf), stdin) == NULL)
 	exit(OK);
     ml_txt (buf);
     ml_txt ("\n\nMaintainers\n");
@@ -199,7 +199,7 @@ do_create ()
     printf ("You can give multiple addresses, but one must be a local ");
     printf ("login\n: ");
     fflush (stdout);
-    if (gets (buf) == NULL)
+    if (fgets (buf, sizeof (buf), stdin) == NULL)
 	exit(OK);
     ml_txt (buf);
     printf ("processing message....\n");
@@ -481,7 +481,7 @@ char ch;
 	printf ("user (r), quit (q)?\n");
 	printf ("default is assumed to be user name to be added\n\n>>> ");
 	fflush (stdout);
-	if (gets (tmpbuf) == NULL){
+	if (fgets (tmpbuf, sizeof (tmpbuf), stdin) == NULL){
 		v_end ();
 		exit(OK);
 	}
@@ -513,7 +513,7 @@ char ch;
 		break;
 	    case 'a':
 		printf ("give username to be added: ");
-		if (gets (tmpbuf) == NULL){
+		if (fgets (tmpbuf, sizeof (tmpbuf), stdin) == NULL){
 			v_end ();
 			exit(OK);
 		}
@@ -529,7 +529,7 @@ char ch;
 
 	    case 'r':
 		printf ("give username to be removed: ");
-		if (gets (tmpbuf) == NULL){
+		if (fgets (tmpbuf, sizeof (tmpbuf), stdin) == NULL){
 			v_end ();
 			exit(OK);
 		}

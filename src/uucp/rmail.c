@@ -225,7 +225,7 @@ char **argv;
 	 * info given.
 	 */
 	for (;;) {
-		if (gets(linebuf) == NULL)
+		if (fgets(linebuf, sizeof(linebuf), stdin) == NULL)
 			break;
 		if (strncmp(linebuf, "From ", 5) &&
 		    strncmp(linebuf, ">From ", 6))
@@ -565,7 +565,7 @@ grabline()
 		usetmp = 0;
 	}
 	else
-		gets(linebuf);
+		fgets(linebuf, sizeof(linebuf), stdin);
 
 	/* Anything wrong? */
 	if (ferror(stdin))

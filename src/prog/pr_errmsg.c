@@ -73,7 +73,7 @@ errmsg_open ()
 
 	rewind_msg ();
 
-	while (gets (buf) != NULL && buf[0] != '\0') {
+	while (fgets (buf, sizeof (buf), stdin) != NULL && buf[0] != '\0') {
 	    int newprio; register char *p;
 
 	    if (lexnequ (buf, "From:", 5)) {
