@@ -39,8 +39,6 @@ clean:
 submit.o: submit.c
 submit.o: ../../h/util.h
 submit.o: ../../h/mmdf.h
-submit.o: /usr/include/sys/stat.h
-submit.o: /usr/include/pwd.h
 submit.o: ../../h/nexec.h
 submit.o: ../../h/ap.h
 submit.o: ../../h/ns.h
@@ -55,8 +53,6 @@ hdr_parse.o: ../../h/hdr.h
 adr_submit.o: adr_submit.c
 adr_submit.o: ../../h/util.h
 adr_submit.o: ../../h/mmdf.h
-adr_submit.o: /usr/include/sys/stat.h
-adr_submit.o: /usr/include/pwd.h
 adr_submit.o: ../../h/ch.h
 adr_submit.o: ../../h/dm.h
 adr_submit.o: ../../h/ap.h
@@ -71,12 +67,10 @@ mq_wtmail.o: ../../h/util.h
 mq_wtmail.o: ../../h/mmdf.h
 mq_wtmail.o: ../../h/ch.h
 mq_wtmail.o: ../../h/adr_queue.h
-mq_wtmail.o: /usr/include/sys/file.h
 mgt_submit.o: mgt_submit.c
 mgt_submit.o: ../../h/util.h
 mgt_submit.o: ../../h/mmdf.h
 mgt_submit.o: ../../h/ch.h
-mgt_submit.o: /usr/include/pwd.h
 mgt_submit.o: ../../h/cnvtdate.h
 mgt_submit.o: ../../h/ap.h
 mgt_submit.o: ../../h/dm.h

@@ -72,12 +72,10 @@ ch_uucp.o: ../../h/util.h
 ch_uucp.o: ../../h/mmdf.h
 ch_uucp.o: ../../h/ch.h
 ch_uucp.o: ../../h/phs.h
-ch_uucp.o: /usr/include/signal.h
 qu2uu_send.o: qu2uu_send.c
 qu2uu_send.o: ../../h/util.h
 qu2uu_send.o: ../../h/mmdf.h
 qu2uu_send.o: ../../h/ch.h
-qu2uu_send.o: /usr/include/signal.h
 qu2uu_send.o: ../../h/ap.h
 qu2uu_send.o: ../../h/phs.h
 uu_wtmail.o: uu_wtmail.c
@@ -91,9 +89,6 @@ rmail.o: ../../h/mmdf.h
 rmail.o: ../../h/ap.h
 rmail.o: ../../h/ch.h
 rmail.o: ../../h/dm.h
-rmail.o: /usr/include/pwd.h
-rmail.o: /usr/include/signal.h
-rmail.o: /usr/include/sys/stat.h
 # DEPENDENCIES MUST END AT END OF FILE
 # IF YOU PUT STUFF HERE IT WILL GO AWAY
 # see make depend above

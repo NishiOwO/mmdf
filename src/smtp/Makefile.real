@@ -85,7 +85,6 @@ clean:
 ch_smtp.o: ch_smtp.c
 ch_smtp.o: ../../h/util.h
 ch_smtp.o: ../../h/mmdf.h
-ch_smtp.o: /usr/include/signal.h
 ch_smtp.o: ../../h/phs.h
 ch_smtp.o: ../../h/ch.h
 qu2sm_send.o: qu2sm_send.c
@@ -98,16 +97,13 @@ sm_wtmail.o: sm_wtmail.c
 sm_wtmail.o: ../../h/util.h
 sm_wtmail.o: ../../h/mmdf.h
 sm_wtmail.o: ../../h/ch.h
-sm_wtmail.o: /usr/include/signal.h
 sm_wtmail.o: ../../h/phs.h
 sm_wtmail.o: ../../h/ap.h
 sm_wtmail.o: ../../h/dm.h
 sm_wtmail.o: ../../h/smtp.h
-sm_wtmail.o: /usr/include/netinet/in.h
-tcp.5.2.o: tcp.5.2.c
-tcp.5.2.o: /usr/include/fcntl.h
-tcp.5.2.o: ../../h/util.h
-tcp.5.2.o: ../../h/mmdf.h
+tcp.o: tcp.c
+tcp.o: ../../h/util.h
+tcp.o: ../../h/mmdf.h
 smtpsrvr.o: smtpsrvr.c
 smtpsrvr.o: ../../h/util.h
 smtpsrvr.o: ../../h/mmdf.h
@@ -115,17 +111,9 @@ smtpsrvr.o: ../../h/ch.h
 smtpsrvr.o: ../../h/ap.h
 smtpsrvr.o: ../../h/phs.h
 smtpsrvr.o: ../../h/smtp.h
-smtpsrvr.o: /usr/include/stdio.h
-smtpsrvr.o: /usr/include/signal.h
-smtpsrvr.o: /usr/include/sys/stat.h
-smtpsrvr.o: /usr/include/pwd.h
-smtpsrvr.o: /usr/include/fcntl.h
 smtpsrvr.o: ../../h/ns.h
-smtpd.5.2.o: smtpd.5.2.c
-smtpd.5.2.o: ../../h/util.h
-smtpd.5.2.o: /usr/include/fcntl.h
-smtpd.5.2.o: /usr/include/signal.h
-smtpd.5.2.o: /usr/include/stdio.h
+smtpd.o: smtpd.c
+smtpd.o: ../../h/util.h
 # DEPENDENCIES MUST END AT END OF FILE
 # IF YOU PUT STUFF HERE IT WILL GO AWAY
 # see make depend above

@@ -37,7 +37,6 @@ ch_blockaddr.o: ch_blockaddr.c
 ch_blockaddr.o: ../../h/util.h
 ch_blockaddr.o: ../../h/mmdf.h
 ch_blockaddr.o: ../../h/ap.h
-ch_blockaddr.o: /usr/include/signal.h
 ch_blockaddr.o: ../../h/phs.h
 ch_blockaddr.o: ../../h/ch.h
 qu2ba_send.o: qu2ba_send.c
@@ -46,7 +45,6 @@ qu2ba_send.o: ../../h/mmdf.h
 qu2ba_send.o: ../../h/phs.h
 qu2ba_send.o: ../../h/ch.h
 qu2ba_send.o: ../../h/ap.h
-qu2ba_send.o: /usr/include/pwd.h
 # DEPENDENCIES MUST END AT END OF FILE
 # IF YOU PUT STUFF HERE IT WILL GO AWAY
 # see make depend above

@@ -347,7 +347,6 @@ clean:
 # DO NOT DELETE THIS LINE -- make depend uses it
 
 amp.o: amp.c
-amp.o: /usr/include/stdio.h
 amp.o: ../../h/util.h
 amp.o: ../../h/mmdf.h
 amp.o: ../../h/ch.h
@@ -355,8 +354,6 @@ amp.o: ../../h/ap.h
 checkup.o: checkup.c
 checkup.o: ../../h/util.h
 checkup.o: ../../h/mmdf.h
-checkup.o: /usr/include/pwd.h
-checkup.o: /usr/include/sys/stat.h
 checkup.o: ../../h/ch.h
 checkup.o: ../../h/d_proto.h
 checkup.o: ../../h/d_structs.h
@@ -365,20 +362,16 @@ checkup.o: ../../h/dm.h
 checkque.o: checkque.c
 checkque.o: ../../h/util.h
 checkque.o: ../../h/mmdf.h
-checkque.o: /usr/include/sys/stat.h
-checkque.o: /usr/include/utmp.h
 checkque.o: ../../h/ch.h
 checkque.o: ../../h/msg.h
 checkque.o: ../../h/adr_queue.h
 checkque.o: ../../h/phs.h
-checkque.o: /usr/include/string.h
 cleanque.o: cleanque.c
 cleanque.o: ../../h/util.h
 cleanque.o: ../../h/mmdf.h
 cleanque.o: ../../h/msg.h
 cleanque.o: ../../h/adr_queue.h
 cleanque.o: ../../h/ch.h
-cleanque.o: /usr/include/sys/stat.h
 checkaddr.o: checkaddr.c
 checkaddr.o: ../../h/util.h
 checkaddr.o: ../../h/mmdf.h
@@ -403,12 +396,8 @@ dbmlist.o: ../../h/chdbm.h
 setup.o: setup.c
 setup.o: ../../h/util.h
 setup.o: ../../h/mmdf.h
-setup.o: /usr/include/pwd.h
-setup.o: /usr/include/sys/stat.h
 setup.o: ../../h/ch.h
 mailid.o: mailid.c
-mailid.o: /usr/include/stdio.h
-mailid.o: /usr/include/pwd.h
 rem_chans.o: rem_chans.c
 rem_chans.o: ../../h/util.h
 rem_chans.o: ../../h/cmd.h
@@ -416,12 +405,9 @@ fixtai.o: fixtai.c
 fixtai.o: ../../h/util.h
 fixtai.o: ../../h/cmd.h
 fixtai.o: ../../h/ch.h
-fixtai.o: /usr/include/sys/stat.h
 fixtai.o: ../../h/ap.h
 fixtai.o: ../../h/conf.h
 process-uucp.o: process-uucp.c
-process-uucp.o: /usr/include/stdio.h
-process-uucp.o: /usr/include/ctype.h
 tablelist.o: tablelist.c
 tablelist.o: ../../h/util.h
 tablelist.o: ../../h/mmdf.h

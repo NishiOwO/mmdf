@@ -35,7 +35,6 @@ clean:
 ch_list.o: ch_list.c
 ch_list.o: ../../h/util.h
 ch_list.o: ../../h/mmdf.h
-ch_list.o: /usr/include/signal.h
 ch_list.o: ../../h/phs.h
 ch_list.o: ../../h/ch.h
 qu2ls_send.o: qu2ls_send.c
@@ -44,7 +43,6 @@ qu2ls_send.o: ../../h/mmdf.h
 qu2ls_send.o: ../../h/phs.h
 qu2ls_send.o: ../../h/ch.h
 qu2ls_send.o: ../../h/ap.h
-qu2ls_send.o: /usr/include/pwd.h
 # DEPENDENCIES MUST END AT END OF FILE
 # IF YOU PUT STUFF HERE IT WILL GO AWAY
 # see make depend above

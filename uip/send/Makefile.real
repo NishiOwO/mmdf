@@ -23,9 +23,6 @@ $(BINDIR)/send:	xsend
 	-$(CHOWN) $(MMDFLOGIN) $(BINDIR)/send
 	-chmod $(PGMPROT) $(BINDIR)/send
 
-version.c:
-	./mkversion
-
 version.o: $(SOURCES) $(MMDFLIBS) ../../VERSION
 	./mkversion
 	$(CC) $(CFLAGS) -c version.c

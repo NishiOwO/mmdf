@@ -35,7 +35,6 @@ clean:
 ch_local.o: ch_local.c
 ch_local.o: ../../h/util.h
 ch_local.o: ../../h/mmdf.h
-ch_local.o: /usr/include/signal.h
 ch_local.o: ../../h/ch.h
 ch_local.o: ../../h/phs.h
 qu2lo_send.o: qu2lo_send.c
@@ -44,9 +43,6 @@ qu2lo_send.o: ../../h/mmdf.h
 qu2lo_send.o: ../../h/phs.h
 qu2lo_send.o: ../../h/ap.h
 qu2lo_send.o: ../../h/ch.h
-qu2lo_send.o: /usr/include/pwd.h
-qu2lo_send.o: /usr/include/sys/stat.h
-qu2lo_send.o: /usr/include/signal.h
 qu2lo_send.o: ../../h/adr_queue.h
 lo_wtmail.o: lo_wtmail.c
 lo_wtmail.o: ../../h/util.h
@@ -54,9 +50,6 @@ lo_wtmail.o: ../../h/mmdf.h
 lo_wtmail.o: ../../h/phs.h
 lo_wtmail.o: ../../h/ap.h
 lo_wtmail.o: ../../h/ch.h
-lo_wtmail.o: /usr/include/pwd.h
-lo_wtmail.o: /usr/include/sys/stat.h
-lo_wtmail.o: /usr/include/signal.h
 lo_wtmail.o: ../../h/adr_queue.h
 lo_wtmail.o: ../../h/hdr.h
 # DEPENDENCIES MUST END AT END OF FILE
