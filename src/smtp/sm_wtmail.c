@@ -502,9 +502,11 @@ int     time;                   /* Max time for sending and getting reply */
 	return( sm_rp.sm_rval = retval );
     }
     s_alarm( 0 );
+#if notdef
     if(sm_rp.sm_rgot) {
       printx("RPLY:%d'%s'\r\n", sm_rp.sm_rlen, sm_rp.sm_rstr);
     }
+#endif
     return (RP_OK);
 }
 /**/
