@@ -1,3 +1,5 @@
+#ifndef _SMTP_H_
+#define _SMTP_H_
 
 /* timeouts for smtpsrvr */
 #define NTIMEOUT        180     /*  3 minute timeout on net I/O  */
@@ -33,3 +35,5 @@ struct sm_rstruct {      /* save last reply obtained           */
     char    sm_rgot;            /* true, if have a reply              */
     char    sm_rstr[LINESIZE];  /* human-oriented reply text          */
 };
+#endif /* _SMTP_H_ */
+

@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#ifndef _CH_H_
+#define _CH_H_
 /*
  *      INFORMATION KEPT FOR ALL TABLES
  */
@@ -259,3 +261,4 @@ Chan * ch_nm2struct (),           /* chan name -> ptr to its table entry */
      * ch_h2chan ();              /* use host name to find chan name     */
 
 Chan   *ch_h2chan ();          /* which chan name table is host in?  */
+#endif /* _CH_H_ */

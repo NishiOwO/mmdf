@@ -1,6 +1,8 @@
 /* 
  *  include Config-Switches
  */
+#ifdef _UTIL_H_
+#define _UTIL_H_
 #include "config.h"
 
 #ifndef DIDUTIL
@@ -120,3 +122,4 @@ long	siz2lon();
 				  /* high byte from the "returned"      */
 				  /* value                              */
 #endif /* DIDUTIL */
+#endif /* _UTIL_H_ */

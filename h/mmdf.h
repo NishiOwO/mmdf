@@ -5,6 +5,9 @@
  *          nesting. (sigh.)
  */
 
+#ifndef _MMDF_H_
+#define _MMDF_H_
+
 #include "ll_log.h"               /* file-logging package               */
 #include "conf.h"                 /* mmdf site-specific general info    */
 
@@ -221,3 +224,4 @@ typedef struct rp_bufstruct RP_Buf;
 				  /* is return value negative?          */
 
 extern char *rp_valstr ();
+#endif /* _MMDF_H_ */
