@@ -52,7 +52,7 @@ ROOTLOGIN       = @ROOTLOGIN@
 PGMPROT         = @PGMPROT@
 XSTR            = @XSTR@
 CTAGS		= @CTAGS@ -w
-VPRINT		= @VPRINT@ # /usr/ucb/print
+VPRINT		= @VPRINT@
 
 #
 #  Configuration Defines
