@@ -54,6 +54,8 @@
 #include <pwd.h>
 #include <signal.h>
 #include <sys/stat.h>
+#include "ml_send.h"
+#include "mm_io.h"
 
 #define	VERSION		"4.0"
 

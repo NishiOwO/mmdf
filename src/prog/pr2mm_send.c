@@ -40,6 +40,7 @@
 #include "mmdf.h"
 #include "ch.h"
 #include "ap.h"
+#include "mm_io.h"
 
 
 #define EX_OK	0 /* everything successful */

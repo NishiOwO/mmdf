@@ -90,8 +90,8 @@ default:	real-default
 #  and one for those that don't have it.  Comment out the one
 #  you do not want.
 
-depend:
-	make @WHAT_DEPEND@
+#depend:
+#	make @WHAT_DEPEND@
 
 #  This one is for sites without cc support.
 #
@@ -132,7 +132,7 @@ THE_M_FLAG= @DEPEND_FLAG@
 # dependencies per line as are reasonable, and is the same as the awk
 # incantation in the other half of this section. [DSH]
 #
-depend-M:
+depend:
 	( for i in ${MODULES} ; do \
 		${CC} ${THE_M_FLAG} ${CFLAGS} $$i.c ; done ) | \
 	awk ' { if ($$1 != prev) { print rec; rec = $$0; prev = $$1; } \

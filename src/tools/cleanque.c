@@ -1,4 +1,4 @@
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.8 1998/05/25 08:32:11 krueger Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.9 1998/05/25 20:11:22 krueger Exp $ */
 /*
  *     MULTI-CHANNEL MEMO DISTRIBUTION FACILITY  (MMDF)
  *     
@@ -36,6 +36,7 @@
 #include "adr_queue.h"
 #include "ch.h"
 #include <sys/stat.h>
+#include "ml_send.h"
 
 /*  QUECLEAN:  Clean up the mail queue directories                      */
 

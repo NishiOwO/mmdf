@@ -13,6 +13,8 @@
 #include "phs.h"
 #include <pwd.h>
 #include <sys/stat.h>
+#include "ml_send.h"
+#include "mm_io.h"
 
 /*  */
 

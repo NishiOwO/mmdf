@@ -21,9 +21,9 @@ rcvdir="\${exec_prefix}/lib/mh"
 
 D_DEBUG=0
 D_D_LOG=0
-D_D_DBLOG=0
+D_D_DBGLOG=0
 D_NODOMLIT=yes
-D_LEFTDOT=no
+D_LEFTDOTS=no
 D_STATSORT=yes
 D_CITATION=0
 
@@ -981,13 +981,27 @@ if test "$ac_cv_prog_gcc" = "yes"; then
   CFLAGS="$CFLAGS -pipe"
 fi
 
-AC_DEFINE_UNQUOTED(DEBUG, $D_DEBUG)
-AC_DEFINE_UNQUOTED(D_LOG, $D_D_LOG)
-AC_DEFINE_UNQUOTED(D_DBLOG, $D_D_DBLOG)
-AC_DEFINE_UNQUOTED(NODOMLIT, $D_NODOMLIT)
-AC_DEFINE_UNQUOTED(LEFTDOT, $D_LEFTDOT)
-AC_DEFINE_UNQUOTED(STATSORT, $D_STATSORT)
-AC_DEFINE_UNQUOTED(CITATION, $D_CITATION)
+if test "$D_DEBUG" != "0"; then
+   AC_DEFINE_UNQUOTED(DEBUG, $D_DEBUG)
+fi
+if test "$D_D_LOG" != "0"; then
+   AC_DEFINE_UNQUOTED(D_LOG, $D_D_LOG)
+fi
+if test "$D_D_DBGLOG" != "0"; then
+   AC_DEFINE_UNQUOTED(D_DBGLOG, $D_D_DBGLOG)
+fi
+if test "$D_NODOMLIT" = "yes"; then
+   AC_DEFINE_UNQUOTED(NODOMLIT, 1)
+fi
+if test "$D_LEFTDOTS" = "yes"; then
+   AC_DEFINE_UNQUOTED(LEFTDOTS, 1)
+fi
+if test "$D_STATSORT" = "yes"; then
+   AC_DEFINE_UNQUOTED(STATSORT, 1)
+fi
+if test "$D_CITATION" != "0"; then
+   AC_DEFINE_UNQUOTED(CITATION, $D_CITATION)
+fi
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 AC_SUBST(SUBDIRS)

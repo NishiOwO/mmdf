@@ -30,6 +30,7 @@ called by:
 
 #include "./s.h"
 #include "./s_externs.h"
+#include "mm_io.h"
 
 post ()
 {

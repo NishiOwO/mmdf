@@ -1,5 +1,6 @@
 #include "util.h"
 #include "mmdf.h"
+#include "mm_io.h"
 
 /*
  *     MULTI-CHANNEL MEMO DISTRIBUTION FACILITY  (MMDF)
@@ -40,7 +41,7 @@ extern struct ll_struct *logptr;
 
 /* ************  (mm_)  LOCAL MAIL-WRITING SUB-MODULE  **************** */
 
-mm_winit (vianet, info, retadr)  /* initialize for one message         */
+int mm_winit (vianet, info, retadr)  /* initialize for one message         */
 char    *vianet;		  /* what channel coming in from        */
 char    *info,			  /* general info                       */
         *retadr;		  /* return address for error msgs      */
@@ -74,7 +75,7 @@ char    *info,			  /* general info                       */
 }
 /**/
 
-mm_wadr (host, adr)              /* send one address spec to local     */
+int mm_wadr (host, adr)              /* send one address spec to local     */
 char    *host,			  /* "next" location part of address    */
         *adr;			  /* rest of address                    */
 {
@@ -94,7 +95,7 @@ char    *host,			  /* "next" location part of address    */
     return (retval);
 }
 
-mm_waend ()                      /* end of address list                */
+int mm_waend ()                      /* end of address list                */
 {
     short     retval;
 
@@ -103,14 +104,14 @@ mm_waend ()                      /* end of address list                */
     return (RP_DONE);
 }
 
-mm_wtxt (buffer, len)            /* send next part of msg text         */
+int mm_wtxt (buffer, len)            /* send next part of msg text         */
 char    *buffer;		  /* the text                           */
 int     len;                      /* length of text                     */
 {
     return (mm_wstm (buffer, len));
 }
 
-mm_wtend ()                      /* end of message text                */
+int mm_wtend ()                      /* end of message text                */
 {
     return (mm_wrec ((char *) 0, 0));     /* flush buffer and indicate end      */
 }

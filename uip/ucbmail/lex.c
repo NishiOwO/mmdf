@@ -8,9 +8,12 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.5 $
+ *  $Revision: 1.6 $
  *
  *  $Log: lex.c,v $
+ *  Revision 1.6  1998/05/25 20:11:33  krueger
+ *  *** empty log message ***
+ *
  *  Revision 1.5  1986/01/14 16:15:18  galvin
  *  Change the "mmdf.h" include line.
  *
@@ -46,6 +49,7 @@ static char *sccsid = "@(#)lex.c	5.4 (Berkeley) 11/2/85";
 #include <sys/file.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include "ml_send.h"
 
 /*
  * Mail -- a mail program

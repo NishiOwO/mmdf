@@ -49,6 +49,7 @@
 
 
 #include "./s.h"
+#include "mm_io.h"
 
 extern int errno;
 extern char *compress ();

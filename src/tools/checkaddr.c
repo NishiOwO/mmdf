@@ -6,6 +6,7 @@
 
 #include "util.h"
 #include "mmdf.h"
+#include "mm_io.h"
 
 extern	char *rindex();
 extern  char *supportaddr;

@@ -40,6 +40,7 @@
 #include "nexec.h"
 #include "util.h"
 #include "mmdf.h"
+#include "mm_io.h"
 
 #define LM_SUBMIT   0
 #define LM_PICKUP   1
@@ -54,7 +55,7 @@ extern char *pathsubmit,         /* program to invoke for submission   */
 	    *nampkup;            /* name of it                         */
 extern int numfds;
 
-LOCFUN mm_cinit(), mm_cend();
+LOCFUN int mm_cinit(), mm_cend();
 
 LOCVAR FILE *mm_rfp,           /* pipe input stream                  */
 	    *mm_wfp;           /* pipe output stream                 */
@@ -63,7 +64,7 @@ LOCVAR int    mm_cid;          /* process id of child mail process      */
 
 /* ************  (mm_)  LOCAL MAIL I/O SUB-MODULE  ****************** */
 
-mm_init ()                        /* get ready for local mail processing  */
+int mm_init ()                        /* get ready for local mail processing  */
 {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "mm_init ()");
@@ -71,7 +72,7 @@ mm_init ()                        /* get ready for local mail processing  */
     return (RP_OK);
 }
 
-mm_end (type)                     /* done with mail process             */
+int mm_end (type)                     /* done with mail process             */
 int       type;
 {
 #ifdef DEBUG
@@ -81,7 +82,7 @@ int       type;
     return (RP_OK);
 }
 
-mm_sbinit ()                      /* initialize local submission        */
+int mm_sbinit ()                      /* initialize local submission        */
 {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "mm_sbinit ()");
@@ -89,7 +90,7 @@ mm_sbinit ()                      /* initialize local submission        */
     return (mm_cinit ((char *) 0));       /* indicate not a pickup              */
 }
 
-mm_sbend ()                       /* done with submission               */
+int mm_sbend ()                       /* done with submission               */
 {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "mm_sbend ()");
@@ -97,7 +98,7 @@ mm_sbend ()                       /* done with submission               */
     return (mm_cend (OK));
 }
 
-mm_pkinit (chname)                /* initialize local pickup            */
+int mm_pkinit (chname)                /* initialize local pickup            */
     char chname[];                /* name of channel being picked up    */
 {
 #ifdef DEBUG
@@ -106,7 +107,7 @@ mm_pkinit (chname)                /* initialize local pickup            */
     return (mm_cinit (chname));
 }
 
-mm_pkend ()                       /* done with pickup                   */
+int mm_pkend ()                       /* done with pickup                   */
 {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "mm_pkend ()");
@@ -115,7 +116,7 @@ mm_pkend ()                       /* done with pickup                   */
 }
 /*                    PROCESS REPLIES                                 */
 
-mm_rrply (valstr, len)           /* get a reply from remote process    */
+int mm_rrply (valstr, len)           /* get a reply from remote process    */
 struct rp_bufstruct *valstr;      /* where to stuff copy of reply text  */
 int    *len;                      /* where to indicate text's length    */
 {
@@ -166,7 +167,7 @@ int    *len;                      /* where to indicate text's length    */
 }
 
 
-mm_wrply (valstr, len)           /* pass a reply to local process      */
+int mm_wrply (valstr, len)           /* pass a reply to local process      */
 struct rp_bufstruct *valstr;      /* string describing reply            */
 int     len;                      /* length of the string               */
 {
@@ -179,7 +180,7 @@ int     len;                      /* length of the string               */
 }
 /*         READ DATA FROM LOCAL MAIL (SUB)PROCESS                     */
 
-mm_rrec (linebuf, len)           /* read one "record"                    */
+int mm_rrec (linebuf, len)           /* read one "record"                    */
 char   *linebuf;		  /* where to stuff the text              */
 int    *len;                      /* where to stuff the length count      */
 {
@@ -214,7 +215,7 @@ int    *len;                      /* where to stuff the length count      */
 }
 /**/
 
-mm_rstm (buffer, len)            /* read buffered block of text        */
+int mm_rstm (buffer, len)            /* read buffered block of text        */
 char   *buffer;			  /* where to stuff the text            */
 int    *len;                      /* where to stuff count               */
 {
@@ -255,7 +256,7 @@ int    *len;                      /* where to stuff count               */
 }
 /*            WRITE DATA TO LOCAL MAIL (SUB)PROCESS                   */
 
-mm_wrec (buf, len)		  /* write a record/packet              */
+int mm_wrec (buf, len)		  /* write a record/packet              */
 char    *buf;			  /* chars to write                     */
 int     len;                      /* number of chars to write           */
 {
@@ -282,7 +283,7 @@ int     len;                      /* number of chars to write           */
 }
 /**/
 
-mm_wstm (buffer, len)            /* write next part of char stream     */
+int mm_wstm (buffer, len)            /* write next part of char stream     */
 char    *buffer;		  /* chars to write                     */
 int     len;                      /* number of chars to write           */
 {
@@ -312,7 +313,7 @@ int     len;                      /* number of chars to write           */
 }
 /*            LOCAL MAIL PROCESS SYSTEM CREATE/DELETE CALLS           */
 
-LOCFUN
+LOCFUN int
 	mm_cinit (chname)        /* get a mail process                 */
 char    chname[];                 /* name of channel to invoke          */
 {
@@ -378,7 +379,7 @@ char    chname[];                 /* name of channel to invoke          */
     return (RP_OK);
 }
 
-LOCFUN
+LOCFUN int
 	mm_cend (type)           /* get rid of local mail process      */
 int     type;
 {

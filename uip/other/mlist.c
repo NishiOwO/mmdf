@@ -5,6 +5,8 @@
 #include <sys/stat.h>
 #include <signal.h>
 #include <stdio.h>
+#include "ml_send.h"
+#include "mm_io.h"
 
 /*
  *      Program to perform list additions and requests

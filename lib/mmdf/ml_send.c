@@ -2,6 +2,8 @@
 #include "mmdf.h"
 #include "cnvtdate.h"
 #include <pwd.h>
+#include "ml_send.h"
+#include "mm_io.h"
 
 /*
  *     MULTI-CHANNEL MEMO DISTRIBUTION FACILITY  (MMDF)
@@ -90,7 +92,7 @@ static char *username;
 
 /**/
 
-ml_init (ret, sndr, from, sub)    /* set-up for using submit            */
+int ml_init (ret, sndr, from, sub)    /* set-up for using submit            */
 int     ret,                      /* allow return mail to sender?       */
 	sndr;                     /* include Sender field?              */
 char    *sub,                     /* subject line                       */
@@ -164,40 +166,40 @@ char    *sub,                     /* subject line                       */
 /**/
 
 
-ml_to ()			  /* ready to specify To: address       */
+int ml_to ()			  /* ready to specify To: address       */
 {
     fieldname = "To:";
     return (OK);
 }
 
-ml_cc ()			  /* ready to specify CC: address       */
+int ml_cc ()			  /* ready to specify CC: address       */
 {
     fieldname = "Cc:";
     return (OK);
 }
 
-ml_adr (address)		  /* a destination for the mail         */
+int ml_adr (address)		  /* a destination for the mail         */
 char    address[];
 {
     ml_sndhdr (fieldname, address);
     return (OK);
 }
 
-ml_aend ()			  /* end of addrs                       */
+int ml_aend ()			  /* end of addrs                       */
 {
     if (ml_state == ML_HEADER) 
 	mm_wtxt("\n", 1);
     return (OK);
 }
 
-ml_tinit ()                     /* ready to send text                 */
+int ml_tinit ()                     /* ready to send text                 */
 {
     if (ml_state == ML_HEADER)
 	ml_state = ML_TEXT;
     return (OK);
 }
 
-ml_sndhdr (name, contents)
+int ml_sndhdr (name, contents)
 char *name;
 char *contents;
 {
@@ -210,7 +212,7 @@ char *contents;
     return(OK);
 }
 /**/
-ml_sender (cmpnt, name)
+void ml_sender (cmpnt, name)
 char    cmpnt[],
 	name[];
 {
@@ -259,7 +261,7 @@ char    cmpnt[],
 }
 
 /*  */
-ml_file (infp)                    /* send a file to the message         */
+int ml_file (infp)                    /* send a file to the message         */
 register FILE  *infp;             /* input stdio file stream pointer    */
 {
     register short len;
@@ -285,7 +287,7 @@ register FILE  *infp;             /* input stdio file stream pointer    */
     return (OK);
 }
 
-ml_txt (text)                     /* some text for the body             */
+int ml_txt (text)                     /* some text for the body             */
 char text[];                      /* the text                           */
 {
     if (ml_state != ML_TEXT)
@@ -301,7 +303,7 @@ char text[];                      /* the text                           */
 /**/
 
 
-ml_end (type)			  /* message is finished                */
+int ml_end (type)			  /* message is finished                */
 int     type;                     /* normal ending or not               */
 {
     struct rp_bufstruct thereply;
@@ -328,7 +330,7 @@ int     type;                     /* normal ending or not               */
 }
 /**/
 
-ml_1adr (ret, sndr, from, sub, adr)
+int ml_1adr (ret, sndr, from, sub, adr)
 				  /* all set-up overhead in 1 proc      */
 int     ret,                      /* allow return mail to sender?       */
 	sndr;                     /* include Sender field?              */

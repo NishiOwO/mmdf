@@ -8,6 +8,7 @@
 #include "cnvtdate.h"
 #include <signal.h>
 #include <sys/stat.h>
+#include "mm_io.h"
 
 extern char     *locname;
 extern char     *locdomain;

@@ -1,5 +1,6 @@
 #include "util.h"
 #include "mmdf.h"
+#include "ml_send.h"
 
 /*
  *     MULTI-CHANNEL MEMO DISTRIBUTION FACILITY  (MMDF)
@@ -103,7 +104,7 @@ LOCVAR struct rp_construct
 };
 /* ****************  (qu_)  DELIVER I/O SUB_MODULE  ***************** */
 
-qu_init (argc, argv)              /* get ready to process Deliver mail  */
+int qu_init (argc, argv)              /* get ready to process Deliver mail  */
 int       argc;                     /* NOTE: other modules have no args   */
 char   *argv[];
 {
@@ -155,7 +156,7 @@ char   *argv[];
     return (RP_OK);
 }
 
-qu_end (type)                     /* done performing Deliver function   */
+int qu_end (type)                     /* done performing Deliver function   */
 int     type;                     /* ignore type of termination         */
 {
 #ifdef DEBUG
@@ -174,7 +175,7 @@ int     type;                     /* ignore type of termination         */
     return (RP_OK);
 }
 
-qu_pkinit ()                      /* get ready to receive mail          */
+int qu_pkinit ()                      /* get ready to receive mail          */
 {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "qu_pkinit");
@@ -183,7 +184,7 @@ qu_pkinit ()                      /* get ready to receive mail          */
     return (RP_OK);
 }
 
-qu_pkend ()                       /* done receiving mail                */
+int qu_pkend ()                       /* done receiving mail                */
 {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "qu_pkend");
@@ -193,7 +194,7 @@ qu_pkend ()                       /* done receiving mail                */
 }
 /**/
 
-qu_minit (msgfile, dohdr)         /* set up for next message            */
+int qu_minit (msgfile, dohdr)         /* set up for next message            */
 char   msgfile[];                 /* name of message to be processed    */
 int     dohdr;                    /* perform address massaging          */
 {
@@ -258,7 +259,7 @@ int     dohdr;                    /* perform address massaging          */
     return (RP_OK);
 }
 
-qu_mend ()                        /* end of current message             */
+int qu_mend ()                        /* end of current message             */
 {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "qu_mend");
@@ -278,7 +279,7 @@ qu_mend ()                        /* end of current message             */
 }
 /*  ************  TELL DELIVER OF RESULT ****************** */
 
-qu_wrply (valstr, len)           /* pass a reply to local process      */
+int qu_wrply (valstr, len)           /* pass a reply to local process      */
 RP_Buf   *valstr;    /* structure containing reply         */
 int     len;                      /* length of the structure            */
 {
@@ -306,7 +307,7 @@ int     len;                      /* length of the structure            */
 }
 /*^L  ************  TELL DELIVER OF RESULT ****************** */
 
-qu_wbrply (valstr, len, addr, ba_adr)  /* pass a reply to local process */
+int qu_wbrply (valstr, len, addr, ba_adr)  /* pass a reply to local process */
      RP_Buf   *valstr;                 /* structure containing reply    */
      int     len;                      /* length of the structure       */
      char *addr, *ba_adr;
@@ -364,7 +365,7 @@ qu_wbrply (valstr, len, addr, ba_adr)  /* pass a reply to local process */
 
 /*                    BASIC I/O WITH DELIVER                          */
 
-qu_rrec (linebuf, len)           /* read a record from Deliver         */
+int qu_rrec (linebuf, len)           /* read a record from Deliver         */
 char   *linebuf;                  /* where to stuff the address         */
 int      *len;                      /* where to stuff address length      */
 {
@@ -409,7 +410,7 @@ int      *len;                      /* where to stuff address length      */
 }
 /**/
 
-qu_rsinit (theseek)             /* initialize stream (text) position  */
+void qu_rsinit (theseek)             /* initialize stream (text) position  */
 long theseek;
 {
     extern long lseek ();
@@ -428,12 +429,12 @@ long theseek;
 	lseek (qu_txfd, theseek, 0);
 }
 
-qu_fileno ()                      /* return fd for message text file    */
+int qu_fileno ()                      /* return fd for message text file    */
 {
     return (qu_txfd);
 }
 
-qu_rstm (buffer, len)            /* read next part of message stream   */
+int qu_rstm (buffer, len)            /* read next part of message stream   */
 char   *buffer;                   /* where to stuff next part of text   */
 int    *len;                      /* where to stuff length of part      */
 {
@@ -495,7 +496,7 @@ int    *len;                      /* where to stuff length of part      */
 }
 /**/
 
-qu_wrec (str, len)               /* write a record to Deliver          */
+int qu_wrec (str, len)               /* write a record to Deliver          */
 char    *str;
 int     len;
 {

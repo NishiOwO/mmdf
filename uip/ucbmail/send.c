@@ -8,9 +8,12 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.4 $
+ *  $Revision: 1.5 $
  *
  *  $Log: send.c,v $
+ *  Revision 1.5  1998/05/25 20:11:34  krueger
+ *  *** empty log message ***
+ *
  *  Revision 1.4  1986/01/14 16:29:24  galvin
  *  Initial revision
  *
@@ -51,6 +54,7 @@ static char *sccsid = "@(#)send.c	5.2 (Berkeley) 6/21/85";
 #include <sys/stat.h>
 
 #include "./mmdf.h"
+#include "ml_send.h"
 
 /*
  * Mail -- a mail program

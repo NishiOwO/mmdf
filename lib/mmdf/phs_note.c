@@ -27,7 +27,7 @@ LOCVAR char
 	    wrmsg[] =   "%s/%s/wmsg",
 	    wrend[] =   "%s/%s/wend";
 /**/
-phs_note (thechan, phase)               /* make a timestamp */
+int phs_note (thechan, phase)               /* make a timestamp */
     Chan *thechan;
     int phase;
 {
@@ -105,7 +105,7 @@ phs_note (thechan, phase)               /* make a timestamp */
 }
 /**/
 
-phs_msg  (thechan, naddrs, len)     /* note trasmission of 1 message    */
+void phs_msg  (thechan, naddrs, len)     /* note trasmission of 1 message    */
     Chan *thechan;
     int naddrs;
     long len;
@@ -128,7 +128,7 @@ phs_msg  (thechan, naddrs, len)     /* note trasmission of 1 message    */
 }
 /**/
 
-phs_end  (thechan, status)      /* note end of session */
+void phs_end  (thechan, status)      /* note end of session */
     Chan *thechan;
     int status;                 /* mmdf end value */
 {

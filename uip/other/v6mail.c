@@ -4,6 +4,7 @@
 #include <pwd.h>
 #include <signal.h>
 #include <sys/stat.h>
+#include "mm_io.h"
 
 /*  Upgrade to use MMDF Submit; 10 Nov. 1978; David H. Crocker
  *    1 Dec 78 Dave Crocker:  add mail-reading, approx like old "mail"

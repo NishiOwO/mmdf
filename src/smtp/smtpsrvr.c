@@ -31,6 +31,7 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #endif /* HAVE_LIBWRAP */
+#include "mm_io.h"
 
 #include "ns.h"
 

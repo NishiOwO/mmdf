@@ -27,6 +27,7 @@
 #include "mmdf.h"
 #include <pwd.h>
 #include <sys/stat.h>
+#include "ml_send.h"
 
 extern int errno;
 extern int sentprotect;

@@ -34,6 +34,7 @@
 #else /* HAVE_SYS_FILE_H */
 #  include <fcntl.h>
 #endif /* HAVE_SYS_FILE_H */
+#include "ml_send.h"
 
 
 #define EX_OK	0 /* everything successful */

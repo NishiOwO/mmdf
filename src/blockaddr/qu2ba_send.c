@@ -40,6 +40,8 @@
 #include "ch.h"
 #include "ap.h"
 #include <pwd.h>
+#include "ml_send.h"
+#include "mm_io.h"
 
 extern struct ll_struct   *logptr;
 extern Chan *chanptr;

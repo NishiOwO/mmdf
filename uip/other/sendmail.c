@@ -7,6 +7,7 @@
 #include "util.h"
 #include "mmdf.h"
 #include "cnvtdate.h"
+#include "mm_io.h"
 
 extern	char	*locname;
 extern	char	*chndfldir;
