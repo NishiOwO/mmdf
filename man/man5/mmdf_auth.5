@@ -1,0 +1,31 @@
+.TH MMDF_AUTH 5 "23 November 98"
+.SH NAME
+.SH SYNOPSIS
+Configuring MMDF Authorisation
+.SH DESCRIPTION
+
+.SH STEPS
+.NH S1
+  1) search key 'host_out' in table 'chan_out->outdest'
+     if found compare a) check if value is empty
+                      b) 'chan_in->chan_name' with value
+                      c) 'host_in'            with value
+.NH S1
+  2) search key 'host_in' in table 'chan_in->insource'
+     if found compare a) check if value is empty
+                      b) 'chan_out->chan_name' with value
+                      c) 'host_out'            with value
+.NH S1
+  3) search key 'chan_in->chan_name' in table 'chan_out->outsource'
+     if found compare a) check if value is empty
+                      b) 'host_out'            with value
+.NH S1
+  4) search key 'chan_out->chan_name' in table 'chan_in->indest'
+     if found compare a) check if value is empty
+                      b) 'host_in'             with value
+.NH G
+
+.PP
+.SH FILES
+.SH "SEE ALSO"
+\fIConfiguring MMDF Authorisation\fR

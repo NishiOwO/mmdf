@@ -1,0 +1,1159 @@
+.ds M \fBMMDFII\fR
+.TH MMDFTAILOR 5 "21 November 1998"
+.SH NAME
+mmdftailor \- MMDF runtime tailoring 
+.SH SYNOPSIS
+MMDF tailoring file
+.SH DESCRIPTION
+
+.bp
+.NH
+Local Names and Site-Specific Information
+.PP
+
+.B MLNAME, MLOCHOST
+"
+.I <string>
+"
+.RS
+The MLNAME is the name of your machine or site  as  you
+wish  it  to be known throughout the network.  This may be a
+generic host name used to hide a number of local hosts.   If
+a  generic  host name, internal hosts will be differentiated
+by MLOCMACHINE (described below).
+.RE
+
+.B MLDOMAING
+"
+.I  <string>
+"
+.RS
+The MLDOMAIN line gives your full local domain.   This,
+combined with the MLNAME (and possibly the MLOCMACHINE) will
+give you the full network address.
+.RE
+
+.RS
+The host knows itself as 
+.I MLNAME.MLDOMAIN
+The message is build upon
+.I MLOCMACHINE.MLNAME.MLDOMAIN
+.RE
+
+.B MLOCMACHINE
+"
+.I <string>
+"
+.RS
+The MLOCMACHINE line is often set to the  null  string,
+unless  you are a large transparent site.  The normal use of
+this is for a site which has several machines but wishes the
+machines themselves to appear as one address.
+.RE
+
+.B MSIG
+"
+.I "<Signature>"
+"
+.RS
+The string specified in MSIG line is the signature that MMDF will use
+when notifying senders of mail delivery problems. This should be
+something that indicates a message agent was responsible.
+.br
+\fIMLNAME\fR.\fIMLOCMACHINE\fR \fIMSIG\fR <\fIMLOGIN\fR@\fIMLNAME\fR.\fIMLOCMACHINE\fR>
+.RE
+
+.B MLOGIN
+.I <mmdf-loginname>
+default:
+.I mmdf
+.RS
+MLOGIN is the user that owns the MMDF transport system.
+.RE
+
+.B MSUPPORT
+"
+.I <email-address>
+"
+.RS
+MSUPPORT is the address to which to send mail that MMDF
+can't cope with (i.e. that MMDF can't deliver or return to
+sender). Be sure MSUPPORT is a legal address!
+.RE
+.PP
+
+.B AUTHREQUEST
+"
+.I <email-address>
+"
+.RS
+AUTHREQUEST is the address to which users should mail if they have
+questions about why a message was not authorized for delivery. It is
+also used as the sender of authorization warning messages. It is not
+used if authorization is not enabled on some channel.
+.RE
+
+.B MMAILID
+.I < 0 | 1 >
+.RS
+The  MMAILID line is used to enable the use of the the Mail-
+IDs facility of \*M which disassociates mail addresses from login names.
+.RE
+
+.B MADDIPADDR
+.I < 0 | 1 >
+.RS
+enable adding IP-address of sending host  to the Received line.
+.RE
+
+.B MADDIPNAME
+.I < 0 | 1 >
+.RS
+enable adding real IP-name of sending host  to the Received line.
+.RE
+
+.br
+
+.NH 2
+Directory Tailoring
+.PP
+
+.B MLOGDIR
+.I <directory>
+default:
+.I @MMDFLOGDIR@
+.RS
+MLOGDIR  is the default directory in which the log files are
+kept.
+.RE
+
+.B MPHSDIR
+.I <directory>
+default:
+.I @MM_PHASEDIR@
+.RS
+MPHSDIR is the directory in which  the  timestamps  for  the
+channels  are  made, showing what state of activity they are
+in.
+.RE
+
+.B MTBLDIR
+.I <directory>
+default:
+.I @MM_TBLDBM@
+.RS
+MTBLDIR is the default directory for the table files.
+.RE
+
+.B MQUEDIR
+.I <directory>
+default:
+.I @MMDFPSOOLDIR@
+.RS
+MQUEDIR is the parent directory for the various  queues  and
+address directories.
+.RE
+
+.B MLCKDIR
+.I <directory>
+default:
+.I /tmp/mmdf
+.RS
+MLCKDIR  is  the  directory where the locking of files takes
+place. This depends on what style of  locking  you  are
+doing.
+.RE
+
+.B MTEMPT, MTMPT
+.I <directory>
+default:
+.I tmp/
+(see conf.c)
+.RS
+MTEMPT is the temporary files directory; if not a full path-
+name, it is taken relative to MQUEDIR.
+.RE
+
+.B MADDRQ
+.I <directory>
+default:
+.I addr/
+(see conf.c)
+.RS
+MADDRQ as above, but holds the address files.
+.RE
+
+.B MMSGQ
+.I <directory>
+default:
+.I msg/
+(see conf.c)
+.RS
+MMSGQ as above, used for the message texts.
+.RE
+
+.B MCMDDIR
+.I <directory>
+default:
+.I @MMDFPREFIX@
+.RS
+MCMDDIR is the default commands directory where the  various
+\*M commands  live;  any command that does not have a full path-
+name is taken relative to this directory.
+.RE
+
+.B MCHNDIR
+.I <directory>
+default:
+.I @MMDFCHANDIR@
+.RS
+MCHNDIR is where the channel programs are to be found.
+.RE
+
+.B MQUEPROT
+.I <mode>
+default:
+.I 0700
+.RS
+The MQUEPROT gives the protection mode  in  octal  that  the
+parent of the MQUEDIR directory will have.
+.RE
+
+.NH
+Database Files
+
+.B MDBM
+.I <dbmfile>
+default:
+.I @MM_TBLDBM@
+.RS
+The  MDBM  line  tells  MMDF where to find the database
+file containing the associative store.  Dbm style  databases
+get  their  speed and flexibility by dynamic hashing and can
+get quite large.  By default, the file  is  located  in  the
+MTBLDIR  dirctory,  but it might need to be relocated due to
+its size.
+.RE
+
+.NH
+The Log Files
+.PP
+
+.B MMSGLOG
+.I <filename>
+.B level=
+<
+.I FAT
+|
+.I TMP
+|
+.I GEN
+|
+.I BST
+|
+.I FST
+|
+.I PTR
+|
+.I BTR
+|
+.I FTR
+>
+.RS
+.DS
+FAT - Logging of fatal errors only.
+.br
+TMP - Temporary errors and fatal errors.
+.br
+GEN - Include the generally interesting diagnostics.
+.br
+BST - Show some basic statistics.
+.br
+FST - Full statistics.
+.br
+PTR - Give a program trace listing of what is happening.
+.br
+BTR - Give more detailed tracing.
+.br
+FTR - Give every diagnosic you can.
+.br
+.DE
+The last two conditions (BTR and FTR) are enabled only if you have
+compiled the MMDF system with DEBUG #define'd. This amount of tracing
+can quickly fill up log files. During normal operation, the logging
+level should be set somewhere between GEN and FST.
+.I GEN enable when compiling with at least DEBUG
+enabled (./configure --mmdf-debug=0) 
+.br
+To be able to get really all trace information DEBUG must be set to 2
+(./configure --mmdf-debug=2)
+.RE
+.br
+.br
+.B MCHANLOG
+.br
+.B PHLOG
+.br
+.B AUTHLOG
+.br
+
+.B MTBL
+.I name [, <options>=<value>[,...]]
+.RS
+.B name=
+.RS
+A name by which the table is known.
+.RE
+.PP
+.B file=
+.RS
+A file from which the contents of the table are built up.
+.RE
+.B show=
+"
+.I "description text"
+"
+.RS
+A display line,
+which is used for pretty printing purposes to explain what
+the table is all about.
+.RE
+.B flags=
+<
+.I file
+|
+.I dbm
+|
+.I ns
+|
+.I nis
+|
+.I abort
+|
+.I channel
+|
+.I domain
+|
+.I partial
+|
+.I route
+>
+.RS
+The flags parameter is used to indicate additional
+properties about the table being defined.
+This can be specified more than once for a given table to set
+more than one flag.
+Currently this is used to specify various table options - source type,
+nameserver lookup parameters, and control of partial lookups.
+.sp
+There are four source types defined: ``file'', ``dbm'', ``ns'' and ``nis''.
+\fIfile\fR means that the table comes from a sequentially
+read file (the default).
+.br
+\fIdbm\fR indicates that the table is in the MMDF hashed
+database built with \fIdbmbuild\fR.
+.br
+\fIns\fR indicates that the table data is obtained by making
+queries on a nameserver.  
+.br
+\fInis\fR means that the table data is obtained by making
+queries on a nis-server.  
+.sp
+In the case of an ns-type table,
+the ``flags'' field will also specify the type of nameserver lookup.
+Currently ``domain'' and ``channel'' are supported.
+.br
+\fIDomain\fR indicates a lookup of the given address in the domain
+specified by the dmn= parameter of the domain definition (e.g. for FOO.ARPA,
+look up FOO in dmn=``ARPA'' or FOO.ARPA in dmn=``'').
+.br
+\fIChannel\fR indicates a lookup of the given fully-qualified domain
+name to determine the address(es) to use in delivering via SMTP.
+.br
+(Note that there used to be a lookup type of ``root''.  This type no
+longer exists--instead use a flags setting of ``domain''
+in the table definition with a domain definition parameter of dmn=``''.)
+.sp
+When a domain is looked up in a domain table and no exact match exists, the
+optional flag ``route'' determines whether a search should be done on
+successive subdomains of the domain.  If a subdomain match is found, the
+right-hand-side of the table entry is used as a route to the domain.  
+For example,
+the top domain table entry UKY.EDU:RELAY.UKY.EDU would cause routing via
+RELAY.UKY.EDU for A.CS.UKY.EDU if the ``route'' flag were set.  This flag
+essentially enables one table entry to act as a wildcard for a gateway to an
+entire subdomain.  (Note that ``route'' used to be the default for all domain 
+tables.  To get the same behavior, you must now explicity set the
+``route'' flag.)
+.sp
+Generally, the MDMN ``dmn='' setting determines what domain tables will be
+searched when looking up a domain name.  However, if an exact or "route-style"
+match cannot be made in the standard domain tables, the optional flag
+``partial'' controls whether the domain should be looked up in other domain
+tables.  For example, if domain tables ARPA
+and EDU have the ``partial'' flag set, an address of FOO
+will generate lookups for FOO.ARPA
+and FOO.EDU.  The ``partial'' flag is often used for the local domain table
+to allow users to omit the full domain specification when referring to local
+machines.  (Note that ``partial'' used to be the default for dbm-style tables.
+To get the same behavior, you must now explicitly set the ``partial'' flag.)
+.sp
+Normally, when looking up a domain name in an ns-type domain table and a
+timeout occurs, MMDF looks through the list of domains for other tables in
+which to try the lookup.  To force MMDF to not try other tables after a
+timeout, use the optional flag ``abort''.  ``Abort'' would normally be used
+when this ns-type domain table is the only reliable source of information
+about this domain (and when results would be confusing or incorrect if
+alternate domain tables were consulted occasionally).
+.PP
+The following tables are provided automatically via chan.c
+and the tailoring package when Mail-IDs are enabled (see section 3.2 above):
+.RE
+.RS
+.IP users 10
+A mapping of usernames to Mail-IDs
+.IP mailids 10
+A mapping of Mail-IDs to usernames
+.br
+But the definition of these two tables may be changed by
+.br
+.RE
+.DE
+MTBL  users,   file="users.nis.map",   flags=nis
+.br
+MTBL  mailids, file="mailids.nis.map", flags=nis
+.DS
+.RE
+.RE
+.br
+
+.B ALIAS
+.I table=<table>, [trusted],[nobypass],[public]
+.RS
+Alias definitions are used to tell the system about the
+various sources of alias information. \*M can have more than
+one alias file. In addition, each alias source has the
+option of being trusted and the option of preventing
+bypassing (via the ~\ on the front of an address).
+.PP
+Making an alias file trusted is a serious decision. A
+trusted alias file can direct mail to be delivered to any
+file or process using the permissions of any user on the
+system. It should only be modifiable by the Superuser, or
+guarded as such. Typically there is only one or two trusted
+alias files per system.
+.PP
+The alias tables are searched in the order they are
+defined. When a hit is made, no further searching is done
+for additional hits in later tables.
+.PP
+.DE
+\fItable\fR     Specifies name of the table to be associated with this
+alias entry. 
+.PP
+\fItrusted\fR   The entries in the table will be allowed to cause
+delivery to files and pipes. 
+.PP
+\fInobypass\fR The ``address'' alias bypass mechanism will not work on
+this file. 
+.PP
+\fIpublic\fR    The aliases defined in this file will be visible to the
+smtpsrvr EXPN command and to non privileged users of malias(1).
+.DS
+.PP
+.RE
+
+.B MDMN
+.I name [, <option>=<value>[,...]]
+.RS
+.B name 
+.RS
+A name by which to refer to this domain definition.
+.RE
+.B dmn=
+"
+.I "domainname"
+"
+.RS
+The full domain name (x.y.z...) that specifies this domain.
+.RE
+.B show=
+"
+.I "description text"
+"
+.RS
+A display line, which is used for pretty printing purposes to explain
+what the domain is all about.
+.RE
+.B table=
+.I <Table>
+.RS
+The associated table entry of hosts that are accessible on this
+channel. If the specified table has not been previously defined,
+it will be defined with the same name, file, and show as for this
+channel. Warning: do not define two channels that process the
+same queue that use different tbl= tables. (Doing so results in queue
+structure problems).
+.RE
+.RE
+.br
+
+.PP
+.B MCHN
+.I name [, <option>=<value>[,...]]
+.RS
+.B name= 
+The name of the channel.
+.PP
+.B show= 
+"
+.I "description text"
+"
+.RS
+A display line, which is used for pretty printing purposes to
+explain what the channel is used for.
+.RE
+.B que=
+<
+.I directory
+>
+.RS
+The queue directory into which messages for this channel should be
+queued.
+.RE
+.br
+.B tbl= 
+<
+.I table
+>
+.RS
+The associated table entry of hosts that are accessible on this
+channel. If the specified table has not been previously defined,
+it will be defined with the same name, file, and show as for this
+channel. Warning: do not define two channels that process the
+same queue that use different tbl= tables. (Doing so results in queue
+structure problems).
+.RE
+.B pgm= 
+<
+.I channel-program
+>
+.RS
+The channel program to be invoked for this channel.
+.RE
+.B mod=
+<
+.I bak
+,
+.I host
+,
+.I imm
+,
+.I pick
+,
+.I psv
+,
+.I reg
+,
+.I send
+,
+.I esmtp
+>
+.RS
+The mode in which this channel works. If several values are
+selected, they are cumulative. Normally, one of ``reg'',
+``bak'',``psv'', or ``imm'' is selected. ``Pick''and ``send''
+are usually both selected on two-way channels such as phone or pobox.
+The values are:
+.br
+.I reg
+.RS
+regular mode (the default). The channel may be explicitly invoked
+by running 
+.I deliver.
+.RE
+.I bak
+.RS
+channel may be invoked only by the background deliver daemon.
+.RE
+.I psv
+.RS
+the channel is passive; it is a pickup type channel (e.g. pobox).
+.RE
+.I imm
+.RS
+this channel may be started up immediately; there is no need to
+batch up mail.
+.RE
+.I pick
+.RS
+This channel may pick up mail from the remote host.
+.RE
+.I send
+.RS
+This channel may send mail to the remote host.
+.RE
+.I host
+.RS
+When sorting queued messages, also sort by host to minimize the
+number of reconnections to each destination.
+.RE
+.I esmtp
+.RS
+Enable ESMTP transfer.
+.br
+(\fBNote:\fR ESMTP support is not yet included in version up to 2.44)
+.RE
+.RE
+.br
+.br
+.B ap=
+<
+.I 733
+,
+.I 822
+,
+.I big
+,
+.I jnt
+,
+.I nodots
+,
+.I nosrcrt
+,
+.I rejsrcrt
+,
+.I same
+,
+.I try
+>
+.RS
+The address-parser type to be used for reformatting headers on
+messages going out on this channel. The settings of ap control
+reformatting. If none is selected, the channel will not reformat.
+If several values are selected, they are cumulative:
+.br
+.I same
+.RS
+selects no address reformatting
+.RE
+.I 822
+.RS
+selects RFC 822 style source routes (e.g. @A:B@C)
+.RE
+.I 733
+.RS
+selects % style (JNT) source routes (e.g. B%C@A)
+.RE
+.I big
+.RS
+selects NRS hierarchy ordering (for the UK)
+.RE
+.I nodots
+.RS
+selects output of leftmost part of domain names (e.g. A in A.B.C)
+for sites that can't handle domains (usually used in
+conjunction with `known=' (described below) to hide domain names
+behind a smart relay).
+.RE
+.I try
+.RS
+indicates that the header parser should try to rewrite addresses for
+ this channel (if selected by one of the other ap= options) but should
+ ignore any nameserver timeouts that occur. If a nameserver timeout
+ occurs, the original (unrewritten) address is used and a warning is
+ inserted into the header.
+.RE
+.I jnt
+.RS
+is equivalent to ap=733 + ap=big
+.RE
+.I nosrcrt
+.RS
+removes routing information from the address.
+.RE
+.I rejsrcrt
+.RS
+Will reject the address, if it contains any routing information.
+.RE
+.RE
+
+.B lname= 
+"
+.I <string>
+"
+.RS
+This specifies a name overriding the default MLNAME value when used in
+this channel. This is the name by which the local host is known to
+hosts accessed by this channel. This is used when the channel should
+have non-standard values for the local domain. If locname = `UCL-CS'
+and locdomain = `AC.UK', then for an arpa smtp channel, one would set
+the parameters ldomain = `ARPA' (and, implicitly, lname =
+`UCL-CS'). All local references in this channel would be mapped to
+UCL-CS.ARPA if reformatting is used. For this mapping to take place,
+domain lookups of the various names by which the local host is known
+must all resolve to locname.locdomain. For example, the line
+"UCL-CS:UCL-CS.AC.UK" must appear in both the ARPA and AC.UK domain
+tables.
+.RE
+.B ldomain= 
+"
+.I <string>
+"
+.RS
+As above, but overriding the value of MLDOMAIN. See the example above.
+.RE
+.B host= 
+"
+.I <string>
+"
+.RS
+The name of the host that is being contacted by this channel,
+usually used in the phone and pobox channels. (Also the name of
+the relay host when all mail to hosts in this channel's table gets
+relayed to one host.) This is required on the badusers and badhosts
+pseudo-channels. It is also required to be set to the local host
+for the list channel.
+.RE
+.B user= 
+"
+.I <string>
+"
+.RS
+The login name of the account which uses the slave program to pick up
+mail (used for the pobox channel only).
+.RE
+.B scr= 
+"
+.I <string>
+"
+.RS
+The name of the dialing script file to be used by the phone channel.
+.RE
+.B trn= 
+.RS
+The name of the transcript file to be used for this channel; this
+currently applies only to PhoneNet, and defaults to DEFTRAN (usually
+ph.trn).
+.RE
+.B poll= 
+.RS
+The frequency of polling the remote machine. A poll on a two-way
+channel (such as the phone channel) is used to see if any mail is
+waiting to be picked up from the remote host. A value of 0 disables
+polling; a value of -1 requests polling to be done every time the
+channel is started up. Any other value is the number of 15-minute
+intervals to wait between polls. Note that the value of poll is
+ignored if any mail is waiting to be sent; in this case, a connection
+is always attempted.
+.RE
+.B insrc= 
+.I <Table>
+.RS
+Table of hosts controlling message flow. See the paper Configuring
+MMDF Authorisation by Steve Kille for details.
+.RE
+.B outsrc= 
+.I <Table>
+.RS
+See insrc, above.
+.RE
+.B indest= 
+.I <Table>
+.RS
+See insrc, above.
+.RE
+.B outdest= 
+.I <Table>
+.RS
+See insrc, above.
+.RE
+.B known= 
+.I <Table>
+.RS
+This is a table of hosts that are known on this channel. If a known
+table is specified and a given host is not in the table, then a relay
+form of the address is used, specifying that the return address goes
+through this host. This conversion occurs after appending
+lname.ldomain (if appropriate--see above). Only the LHS of this table
+is used; the RHS is ignored. The LHS should contain hosts, not
+domains. Typically, channel tables double as ``known tables''. If the
+table is an NS-type table, it must be a domain or top table, not a
+channel table. Be sure that the table also contains your own fully
+specified name (localhost.locdomain). Note that the ``known table''
+must exist. A tailor entry will not define a ``known table'' that has
+not been predefined.
+.RE
+
+.B auth= 
+<
+.I dho
+,
+.I free
+,
+.I hau
+,
+.I inblock
+,
+.I inlog
+,
+.I inwarn
+,
+.I outblock
+,
+.I outlog
+,
+.I outwarn
+>
+.RS
+This specifies the authorisation tests that are made on this
+channel.
+It takes any combination of the following modes:
+.br
+.I free
+.RS
+default, no checking takes place.
+.RE
+.I inlog
+.RS
+log information regarding incoming messages.
+.RE
+.I outlog
+.RS
+log information regarding outgoing messages.
+.RE
+.I inwarn
+.RS
+warn sender of incoming message if his/her authorisation is
+inadequate (the message still goes through).
+.RE
+.I outwarn
+.RS
+as above, but for outgoing messages.
+.RE
+.I inblock
+.RS
+reject incoming messages that have inadequate authorisation.
+.RE
+.I outblock
+.RS
+as above, but for outgoing messages.
+.RE
+.I hau
+.RS
+Host And User control.  Requires both host and user authorisations to
+be acceptable.
+.RE
+.I dho
+.RS
+Direct Host Only.
+When applying host controls, the message must be associated with a
+user local to that host (i.e. no source routes).
+.RE
+.RE
+
+.B confstr= 
+"
+.I <string>
+"
+.RS
+This is a string that is used by some channels for
+specifying the invocation of another program.
+There is a form of macro expansion in this string,
+so that it can include the target address,
+the return address, etc.  Refer to the man pages describing specific channels
+for more information about using the confstr.  Most channels don't use this
+string currently.
+.RE
+
+
+.B warntime= 
+.I <int>
+.br
+.B failtime= 
+.I <int>
+.br
+.RS
+Overrides the globally set \fBFAILTIME\fR and \fBWARNTIME\fR (see
+below)
+.br
+\fBNote:\fR not yet included in version up to 2.44)
+.RE
+
+.B level= 
+<
+.I FAT
+|
+.I TMP
+|
+.I GEN
+|
+.I BST
+|
+.I FST
+|
+.I PTR
+|
+.I BTR
+|
+.I FTR
+>
+.br
+.B log= 
+.I logfile
+.br
+.B ttl= 
+.I <int>
+.RE
+
+.B MADDID
+.I < 0 | 1 >
+.RS
+If the number is 0, no action is taken. If the number is non-zero,
+then \fIsubmit\fR will add Message-ID: header lines if they are
+missing in messages.
+.RE
+
+.B MLISTSIZE
+<
+.I int
+>
+.RS
+specifies the maximum number of addresses in a message
+before it is considered to have a ``big'' list.
+If there are more than the maximum number of addresses, then
+\*M will not send warning message for waiting mail and will only
+return a ``citation'' for failed mail.  A ``citation'' consists
+of the entire header plus the first few lines of the message
+body.
+.RE
+
+.B MMAXHOPS
+<
+.I int
+>
+default:
+.I 20
+.RS
+specifies the maximum number of Received: or Via:
+lines in a message before it is considered to be looping, and is rejected.
+.RE
+
+.B MWARNTIME
+<
+.I int
+>
+default:
+.I 48
+.RS
+specifies the time in hours that a message may
+remain in a queue before a warning message about delayed
+delivery is sent to the sender.
+.RE
+
+.B MFAILTIME
+<
+.I int
+>
+default:
+.I 96
+.RS
+is the time a message may remain in a queue before
+a failed mail message is sent to the sender and the message is
+purged from the queue.
+.RE
+
+.B MMAXSORT
+<
+.I int
+>
+default:
+.I 300
+.RS
+If the number of items in the queue is less than
+MMAXSORT,
+the messages will be sorted by arrival time and dispatched
+in that order;
+otherwise a message will be dispatched as it is found in the
+directory search.
+.RE
+
+.B MSLEEP
+<
+.I int
+>
+default:
+.I 600
+.RS
+is the length of time in seconds that the background
+delivery daemon sleeps between queue scans.  The following
+causes the daemon to sleep 5 minutes between passes.
+.RE
+
+.B MDELIVER
+"
+.I "path to deliver"
+"
+default:
+.I @MMDFLIBDIR@/deliver
+.RS
+is where the \fIdeliver\fR program lives, and
+.RE
+
+.B MPKUP
+"
+.I "path to pickup"
+"
+default:
+.I @MMDFLIBDIR@/pickup
+.RS
+is the post box pickup program.
+.RE
+
+.B MSUBMIT
+"
+.I "path to submit"
+"
+default:
+.I @MMDFLIBDIR@/submit
+.RS
+tells MMDF where the \fIsubmit\fR program lives.
+.RE
+
+.B MV6MAIL
+"
+.I "path to v6mail"
+"
+default:
+.I @MMDFLIBDIR@/v6mail
+.RS
+is the mail program MMDF should use to return
+undeliverable messages and to send diagnostics.
+It should behave rather like the original Bell \fImail\fR program.
+.RE
+
+.B MDLVRDIR
+"
+.I ""
+"
+default:
+.I <empty>
+.RS
+is the directory in which to deliver mail.
+If this is null, then the user's home directory is used.
+.RE
+
+.B MMBXNAME
+"
+.I
+"
+default:
+.I mailbox
+.RS
+is the name of the mailbox.
+If this is null, then the user's login name is used.
+The following would set \*M to deliver mail to /usr/spool/mail
+with each mailbox named after the user's login name:
+.DS
+MDLVRDIR   "/usr/spool/mail"
+MMBXNAME   ""
+.DE
+The following causes mailbox files to be created
+in the user's home directory:
+.DS
+MDLVRDIR   ""
+MMBXNAME   "mailbox"
+.DE
+.RE
+
+.B MMBXPROT
+.I <mode>
+.RS
+is the protection mode that should be used when
+creating the user's mailbox. Its value is an octal number.  See manual 
+section \fIchmod(1)\fR.
+.RE
+
+.B MMBXPREF
+.I ``\e001\e001\e001\e001\en''
+.br
+.B MMBXSUFF
+.I ``\e001\e001\e001\e001\en''
+.RS
+are two strings that are written
+before and after the message is written into the mailbox.
+These are usually set to a sequence of control-A's.
+.RE
+
+.B MDLV
+<
+.I string
+>
+default:
+.I .maildelivery
+.RS
+is the name of the maildelivery file, used for tailoring the delivery
+for each user. See manual section \fImaildelivery\fR(5).
+.RE
+
+.B MDFLCHAN
+.I <channel>
+.RS
+is used to set the default channel to something other than local.
+.RE
+
+.B NIQUEDIR
+.I <directory>
+.RS
+is set to a directory used for NIFTP temporary files
+hence is only used on NIFTP channels.
+.RE
+
+.SH runtime UUCP setting
+
+.B UUNAME
+"
+.I "hostname"
+"
+.RS
+determines the name that appears in the blank:
+.nf
+From blah <date stuff> remote from ________
+.fi
+.RE
+
+.B UUXSTR
+"
+.I "string"
+"
+default:
+.I
+.RS
+is the command used to invoke the UUCP software.
+In general you may want to tailor the grade level if supported
+and the disabling of immediate attempts (via \-r).
+If you have special per-message  arguments, then you will
+need to modify the UUCP channel itself (e.g. \-a\fIsender\fR).
+.br
+.DS
+UUXSTR  ``uux -''       or
+.br
+UUXSTR  ``uux - -r''    or perhaps
+.br
+UUXSTR  ``uux - -r -gA''
+.DE
+.RE
+
+.SH Dialpackage tailoring (if compiled in.)
+.sp
+
+.SH FILES
+@MM_MMDFTAILOR@
+.br
+config/<site>/conf.c
+
+
+.SH "SEE ALSO"
+tables(5), script(5), logs(5), queue(5)
+.PP
+\fIRuntime Tailoring the MMDF II system\fR

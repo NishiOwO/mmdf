@@ -2,7 +2,7 @@
 README -- MMDFII, Patch Level 44 (alpha), June 1998
 
 	This is the current source tree of the MMDF II 2.45 devellopment version.
-It is based on MMDF II 2.44 patchlevel a9.
+It is based on MMDF II 2.44 patchlevel b2.
 
 CHANGES:
     This release mainly consists of cleanups. But there are also some
@@ -39,6 +39,7 @@ TESTED PLATFORMS:
     + Sun Sparc Ultra 2: Solaris 2.5.1    ()
     + Sun Sparc 10     : Solaris 2.4      (gcc-2.6.3)
     + Sun sparc SUNW,Ultra-4: Solaris 2.6 (cc) 
+    + Sun Sparc Ultra 1     : Solaris 2.6      (gcc-2.8.1)
     + sun4m            : SunOS  4.1.4     (cc, gcc 2.7.2)
     + BSDI             :               thanks to Ran Atkinson
     + FreeBSD 3.0      :               thanks to Mike Muuss

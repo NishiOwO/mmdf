@@ -1,0 +1,99 @@
+#	MMDF Root Makefile
+#
+#
+MMDF_MAJOR_VERSION  = @MMDF_MAJOR_VERSION@
+MMDF_MINOR_VERSION  = @MMDF_MINOR_VERSION@
+
+SHELL           = /bin/sh
+
+BUILD_SUBDIRS	= @CONFIG_SUBDIRS@
+SUBDIR		= @SUBDIRS@
+
+install_prefix	=
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+libdir		= @libdir@
+libexecdir	= @libexecdir@
+bindir		= @bindir@
+sbindir		= @sbindir@
+rcvdir		= @rcvdir@
+datadir		= @datadir@
+sharedstatedir	= @sharedstatedir@
+localstatedir	= @localstatedir@
+mmdfprefix	= @mmdfprefix@
+mmdflibdir	= @mmdflibdir@
+chandir		= @chandir@
+tbldir		= @tbldir@
+sysconfdir	= @sysconfdir@
+srcdir          = @srcdir@
+varprefix       = @varprefix@
+mmdflogdir      = @mmdflogdir@
+mmdfphasedir    = @mmdfphasedir@
+mmdfspooldir    = @mmdfspooldir@
+mmdfdiallog	= @mmdfdiallog@
+
+HOST		= @HOST@
+HOST		= @host@
+HOST_CPU	= @host_cpu@
+HOST_VENDOR	= @host_vendor@
+HOST_OS		= @host_os@
+HOST_ALIAS	= @host_alias@
+SYSTEM		= @SYSTEM@
+SYSTEM		= @system@
+
+SEDFILE		= sed.file
+## 
+## various programs
+##
+INSTALL         = ./install-sh -c
+INSTALL_PROGRAM = ${INSTALL}
+CHOWN		= @CHOWN@
+MMDFLOGIN	= @MMDFLOGIN@
+ROOTLOGIN	= @ROOTLOGIN@
+PGMPROT		= @PGMPROT@
+DIALPROG	= @DIAL@
+
+all: man5/mmdftailor.5
+
+install:
+#	for dir in ${SUBDIR}; do \
+#		(cd $${dir}; make ${MFLAGS} ${MAKEFLAGS} install); done
+
+clean:
+	rm -f man5/mmdftailor.5
+	rm -f ${SEDFILE}
+
+distclean:
+	rm -f */*~ *~ #*# */#*#
+	rm -f Makefile
+
+########################
+#
+${SEDFILE}: Makefile
+	-@echo "creating ${SEDFILE}"
+	-@echo "s/@PREFIX@/${prefix}/g" > ${SEDFILE}
+	-@echo "s/@BINDIR@/${bindir}/g" >> ${SEDFILE}
+	-@echo "s/@SBINDIR@/${sbindir}/g" >> ${SEDFILE}
+	-@echo "s/@LIBEXECDIR@/${libexecdir}/g" >> ${SEDFILE}
+	-@echo "s/@MMDFPREFIX@/${mmdfprefix}/g" >> ${SEDFILE}
+	-@echo "s/@MMDFLIBDIR@/${mmdflibdir}/g" >> ${SEDFILE}
+	-@echo "s/@MMDFCHANDIR@/${chandir}/g" >> ${SEDFILE}
+	-@echo "s/@MMDFTABLEDIR@/${tbldir}/g" >> ${SEDFILE}
+	-@echo "s/@MMDFCFGDIR@/${sysconfdir}/g" >> ${SEDFILE}
+	-@echo "s/@MMDFPSOOLDIR@/${mmdfspooldir}/g" >> ${SEDFILE}
+	-@echo "s/@MMDFLOGDIR@/${mmdflogdir}/g" >> ${SEDFILE}
+	-@echo "s/@MM_PHASEDIR@/${mmdfphasedir}/g" >> ${SEDFILE}
+	-@echo "s/@MM_MMDFTAILOR@/${sysconfdir}/mmdftailor/g" >> ${SEDFILE}
+	-@echo "s/@MM_TBLDBM@/${tbldir}/mmdfdbm/g" >> ${SEDFILE}
+	-@echo "s/@MM_AUTHFILE@/${sysconfdir}/warning/g" >> ${SEDFILE}
+	-@echo "s/@MM_DIALLOG@/${mmdfdiallog}/g" >> ${SEDFILE}
+	-@echo "s/@RESENDPROG@/|${bindir}/resend /g" >> ${SEDFILE}
+	-@echo "s/@SENDPROG@/${bindir}/send/g" >> ${SEDFILE}
+	-@echo "s/@DIALPROG@/${DIALPROG}/g" >> ${SEDFILE}
+	sed 's/\//\\\//g' ${SEDFILE} > dummy
+	sed -e 's/^s\\\/@/s\/@/g' -e 's/@\\\//@\//g' -e 's/\\\/g/\/g/g' \
+		dummy > ${SEDFILE}
+	rm -f dummy
+
+man5/mmdftailor.5: ${SEDFILE} man5/mmdftailor.5.in
+	sed -f ${SEDFILE} man5/mmdftailor.5.in > man5/mmdftailor.5 

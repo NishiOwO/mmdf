@@ -1,0 +1,155 @@
+.TH SENDMAIL 8 "23 November 98"
+.SH NAME
+MMDF \- sendmail replacement for ``real-sendmail''
+.SH SYNOPSIS
+/usr/lib/sendmail 
+.RI "[ " flags " ] [ " address " "  ... " ]"
+.br
+.SH DESCRIPTION
+.I sendmail
+is a send-only sendmail emulator for mail-clients.
+It provides the functionality required for humans and programs to send
+mail via the standard or /usr/bin/mail user agents.
+.PP
+It accepts a mail stream on standard input with recipients specified on the
+command line and synchronously forwards the message to MMDF system.
+
+
+.SH OPTIONS
+Most sendmail options are irrelevent to MMDF sendmail. Those marked ``ignored'' or
+``default'' have no effect on mail transfer.  Those marked ``unsupported''
+are fatal errors.  Those marked ``simulated'' are not errors, but the result
+is for the program to exit with an informative message. A sort of fatal
+non-error.
+.br
+All sendmail options not listed here are ``unsupported''.
+
+.TP
+.B \-ba
+Go into ARPANET mode. All input lines must end with a CR-LF, and
+all messages will be generated with a CR-LF at the end. Also, the ``From:''
+and ``Sender:'' fields are examined for the name of the sender.
+
+.TP
+.B \-bs
+Read SMTP commands from stdin.
+
+.TP
+.B \-bm
+(default) Deliver mail in the usual way.
+
+.TP
+.B \-bv
+(unsupported) Verify names only.
+
+.TP
+.B \-b\fP\fI*\fP
+(unsuppoerted) \fP\fI*\fP anything else then above
+
+.TP
+.B \-f\fP\fIname\fP
+Sets the name of the ``from'' person.
+
+.TP
+.B \-r
+Same as -f.
+
+.TP
+.B \-F\fP\fIfullname\fP
+Set the full name of the sender.
+
+.TP
+.B \-h\fP\fI\fN\fP
+(ignored) Set the hop count to N.
+
+.TP
+.B \-t
+Read  message, searching for recipients. ``To:'', `Cc:'', and ``Bcc:'' lines
+will be scanned for people to send to. Any addresses  in  the  argument list
+will be suppressed.
+
+.TP
+.B \-v
+Go into verbose mode. 
+
+.TP
+.B \-T
+(ignored)
+
+.TP
+.B \-C\fP\fIfile\fP 
+(ignored) Use alternate configuration file.
+
+.TP
+.B \-c
+(ignored)
+
+.TP
+.B \-d\fP\fIX\fP
+(ignored) Set debugging value to X.
+
+.TP
+.B \-e
+(ignored)
+
+.TP
+.B \-i
+(ignored) Ignore dots alone on lines by themselves in incoming
+messages. This should be set if you are reading data from a file.
+
+.TP
+.B \-m
+(ignored) Ignore originator in alias.
+
+.TP
+.B \-n
+(ignored) Do not do aliasing.
+
+.TP
+.B \-o\fP\fIx\fP \fP\fIvalue\fP
+(ignored) Set option \fIx\fP to the specified \fIvalue\fP. This form
+uses single character names only.
+
+.TP
+.B \-s
+(ignored)
+
+.TP
+.B \-B\fP\fItype\fP
+(unsupported) Set the body type to \fItype\fP. Current legal values 7BIT or 8BITMIME.
+
+.TP
+.B \-N \fP\fIdsn\fP
+(unsupported) Set delivery status notification conditions to \fIdsn\fP, which can
+be `never' for no notifications or a comma separated list of the
+values `failure' to be notified if delivery failed, `delay' to be
+notified if delivery is delayed, and `success' to be notified when the
+message is successfully delivered. 
+
+.TP
+.B \-p\fP\fIprotocol\fP
+(unsupported) Set the name of the protocol used to receive the
+message. This can be a simple protocol name such as ``UUCP'' or a
+protocol and hostname, such as ``UUCP:ucbvax''.
+
+.TP
+.B \-U
+(unsupported) Initial (user) submission.  This should \fIalways\fP be
+set when called from a user agent such as \fBMail\fP or \fBexmh\fP and
+\fInever\fP be set when called by a network delivery agent such as
+\fBrmail\fP.
+
+.TP
+.B \-V \fP\fIenvid\fP
+(unsupported) Set the original envelope id. This is propogated across
+SMTP to servers that support DSNs and is returned in DSN-compliant
+error messages.
+
+.SH FILES
+/usr/lib/sendmail
+.br
+@sbindir@/sendmail
+.br
+
+.SH "SEE ALSO"
+RFC 821, RFC 822.

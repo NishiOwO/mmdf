@@ -17,6 +17,7 @@ AC_PREFIX_DEFAULT('/usr')
 
 OUTPUT_FILES="lib/Makefile src/Makefile uip/Makefile"
 OUTPUT_FILES=$OUTPUT_FILES" conf/common/Makefile.com Makefile"
+OUTPUT_FILES=$OUTPUT_FILES" man/Makefile"
 
 VERSION=`sed -e 's/MMDF //' -e 's/\./ /' ${srcdir}/Version`
 MMDF_MAJOR_VERSION=`echo $VERSION | awk '{print $1}'`
@@ -908,6 +909,10 @@ fi
 if test -d uip; then
   SUBDIRS="$SUBDIRS uip"
 fi
+if test -d man; then
+  SUBDIRS="$SUBDIRS man"
+fi
+
 LIBSUBDIRS="addr mmdf table util"
 AC_ENABLE_DEFAULT(dial, no, LIBSUBDIRS)
 
