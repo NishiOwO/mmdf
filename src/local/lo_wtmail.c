@@ -917,8 +917,10 @@ char	*line;
 	}
 	mptr->m_hit = 0;
 #ifdef	DEBUG
-	ll_log (logptr, LLOGFTR, "dol=%o parse=%o opts='%s'",
+/*
+    ll_log (logptr, LLOGFTR, "dol=%o parse=%o opts='%s'",
 			mptr->m_dollar, mptr->m_parse, mptr->m_options);
+*/
 #endif /* DEBUG */
 	return OK;
 }
