@@ -1,4 +1,4 @@
-static char Id[] = "$Id: smtpsrvr.c,v 1.24 1999/09/03 08:06:07 krueger Exp $";
+static char Id[] = "$Id: smtpsrvr.c,v 1.25 1999/09/06 11:53:28 krueger Exp $";
 /*
  *                      S M T P S R V R . C
  *
@@ -778,7 +778,8 @@ mail(int cmdnr)
       }
     }
 
-    if (!size_checked && rp_gval(check_disc_space(0, quedfldir)) == RP_FSPC) {
+    if (!size_checked &&
+        rp_gval(check_disc_space(0, quedfldir))!=RP_BOK) {
       snprintf(replybuf, sizeof(replybuf),
                "452 space shortage, please try later\r\n");
       netreply(replybuf);
@@ -788,7 +789,7 @@ mail(int cmdnr)
 
 #ifdef HAVE_ESMTP
     if (1 /*smtp_check_spool_space*/) {
-      if (rp_gval(check_disc_space(size + 5000, quedfldir)) == RP_FSPC) {
+      if (rp_gval(check_disc_space(size + 5000, quedfldir)) != RP_BOK) {
         snprintf(replybuf, sizeof(replybuf),
                  "452 space shortage, please try later\r\n");
         netreply(replybuf);
