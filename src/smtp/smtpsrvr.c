@@ -1,4 +1,4 @@
-static char Id[] = "$Id: smtpsrvr.c,v 1.30 2000/01/05 10:21:09 krueger Exp $";
+static char Id[] = "$Id: smtpsrvr.c,v 1.31 2000/01/09 12:54:56 krueger Exp $";
 /*
  *                      S M T P S R V R . C
  *
@@ -874,6 +874,9 @@ int cmdnr;
         return;
       }
     }
+#else /* HAVE_ESMTP */
+    sender = argv[0];
+    sender = addrfix( sender );
 #endif /* HAVE_ESMTP */
     
     if (!size_checked &&
