@@ -1,5 +1,5 @@
 dnl
-dnl $Id: aclocal.m4,v 1.5 1999/08/16 09:20:57 krueger Exp $
+dnl $Id: aclocal.m4,v 1.6 1999/08/29 12:27:23 krueger Exp $
 dnl
 dnl
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -233,10 +233,10 @@ if test "$libexecdir" = "\${exec_prefix}/libexec"; then
    libexecdir="\${exec_prefix}/lib/mh"
 fi
 if test "$mtbldir" = "\${mmdfprefix}/table"; then
-   mtbldir="\${sysconfdir}/table"
+   mtbldir="\${sysconfdir}"
 fi
 if test "$datadir" = "\${prefix}/share"; then
-   datadir="\${sysconfdir}"
+   datadir="\${prefix}/share/mmdf"
 fi
 if test "$sysconfdir" = "\${prefix}/etc"; then
    sysconfdir="/etc/mmdf"
@@ -244,7 +244,7 @@ fi
 mmtailor="\${sysconfdir}/mmdftailor"
 tbldbm="\${mtbldir}/mmdfdbm"
 lckdfldir="\${uucplock}/mmdf"
-authfile="\${sysconfdir}/warning"
+authfile="\${datadir}/warning"
 uucplock="\${varprefix}/lock"
 resendprog="\${bindir}/resend"
 sendprog="\${bindir}/send"
