@@ -1,0 +1,409 @@
+#! /bin/sh
+
+##########
+BOOL_VARS="wrap nameserver dbm nis nn nosrcroute 8bit"
+BOOL_VARS=$BOOL_VARS" dial"
+BOOL_VARS=$BOOL_VARS" badusers bboards blockaddr delay ean list niftp"
+BOOL_VARS=$BOOL_VARS" phone pobox pop prog smphone smtp uucp"
+BOOL_VARS=$BOOL_VARS" msg other send snd ucbmail unsupported"
+BOOL_VARS=$BOOL_VARS" nodomlit leftdots statsort mailids"
+BOOL_VARS=$BOOL_VARS" mgt_addid mgt_addipaddr mgt_addipname "
+
+default_wrap=${default_wrap='y'}
+default_nameserver=${default_nameserver='y'}
+default_dbm=${default_dbm='y'}
+default_nis=${default_nis='n'}
+default_nn=${default_nn='n'}
+default_nosrcroute=${default_nosrcroute='y'}
+default_8bit=${default_8bit='y'}
+default_dial=${default_dial='n'}
+default_badusers=${default_badusers='y'}
+default_bboards=${default_bboards='n'}
+default_blockaddr=${default_blockaddr='y'}
+default_delay=${default_delay='n'}
+default_ean=${default_ean='n'}
+default_list=${default_list='y'}
+default_niftp=${default_niftp='n'}
+default_phone=${default_phone='n'}
+default_pobox=${default_pobox='n'}
+default_pop=${default_pop='n'}
+default_prog=${default_prog='n'}
+default_smphone=${default_smphone='n'}
+default_smtp=${default_smtp='y'}
+default_uucp=${default_uucp='y'}
+default_msg=${default_msg='y'}
+default_other=${default_other='y'}
+default_send=${default_send='y'}
+default_snd=${default_snd='y'}
+default_ucbmail=${default_ucbmail='n'}
+default_unsupported=${default_unsupported='n'}
+default_nodomlit=${default_nodomlit='n'}
+default_leftdots=${default_leftdots='n'}
+default_statsort=${default_statsort='y'}
+default_mailids=${default_mailids='y'}
+default_mgt_addid=${default_mgt_addid='y'}
+default_mgt_addipaddr=${default_mgt_addipaddr='y'}
+default_mgt_addipname=${default_mgt_addipname='y'}
+#default_
+
+##########
+OTHER_VARS="debug d_log d_dblog citation"
+OTHER_VARS=$OTHER_VARS" numchans numtables numdomains"
+
+default_debug=${default_debug=1}
+default_d_log=${default_d_log=1}
+default_d_dblog=${default_d_dblog=1}
+default_citation=${default_citation=0}
+default_numchans=${default_numchans=20}
+default_numtables=${default_numtables=30}
+default_numdomains=${default_numdomains=20}
+
+OTHER_VARS=$OTHER_VARS" locname locdomain signature"
+OTHER_VARS=$OTHER_VARS" login addr"
+OTHER_VARS=$OTHER_VARS" mmdf_prefix mmdf_spool mmdftailor cmddfldir logdfldir"
+OTHER_VARS=$OTHER_VARS" phsdfldir tbldfldir tbldbm quedfldir chndfldir"
+OTHER_VARS=$OTHER_VARS" lckdfldir zap_env warntime failtime maxhops"
+OTHER_VARS=$OTHER_VARS" lnk_listsize"
+OTHER_VARS=$OTHER_VARS" maxqueue mailsleep locmachine authrequest authfile"
+default_locname=${default_locname=''}
+default_locdomain=${default_locdomain='(none)'}
+default_signature=${default_signature='MMDF mail system'}
+default_login=${default_login='mmdf'}
+default_addr=${default_addr=''}
+default_mmdf_prefix=${default_mmdf_prefix='/usr/mmdf'}
+default_mmdf_spool=${default_mmdf_spool='/var/spool/mmdf'}
+default_mmdftailor=${default_mmdftailor='$ac_cv_value_mmdf_prefix/mmdftailor'}
+default_cmddfldir=${default_cmddfldir='$ac_cv_value_mmdf_prefix'}
+default_logdfldir=${default_logdfldir='$ac_cv_value_mmdf_spool/log'}
+default_phsdfldir=${default_phsdfldir='$ac_cv_value_mmdf_spool/log/phase'}
+default_tbldfldir=${default_tbldfldir='$ac_cv_value_mmdf_prefix/table'}
+default_tbldbm=${default_tbldbm='$ac_cv_value_tbldfldir/mmdfdbm'}
+default_quedfldir=${default_quedfldir='$ac_cv_value_mmdf_spool/home'}
+default_chndfldir=${default_chndfldir='$ac_cv_value_mmdf_prefix/chans'}
+default_lckdfldir=${default_lckdfldir='/tmp/mmdf'}
+#default_zap_env=${default_zap_env="TZ=MEZ-1MESZ"}
+default_warntime=${default_warntime='48'}
+default_failtime=${default_failtime='96'}
+default_maxhops=${default_maxhops='20'}
+default_lnk_listsize=${default_lnk_listsize='12'}
+default_maxqueue=${default_maxqueue='300'}
+default_mailsleep=${default_mailsleep='600'}
+default_locmachine=${default_locmachine='$ac_cv_value_locname'}
+default_authrequest=${default_authrequest='$ac_cv_value_addr'}
+default_authfile=${default_authfile='$ac_cv_value_mmdf_prefix/warning'}
+#default_
+
+param=""
+
+#######################################################################
+cat << EOF
+        Welcome to Configure for MMDF
+
+   Configure will ask  you several  questions. If  you do not know what to
+answer,   use  the  default  one.  There  are  only  questions  about  the
+configuration (feature to compile in, pathnames, searchpath  for libraries
+and include files and which programs should be compiled).
+
+   When all questions are  answered. Configure will run ./configure for all
+machine and compiler dependent switches. 
+
+   
+EOF
+#######################################################################
+host_alias=`config.guess`
+host=`config.sub $host_alias`
+host_cpu=`echo $host | sed 's/^\(.*\)-\(.*\)-\(.*\)$/\1/'`
+host_vendor=`echo $host | sed 's/^\(.*\)-\(.*\)-\(.*\)$/\2/'`
+host_os=`echo $host | sed 's/^\(.*\)-\(.*\)-\(.*\)$/\3/'`
+if test -x conf/$host; then
+  TARGET=$host
+else
+  if test -x conf/$host_cpu; then
+    TARGET=$host_cpu
+  else
+    TARGET=NONE
+  fi
+fi
+
+#######################################################################
+#  all boolean switches first
+#
+for name in $BOOL_VARS
+do
+    VAR=enable_$name
+    eval default='$default_'$name
+    prefix="Enable "
+    t=$name
+    case $name in
+	wrap)       t="tcpwrapper ........................ ";;
+	nameserver) t="nameserver support ................ ";;
+	dbm)        t="dbm support ....................... ";;
+	nis)        t="nis support for tables ............ ";;
+	nn)         t="configurable users/mailids table .. ";;
+	nosrcroute) t="remove source-routes .............. ";;
+	8bit)       t="eight-bit clean ................... ";;
+	dial)       t="dial package ...................... ";;
+	badusers)   t="channel-program 'badusers' ........ ";;
+	bboards)    t="channel-program 'bboards' ......... ";;
+	blockaddr)  t="channel-program 'blockaddr' ....... ";;
+	delay)      t="channel-program 'delay' ........... ";;
+	ean)        t="channel-program 'ean' ............. ";;
+	list)       t="channel-program 'list' ............ ";;
+	niftp)      t="channel-program 'niftp' ........... ";;
+	phone)      t="channel-program 'phone' ........... ";;
+	pobox)      t="channel-program 'pobox' ........... ";;
+	pop)        t="channel-program 'pop' ............. ";;
+	prog)       t="channel-program 'prog' ............ ";;
+	smphone)    t="channel-program 'smphone' ......... ";;
+	smtp)       t="channel-program 'smtp' ............ ";;
+	uucp)       t="channel-program 'uucp' ............ ";;
+	msg)        t="user program 'msg' ................ ";;
+	other)      t="user programs 'other' ............. ";;
+	send)       t="user program 'send' ............... ";;
+	snd)        t="user program 'snd' ................ ";;
+	ucbmail)    t="user program 'ucbMail' ............ ";;
+	unsupported) t="user program part unsupported ..... ";;
+	nodomlit)   echo ""
+                    t=""
+                    prefix="       "
+		;;
+	leftdots)   echo "Enable intpretation of dots as delimiters on the"
+                    echo "LHS  of an @ in addresses. Say 'y' only if you have"
+                    t="historical need to ....................... ";
+                    prefix=""
+		;;
+	statsort)   echo
+             echo "Say 'y' if you want deliver to sort the mail queue based on"
+             echo "a stat(2) of the message  text file instead of reading the"
+             echo "timestamp that is stored in the message addressfile. It is "
+                    t="much more efficient. ..................... "
+                    prefix=""
+		;;
+	mailids)    t="mailids support ................... ";;
+    esac
+    if test "$default" = ""; then
+	default="n"
+    fi
+
+    /bin/echo "$prefix$t (y/n) [$default] : \c"
+    read ans
+    if test "$ans" = ""; then
+	ans=$default
+    fi
+    if test "$ans" = "y" || test "$ans" = "yes"; then
+	eval "$VAR=yes"
+	param=$param" --enable-$name"
+    else
+	eval "$VAR=no"
+	param=$param" --disable-$name"
+    fi
+done
+
+#######################################################################
+#  configure numeric depend switches
+#
+echo
+for name in $OTHER_VARS
+do
+    VAR=ac_cv_value_$name
+    eval default='$default_'$name
+    prefix="Set the "
+    if test "$default" = ""; then
+	default=0
+    fi
+    case $name in
+        *dfldir|tbldbm|locmachine|authrequest|authfile|mmdftailor)
+		dummy='default='$default
+	        eval $dummy
+	    ;;
+    esac
+    t=$name
+    case $name in
+	debug)      t="debuging level ............................... ";;
+        d_log)      t="debuging level (only dial-code) .............. ";;
+	d_dblog)    t="debuging level (only dial-code) .............. ";;
+	citation)   t="number of lines of citation .................. ";;
+	numchans)   t="maximum number of possible channels entries .. ";;
+	numtables)  t="maximum number of possible tables ............ ";;
+	numdomains) t="maximum number of possible domain entries .... ";;
+	mmdftailor) t="path to 'mmdftailor'-file .................... ";;
+	locname)    t="local name of the machine .................... "
+	    default=`(uname -n) 2>/dev/null` || default=unknown
+	    ;;
+	locdomain)  t="local domainname ............................. ";;
+	signature)  t="signature field for return-mail .............. ";;
+	login)      t="login under everything will be installed ..... ";;
+	addr)       t="address for bug-reports ...................... "
+	    default="Postmaster@"$ac_cv_value_locdomain
+	    ;;
+	mmdf_prefix) t="default home-directory ....................... ";;
+	mmdf_spool)  t="spool directory .............................. ";;
+	cmddfldir)   t=$name;;
+	logdfldir)   t=$name;;
+	phsdfldir)   t=$name;;
+	tbldfldir)   t=$name;;
+	tbldbm)      t=$name;;
+	quedfldir)   t=$name;;
+	chndfldir)   t=$name;;
+	lckdfldir)   t=$name;;
+	zap_env)     t=$name;;
+	warntime)    t=$name;;
+	failtime)    t=$name;;
+	maxhops)     t=$name;;
+	mgt_addid)   t=$name;;
+	mgt_addipaddr) t=$name;;
+	mgt_addipname) t=$name;;
+	lnk_listsize)  t=$name;;
+	maxqueue)    t=$name;;
+	mailsleep)   t=$name;;
+	locmachine)  t=$name;;
+	authrequest) t=$name;;
+	authfile)    t=$name;;
+    esac
+    if test "$default" = "(none)"; then
+	default=""
+    fi
+
+    /bin/echo "$prefix$t [$default] : \c"
+    read ans
+    if test "$ans" = ""; then
+	ans=$default
+    fi
+    eval "$VAR='$ans'"
+done
+
+#######################################################################
+#
+#
+(set) 2>&1 | 
+  case `(ac_space=' '; set) 2>&1` in
+  *ac_space=\ *)
+    # `set' does not quote correctly, so add quotes (double-quote substitution
+    # turns \\\\ into \\, and sed turns \\ into \).
+    sed -n \
+      -e "s/'/'\\\\''/g" \
+      -e "s/^\\(ac_cv_value_[a-zA-Z0-9_]*\\)=\\(.*\\)/\\1=\${\\1='\\2'}/p"
+    ;;
+  *)
+    # `set' quotes correctly as required by POSIX, so do not add quotes.
+    sed -n -e 's/^\(ac_cv_value_[a-zA-Z0-9_]*\)=\(.*\)/\1=${\1=\2}/p'
+    ;;
+  esac > xConfcache
+
+#######################################################################
+#  write conf/sites/<site-name>'
+#
+default='y'
+config=conf/sites/$ac_cv_value_locmachine.config
+/bin/echo "Write $config  ? (y/n) [$default] \c"
+read ans
+if test "$ans" = ""; then
+    ans=$default
+fi
+if test "$ans" = "y" || test "$ans" = "yes"; then
+  if test -f $config; then
+    mv $config $config.orig
+  fi
+  cat > $config <<EOF
+# configuration file for $ac_cv_value_locmachine
+# build by Configure on `date`
+#
+# `uname -a`
+#
+CONFIG_SYS_ADDID=$enable_mgt_addid
+CONFIG_SYS_ADDIPADDR=$enable_mgt_addipaddr
+CONFIG_SYS_ADDIPNAME=$enable_mgt_addipname
+CONFIG_SYS_NODOMLIT=$enable_nodomlit
+CONFIG_SYS_LEFTDOT=$enable_leftdots
+CONFIG_SYS_STATSORT=$enable_statsort
+CONFIG_SYS_MAILIDS=$enable_mailids
+CONFIG_SYS_DEBUG=$ac_cv_value_debug
+CONFIG_SYS_D_LOG=$ac_cv_value_d_log
+CONFIG_SYS_D_DBLOG=$ac_cv_value_d_dblog
+CONFIG_SYS_CITATION=$ac_cv_value_citation
+CONFIG_SYS_NUMCHANS=$ac_cv_value_numchans
+CONFIG_SYS_NUMTABLES=$ac_cv_value_numtables
+CONFIG_SYS_NUMDOMAINS=$ac_cv_value_numdomains
+CONFIG_SYS_LOCNAME=$ac_cv_value_locname
+CONFIG_SYS_LOCDOMAIN=$ac_cv_value_locdomain
+CONFIG_SYS_SIGNATURE="$ac_cv_value_signature"
+CONFIG_SYS_LOGIN=$ac_cv_value_login
+CONFIG_SYS_ADDR=$ac_cv_value_addr
+CONFIG_SYS_MMDF_PREFIX=$ac_cv_value_mmdf_prefix
+CONFIG_SYS_MMDF_SPOOL=$ac_cv_value_mmdf_spool
+CONFIG_SYS_MMDFTAILOR=$ac_cv_value_mmdftailor
+CONFIG_SYS_CMDDFLDIR=$ac_cv_value_cmddfldir
+CONFIG_SYS_LOGDFLDIR=$ac_cv_value_logdfldir
+CONFIG_SYS_PHSDFLDIR=$ac_cv_value_phsdfldir
+CONFIG_SYS_TBLDFLDIR=$ac_cv_value_tbldfldir
+CONFIG_SYS_TBLDBM=$ac_cv_value_tbldbm
+CONFIG_SYS_QUEDFLDIR=$ac_cv_value_quedfldir
+CONFIG_SYS_CHNDFLDIR=$ac_cv_value_chndfldir
+CONFIG_SYS_LCKDFLDIR=$ac_cv_value_lckdfldir
+CONFIG_SYS_WARNTIME=$ac_cv_value_warntime
+CONFIG_SYS_FAILTIME=$ac_cv_value_failtime
+CONFIG_SYS_MAXHOPS=$ac_cv_value_maxhops
+CONFIG_SYS_LNK_LISTSIZE=$ac_cv_value_lnk_listsize
+CONFIG_SYS_MAXQUEUE=$ac_cv_value_maxqueue
+CONFIG_SYS_MAILSLEEP=$ac_cv_value_mailsleep
+CONFIG_SYS_LOCMACHINE=$ac_cv_value_locmachine
+CONFIG_SYS_AUTHREQUEST=$ac_cv_value_authrequest
+CONFIG_SYS_AUTHFILE=$ac_cv_value_authfile
+
+CONFIG_CODE_WRAP=$enable_wrap
+CONFIG_CODE_NAMESERVER=$enable_nameserver
+CONFIG_CODE_DBM=$enable_dbm
+CONFIG_CODE_NIS=$enable_nis
+CONFIG_CODE_NN=$enable_nn
+CONFIG_CODE_NOSRCROUTE=$enable_nosrcroute
+CONFIG_CODE_8BIT=$enable_8bit
+
+CONFIG_LIB_DIAL=$enable_dial
+
+CONFIG_SRC_BADUSERS=$enable_badusers
+CONFIG_SRC_BBOARDS=$enable_bboards
+CONFIG_SRC_BLOCKADDR=$enable_blockaddr
+CONFIG_SRC_DELAY=$enable_delay
+CONFIG_SRC_EAN=$enable_ean
+CONFIG_SRC_LIST=$enable_list
+CONFIG_SRC_NIFTP=$enable_niftp
+CONFIG_SRC_PHONE=$enable_phone
+CONFIG_SRC_POBOX=$enable_pobox
+CONFIG_SRC_POP=$enable_pop
+CONFIG_SRC_PROG=$enable_prog
+CONFIG_SRC_SMPHONE=$enable_smphone
+CONFIG_SRC_SMTP=$enable_smtp
+CONFIG_SRC_UUCP=$enable_uucp
+
+CONFIG_UIP_MSG=$enable_msg
+CONFIG_UIP_OTHER=$enable_other
+CONFIG_UIP_SEND=$enable_send
+CONFIG_UIP_SND=$enable_snd
+CONFIG_UIP_UCBMAIL=$enable_ucbmail
+CONFIG_UIP_UNSUPPORTED=$enable_unsupported
+
+#
+#  End of configuration.
+#
+EOF
+fi
+
+#######################################################################
+#  shoul'd configure be run now?
+#
+default='n'
+/bin/echo "Run configure now? (y/n) [$default] \c"
+read ans
+if test "$ans" = ""; then
+    ans=$default
+fi
+if test "$ans" = "y" || test "$ans" = "yes"; then
+    echo ./configure $param
+    ./configure $param
+else
+    echo ./configure $param > run_configure
+    chmod a+x run_configure
+    echo "Please start run_configure at later time."
+    ls -l run_configure
+fi
+
