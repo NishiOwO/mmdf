@@ -8,12 +8,12 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.3 $
+ *  $Revision: 1.4 $
  *
  *  $Log: lex.c,v $
- *  Revision 1.3  1985/11/18 14:34:21  galvin
- *  Teach setfile how to MMDF lock files.
- *  Have it use the access system call rather than opening and closing files.
+ *  Revision 1.4  1985/11/18 16:09:27  galvin
+ *  Change name of command table to CmdTab so as not
+ *  to conflict with cmdtab of MMDF.
  *
  * Revision 1.5  86/01/14  16:15:18  galvin
  * Change the "mmdf.h" include line.
