@@ -486,11 +486,13 @@ bugout:
     {
 	ap_sqdelete (domain, (AP_ptr) 0);
 	ap_free (domain);
+    domain = (AP_ptr) 0;
     }
     if (route != (AP_ptr) 0)
     {
 	ap_sqdelete (route, (AP_ptr) 0);
 	ap_free (route);
+    route = (AP_ptr) 0;
     }
     if (cp && cp != (char *)MAYBE)
 	free (cp);
