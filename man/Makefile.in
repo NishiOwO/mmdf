@@ -64,7 +64,10 @@ all: man5/mmdftailor.5
 
 install:
 	for dir in man?; do \
-		(cd $${dir}; make ${MFLAGS} install); done
+		(cd $${dir}; \
+		for page in *.?; do \
+			$(INSTALL) -m 444 $page /usr/man/$${dir}/$${page}; \
+		done); done
 
 clean:
 	rm -f man5/mmdftailor.5
