@@ -15,7 +15,7 @@ int aflag;
 extern char *adrptr;
 char *malloc();
 
-aliasinit( aliasfile )
+void aliasinit( aliasfile )
 char *aliasfile;
 {
 	char alsfilename[128];
@@ -31,7 +31,7 @@ char *aliasfile;
 		*/
 
 	afd = fopen( alsfilename, "r" );
-	if( afd <= NULL ) {
+	if( afd <= (FILE* )0 ) {
 		aflag = 0;
 		perror(" Can't open alias file ");
 	}
@@ -62,7 +62,7 @@ char *aliasfile;
 
 int linelen, destlen, addrlen;
 
-aliasmap(dest, src, thehost)
+void aliasmap(dest, src, thehost)
 char *dest, *src, thehost[];
 {
     char addr[BSIZE],
