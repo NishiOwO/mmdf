@@ -1,0 +1,17 @@
+If you want to change the default switches, you need to run Configure first.
+It is an interactiv shell-script which will ask you a lot of question.
+At the end you may start configure to find out your site dependent defines.
+
+For a default installation
+	./configure
+	make depend
+	make
+	make install
+
+Comments and Bug list:
+
+on linux:
+1) use at least linc version 5.4.30
+2) don't compile with dbm support because gdbm emulates dbminit() and always
+   lock the mmdf database so that no other program can access to it. =>
+   MMDF is unable to run!
