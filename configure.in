@@ -623,8 +623,18 @@ AC_CHECK_FUNCS(getdtablesize gethostname)
 AC_CHECK_FUNCS(gettimeofday getwd)
 AC_CHECK_FUNCS(index initgroups killpg memcpy)
 AC_CHECK_FUNCS(mkdir mkstemp res_mkquery)
-AC_CHECK_FUNCS(setpgrp setpgid setreuid sigchild sigset sigsetmask snprintf)
-AC_CHECK_FUNCS(socket strchr strdup strncat strncpy truncate tzset)
+AC_CHECK_FUNCS(setpgrp setpgid setreuid sigchild sigset sigsetmask)
+AC_CHECK_FUNCS(socket strchr strdup strncat truncate tzset)
+AC_CHECK_FUNC(strncpy,,[
+dnl AC_MSG_WARN(your system does not strncpy())
+AC_MSG_ERROR(your system does not strncpy()
+      MMDF will not compile.
+      Please send a report to the current maintainer.)
+])
+AC_CHECK_FUNC(snprintf,,[AC_CHECK_FUNC(vsnprintf,,[
+AC_MSG_WARN(Your system does not have snprint() nor vsnprintf())
+AC_MSG_WARN(the implement snprintf() replacement uses the unsecure sprintf()!)
+])])
 
 AC_FUNC_UTIME_NULL
 AC_FUNC_VFORK
@@ -656,7 +666,7 @@ fi
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl sprintf returns number of printed chars
-AC_MSG_CHECKING(whether vsprintf returns number of printed chars)
+AC_MSG_CHECKING(whether sprintf returns number of printed chars)
 AC_CACHE_VAL(ac_cv_returns_n_of_chars, AC_TRY_RUN( 
  [#include <stdio.h> 
  main() { char *str=(char*)malloc(20);
@@ -761,7 +771,7 @@ if test "$ac_cv_func_mkdir" = "yes"; then
   AC_CACHE_VAL(ac_cv_have_MKDIR_LNX, AC_TRY_RUN( 
    [#include <sys/stat.h>
      main() { 
-	mkdir("dummy", 777);
+	mkdir("dummy", 0577);
 	exit(0);
    }],
      ac_cv_have_MKDIR_LNX=yes,
@@ -773,8 +783,7 @@ if test "$ac_cv_func_mkdir" = "yes"; then
   else
     AC_MSG_RESULT(no)
   fi
-  if [ -x dummy ]
-  then
+  if test -x dummy; then
     rmdir dummy
   fi
 fi

@@ -1,6 +1,6 @@
 /* h/config.h.in.  Generated automatically from configure.in by autoheader.  */
 /*
- * $Id: config.h.in,v 1.33 1999/08/13 07:36:15 krueger Exp $
+ * $Id: config.h.in,v 1.34 1999/08/17 13:35:04 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -399,9 +399,6 @@ yourdomain".  Since % or
 /* Define if you have the sigsetmask function.  */
 #undef HAVE_SIGSETMASK
 
-/* Define if you have the snprintf function.  */
-#undef HAVE_SNPRINTF
-
 /* Define if you have the socket function.  */
 #undef HAVE_SOCKET
 
@@ -413,9 +410,6 @@ yourdomain".  Since % or
 
 /* Define if you have the strncat function.  */
 #undef HAVE_STRNCAT
-
-/* Define if you have the strncpy function.  */
-#undef HAVE_STRNCPY
 
 /* Define if you have the truncate function.  */
 #undef HAVE_TRUNCATE
