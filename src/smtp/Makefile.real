@@ -1,6 +1,7 @@
 #
 #   smtp:    ArpaNet-based channel transmission
 #
+SYSTEM  = ${SERVER_SYSTEM}
 MODULES = 	ch_smtp qu2sm_send sm_wtmail tcp.${SYSTEM} \
 		smtpsrvr smtpd.${SYSTEM}
 
