@@ -61,8 +61,11 @@ extern char lo_replyto[];	/* the reply address		*/
 extern char lo_size[];
 extern char *lo_parm;		/* parameter portion of address */
 extern struct passwd *lo_pw;	/* passwd struct for recipient  */
+extern long mbox_quota_soft;  /* mailbox quota limit               */
+extern long mbox_quota_hard;  /* mailbox quota limit               */
 
 extern	char	*expand();
+extern  void cnvtbytestr();
 
 int	sigpipe;		/* has pipe gone bad? */
 RETSIGTYPE	onpipe();		/* catch that pipe write failure */
@@ -1229,14 +1232,17 @@ char *mboxname;
   Table *tblptr = tb_nm2struct("mboxquota");
   long sizelimit;
   
+  ll_log (logptr, LLOGTMP, "check_mboxquota(%s) %p %d", mboxname,
+          tblptr, mbox_quota);
+
   /* no Mailbox-Quota table defined and mbox_quota<0,  so return OK */
-  if(tblptr==NULL && mbox_quota<0) return RP_BOK;
+  if(tblptr==NOTOK && mbox_quota<0) return RP_BOK;
 
   /* some quota limits are set, now check it */
   if(stat(mboxname, &mbxstat)<0) return RP_BOK;
 
   /* if quota-table is defined, check if we find user there */
-  if(tblptr!=NULL && tb_k2val(tblptr, TRUE, lo_adr, buf)!=NOTOK) {
+  if(tblptr!=NOTOK && tb_k2val(tblptr, TRUE, lo_adr, buf)!=NOTOK) {
     sscanf(buf, "%d", &sizelimit);
     if(sizelimit<=0) return RP_BOK;
     switch(buf[strlen(buf)-1]) {
@@ -1252,7 +1258,7 @@ char *mboxname;
         default:
           break;
     }
-    ll_log (logptr, LLOGFST, "quota limit exceeded for '%s' val: %ld<%ld =%d",
+    ll_log (logptr, LLOGFST, "quota limit check for '%s' val: %ld<%ld =%d",
            lo_adr, st_gsize(&mbxstat), sizelimit,
            st_gsize(&mbxstat)<sizelimit);
     printx("quota size for '%s' is %ld<%ld =%d\n",
@@ -1263,7 +1269,7 @@ char *mboxname;
     /* user not found, so check against system-wide limit */
     if(mbox_quota>=0) {
       ll_log (logptr, LLOGFST,
-              "quota limit exceeded for '%s' sval: %ld<%ld =%d",
+              "quota limit check for '%s' sval: %ld<%ld =%d",
               lo_adr, st_gsize(&mbxstat), mbox_quota,
               st_gsize(&mbxstat)<mbox_quota);
       printx("quota size for '%s' is %ld<%ld =%d\n",

@@ -48,6 +48,8 @@ extern int tb_dbm_init();
 #endif
 extern int tb_ns_init();
 
+extern void cnvtbytestr();
+
 extern LLog *logptr, chanlog;
 
 extern char
@@ -85,7 +87,8 @@ extern int
 	    mid_enable,
 	    mailsleep,
 	    sentprotect,
-        mbox_quota;  /* MailBox quota limit (in bytes) */
+        mbox_quota_soft,  /* MailBox quota limit (in bytes) */
+        mbox_quota_hard;  /* MailBox quota limit (in bytes) */
 
 
 #ifdef HAVE_ESMTP
@@ -243,7 +246,7 @@ Cmd cmdtab[] =
     {"mlogin",      MMLOGIN,    1},
     {"mmailid",     MMMAILIDS,  1},
     {"mmaxhops",    MMAXHOPS,   1},
-    {"mmaxmbsz",    MMAXMBSZ,   1},
+    {"mmaxmbsz",    MMAXMBSZ,   2},
     {"mmaxsort",    MMMAXSORT,  1},
     {"mmbxname",    MMMBXNAME,  1},
     {"mmbxpref",    MMMBXPREF,  1},
@@ -467,19 +470,8 @@ int mm_tai (argc, argv)     /* process mmdf tailor info     */
     	    break;
 
         case MMAXMBSZ:
-          sscanf(argv[1], "%d", &mbox_quota);
-          switch(argv[1][strlen(argv[1])-1]) {
-              case 'k':
-              case 'K': mbox_quota*=1000;  break;
-                
-              case 'm':
-              case 'M': mbox_quota*=1000000;  break;
-                
-              case 'g':
-              case 'G': mbox_quota*=1000000000;  break;
-              default:
-                break;
-          }
+          cnvtbytestr(argv[1], &mbox_quota_soft);
+          cnvtbytestr(argv[2], &mbox_quota_hard);
           break;
           
         case UUname:

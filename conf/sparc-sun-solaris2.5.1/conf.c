@@ -250,5 +250,6 @@ char	*authfile = AUTHFILE;
 
 /******************* LOCAL CHANNEL TAILORING  *************************/
 /* default quota limit for a user mailbox (in bytes) */
-long mbox_quota = -1;
+long mbox_quota_soft = -1;
+long mbox_quota_hard = -1;
 
