@@ -8,11 +8,11 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.4 $
+ *  $Revision: 1.5 $
  *
  *  $Log: v7.local.h,v $
- *  Revision 1.4  1985/12/18 03:28:31  galvin
- *  Undef CANLOCK because we use MMDF locking.
+ *  Revision 1.5  1986/01/05 18:01:36  galvin
+ *  Add discovered option CANTELL.
  *
  * Revision 1.6  86/01/14  16:33:59  galvin
  * Add DAYLIGHT define for use by smtpdate().
