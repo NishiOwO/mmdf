@@ -1323,7 +1323,7 @@ AC_DIVERT_POP()dnl
 T12,103
 AC_ARG_ARRAYerrprint(__file__:__line__: [$0] has been removed; don't do unportable things with arguments
 )m4exit(4)
-T18,16559
+T18,19548
 AC_INIT_PARSE_ARGSAC_PRO([AC_INIT_PARSE_ARGS])
 # Initialize some variables set by options.
 # The variables have the same names as the options, with
@@ -1361,11 +1361,23 @@ includedir='${prefix}/include'
 oldincludedir='/usr/include'
 infodir='${prefix}/info'
 mandir='${prefix}/man'
-varprefix=${prefix}/var
-mmdfphasedir=${varprefix}/mmdf/log/phase
-mmdflogdir=${varprefix}/mmdf/log
-mmdfdiallog=${logdir}/dial_log
-mmdfspooldir=${varprefix}/mmdf/home
+varprefix='/var/spool'
+mmdfprefix='${prefix}/mmdf'
+mmdfphasedir='${varprefix}/mmdf/log/phase'
+mmdflogdir='${varprefix}/mmdf/log'
+mmdfdiallog='${mmdflogdir}/dial_log'
+mmdfspooldir='${varprefix}/mmdf/home'
+if test "$mmdfdebug"  = ""; then mmdfdebug=0;  fi
+if test "$mmdfdlog"   = ""; then mmdfdlog=0;   fi
+if test "$mmdfdbglog" = ""; then mmdfdbglog=0; fi
+if test "$mmdfnodomlit" = ""; then mmdfnodomlit=0; fi
+if test "$mmdfleftdots" = ""; then mmdfleftdots=0; fi
+if test "$mmdfstatsort" = ""; then mmdfstatsort=0; fi
+if test "$mmdfcitation" = ""; then mmdfcitation=0; fi
+used_mmdfphasedir=0
+used_mmdflogdir=0
+used_mmdfdiallog=0
+used_mmdfspooldir=0
 
 # Initialize some other variables.
 subdirs=
@@ -1474,12 +1486,20 @@ Configuration:
   --version               print the version of autoconf that created configure
 
   --create-target         force creation of conf/<target>/* if needed
+  --mmdf-debug=[0,1,2]    enable more logging information      [default: $mmdfdebug]
+  --mmdf-dlog             enable debug-option of dial packages [default: $mmdfdlog]
+  --mmdf-dbglog           enable more debug-option of dial packages [default: $mmdfdbglog]
+  --mmdf-nodomlit         toggle define NODOMLIT [default: $mmdfnodomlit]
+  --mmdf-leftdots         toggle define LEFTDOTS [default: $mmdfleftdots]
+  --mmdf-statsort         toggle define STATSORT [default: $mmdfstatsort]
+  --mmdf-citation         toggle define CITATION [default: $mmdfcitation]
 
 Directory and file names:
   --prefix=PREFIX         install architecture-independent files in PREFIX
                           [$ac_default_prefix]
   --exec-prefix=EPREFIX   install architecture-dependent files in EPREFIX
                           [same as prefix]
+  --mmdf-prefix=DIR       default home of mmdf in DIR [PREFIX/mmdf]
   --bindir=DIR            user executables in DIR [EPREFIX/bin]
   --sbindir=DIR           system admin executables in DIR [EPREFIX/sbin]
   --libexecdir=DIR        program executables in DIR [EPREFIX/libexec]
@@ -1569,31 +1589,90 @@ EOF
   -mandir=* | --mandir=* | --mandi=* | --mand=* | --man=* | --ma=* | --m=*)
     mandir="$ac_optarg" ;;
 
+  -mmdf-citation | --mmdf-citation | --mmdf-citatio | --mmdf-citati \
+  | --mmdf-citat | --mmdf-cita | --mmdf-cit | --mmdf-ci | --mmdf-c )
+    ac_prev=mmdfcitation ;;
+  -mmdf-citation=* | --mmdf-citation=* | --mmdf-citatio=* | --mmdf-citati=* \
+  | --mmdf-citat=* | --mmdf-cita=* | --mmdf-cit=* | --mmdf-ci=* \
+  | --mmdf-c=* )
+    mmdfcitation="$ac_optarg" ;;
+
+  -mmdf-dbglog | --mmdf-dbglog | --mmdf-dbglo | --mmdf-dbgl \
+  | --mmdf-dbg | --mmdf-db )
+    if test "$mmdfdbglog" = 0; then
+	mmdfdbglog=1 ;
+    else
+	mmdfdbglog=0 ;
+    fi;;
+
+  -mmdf-debug | --mmdf-debug | --mmdf-debu | --mmdf-deb | --mmdf-de )
+    ac_prev=mmdfdebug ;;
+  -mmdf-debug=* | --mmdf-debug=* | --mmdf-debu=* | --mmdf-deb=* | --mmdf-de=* )
+    mmdfdebug="$ac_optarg" ;;
+
   -mmdf-diallog | --mmdf-diallog | --mmdf-diallo | --mmdf-diall | --mmdf-dial | --mmdf-dia)
     ac_prev=mmdfdiallog ;;
   -mmdf-diallog=* | --mmdf-diallog=* | --mmdf-diallo=* | --mmdf-diall=* | --mmdf-dial=* | --mmdf-dia=*)
-    mmdfdiallog="$ac_optarg" ;;
+    mmdfdiallog="$ac_optarg"; used_mmdfdiallog=1 ;;
+
+  -mmdf-dlog | --mmdf-dlog | --mmdf-dlo | --mmdf-dl )
+    if test "$mmdfdlog" = 0; then
+        mmdfdlog=1 ;
+    else
+	mmdfdlog=0 ;
+    fi;;
+
+  -mmdf-leftdots | --mmdf-leftdots | --mmdf-leftdot | --mmdf-leftdo \
+  | --mmdf-leftd | --mmdf-left | --mmdf-lef | --mmdf-le )
+    if test "$mmdfleftdots" = 0; then
+	mmdfleftdots=1
+    else
+	mmdfleftdots=0
+    fi ;;
 
   -mmdf-logdir | --mmdf-logdir | --mmdf-logdi | --mmdf-logd | --mmdf-log \
-  | --mmdf-lo | --mmdf-l )
+  | --mmdf-lo )
     ac_prev=mmdflogdir ;;
   -mmdf-logdir=* | --mmdf-logdir=* | --mmdf-logdi=* | --mmdf-logd=* | --mmdf-log=* \
-  | --mmdf-lo=* | --mmdf-l=* )
-    mmdflogdir="$ac_optarg" ;;
+  | --mmdf-lo=* )
+    mmdflogdir="$ac_optarg"; used_mmdflogdir=1 ;;
+
+  -mmdf-nodomlit | --mmdf-nodomlit | --mmdf-nodomli | --mmdf-nodoml \
+  | --mmdf-nodom | --mmdf-nodo | --mmdf-nod | --mmdf-no | --mmdf-n )
+    if test "$mmdfnodomlit" = 0; then
+	mmdfnodomlit=1
+    else
+	mmdfnodomlit=0
+    fi ;;
 
   -mmdf-phasedir | --mmdf-phasedir | --mmdf-phasedi | --mmdf-phased | --mmdf-phase | --mmdf-phas \
   | --mmdf-pha | --mmdf-ph)
     ac_prev=mmdfphasedir ;;
   -mmdf-phasedir=* | --mmdf-phasedir=* | --mmdf-phasedi=* | --mmdf-phased=* | --mmdf-phase=* \
   | --mmdf-phas=* | --mmdf-pha=* | --mmdf-ph=*)
-    mmdfphasedir="$ac_optarg" ;;
+    mmdfphasedir="$ac_optarg"; used_mmdfphasedir=1 ;;
+
+  -mmdf-prefix | --mmdf-prefix | --mmdf-prefi | --mmdf-pref | --mmdf-pre \
+  | --mmdf-pr )
+    ac_prev=mmdfprefix ;;
+  -mmdf-prefix=* | --mmdf-prefix=* | --mmdf-prefi=* | --mmdf-pref=* \
+  | --mmdf-pre=* | --mmdf-pr=* )
+    mmdfprefix="$ac_optarg"; used_mmdfprefix=1 ;;
 
   -mmdf-spooldir | --mmdf-spooldir | --mmdf-spooldi | --mmdf-spoold | --mmdf-spool | --mmdf-spoo \
   | --mmdf-spo | --mmdf-sp)
     ac_prev=mmdfspooldir ;;
   -mmdf-spooldir=* | --mmdf-spooldir=* | --mmdf-spooldi=* | --mmdf-spoold=* | --mmdf-spool=* \
   | --mmdf-spoo=* | --mmdf-spo=* | --mmdf-sp=*)
-    mmdfspooldir="$ac_optarg" ;;
+    mmdfspooldir="$ac_optarg"; used_mmdfspooldir=1 ;;
+
+  -mmdf-statsort | --mmdf-statsort | --mmdf-statsor | --mmdf-statso \
+  | --mmdf-stats | --mmdf-stat | --mmdf-sta | --mmdf-st )
+    if test "$mmdfstatsort" = "0"; then
+	mmdfstatsort=1
+    else
+	mmdfstatsort=0
+    fi ;;
 
   -nfp | --nfp | --nf)
     # Obsolete; use --without-fp.
@@ -2568,7 +2647,7 @@ if test $ac_cv_func_getpgrp_void = yes; then
   AC_DEFINE(GETPGRP_VOID)
 fi
 []AC_EPI()
-T15,3751
+T15,3899
 AC_INIT_PREPAREAC_PRO([AC_INIT_PREPARE])trap 'rm -fr conftest* confdefs* core core.* *.core $ac_clean_files; exit 1' 1 2 15
 
 # File descriptor usage:
@@ -2691,6 +2770,12 @@ AC_SUBST(phasedir)dnl
 AC_SUBST(logdir)dnl
 AC_SUBST(spooldir)dnl
 AC_SUBST(diallog)dnl
+AC_SUBST(varprefix)dnl
+AC_SUBST(mmdfprefix)dnl
+AC_SUBST(mmdfphasedir)dnl
+AC_SUBST(mmdflogdir)dnl
+AC_SUBST(mmdfdiallog)dnl
+AC_SUBST(mmdfspooldir)dnl
 []AC_EPI()
 T22,456
 AC_CHECK_HEADER_DIRENTAC_PRO([AC_CHECK_HEADER_DIRENT])ac_safe=`echo "$1" | tr './\055' '___'`
@@ -3324,6 +3409,11 @@ T13,60
 AC_GETLOADAVGAC_PRO([AC_GETLOADAVG])indir([AC_FUNC_GETLOADAVG])[]AC_EPI()
 F3,3
 dnldnl
+T11,97
+AC_INIT_VARAC_PRO([AC_INIT_VAR])AC_DIVERT_PUSH(1)dnl
+  dummy="$1=$2"
+  eval $dummy
+AC_DIVERT_POP()[]AC_EPI()
 T12,1679
 AC_FUNC_MMAPAC_PRO([AC_FUNC_MMAP])AC_CHECK_FUNCS(valloc getpagesize)
 AC_CACHE_CHECK(for working mmap, ac_cv_func_mmap,
