@@ -8,12 +8,11 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.4 $
+ *  $Revision: 1.5 $
  *
  *  $Log: lex.c,v $
- *  Revision 1.4  1985/11/18 16:09:27  galvin
- *  Change name of command table to CmdTab so as not
- *  to conflict with cmdtab of MMDF.
+ *  Revision 1.5  1986/01/14 16:15:18  galvin
+ *  Change the "mmdf.h" include line.
  *
  * Revision 1.5  86/01/14  16:15:18  galvin
  * Change the "mmdf.h" include line.
