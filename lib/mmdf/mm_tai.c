@@ -4,6 +4,44 @@
 #include "ch.h"
 #include "ap.h"
 
+extern int tb_noop();
+#define tb_file_init tb_noop
+#define tb_dbm_init tb_noop
+
+#ifdef HAVE_NIS
+extern int tb_nis_init();
+#else /* HAVE_NIS */
+#  define tb_nis_init tb_noop
+#endif /* HAVE_NIS */
+#ifdef HAVE_REGEXEC
+extern int tb_regexp_init();
+#else /* HAVE_REGEXEC */
+#  define tb_regexp_init tb_noop
+#endif /* HAVE_REGEXEC */
+
+#ifdef HAVE_RBLSUPPORT
+extern int tb_rbl_init();
+#else /* HAVE_RBLSUPPORT */
+#  define tb_rbl_init tb_noop
+#endif /* HAVE_RBLSUPPORT */
+#ifdef HAVE_LDAPSUPPORT
+extern int tb_ldap_init();
+#else /* HAVE_LDAPSUPPORT */
+#  define tb_ldap_init tb_noop
+#endif /* HAVE_LDAPSUPPORT */
+#ifdef HAVE_SQLSUPPORT
+extern int tb_sql_init();
+#else /* HAVE_SQLSUPPORT */
+#  define tb_sql_init tb_noop
+#endif /* HAVE_SQLSUPPORT */
+extern int tb_test_init();
+
+#if 0
+extern int tb_file_init();
+extern int tb_dbm_init();
+#endif
+extern int tb_ns_init();
+
 extern LLog *logptr, chanlog;
 
 extern char
@@ -446,6 +484,7 @@ int mm_tai (argc, argv)     /* process mmdf tailor info     */
 	case ALIAS:
       al_tai (argc, &argv[1]);
       break;
+
 #ifdef HAVE_ESMTP
         case MMSGSIZELIMIT:
           message_size_limit = atol(argv[1]);
@@ -481,6 +520,7 @@ extern int  tb_numtables;
 #define CMDTSHOW    4
 #define CMDTFLAGS   5
 #define CMDTNOOP    6
+#define CMDTTYPE    7
 
 LOCVAR Cmd
 	    cmdtbl[] =
@@ -491,6 +531,7 @@ LOCVAR Cmd
     {"flags",	 CMDTFLAGS,  1},
     {"name",     CMDTNAME,   1},
     {"show",     CMDTSHOW,   1},
+    {"type",     CMDTTYPE,   1},
     {0,          0,          0}
 };
 
@@ -505,7 +546,7 @@ LOCVAR Cmd
 #define CMDTFABORT      8
 #define CMDTFROUTE      9
 #ifdef HAVE_NIS
-#  define CMDTFNIS       10
+#  define CMDTFNIS     10
 #endif /* HAVE_NIS */
 
 LOCVAR Cmd
@@ -527,11 +568,79 @@ LOCVAR Cmd
 
 #define TBENT ((sizeof(tbflags)/sizeof(Cmd))-1)
 
+#define CMDTFTFILE   1
+#define CMDTFTDBM    2
+#define CMDTFTNS     3
+#define CMDTFTNIS    4
+#define CMDTFTREGEXP 5
+#define CMDTFTRBL    5
+#define CMDTFTLDAP   6
+#define CMDTFTSQL    7
+#define CMDTFTTEST   8
+
+LOCVAR Cmd
+	tbtype [] =
+{
+  { "dbm",   CMDTFTDBM,     0 },
+  { "file",  CMDTFTFILE,    0 },
+#ifdef HAVE_LDAPSUPPORT
+  { "ldap",  CMDTFTLDAP,    0 },
+#endif /* HAVE_LDAPSUPPORT */
+  { "ns",    CMDTFTNS,      0 },
+#ifdef HAVE_NIS
+  { "nis",   CMDTFTNIS,     0 },
+#endif /* HAVE_NIS */
+#ifdef HAVE_RBLSUPPORT
+  { "rbl",   CMDTFTRBL,     0 },
+#endif /* HAVE_RBLSUPPORT */
+#ifdef HAVE_REGEXEC
+  { "regexp",CMDTFTREGEXP,  0 },
+#endif /* HAVE_REGEXEC */
+#ifdef HAVE_SQLSUPPORT
+  { "sql",   CMDTFTSQL,     0 },
+#endif /* HAVE_SQLSUPPORT */
+  { "test",  CMDTFTTEST,    0 },
+  { 0,      0, 0 }
+};
+#define TBTYPE ((sizeof(tbtype)/sizeof(Cmd))-1)
+
+struct tblinistruct
+{
+  int tb_type;
+  int (*tb_init)(); 
+};
+typedef struct tblinistruct TblInit;
+
+LOCVAR TblInit tbl_init[] =
+{
+  { TBT_FILE, tb_noop },
+  { TBT_FILE, tb_file_init },
+  { TBT_DBM,  tb_dbm_init },
+  { TBT_NS,   tb_ns_init },
+  { TBT_NIS,  tb_nis_init },
+  { TBT_REGEX,tb_regexp_init },
+  { TBT_RBL,  tb_rbl_init },
+  { TBT_LDAP, tb_ldap_init },
+  { TBT_SQL,  tb_sql_init },
+  { TBT_TEST, tb_test_init },
+  { 0, 0, }
+};
+
+int tb_noop(tblptr)
+    Table *tblptr;
+{
+#ifdef DEBUG
+  ll_log (logptr, LLOGBTR, "###tb_noop (%p: %d)", tblptr);
+#endif
+  return;
+}
+
 int tb_tai (argc, argv)
     int argc;
     char *argv[];
 {
     int ind;
+    int type;
     register Table *tbptr;
 #ifdef HAVE_NIS
     extern Table tb_mailids;
@@ -561,13 +670,25 @@ int tb_tai (argc, argv)
     tb_list[tb_numtables++] = tbptr =
 			(Table *) malloc ((unsigned) (sizeof (Table)));
     tb_list[tb_numtables] = (Table *) 0;
-    tbptr -> tb_name =  "notablename";
-    tbptr -> tb_show =  (char *) 0;
-    tbptr -> tb_file =  (char *) 0;
-    tbptr -> tb_fp   =  (FILE *) NULL;
-    tbptr -> tb_pos  =  0L;
-    tbptr -> tb_flags = TB_FILE;
+    memset(tbptr, 0, (unsigned) (sizeof (Table)));
+    tbptr -> tb_name = strdup("notablename");
+    tbptr -> tb_flags      = TB_FILE;
+    tbptr -> tb_type       = TBT_FILE;
 
+    /* find first the type-field */
+    for (ind = 0; ind < argc; ind++)
+    {
+      if((cmdbsrch (argv[ind], argc - ind, cmdtbl, CMDTBENT) == CMDTTYPE) &&
+         (ind<argc-1)) {
+        type = cmdbsrch (argv[ind+1], argc - ind - 1, tbtype, TBTYPE);
+        tbptr -> tb_type = tbl_init[type].tb_type;
+        
+        if(tbl_init[type].tb_init != 0)
+          tbl_init[type].tb_init(tbptr);
+      }
+    }
+
+    /* parse now the other arguments */
     for (ind = 0; ind < argc; ind++)
     {
 	if (!lexequ (argv[ind], "="))
@@ -594,82 +715,97 @@ int tb_tai (argc, argv)
 #endif
 	    switch (cmdbsrch (argv[ind - 1], argc - ind, cmdtbl, CMDTBENT))
 	    {
-		case CMDTBASE:
-	dobase:
-		    tbptr -> tb_name =  argv[ind];
-		    tbptr -> tb_show =  argv[ind];
-		    tbptr -> tb_file =  argv[ind];
-		    break;
+            case CMDTBASE:
+              dobase:
+              tbptr -> tb_name =  argv[ind];
+              tbptr -> tb_show =  argv[ind];
+              tbptr -> tb_file =  argv[ind];
+              break;
 
-		case CMDTNAME:
-		    tbptr -> tb_name =  argv[ind];
-		    break;
+            case CMDTNAME:
+              tbptr -> tb_name =  argv[ind];
+              break;
 
-		case CMDTFILE:
-		    tbptr -> tb_file =  argv[ind];
-		    break;
+            case CMDTFILE:
+              tbptr -> tb_file =  argv[ind];
+              break;
 
-		case CMDTSHOW:
-		    tbptr -> tb_show=  argv[ind];
-		    break;
+            case CMDTSHOW:
+              tbptr -> tb_show=  argv[ind];
+              break;
 
 	    	case CMDTFLAGS:
 #ifdef DEBUG
-		    ll_log (logptr, LLOGFTR, "table flag '%s'", argv[ind]);
+              ll_log (logptr, LLOGFTR, "table flag '%s'", argv[ind]);
 #endif
-		    switch (cmdbsrch (argv[ind], 0, tbflags, TBENT))
-		    {
-			case CMDTFFILE:
-			    tbptr -> tb_flags |= TB_FILE;
-			    break;
+              switch (cmdbsrch (argv[ind], 0, tbflags, TBENT))
+              {
+                  case CMDTFFILE:
+                    /*tbptr -> tb_flags |= TB_FILE;*/
+                    break;
 
-			case CMDTFDBM:
-			    tbptr -> tb_flags |= TB_DBM;
-			    break;
+                  case CMDTFDBM:
+                    if(tbptr -> tb_type == TBT_FILE)
+                      tbptr -> tb_type = TBT_DBM;
+                    /*tbptr -> tb_flags |= TB_DBM;*/
+                    break;
 
-			case CMDTFNS:
-			    tbptr -> tb_flags |= TB_NS;
-			    break;
+                  case CMDTFNS:
+                    if(tbptr -> tb_type == TBT_FILE)
+                      tbptr -> tb_type = TBT_NS;
+                    /*tbptr -> tb_flags |= TB_NS;*/
+                    break;
 
-			case CMDTFDOMAIN:
-			    tbptr -> tb_flags |= TB_DOMAIN;
-			    break;
+                  case CMDTFDOMAIN:
+                    tbptr -> tb_flags |= TB_DOMAIN;
+                    break;
 
-			case CMDTFCHANNEL:
-			    tbptr -> tb_flags |= TB_CHANNEL;
-			    break;
+                  case CMDTFCHANNEL:
+                    tbptr -> tb_flags |= TB_CHANNEL;
+                    break;
 
-			case CMDTFPARTIAL:
-			    tbptr -> tb_flags |= TB_PARTIAL;
-			    break;
+                  case CMDTFPARTIAL:
+                    tbptr -> tb_flags |= TB_PARTIAL;
+                    break;
 
-			case CMDTFABORT:
-			    tbptr -> tb_flags |= TB_ABORT;
-			    break;
+                  case CMDTFABORT:
+                    tbptr -> tb_flags |= TB_ABORT;
+                    break;
 
-			case CMDTFROUTE:
-			    tbptr -> tb_flags |= TB_ROUTE;
-			    break;
-
+                  case CMDTFROUTE:
+                    tbptr -> tb_flags |= TB_ROUTE;
+                    break;
+                
 #ifdef HAVE_NIS
-		        case CMDTFNIS:
-		            tbptr -> tb_flags |= TB_NIS;
+                  case CMDTFNIS:
+                    if(tbptr -> tb_type == TBT_FILE)
+                      tbptr -> tb_type = TBT_NIS;
+		            /*tbptr -> tb_flags |= TB_NIS;*/
 		            break;
  
 #endif /* HAVE_NIS */
-			default:
-			    tai_error ("unknown table flag", argv[ind-1],
-					argc, argv);
-			    continue;
-		    }
-	    	    break;
+                  default:
+                    tai_error ("unknown table flag", argv[ind-1],
+                               argc, argv);
+                    continue;
+              }
+              break;
 
-		case CMDTNOOP:
-		    break;      /* noop */
+            case CMDTNOOP:
+              break;      /* noop */
 
-		default:
-		    tai_error ("unknown table parm", argv[ind], argc, argv);
-		    break;
+            case CMDTTYPE:
+              break;
+              
+            default:
+              if(tbptr -> tb_tai != NULL) {
+                if(tbptr -> tb_tai(tbptr, &ind, argc, &argv[0])){
+                  tai_error ("unknown table parm", argv[ind], argc, argv);
+                }
+              }
+              else
+                tai_error ("unknown table parm", argv[ind], argc, argv);
+              break;
 	    }
 	}
     }
@@ -684,13 +820,25 @@ int tb_tai (argc, argv)
 #ifdef HAVE_NIS
     if( strcmp(tbptr -> tb_name, "users") == 0) {
       tb_users.tb_flags = tbptr -> tb_flags;
-      tb_users.tb_file = tbptr -> tb_file;
+      tb_users.tb_file  = tbptr -> tb_file;
+      tb_users.tb_type  = tbptr -> tb_type;
+      tb_users.tb_parameters = tbptr -> tb_parameters;
+      tb_users.tb_tai   = tbptr -> tb_tai;
+      tb_users.tb_fetch = tbptr -> tb_fetch;
+      tb_users.tb_print = tbptr -> tb_print;
+      tb_users.tb_check = tbptr -> tb_check;
       free(tb_list[tb_numtables]);
       tb_numtables--;
     }
     if( strcmp(tbptr -> tb_name, "mailids") == 0) {
       tb_mailids.tb_flags = tbptr -> tb_flags;
-      tb_mailids.tb_file = tbptr -> tb_file;
+      tb_mailids.tb_file  = tbptr -> tb_file;
+      tb_mailids.tb_type  = tbptr -> tb_type;
+      tb_mailids.tb_parameters = tbptr -> tb_parameters;
+      tb_mailids.tb_tai   = tbptr -> tb_tai;
+      tb_mailids.tb_fetch = tbptr -> tb_fetch;
+      tb_mailids.tb_print = tbptr -> tb_print;
+      tb_mailids.tb_check = tbptr -> tb_check;
       free(tb_list[tb_numtables]);
       tb_numtables--;
     }
@@ -752,7 +900,7 @@ int dm_tai (argc, argv)
         ll_log (logptr, LLOGFTR, "old domains (%d)", dm_numtables);
         for (ind = 0; dm_list[ind] != (Domain *) 0; ind++)
     	    ll_log (logptr, LLOGFTR, "dm(%d) '%s'", 
-		ind, dm_list[ind] -> dm_name);
+                    ind, dm_list[ind] -> dm_name);
     }
 #endif
 

@@ -78,7 +78,7 @@ Dmn_route *dmnroute;              /* where to put routing information   */
     ll_log (logptr, LLOGBTR, "dm_k2val (%s, %s)", dmntbl -> dm_name, subdmn);
 #endif
 
-    if (((dmntbl->dm_table->tb_flags & TB_SRC) == TB_NS) &&
+    if (((dmntbl->dm_table->tb_type) == TBT_NS) &&
 	isstr(dmntbl->dm_domain)) {
 	snprintf(sdbuf, sizeof(sdbuf), "%s.%s", subdmn, dmntbl->dm_domain);
 	retval = tb_k2val (dmntbl->dm_table, TRUE, sdbuf, dmnroute->dm_buf);
@@ -120,7 +120,7 @@ Dmn_route *dmnroute;              /* where to put routing information   */
 	char tdmnbuf[LINESIZE];
 
 	p++;
-	if (((dmntbl->dm_table->tb_flags & TB_SRC) == TB_NS) &&
+	if (((dmntbl->dm_table->tb_type) == TBT_NS) &&
 	    isstr(dmntbl->dm_domain)) {
 	    snprintf(sdbuf, sizeof(sdbuf), "%s.%s", p, dmntbl->dm_domain);
 	    retval = tb_k2val (dmntbl->dm_table, TRUE, sdbuf, tdmnbuf);

@@ -637,7 +637,7 @@ fi
 
 AC_CHECK_FUNCS(bcopy dbmcachedump dup2 fcntl ftime getcwd getdtablesize \
  gethostname gettimeofday getwd index initgroups \
- killpg memcpy mkdir mkstemp quotactl res_mkquery \
+ killpg memcpy mkdir mkstemp quotactl regexec res_mkquery \
  setpgrp setpgid setreuid sigchild sigset sigsetmask \
  sigsys socket strchr strdup truncate tzset)
 AC_CHECK_FUNC(strncat,AC_DEFINE_UNQUOTED(HAVE_STRNCAT,1),[

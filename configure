@@ -4177,7 +4177,7 @@ fi
 
 for ac_func in bcopy dbmcachedump dup2 fcntl ftime getcwd getdtablesize \
  gethostname gettimeofday getwd index initgroups \
- killpg memcpy mkdir mkstemp quotactl res_mkquery \
+ killpg memcpy mkdir mkstemp quotactl regexec res_mkquery \
  setpgrp setpgid setreuid sigchild sigset sigsetmask \
  sigsys socket strchr strdup truncate tzset
 do

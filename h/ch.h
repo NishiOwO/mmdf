@@ -11,6 +11,13 @@ struct tb_struct
     FILE    *tb_fp;             /* stdio file pointer                   */
     long     tb_pos;            /* position in file                     */
     int	     tb_flags;		/* various bits	(type of table, etc)	*/
+  int  tb_type;            /* type of table: file, dbm, ns, nis, .... */
+  void *tb_parameters;     /* tabletype specific parameters */
+  int  (*tb_tai)();        /* pointer to tailoring-function (tabletype=ext) */
+/*  int  (*tb_k2val)();     / * pointer to fetch-function (tabletype=ext)     */
+  int  (*tb_fetch)();      /* pointer to fetch-function (tabletype=ext)     */
+  int  (*tb_print)();      /* pointer to print-function (tabletype=ext)     */
+  int  (*tb_check)();      /* pointer to print-function (tabletype=ext)     */
 };
 #define	TB_SRC	000077			/* Source of table data */
 #define	TB_FILE		000000		/* Read from file */
@@ -19,12 +26,6 @@ struct tb_struct
 #ifdef HAVE_NIS
 #  define TB_NIS        000002          /* Read from NIS-server */
 #endif /* HAVE_NIS */
-/* fine TB_         000003      / * */
-/* fine TB_LDAP     000004      / * */
-/* fine TB_SQL      000005      / * */
-/* fine TB_         000006      / * */
-/* fine TB_         000007      / * */
-/* fine TB_         000010      / * */
 #define TB_TYPE		000300		/* what type of question to ask NS */
 #define TB_DOMAIN	000100		/* ask the nameserver for a domain */
 #define TB_CHANNEL	000200		/* ask the nameserver for a channel */
@@ -33,6 +34,20 @@ struct tb_struct
 #define TB_ABORT        002000 /* don't look at other domains upon NS timeout */
 #define TB_ROUTE        004000 /* enable routing via subdomain matches */
 
+#define TBT_FILE  0      /* sequencial file access */
+#define TBT_DBM   1      /* DBM,GDBM               */
+#define TBT_NS    2      /* Nameserver             */
+#define TBT_NIS   3      /* NIS/YP-request         */
+#define TBT_REGEX 4      /* Regular-expressions    */
+#define TBT_RBL   5      /*  */
+#define TBT_LDAP  6      /*  */
+#define TBT_SQL   7      /*  */
+#define TBT_TEST  8      /* For tests */
+/* fine TBT_      9      / * */
+/* fine TBT_     10      / * */
+#define TBT_LAST 11      /* maximum of different table type
+                            no type can be greater than that value */
+                           
 typedef struct tb_struct    Table;
 
 Table *tb_nm2struct ();

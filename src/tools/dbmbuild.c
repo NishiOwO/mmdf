@@ -451,9 +451,9 @@ process (tblptr)
     if (tblptr -> tb_fp == (FILE *)EOF)
 	return;
 
-    switch(tblptr -> tb_flags & TB_SRC) {
+    switch(tblptr -> tb_type) {
 #ifdef HAVE_NAMESERVER
-        case TB_NS:
+        case TBT_NS:
     	if (Debug || Verbose)
 	    fprintf (stderr, "   (Nameserver table)\n");
 	return;
@@ -461,13 +461,16 @@ process (tblptr)
 #endif /* HAVE_NAMESERVER */
 
 #ifdef HAVE_NIS
-        case TB_NIS:
+        case TBT_NIS:
       if (Debug || Verbose)
           fprintf (stderr, "   (NIS table)\n");
       return;
       break;
 #endif /* HAVE_NIS */
+        case TBT_DBM:
+          break;
         default:
+          return;
           break;
     }
 
@@ -600,18 +603,23 @@ datum value;
 check (tblptr)
 Table *tblptr;
 {
-  switch(tblptr -> tb_flags & TB_SRC) {
+  switch(tblptr -> tb_type) {
     
+      case TBT_TEST:
 #ifdef HAVE_NAMESERVER
-      case TB_NS:
-	return(0);
+      case TBT_NS:
 #endif /* HAVE_NAMESERVER */
 #ifdef HAVE_NIS
-      case TB_NIS:
-      return(0);
+      case TBT_NIS:
 #endif /* HAVE_NIS */
-      default:
+#ifdef HAVE_RBLSUPPORT
+      case TBT_RBL:
+#endif /* HAVE_RBLSUPPORT */
+        return(0);
+      case TBT_DBM:
         break;
+      default:
+        return(0);
   }
   
     if (tblptr -> tb_fp == (FILE *)EOF)

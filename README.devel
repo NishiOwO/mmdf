@@ -1,0 +1,47 @@
+How to implement new table-formats
+==================================
+
+We want to implement a new table called 'ntab'
+
+1) Add a new define to h/ch.h
+#define TBT_NTAB  <next not assign number less than TBT_LAST>
+                  If needed, increase TBT_LAST.
+2) Edit lib/mmdf/mm_tai.c
+   - add definition of init-function:
+extern tb_ntab_init();
+
+   - expand struct tbtype
+{"ntab", CMDTFTNTAB, 0 },
+
+   - expand struct tbl_init
+{ TBT_NTAB, tb_ntab_init },
+
+3) Add source file 'tb_ntab' to lib/table/Makefile.real
+4) Write the file lib/table/tb_ntab.c
+We need the following functions:
+
+/* initialisation */
+int tb_ntab_init(tblptr)
+	Table *tblptr;
+{
+  tblptr -> tb_tai   = &tb_ntab_tai;
+  /*tblptr -> tb_print = &tb_ntab_print;*/ /*
+  /*tblptr -> tb_check = &tb_ntab_check;*/ /* used by checkup program */
+  tblptr -> tb_fetch = &tb_ntab_fetch;     /* Allways needed */
+  
+  return;
+}
+
+/* table specific tailoring */
+int tb_test_tai(tbptr, gind, argc, argv)
+    Table *tbptr;
+    int *gind;
+    int argc;
+    char *argv[];
+
+/* fetch table entry for given key */
+int tb_ntab_fetch (table, name, buf, first) /* use key and return value */
+register Table  *table;           /* I: */
+register char  name[];            /* I: name of ch "member" / key          */
+char   *buf;                      /* O: put value int this buffer          */
+int     first;                    /* I: start at beginning of list?        */

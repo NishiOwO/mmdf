@@ -697,17 +697,19 @@ cktable(tb, title)
 register Table *tb;
 register char *title;
 {
+  extern int que ();
     struct stat statbuf;
 
     tb -> tb_fp = (FILE *) NOTOK;	/* flag this table as processed */
-    switch(tb -> tb_flags&TB_SRC) {
-        case TB_NS:
+#if 0
+    switch(tb -> tb_type) {
+        case TBT_NS:
 	que (LEVEL6, subhdrfmt, title, "(via nameserver)");
           break;
 
 #ifdef HAVE_NIS
-        case TB_NIS:
-	cknistable(tb, title);
+        case TBT_NIS:
+          cknistable(tb, title);
           break;
 #endif /* HAVE_NIS */
 
@@ -717,6 +719,15 @@ register char *title;
 	    que (LEVEL1, probfmt, "cannot stat", xerrstr());
           break;
     }
+#else
+    if(tb->tb_check != NULL) tb->tb_check(&que, tb, subhdrfmt, title);
+    else {
+      que (LEVEL6, subhdrfmt, title, tb -> tb_file);
+      if (stat (tb -> tb_file, &statbuf) < OK)
+      que (LEVEL1, probfmt, "cannot stat", xerrstr());
+    }
+    
+#endif
     qflush (LEVEL6);
 }
 

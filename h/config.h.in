@@ -1,6 +1,6 @@
 /* h/config.h.in.  Generated automatically from configure.in by autoheader.  */
 /*
- * $Id: config.h.in,v 1.40 1999/09/08 07:58:01 krueger Exp $
+ * $Id: config.h.in,v 1.41 1999/10/24 16:48:20 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -395,6 +395,9 @@ yourdomain".  Since % or
 
 /* Define if you have the quotactl function.  */
 #undef HAVE_QUOTACTL
+
+/* Define if you have the regexec function.  */
+#undef HAVE_REGEXEC
 
 /* Define if you have the res_mkquery function.  */
 #undef HAVE_RES_MKQUERY

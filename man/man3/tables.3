@@ -1,0 +1,60 @@
+.TH ADDRESS 3.tables
+'ta .8i 1.6i 2.4i 3.2i 4.0i 4.8i 5.6i 6.3i
+.SH NAME
+table tailoring (tb_*_tai)
+.SH SYNOPSIS
+
+.nf
+#include "util.h"
+#include "ch.h"
+#include "cmd.h"
+
+struct tb_struct
+{
+    char    *tb_name;    /* internal name of table               */
+    char    *tb_show;    /* displayable human-oriented string    */
+    char    *tb_file;    /* name of file containing table        */
+    FILE    *tb_fp;      /* stdio file pointer                   */
+    long     tb_pos;     /* position in file                     */
+    int	     tb_flags;	 /* various bits	(type of table, etc)	*/
+  int  tb_type;          /* type of table: file, dbm, ns, nis, .... */
+  void *tb_parameters;   /* tabletype specific parameters */
+  int  (*tb_tai)();      /* pointer to tailoring-function (tabletype=ext) */
+  int  (*tb_fetch)();    /* pointer to fetch-function (tabletype=ext)     */
+  int  (*tb_print)();    /* pointer to print-function (tabletype=ext)     */
+  int  (*tb_check)();    /* pointer to print-function (tabletype=ext)     */
+};
+.fi
+
+.PD 0
+.SS "NODE PRIMITIVES"
+
+.IP "ap_new_init() -> int" 25
+.IP "ap_new_tai() -> int" 25
+.IP "ap_new_fetch() -> int" 25
+.IP "ap_new_print() -> int" 25
+.IP "ap_new_check() -> int" 25
+.PD
+.bp
+.SH DESCRIPTION
+.PP
+
+
+.I ap_new_init
+will create, fill-in, and insert a node.
+As an efficiency mechanism, it often
+is possible to combine the data values of contiguous parse nodes,
+if the nodes are of the same object
+type.
+.I ap_new_tai
+.I ap_new_fetch
+.I ap_new_print
+.I ap_new_check
+.SH FILES
+.IP "ch.h" 25
+Include file
+.IP "mm_tai.c"
+.IP "tb_new.c"
+.SH AUTHORS
+.PD 0
+.PD

@@ -170,7 +170,9 @@ set_tb (tptr)
     str_print (tptr->tb_show);
     printf (", ");
     str_print (tptr->tb_file);
-    printf (", (FILE *)0, 0L, 0%o },\n", (int)tptr->tb_flags);
+    printf (", (FILE *)0, 0L, 0%o", (int)tptr->tb_flags);
+    printf (", %d, 0L, 0L, 0L", (int)tptr->tb_type);
+    printf (" },\n");
 }
 /*****************************************************************************
 *                              | s e t _ a l |                               *

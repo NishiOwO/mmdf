@@ -52,6 +52,10 @@
 #  include <gdbm.h>
 #endif
 
+#if defined(HAVE_LIBGDBM) || defined(HAVE_LIBNDBM) || defined(HAVE_LIBDBM)
+#  define HAVE_DBM
+#endif
+
 extern LLog *logptr;
 extern char *tbldfldir;
 extern char *tbldbm;
@@ -61,6 +65,8 @@ extern char *ch_dflnam;
 #ifndef HAVE_LIBGDBM
 typedef struct {char *dptr; int dsize;} datum;
 #endif
+int Tdebug = 0;
+#define  logx    if (Tdebug) printf
 
 extern datum myfetch();
 
@@ -77,11 +83,15 @@ int     pos;                    /* which position to get  (0 = first) */
     DBMValues   dbm;
     Chan	**chp;
     char        hostname[ADDRSIZE];
+    int         tb_done[TBT_LAST];
+    int         tb_type;
+    
 #ifdef	HAVE_NAMESERVER
     int         ns_done = 0;
 #endif /* HAVE_NAMESERVER */
     int         dbm_done = 0;
-
+    memset(tb_done, 0, sizeof(tb_done));
+    
 /*  the list of channel name tables is first searched.  If a hit is found
  *  in the table for the local channel, OK is returned to indicate a local
  *  reference.
@@ -93,69 +103,84 @@ int     pos;                    /* which position to get  (0 = first) */
     for (chp = ch_tbsrch; (chanptr = *chp) != (Chan *)0; chp++)
     {
 #ifdef DEBUG
-	ll_log( logptr, LLOGFTR, "h2chan table '%s'",
-		chanptr->ch_table->tb_name);
+      ll_log( logptr, LLOGFTR, "h2chan table '%s'",
+              chanptr->ch_table->tb_name);
 #endif
-      switch(chanptr -> ch_table -> tb_flags & TB_SRC) {
-#ifdef HAVE_NAMESERVER
-          case TB_NS:
-	    if (!ns_done) {
-		/*
-		 * assumes the fact we are looking for a 'channel'
-		 * if this is not the case you must do the lookup every
-		 * time round the loop
-		 * This code believes all NS channel tables are equivalent,
-		 * and they will return the same answer.  Not unreasonable
-		 * at the current time, but watch out.
-		 */
-
-		switch(ns_fetch (chanptr->ch_table, hostr, hostname, 1)){
-		case OK:
-		    ns_done++;
-		    break;
-		case MAYBE:
-		    return( (Chan *)MAYBE);
-		}
-		ns_done++;
-	    }
-	    if (ns_done == 1)
-		continue;
-	    if(--pos > 0)
-		continue;
-#if DEBUG > 1
-	    ll_log( logptr, LLOGFTR, "NSconsider ('%s', '%s')",
-		hostname, chanptr->ch_lname);
-#endif
-	    if (lexequ (chanptr -> ch_name, ch_dflnam))
-		return( (Chan *)OK );   /* local ref             */
-	    return( chanptr );
-            break;
-#endif /* HAVE_NAMESERVER */
-
+      
+      tb_type = chanptr -> ch_table -> tb_type;
+      switch(tb_type) {
           default:
-	    if (!dbm_done) {
-		dbm_done++;
-		if (tb_fetch (hostr, dbm))
-		     dbm_done++;
-	    }
-	    if (dbm_done == 1)
-		continue;
-	    for (dp = dbm ; (cp = dp->RECname) != NULL ; dp++) {
+            if ((!tb_done[tb_type]) &&
+                (chanptr->ch_table->tb_fetch!=NULL) ){
+              /*
+               * assumes the fact we are looking for a 'channel'
+               * if this is not the case you must do the lookup every
+               * time round the loop
+               * This code believes all NS channel tables are equivalent,
+               * and they will return the same answer.  Not unreasonable
+               * at the current time, but watch out.
+               */
+              switch(chanptr->ch_table->tb_fetch (chanptr->ch_table,
+                                                  hostr, hostname, 1)){
+                  case OK:
+                    tb_done[tb_type]++;
+                    break;
+                  case MAYBE:
+                    return( (Chan *)MAYBE);
+              }
+              tb_done[tb_type]++;
+            }
+            if (tb_done[tb_type] == 1)
+              continue;
+            if(--pos > 0)
+              continue;
 #if DEBUG > 1
-		ll_log( logptr, LLOGFTR, "consider ('%s')", cp);
+            ll_log( logptr, LLOGFTR, "NSconsider ('%s', '%s')",
+                    hostname, chanptr->ch_lname);
 #endif
-		if (lexequ(cp, chanptr -> ch_table -> tb_name)) {
-		    if (--pos > 0)
-			break;
-		    if (lexequ(chanptr -> ch_name, ch_dflnam))
-			return( (Chan *)OK );
-		    return(chanptr);
-		}
-	    }
-        break;
+            if (lexequ (chanptr -> ch_name, ch_dflnam))
+              return( (Chan *)OK );   /* local ref             */
+            return( chanptr );
+            break;
+
+          case TBT_FILE:
+            if (tb_k2val (chanptr -> ch_table, TRUE, hostr, hostname) == OK)
+            {                         /* the hostname IS in this table      */
+              if (lexequ (chanptr -> ch_name), ch_dflnam)
+              {
+                return ((Chan *) OK); /* local reference                */
+              }
+              return (chanptr);    /* let caller know which chan         */
+            }
+            break;
+            
+          case TBT_DBM:
+#ifdef HAVE_DBM
+            if (!tb_done[tb_type]) {
+              tb_done[tb_type]++;
+              if (tb_fetch (hostr, dbm))
+                tb_done[tb_type]++;
+            }
+            if (tb_done[tb_type] == 1)
+              continue;
+            else
+            for (dp = dbm ; (cp = dp->RECname) != NULL ; dp++) {
+#if DEBUG > 1
+              ll_log( logptr, LLOGFTR, "consider ('%s')", cp);
+#endif
+              if (lexequ(cp, chanptr -> ch_table -> tb_name)) {
+                if (--pos > 0)
+                  break;
+                if (lexequ(chanptr -> ch_name, ch_dflnam))
+                  return( (Chan *)OK );
+                return(chanptr);
+              }
+            }
+#endif /* HAVE_DBM */
+            break;
       }
     }
-
+    
     return ((Chan *) NOTOK);
 }
 
@@ -174,62 +199,83 @@ char    *dmbuf;                 /* Domain route buffer */
     extern	Domain	**dm_list;
     Domain	**dmp;
     char	*argv[DM_NFIELD];
-    int         dbm_done = 0;
     char        sdbuf[LINESIZE];
+    int         tb_done[TBT_LAST];
+    int         tb_type;
 
 #ifdef DEBUG
     ll_log( logptr, LLOGFTR, "dm_s2dom ('%s')", subdomain);
 #endif
+    memset(tb_done, 0, sizeof(tb_done));
 
     for (dmp = dm_list; (dmnptr = *dmp) != (Domain *)0; dmp++)
     {
-	/* If flags=partial is not set or this is a top domain table    */
-	/* (indicating that we've already tried this match as a "route" */
-	/* match), skip it.                                             */
-	if (((dmnptr -> dm_table -> tb_flags & TB_PARTIAL) != TB_PARTIAL) ||
-	    (!isstr(dmnptr->dm_domain)))
-	    continue;
-      switch(dmnptr -> dm_table -> tb_flags & TB_SRC) {
-#ifdef HAVE_NAMESERVER
-          case TB_NS:
-            snprintf(sdbuf, sizeof(sdbuf), "%s.%s", subdomain, dmnptr->dm_domain);
-	    switch (ns_fetch(dmnptr->dm_table,sdbuf,official,1)) {
-	    case OK:
-	        /* route is simply official name */
-	        (void) strcpy(dmbuf,official);
-	        return( dmnptr );
-	    case MAYBE:
-	        return( (Domain *)MAYBE);
-	    }
-            break;
-#endif /* HAVE_NAMESERVER */
+      /* If flags=partial is not set or this is a top domain table    */
+      /* (indicating that we've already tried this match as a "route" */
+      /* match), skip it.                                             */
+      tb_type = dmnptr -> dm_table -> tb_type;
+      memset(sdbuf, 0, sizeof(sdbuf));
+
+      if (((dmnptr -> dm_table -> tb_flags & TB_PARTIAL) != TB_PARTIAL) ||
+          (!isstr(dmnptr->dm_domain)))
+        snprintf(sdbuf, sizeof(sdbuf), "%s", subdomain);
+      else
+        snprintf(sdbuf, sizeof(sdbuf), "%s.%s", subdomain, dmnptr->dm_domain);
+      
+      switch(dmnptr -> dm_table -> tb_type) {
           default:
-	    if (!dbm_done) {
-		dbm_done++;
-		if (tb_fetch (subdomain, dbm))
-		     dbm_done++;
-	    }
-	    if (dbm_done == 1)
-		continue;
-	    for ( dp = dbm ; (cp = dp->RECname) != NULL ; dp++) {
+            if( dmnptr->dm_table->tb_fetch!=NULL ) {
+              switch (dmnptr->dm_table->tb_fetch(dmnptr->dm_table,
+                                                 sdbuf, official, 1)) {
+                  case OK:
+                    /* route is simply official name */
+                    (void) strcpy(dmbuf,official);
+                    return( dmnptr );
+                  case MAYBE:
+                    break;
+                    return( (Domain *)MAYBE);
+              }
+            }
+            break;
+            
+          case TBT_FILE:
+            if (tb_k2val (dmnptr -> dm_table, TRUE, subdomain, sdbuf) == OK) {
+              (void) strcpy(dmbuf, sdbuf);
+              str2arg(sdbuf, DM_NFIELD, argv, 0);
+              (void) strcpy(official, argv[0]);
+              return (dmnptr);
+            }
+            break;
+            
+          case TBT_DBM:
+#ifdef HAVE_DBM
+            if (!tb_done[tb_type]) {
+              tb_done[tb_type]++;
+              if (tb_fetch (subdomain, dbm))
+                tb_done[tb_type]++;
+            }
+            if (tb_done[tb_type] == 1)
+              continue;
+            for ( dp = dbm ; (cp = dp->RECname) != NULL ; dp++) {
 #ifdef DEBUG
-		ll_log( logptr, LLOGFTR, "dm_s2dom: consider ('%s')", cp);
+              ll_log( logptr, LLOGFTR, "dm_s2dom: consider ('%s')", cp);
 #endif
-		if (!lexequ(cp, dmnptr -> dm_table -> tb_name))
-		    continue;
-		if(dp->RECval == NULL) {	/* should never happen */
-		    *dmbuf = *official = '\0';
-		    return(dmnptr);
-		}
-		(void) strcpy (dmbuf, dp->RECval);
-		str2arg(dp->RECval, DM_NFIELD, argv, 0);
-		(void) strcpy(official, argv[0]);
-		return(dmnptr);
-	    }
-        break;
+              if (!lexequ(cp, dmnptr -> dm_table -> tb_name))
+                continue;
+              if(dp->RECval == NULL) {	/* should never happen */
+                *dmbuf = *official = '\0';
+                return(dmnptr);
+              }
+              (void) strcpy (dmbuf, dp->RECval);
+              str2arg(dp->RECval, DM_NFIELD, argv, 0);
+              (void) strcpy(official, argv[0]);
+              return(dmnptr);
+            }
+#endif /* HAVE_DBM */
+            break;
 	}
     }
-
+    
     (void) strcpy (official, subdomain);
     return ((Domain *) NOTOK);
 }
@@ -237,6 +283,7 @@ char    *dmbuf;                 /* Domain route buffer */
 /* *******  Get a record from the database, given a key    ********** */
 /*            Note that the strings are in internal statics             */
 
+#ifdef HAVE_DBM
 tb_fetch (name, dbm)                /* return filled entry for name */
 char *name;                         /* use this key to fetch entry  */
 DBMValues dbm;                      /* put the entry here           */
@@ -311,6 +358,7 @@ DBMValues dbm;                      /* put the entry here           */
 
     return (TRUE);
 }
+#endif /* HAVE_DBM */
 
 #ifdef HAVE_WILDCARD
 int tb_wk2val(table, first, name, buf)
@@ -359,75 +407,53 @@ char   *buf;                      /* put value int this buffer          */
 LOCVAR DBMValues dbm;
 LOCVAR struct DBvalues *dp = (struct DBvalues *) 0;
     register char *cp;
-#if defined(HAVE_NAMESERVER) || defined(HAVE_NIS)
     int retval;
-#endif
-#ifdef HAVE_NIS
-    char *domain;
-    int  len;
-    char *value = NULL;
-#endif /* HAVE_NIS */
-    
+    char    host[LINESIZE];
 
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "tb_k2val (%s, first=%d, %s)",
 			table -> tb_name, first, name);
 #endif
 
-    switch(table->tb_flags&TB_SRC) {
-#ifdef HAVE_NAMESERVER
-        case TB_NS:
-	if ((retval = ns_fetch (table, name, buf, first)) != NOTOK)
-	    return (retval);
-#ifdef DEBUG
-	ll_log (logptr, LLOGFTR, "tb_k2val failed");
-#endif
-	(void) strcpy (buf, "(ERROR)");
-	return (NOTOK);
-          break;
-#endif /* HAVE_NAMESERVER */
-
-#ifdef HAVE_NIS
-        case TB_NIS:
-      domain = NULL;
-
-      if (domain == NULL) /* get NIS-domain first */
-	if ((retval = yp_get_default_domain(&domain)) != 0)
-	  {
-#ifdef DEBUG
-	    ll_log (logptr, LLOGFTR,
-		    "tb_k2val: Can't get default domainname. Reason: %s.\n",
-		    yperr_string(retval));
-#endif
-	    (void) strcpy (buf, "(ERROR)");
-	    return (NOTOK);	  /* cannot get domainname              */
-	  }
-
-      retval = yp_match(domain, table->tb_file, name, strlen(name),
-			&value, &len);
-      if(!retval) {
-#ifdef DEBUG
-	ll_log (logptr, LLOGFTR,"tb_k2val: NIS entry found: %s, %d", 
-		value, retval);
-#endif
-	value[len]='\0';
-	strcpy(buf, value);
-	compress (buf, buf);  /* get rid of extra white space       */
-	return (OK);
-      }
-#ifdef DEBUG
-       ll_log (logptr, LLOGFTR, "tb_k2val failed");
-#endif
-       (void) strcpy (buf, "(ERROR)");
-       return (NOTOK);
-          break;
-#endif /* HAVE_NIS */
-
+    switch(table->tb_type) {
         default:
+          if(table -> tb_fetch != NULL) {
+            if ((retval = table -> tb_fetch (table, name, buf, first))
+                != NOTOK)
+              return (retval);
+          }
+#ifdef DEBUG
+          ll_log (logptr, LLOGFTR, "tb_k2val failed");
+#endif
+          (void) strcpy (buf, "(ERROR)");
+          return (NOTOK);
+          break;
+          
+        case TBT_FILE:
+          if (!tb_open (table, first))
+            return (NOTOK);           /* not opened                         */
+
+          while (tb_read (table, host, buf))
+          {                             /* cycle through keys                 */
+            if (lexequ (name, host))  /* does key match search name?        */
+            {
+              compress (buf, buf);  /* get rid of extra white space       */
+              return (OK);
+            }
+          }
+
+          (void) strcpy (buf, "(ERROR)");
+          return (NOTOK);
+          break;
+
+        case TBT_DBM:
           break;
     }
-    if (!first)
-	dp++;
+    
+#ifdef HAVE_DBM
+    if (!first) {
+      if(dp!=NULL) dp++;
+    }
     else
     {
 	if (tb_fetch (name, dbm))
@@ -456,6 +482,7 @@ LOCVAR struct DBvalues *dp = (struct DBvalues *) 0;
 		return (OK);      /* give them the value-part         */
 	    }
 	}
+#endif /* HAVE_DBM */
 #ifdef DEBUG
     ll_log (logptr, LLOGFTR, "tb_k2val failed");
 #endif

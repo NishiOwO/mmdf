@@ -84,15 +84,19 @@ char **argv;
 check (tblptr)
 Table *tblptr;
 {
-  switch(tblptr -> tb_flags & TB_SRC) {
+  switch(tblptr -> tb_type) {
     
+      case TBT_TEST:
 #ifdef HAVE_NAMESERVER
-      case TB_NS: return;
+      case TBT_NS:
 #endif /* HAVE_NAMESERVER */
-
 #ifdef HAVE_NIS
-      case TB_NIS: return;
+      case TBT_NIS:
 #endif /* HAVE_NIS */
+#ifdef HAVE_RBLSUPPORT
+      case TBT_RBL:
+#endif /* HAVE_RBLSUPPORT */
+        return;
 
       default:
     if (tblptr -> tb_fp == (FILE *)EOF)
