@@ -1,4 +1,4 @@
-static char Id[] = "$Id: smtpsrvr.c,v 1.36 2001/04/26 22:02:15 krueger Exp $";
+static char Id[] = "$Id: smtpsrvr.c,v 1.37 2001/05/02 21:27:52 krueger Exp $";
 /*
  *                      S M T P S R V R . C
  *
@@ -819,8 +819,8 @@ int cmdnr;
 #endif /* HAVE_ESMTP_DSN */
         {NULL, NULL, -1, NULL     }
       };
-#endif /* HAVE_ESMTP */
         mailfromcommands[0].valueptr = (void *)&size;
+#endif /* HAVE_ESMTP */
  
 	if (arg == 0 || *arg == 0) {
 		netreply("501 No argument supplied\r\n");
