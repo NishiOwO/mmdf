@@ -1,10 +1,24 @@
 /*
- * $Id: rbl_match.c,v 1.1 1998/12/17 09:30:04 krueger Exp $
+ * $Id: rbl_match.c,v 1.2 1999/10/24 16:56:42 krueger Exp $
  *
  *
  */
 
 #include "util.h"
+#include "mmdf.h"
+#include "cmd.h"
+#include "ch.h"
+
+extern LLog *logptr, chanlog;
+
+int tb_rbl_init(tblptr)
+Table *tblptr;
+{
+#ifdef DEBUG
+  ll_log (logptr, LLOGBTR, "tb_rbl_init (%p)", tblptr);
+#endif
+  return;
+}
 
 #if defined(HAVE_NAMESERVER) && defined(HAVE_RBLSUPPORT)
 int rbl_match(rbl_domain, rbl_hostaddr)
