@@ -1064,7 +1064,7 @@ int tb_ns_tai(tbptr, gind, argc, argv)
 
       case CMDTSERVER:
         logx("Using SERVER '%s' for %s\n", argv[ind], tbptr->tb_name);
-        param->ns_server = strdup(argv[ind]);
+        param->ns_server = argv[ind];
         break;
         
       default:
