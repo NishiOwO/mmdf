@@ -15,4 +15,7 @@
 #define PHS_WREND   9           /* end writing (picking up) mail to site */
 
 
+extern int    phs_note();
 extern time_t phs_get ();
+extern void   phs_msg();
+extern void   phs_end();

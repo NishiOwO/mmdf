@@ -1,58 +1,11 @@
 /*
- * $Id: funcs.h,v 1.2 1998/05/25 11:43:46 mmdf Exp $
+ * $Id: funcs.h,v 1.3 1998/05/25 20:17:00 krueger Exp $
  */
 
 #ifdef HAVE_MALLOC_H
 #  include <malloc.h>
 #endif
 
-/* addr/adrparse.c */
-extern void parsadr();
-
-/* addr/ap_1adr.c */
-extern int ap_1adr ();
-/* LOCFUN void ap_7to8 (); */
-
-/* addr/ap_dmflip.c */
-extern char *ap_dmflip();
-
-/* addr/ap_lex.c */
-extern int ap_lex();
-extern int ap_char();
-
-/* addr/ap_lxtable.c */
-
-/* addr/ap_normali.c */
-/* extern AP_ptr ap_normalize(); */
-/* LOCFUN void	ap_ptinit(); */
-#ifndef	JNTMAIL
-extern void ap_locnormalize();
-#endif
-extern int ap_dmnormalize();
-/* LOCFUN void logtree(); */
-
-/* functions from addr/ap_p2s.c */
-extern char *ap_p2s();
-
-/* functions from addr/ap_util.c */
-extern void ap_free();
-extern void ap_fllnode();
-extern void ap_ninit();
-extern void ap_insert();
-extern void ap_delete();
-extern void ap_sqtfix ();
-extern void ap_iinit ();
-extern void ap_clear ();
-extern int  ap_ppush ();
-extern void ap_ppop ();
-extern int  ap_flget ();
-extern int  ap_fpush ();
-extern void ap_fpop ();
-extern void ap_palloc ();
-extern void ap_pfill ();
-extern void ap_pnsrt ();
-extern void ap_pappend ();
-extern void ap_padd ();
 
 /**************************************************/
 /* mmdf/alias.c */
