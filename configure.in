@@ -277,7 +277,7 @@ dnl Version business -- should be the same as in Singular subdir
 dnl
 AC_GET_UNAME
 MMDF_CONFIG=$UNAME_NODE.config
-AC_LOAD_INTERACTIVE_CONFIG(xConfcache)
+dnl AC_LOAD_INTERACTIVE_CONFIG(xConfcache)
 AC_LOAD_LOCAL_CONFIG($MMDF_CONFIG)
 AC_CANONICAL_HOST
 AC_PROG_CC
@@ -975,10 +975,11 @@ echo "vendor="$host_vendor
 echo "os    ="$host_os
 echo "target="$target
 
-AC_OUTPUT(lib/Makefile src/Makefile uip/Makefile conf/common/Makefile.com \
-Makefile conf/$target/conf.h conf/$target/conf.c)
+dnl AC_OUTPUT(lib/Makefile src/Makefile uip/Makefile conf/common/Makefile.com
+dnl Makefile conf/$target/conf.h conf/$target/conf.c)
+AC_OUTPUT(lib/Makefile src/Makefile uip/Makefile conf/common/Makefile.com Makefile)
 cd conf
-echo ./sitesetup $target
+echo running ./sitesetup $target
 ./sitesetup $target
 cd ..
 
