@@ -829,11 +829,11 @@ char *s;
 	return( i+1 );
 }
 
-#ifndef V4_2BSD
+#ifndef HAVE_TRUNCATE
 
 #define BUFSIZE		1024
 
-static char tmp_file[] = "/tmp/truncXXXXXX";
+static char tmp_file[20];
 
 truncate(path, length)
 char *path;
@@ -842,6 +842,7 @@ long length;
 	char tmpf[sizeof tmp_file];
 	register fd1, fd2, n;
 	char buf[BUFSIZE];
+    strcpy(tmp_file, "/tmp/truncXXXXXX");
 
 	if ((fd1 = open(path, 0)) < 0)
 		return -1;
@@ -879,4 +880,4 @@ long length;
 	return 0;
 }
 
-#endif V4_2BSD
+#endif /* HAVE_TRUNCATE */

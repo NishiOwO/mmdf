@@ -42,7 +42,7 @@
 #include <string.h>
 #endif /* HAVE_SYS_FILE_H */
 
-#ifndef V4_2BSD
+#ifndef HAVE_SIGSETMASK
 RETSIGTYPE	(*oldhup)();
 RETSIGTYPE	(*oldintr)();
 RETSIGTYPE	(*oldquit)();
@@ -137,13 +137,13 @@ int     setflg;
 
 		if( (binfp = fopen( binarybox, "r" )) != NULL )  {
 
-#ifndef V4_2BSD
+#ifdef HAVE_SIGSETMASK
+			oldsig = sigsetmask(SPSIGS);
+#else /* HAVE_SIGSETMASK */
 			oldhup = signal(SIGHUP,SIG_IGN);
 			oldintr = signal(SIGINT,SIG_IGN);
 			oldquit = signal(SIGQUIT,SIG_IGN);
-#else
-			oldsig = sigsetmask(SPSIGS);
-#endif
+#endif /* HAVE_SIGSETMASK */
 			binaryvalid = FALSE;
 
 			/* Load binary map first */
@@ -225,13 +225,13 @@ int     setflg;
 			fclose( binfp );
 			binfp = (FILE *)NULL;
 			binaryvalid = TRUE;
-#ifndef V4_2BSD
+#ifdef HAVE_SIGSETMASK
+			sigsetmask(oldsig);
+#else /* HAVE_SIGSETMASK */
 			signal(SIGHUP,oldhup);
 			signal(SIGINT,oldintr);
 			signal(SIGQUIT,oldquit);
-#else
-			sigsetmask(oldsig);
-#endif
+#endif /* HAVE_SIGSETMASK */
 
 			/* Fall through to read any new messages */
 			setflg = SETAPND;	/* to get "new" flags */
@@ -804,13 +804,13 @@ binbuild()
 		return;
 	}
 
-#ifndef V4_2BSD
+#ifdef HAVE_SIGSETMASK
+	oldsig = sigsetmask(SPSIGS);	/* Block all signals */
+#else /* HAVE_SIGSETMASK */
 	oldhup = signal(SIGHUP,SIG_IGN);
 	oldintr = signal(SIGINT,SIG_IGN);
 	oldquit = signal(SIGQUIT,SIG_IGN);
-#else
-	oldsig = sigsetmask(SPSIGS);	/* Block all signals */
-#endif
+#endif /* HAVE_SIGSETMASK */
 	strcpy( tempfile, binarybox);
 	/* get the path to directory of file  */
 	if (ptr = rindex(tempfile, '/'))
@@ -857,13 +857,13 @@ binbuild()
 	if( bprint == ON )
 		printf(" done\r\n");
 	fflush( stdout );
-#ifndef V4_2BSD
+#ifdef HAVE_SIGSETMASK
+	sigsetmask(oldsig);	/* restore signals */
+#else /* HAVE_SIGSETMASK */
 	signal(SIGHUP,oldhup);
 	signal(SIGINT,oldintr);
 	signal(SIGQUIT,oldquit);
-#else
-	sigsetmask(oldsig);	/* restore signals */
-#endif
+#endif /* HAVE_SIGSETMASK */
 }
 
 /*
