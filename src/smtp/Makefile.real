@@ -73,9 +73,6 @@ xsmtpd: smtpd.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ \
 		smtpd.o $(MMDFLIBS) $(SYSLIBS)
 
-smtpd.o:	smtpd.o
-	cp smtpd.o smtpd.o
-
 l-smtpd:
 	$(LINT) $(LFLAGS) smtpd.c $(LLIBS)
 
