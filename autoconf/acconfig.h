@@ -15,7 +15,7 @@
 
 
 /*
- * $Id: acconfig.h,v 1.2 1999/04/11 22:05:05 krueger Exp $
+ * $Id: acconfig.h,v 1.3 1999/07/19 20:31:34 krueger Exp $
  *
  */
 
@@ -359,6 +359,8 @@
  *             networking.  See TB_NS below.
  */
 #undef HAVE_NAMESERVER
+#undef HAVE__GETSHORT
+#undef HAVE_GETSHORT
 
 /*             Prevents    Domain    Literals    (such    as
  *             [10.0.0.59])  from  appearing  in  addresses.
