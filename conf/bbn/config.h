@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.3 1997/12/29 19:43:21 krueger Exp $
+ * $Id: config.h,v 1.4 1997/12/29 19:51:08 krueger Exp $
  *
  * please set every configuration-switch here
  *
@@ -195,5 +195,9 @@
  *             needed on RISC-machines like HP9000s700 an newer.
  */
 /* #undef SUBMIT_TOO_FAST */
+
+/*             Enable 8bit-clean mode when getting messages over smtp.
+ */
+/* #undef EIGHT_BIT_CLEAN */
 
 #endif /* CONFIG_H */

@@ -331,8 +331,12 @@ getline()
 		}
 		c = *inp++ & 0377;
 
+#ifndef EIGHT_BIT_CLEAN
 		if (c == '\r' ||        /* ignore CR */
 		    c >= 0200)          /* or any telnet codes that */
+#else
+		if (c == '\r')        /* ignore CR */
+#endif
 			continue;       /*  try to sneak through */
 		if (dont_mung == 0 && arg == NULL)
 		{
