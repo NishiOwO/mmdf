@@ -1,4 +1,4 @@
-static char Id[] = "$Id: smtpsrvr.c,v 1.33 2000/01/18 14:25:10 krueger Exp $";
+static char Id[] = "$Id: smtpsrvr.c,v 1.34 2001/01/19 13:22:02 mmdf Exp $";
 /*
  *                      S M T P S R V R . C
  *
@@ -653,8 +653,8 @@ int cmdnr;
 
 struct comarr2           /* format of the command table */
 {
-	char *cmdname;          /* ascii name */
-	int (*cmdfunc)();       /* command procedure to call */
+    char *cmdname;          /* ascii name */
+    int (*cmdfunc)();       /* command procedure to call */
     int cmdnr;
     void *valueptr;
 };
@@ -784,28 +784,28 @@ mail(cmdnr)
 int cmdnr;
 #endif
 {
-	static char    replybuf[256];
-	static char    info[1024];
+    static char    replybuf[256];
+    static char    info[1024];
     static char    *value;
-	char           *lastdmn;
-	struct rp_bufstruct thereply;
+    char           *lastdmn;
+    struct rp_bufstruct thereply;
 #ifdef HAVE_NOSRCROUTE
     int            ap_outtype_save;
 #endif
-	int	len, infolen=0, infoboo=0;
-	AP_ptr  domain, route, mbox, themap, ap_sender;
+    int	len, infolen=0, infoboo=0;
+    AP_ptr  domain, route, mbox, themap, ap_sender;
     char           *argv[25];
     char           *subargv[5];
     int            Agc, SubAgc, i;
 #ifdef HAVE_ESMTP
-	register struct comarr2 *comp;
+    register struct comarr2 *comp;
     long           size=-1;
 #  ifdef HAVE_ESMTP_DSN
     char           dsn_envid[32];
 #  endif /* HAVE_ESMTP_DSN */
     struct comarr2           /* format of the command table */
       mailfromcommands[] = {
-        {"size",  mfsize,  MCMDSIZE,  (void *)(&size)},      /* 0 */
+        {"size",  mfsize,  MCMDSIZE,  NULL  },      /* 0 */
 #ifdef HAVE_ESMTP_8BITMIME
         {"body",  mfbody,  MCMDBODY,  NULL},                 /* 1 */
 #endif /* HAVE_ESMTP_8BITMIME */
@@ -816,6 +816,7 @@ int cmdnr;
         {NULL, NULL, -1, NULL     }
       };
 #endif /* HAVE_ESMTP */
+        mailfromcommands[0].valueptr = (void *)&size;
  
 	if (arg == 0 || *arg == 0) {
 		netreply("501 No argument supplied\r\n");
