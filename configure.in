@@ -498,12 +498,12 @@ AC_CHECK_LIB(socket, socket)
 AC_CHECK_LIB(nsl, inet_ntoa)
 
 if test "$ac_cv_enable_code_dbm" != "no"; then
-   AC_CHECK_FUNC(dbm_open,ac_cv_lib_dbm="yes",[
+   AC_CHECK_FUNC(dbminit,ac_cv_lib_dbm="yes",[
       AC_CHECK_LIB(gdbm, gdbm_open)
       if test "$ac_cv_lib_gdbm_gdbm_open" = "no"; then
          AC_CHECK_LIB(ndbm, dbm_open)
          if test "$ac_cv_lib_ndbm_gdbm_open" = "no"; then
-            AC_CHECK_LIB(dbm, dbm_open)
+            AC_CHECK_LIB(dbm, dbminit)
          fi
       fi
       if test "$ac_cv_lib_gdbm_gdbm_open" = "yes" || 

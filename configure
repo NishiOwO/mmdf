@@ -1922,48 +1922,48 @@ fi
 
 
 if test "$ac_cv_enable_code_dbm" != "no"; then
-   echo $ac_n "checking for dbm_open""... $ac_c" 1>&6
-echo "configure:1927: checking for dbm_open" >&5
-if eval "test \"`echo '$''{'ac_cv_func_dbm_open'+set}'`\" = set"; then
+   echo $ac_n "checking for dbminit""... $ac_c" 1>&6
+echo "configure:1927: checking for dbminit" >&5
+if eval "test \"`echo '$''{'ac_cv_func_dbminit'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
 #line 1932 "configure"
 #include "confdefs.h"
 /* System header to define __stub macros and hopefully few prototypes,
-    which can conflict with char dbm_open(); below.  */
+    which can conflict with char dbminit(); below.  */
 #include <assert.h>
 /* Override any gcc2 internal prototype to avoid an error.  */
 /* We use char because int might match the return type of a gcc2
     builtin and then its argument prototype would still apply.  */
-char dbm_open();
+char dbminit();
 
 int main() {
 
 /* The GNU C library defines this for functions which it implements
     to always fail with ENOSYS.  Some functions are actually named
     something starting with __ and the normal name is an alias.  */
-#if defined (__stub_dbm_open) || defined (__stub___dbm_open)
+#if defined (__stub_dbminit) || defined (__stub___dbminit)
 choke me
 #else
-dbm_open();
+dbminit();
 #endif
 
 ; return 0; }
 EOF
 if { (eval echo configure:1955: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest; then
   rm -rf conftest*
-  eval "ac_cv_func_dbm_open=yes"
+  eval "ac_cv_func_dbminit=yes"
 else
   echo "configure: failed program was:" >&5
   cat conftest.$ac_ext >&5
   rm -rf conftest*
-  eval "ac_cv_func_dbm_open=no"
+  eval "ac_cv_func_dbminit=no"
 fi
 rm -f conftest*
 fi
 
-if eval "test \"`echo '$ac_cv_func_'dbm_open`\" = yes"; then
+if eval "test \"`echo '$ac_cv_func_'dbminit`\" = yes"; then
   echo "$ac_t""yes" 1>&6
   ac_cv_lib_dbm="yes"
 else
@@ -2065,9 +2065,9 @@ else
 fi
 
          if test "$ac_cv_lib_ndbm_gdbm_open" = "no"; then
-            echo $ac_n "checking for dbm_open in -ldbm""... $ac_c" 1>&6
-echo "configure:2070: checking for dbm_open in -ldbm" >&5
-ac_lib_var=`echo dbm'_'dbm_open | sed 'y%./+-%__p_%'`
+            echo $ac_n "checking for dbminit in -ldbm""... $ac_c" 1>&6
+echo "configure:2070: checking for dbminit in -ldbm" >&5
+ac_lib_var=`echo dbm'_'dbminit | sed 'y%./+-%__p_%'`
 if eval "test \"`echo '$''{'ac_cv_lib_$ac_lib_var'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -2079,10 +2079,10 @@ cat > conftest.$ac_ext <<EOF
 /* Override any gcc2 internal prototype to avoid an error.  */
 /* We use char because int might match the return type of a gcc2
     builtin and then its argument prototype would still apply.  */
-char dbm_open();
+char dbminit();
 
 int main() {
-dbm_open()
+dbminit()
 ; return 0; }
 EOF
 if { (eval echo configure:2089: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest; then
