@@ -3,20 +3,20 @@
 #
 MODULES = 	amp checkup checkque cleanque checkaddr nictable \
 		dbmbuild dbmedit dbmlist setup mailid rem_chans fixtai \
-		process-uucp tablelist
+		process-uucp tablelist getvar
 
 real-default:	amp checkup cleanque checkque checkaddr \
 		nictable dbmbuild dbmedit dbmlist setup mailid \
-		rem_chans fixtai process-uucp tablelist
+		rem_chans fixtai process-uucp tablelist getvar
 
 install:	inst-checkup inst-checkque inst-dbmbuild inst-dbmedit \
 		inst-dbmlist inst-nictable inst-cleanque inst-setup \
 		inst-mailid inst-checkaddr inst-rem_chans inst-fixtai \
-		inst-amp inst-process-uucp inst-tablelist
+		inst-amp inst-process-uucp inst-tablelist inst-getvar
 
 lint:	l-amp l-checkup l-cleanque l-checkque l-dbmbuild l-dbmedit l-dbmlist \
 	l-nictable l-setup l-mailid l-checkaddr l-rem_chans l-fixtai \
-	l-process-uucp l-tablelist
+	l-process-uucp l-tablelist l-getvar
 
 #
 #   amp:       test address-mapping code (coerce to RFC733 or RFC822)
@@ -369,6 +369,30 @@ l-tablelist:
 	$(LINT) $(LFLAGS) tablelist.c $(LLIBS)
 
 
+#
+#   getvar:     return value of an variable defined in the tailorfile
+#
+inst-getvar  :   $(MCMDDIR)/$(MMPREF)getvar
+
+$(MCMDDIR)/$(MMPREF)getvar  :   xgetvar
+	$(INSTALL) -c -m 0$(PGMPROT)  -o $(MMDFLOGIN)  xgetvar \
+		$(MCMDDIR)/$(MMPREF)getvar
+#	cp xgetvar $(MCMDDIR)/$(MMPREF)getvar
+#	-$(CHOWN) $(MMDFLOGIN) $(MCMDDIR)/$(MMPREF)getvar
+#	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)getvar
+	-@ls -ls $(MCMDDIR)/$(MMPREF)getvar
+	-@echo "getvar installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)getvar" >> ${filelist}
+
+getvar:	 xgetvar
+	-@echo
+xgetvar:	 getvar.o $(MMDFLIBS)
+	    $(CC) $(LDFLAGS) -o $@ getvar.o $(MMDFLIBS) $(SYSLIBS)
+
+l-getvar:
+	$(LINT) $(LFLAGS) getvar.c $(LLIBS)
+
+
 
 clean:
 	-rm -f x* *.o makedep eddep make.out errs
@@ -444,6 +468,10 @@ tablelist.o: ../../h/mmdf.h
 tablelist.o: ../../h/ch.h
 tablelist.o: ../../h/dm.h
 tablelist.o: ../../h/chdbm.h
+getvar.o: getvar.c
+getvar.o: ../../h/util.h
+getvar.o: ../../h/mmdf.h
+getvar.o: ../../h/cmd.h
 # DEPENDENCIES MUST END AT END OF FILE
 # IF YOU PUT STUFF HERE IT WILL GO AWAY
 # see make depend above

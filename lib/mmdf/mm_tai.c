@@ -1587,3 +1587,248 @@ int tai_llev (argc, argv)            /* return logging level value */
 #endif
     return (faklog.ll_level);
 }
+
+extern char *mmtailor;
+void *read_variable(varname, value, type)
+char *varname;
+void **value;
+int *type;
+{
+  void *ret = NULL;
+  *type = VARTYPE_CHAR;
+  
+  if(varname != NULL)
+    switch (cmdbsrch (varname, 1, cmdtab, CMDTABENT))
+    {
+        case NO:
+        case MMNOOP:
+        default:        /* command not known to us      */
+          if(lexequ(varname, "mmdftailor")) {
+            ret = (void *)mmtailor;
+          }
+          else
+            *type = VARTYPE_NIL;
+          break;
+
+        case ALIAS:
+        case MMDOMAIN:
+        case MMCHAN:
+        case MMTBL:
+        case AUTHLOG:
+        case MMCHANLOG:
+        case MMMSGLOG:
+          *type = VARTYPE_NIL;
+          break;
+
+        case MMLOCMACHINE:
+          ret = (void *)locmachine;
+	    break;
+
+        case MMLOCHOST:
+          ret = (void *)locname;
+	    break;
+
+        case MMLOCDOMAIN:
+          ret = (void *)locdomain;
+          break;
+
+	case MMSIGN:
+	    ret = (void *)sitesignature;
+	    break;
+
+	case MMLOGIN:
+	    ret = (void *)mmdflogin;
+	    break;
+
+	case MMSUPPORT:
+	    ret = (void *)supportaddr;
+	    break;
+
+	case MMLOGDIR:
+	    ret = (void *)logdfldir;
+	    break;
+
+	case MMPHSDIR:
+	    ret = (void *)phsdfldir;
+	    break;
+
+	case MMTBLDIR:
+	    ret = (void *)tbldfldir;
+	    break;
+
+	case MMDBM:
+	    ret = (void *)tbldbm;
+	    break;
+
+	case MMQUEDIR:
+	    ret = (void *)quedfldir;
+	    break;
+
+	case MMCMDDIR:
+	    ret = (void *)cmddfldir;
+	    break;
+
+	case MMCHANDIR:
+	    ret = (void *)chndfldir;
+	    break;
+
+	case MMDLVRDIR:
+	    ret = (void *)mldfldir;
+	    break;
+
+	case MMLCKDIR:
+	    ret = (void *)lckdfldir;
+	    break;
+
+	case MMTEMPT:
+	    ret = (void *)tquedir;
+	    break;
+
+	case MMADDRQ:
+	    ret = (void *)aquedir;
+	    break;
+
+	case MMMSGQ:
+	    ret = (void *)mquedir;
+	    break;
+
+	case MMQUEPROT:
+	    ret = (void *) &queprot;
+          *type = VARTYPE_OCT;
+	    break;
+
+	case AUTHREQUEST:
+	    ret = (void *)authrequest;
+	    break;
+
+	case MMWARNTIME:
+	    ret = (void *)&warntime;
+    	    *type = VARTYPE_INT;
+	    break;
+
+	case MMFAILTIME:
+	    ret = (void *)&failtime;
+    	    *type = VARTYPE_INT;
+	    break;
+
+	case MMMAXSORT:
+	    ret = (void *)&maxqueue;
+    	    *type = VARTYPE_INT;
+	    break;
+
+	case MMSLEEP:
+	    ret = (void *)&mailsleep;
+    	    *type = VARTYPE_INT;
+	    break;
+
+	case MMSUBMIT:
+	    ret = (void *)namsubmit;
+        ret = (void *)pathsubmit;
+	    break;
+
+	case MMDELIVER:
+	    ret = (void *)namdeliver;
+        ret = (void *)pathdeliver;
+	    break;
+
+	case MMPICKUP:
+	    ret = (void *)nampkup;
+        ret = (void *)pathpkup;
+	    break;
+
+	case MMV6MAIL:
+      ret = (void *)nammail;
+      ret = (void *)pathmail;
+      break;
+
+        case MMMBXPROT:
+          ret = (void *)&sentprotect;
+          *type = VARTYPE_OCT;
+          break;
+
+	case MMMBXNAME:
+	    ret = (void *)mldflfil;
+	    break;
+
+	case MMMBXPREF:
+	    ret = (void *)delim1;
+	    break;
+
+	case MMMBXSUFF:
+	    ret = (void *)delim2;
+	    break;
+
+	case MMDLVFILE:
+	    ret = (void *)dlvfile;
+	    break;
+
+    	case MMAXHOPS:
+    	    ret = (void *)&maxhops;
+    	    *type = VARTYPE_INT;
+    	    break;
+
+    	case MADDID:
+    	    ret = (void *)&mgt_addid;
+    	    *type = VARTYPE_INT;
+    	    break;
+
+        case MADDIPADDR:
+            ret = (void *)&mgt_addipaddr;
+    	    *type = VARTYPE_INT;
+            break;
+
+        case MADDIPNAME:
+            ret = (void *)&mgt_addipname;
+    	    *type = VARTYPE_INT;
+            break;
+
+    	case MLISTSIZE:
+	    ret = (void *)&lnk_listsize;
+    	    *type = VARTYPE_INT;
+            break;
+
+	case UUname:
+	    ret = (void *)Uuname;
+	    break;
+
+	case UUxstr:
+	    ret = (void *)Uuxstr;
+	    break;
+
+	case MMDFLCHAN:
+	    ret = (void *)ch_dflnam;
+	    break;
+
+	case MMMAILIDS:         /* enable/disable use of Mail-Ids */
+	    ret = (void *)&mid_enable;
+        *type = VARTYPE_INT;
+	    break;
+
+	case NIQUEDIR:
+	    ret = (void *)pn_quedir;
+	    break;
+
+#ifdef HAVE_ESMTP
+        case MMSGSIZELIMIT:
+          ret = (void *)&message_size_limit;
+          *type = VARTYPE_LONG;
+          break;
+#   ifdef HAVE_ESMTP_8BITMIME
+        case M8BITMIME:
+          ret = (void *)&accept_8bitmime;
+          *type = VARTYPE_INT;
+          break;
+#   endif /* HAVE_ESMTP_8BITMIME */
+#   ifdef HAVE_ESMTP_DSN
+        case MDSN:
+          ret = (void *)&dsn;
+          *type = VARTYPE_INT;
+          break;
+#   endif /* HAVE_ESMTP_DSN */
+#endif /* HAVE_ESMTP */
+    }
+  else
+    *type = VARTYPE_NIL;
+
+  *value = ret;
+}
