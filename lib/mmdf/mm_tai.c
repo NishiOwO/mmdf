@@ -941,6 +941,8 @@ extern int  ch_numchans;
 #define CMDCLLOG   26
 #define CMDCLLEV   27
 #define CMDCEDIT   28
+#define CMDCFAILTIM 29
+#define CMDCWARNTIM 30
 
 LOCVAR Cmd
 	    cmdchan[] =
@@ -950,6 +952,7 @@ LOCVAR Cmd
     "auth",     CMDCAUTH,   1,
     "base",     CMDCBASE,   1,
     "confstr",  CMDCCONFSTR,1,
+    "failtime", CMDCFAILTIM,1,
     "host",     CMDCHOST,   1,
     "indest",   CMDCLIDEST, 1,
     "insrc",    CMDCLISRC,  1,
@@ -971,6 +974,7 @@ LOCVAR Cmd
     "trn",      CMDCTRANS,  1,
     "ttl",      CMDCTTL,    1,
     "user",     CMDCUSER,   1,
+    "warntime", CMDCWARNTIM,1,
     0,          0,          0
 };
 
@@ -1121,8 +1125,8 @@ ch_tai (argc, argv)
     chptr -> ch_ttl = (time_t)7200;  /* dead cache TimeToLive, two hours */
     chptr -> ch_logfile = chanlog.ll_file;
     chptr -> ch_loglevel = chanlog.ll_level;
-    chptr -> warntime = warntime;
-    chptr -> failtime = failtime;
+    chptr -> ch_warntime = warntime;
+    chptr -> ch_failtime = failtime;
     tbind = -1;
     showind = -1;
 
@@ -1399,6 +1403,14 @@ ch_tai (argc, argv)
 			    tai_error ("unknown auth type", argv[ind], argc, argv);
 			    continue;
 		    }
+		    break;
+
+		case CMDCFAILTIM:
+		    chptr -> ch_failtime =  atoi (argv[ind]);
+		    break;
+
+		case CMDCWARNTIM:
+		    chptr -> ch_warntime =  atoi (argv[ind]);
 		    break;
 
 		default:

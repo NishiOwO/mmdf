@@ -224,8 +224,8 @@ struct ch_struct
     time_t  ch_ttl;             /* Number of seconds to keep dead host records */
     char    *ch_logfile;        /* Logfile for this channel */
     int     ch_loglevel;        /* Logging level for this channel */
-    int     warntime;
-    int     failtime;
+    int     ch_warntime;
+    int     ch_failtime;
 };
 
 
