@@ -29,6 +29,8 @@ int	fast = 0;
 char	bufout[BUFSIZ];
 
 extern	int	errno;			/* system error number */
+LOCFUN arginit();
+LOCFUN mn_dirinit();
 
 main(argc, argv)
 int argc;

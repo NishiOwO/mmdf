@@ -69,7 +69,7 @@ input ()
     char    otherbuf[S_BSIZE];
     char    tempbuf[24];
     char    *fromptr, *toptr, *ccptr, *subjptr, *bccptr, *otherptr;
-    int     (*old1) (),
+    RETSIGTYPE     (*old1) (),
 	    (*old2) (),
 	    (*old3) ();
     register int    i;

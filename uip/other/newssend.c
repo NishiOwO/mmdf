@@ -55,7 +55,7 @@ char   *argv[];
 	sendmail (argc, argv);
 }
 
-pipsig ()
+RETSIGTYPE pipsig ()
 {
 	if (rp_gval (endchild (NOTOK)) == RP_NO)
 		err_abrt(RP_LIO, "Abnormal return from submit\n");

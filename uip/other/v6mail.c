@@ -114,7 +114,7 @@ int     val;
     exit (val == OK ? 0 : 99);
 }
 
-pipsig ()
+RETSIGTYPE pipsig ()
 {
     if (rp_gval (endchild (NOTOK)) == RP_NO)
 	prompt ("Problem accessing mail submission program\n");

@@ -35,7 +35,7 @@ extern char replyto[];
 extern char aliasfilename[];
 extern struct header *headers;
 
-extern (*orig) ();
+extern RETSIGTYPE (*orig) ();
 
 extern int errno;
 extern char *compress ();

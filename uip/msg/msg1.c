@@ -139,7 +139,7 @@ char   *argv[];
 	char    tb[1024];
 	register struct message **mp;
 	extern struct passwd *getpwuid();
-	extern int onhangup();
+	extern RETSIGTYPE onhangup();
 	struct passwd  *pwdptr;
 	char *uterm;
 	int realid;

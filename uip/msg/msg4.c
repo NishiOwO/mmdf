@@ -480,7 +480,7 @@ tt_norm()
 /*
  *			O N I N T
  */
-onint()
+RETSIGTYPE onint()
 {
 	signal( SIGINT, onint);
 	error( "\r\n" );
@@ -491,7 +491,7 @@ onint()
  *
  * This routine is called when we get a hangup signal.
  */
-onhangup()
+RETSIGTYPE onhangup()
 {
 	signal (SIGHUP, SIG_IGN);
 	signal (SIGINT, SIG_IGN);
@@ -520,7 +520,7 @@ onhangup()
  *  
  *  SIGSTOP signal catcher
  */
-onstop() {
+RETSIGTYPE onstop() {
 	int pid;
 	int saveverbose = verbose;
 	
@@ -542,7 +542,7 @@ onstop() {
  *
  *	Catches SIGPIPE
  */
-onnopipe() {
+RETSIGTYPE onnopipe() {
 	signal( SIGPIPE, onnopipe );
 	outfd = -1;
 	error( " msg: Broken pipe\r\n" );

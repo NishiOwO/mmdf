@@ -79,7 +79,7 @@ int     drffd;                  /* handle on the draft file */
 int 	tmpfd;
 int     nsent;
 int     badflg;			  /* true if at least one bad address */
-int	(*orig) ();               /* to save old signal values */
+RETSIGTYPE	(*orig) ();               /* to save old signal values */
 
 char   *adrptr;                   /* field currently getting addresses  */
 char    bigbuf[BBSIZE],              /* buffer for text of msg */

@@ -29,7 +29,7 @@ int	extract;
 int	badaddrs;
 int	rewritefrom;
 
-int	die();
+RETSIGTYPE	die();
 
 /*ARGSUSED*/
 main(argc, argv)
@@ -339,7 +339,7 @@ char	*fmt, *a, *b;
 	exit(9);
 }
 
-die(sig)
+RETSIGTYPE die(sig)
 int sig;
 {
 	mm_end(NOTOK);

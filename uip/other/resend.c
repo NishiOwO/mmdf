@@ -38,7 +38,7 @@ char   *argv[];
 	sendmail (argc, argv);
 }
 
-pipsig ()
+RETSIGTYPE pipsig ()
 {
 	if (rp_gval (endchild (NOTOK)) == RP_NO)
 		err_abrt(RP_LIO, "Abnormal return from submit");
@@ -226,7 +226,7 @@ contents[];
 
 dosender ()
 {
-	int     sigfp;
+	FILE *  sigfp;
 	char	linebuf[ADDRSIZE];
 	char	sigtxt[FILNSIZE];     /* where is signature text?           */
 	char    gotsig;

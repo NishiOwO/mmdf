@@ -81,7 +81,7 @@ extern	char	*squepref;	/* string to preface sub-queue name	*/
 extern	char	*lckdfldir;
 extern	int	lk_open();
 
-long	mq_gtnum();	/* reads long ascii # from addr file		*/
+LOCFUN long	mq_gtnum();	/* reads long ascii # from addr file		*/
 
 LOCVAR	int	mq_fd;		/* read file descriptor, saved 		*/
 LOCVAR	FILE	*mq_rfp;	/* read handle, for getting entries	*/

@@ -116,6 +116,7 @@ extern char    *ap_p2s ();
 extern char    *ap_s2p ();
 extern char    *getmailid();
 extern AP_ptr  ap_t2s ();
+LOCFUN hdr_parse ();
 
 int	debug	=	FALSE;		/* output trace messages?	   */
 int	found_1 =	FALSE;		/* true if message was sent to	   */

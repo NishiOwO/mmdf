@@ -210,9 +210,10 @@ extern char *strdup ();
 extern char *malloc();
 extern char *index(), *strend(), *rindex();
 
-extern prmsg(), delmsg(), undelmsg(), prhdr(), movmsg(), onint(), onnopipe();
+extern prmsg(), delmsg(), undelmsg(), prhdr(), movmsg();
+extern RETSIGTYPE onnopipe(), onstop(), onint();
 extern putmsg(), writmsg(), gomsg(), lstmsg(), keepmsg(), lstbdy(), writbdy();
-extern onstop(), hdrfile(), dolstmsg();
+extern hdrfile(), dolstmsg();
 
 extern ansmsg(), fwdmsg(), fwdpost(), resendmsg(), ansend();
 extern undigestify();
