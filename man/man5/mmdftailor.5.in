@@ -1031,6 +1031,13 @@ creating the user's mailbox. Its value is an octal number.  See manual
 section \fIchmod(1)\fR.
 .RE
 
+.B MMAXMBSZ
+.I < softlimit > < hardlimit >
+.RS
+set mailbox-size limit soft excluding the new message, and hard
+including the new message.
+.RE
+
 .B MMBXPREF
 .I ``\e001\e001\e001\e001\en''
 .br
