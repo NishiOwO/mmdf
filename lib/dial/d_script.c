@@ -33,12 +33,12 @@ extern int d_xretry;
 extern int d_toack;
 extern int d_todata;
 extern int d_wpack;
-#ifdef SYS5
+#ifndef HAVE_SGTTY_H
 extern unsigned short d_prbitc, d_prbiti, d_prbito, d_prbitl;
 extern unsigned short d_scbitc, d_scbiti, d_scbito, d_scbitl;
 #else
 extern int d_pron, d_proff, d_scon, d_scoff;
-#endif /* SYS5 */
+#endif /* HAVE_SGTTY_H */
 extern int d_nbuff;
 extern int d_didial;
 extern  FILE * d_prtfp;
@@ -101,13 +101,13 @@ struct scrcmds
 		    "bill", S_BILL, 3, 3,
 		    "replay", S_REPLAY, 1, 1,
 		    "mark", S_MARK, 1, 1,
-#ifdef SYS5
+#ifndef HAVE_SGTTY_H
 		    "stty-pr", S_PRTTY, 3, 5,
 		    "stty-sc", S_SCTTY, 3, 5,
 #else
 		    "stty-pr", S_PRTTY, 3, 3,
 		    "stty-sc", S_SCTTY, 3, 3,
-#endif /* SYS5 */
+#endif /* HAVE_SGTTY_H */
 		    "window", S_DBLBUF, 3, 3,
 		    "use", S_USEFILE, 2, ANYARGS,
 /*** prompt command has one format  "prompt <val>"      reilly@udel-relay ***/
@@ -336,7 +336,7 @@ d_cmdproc (command, nfields, fields)
 	    return (D_CONTIN);
 
 	case S_PRTTY:
-#ifdef SYS5
+#ifndef HAVE_SGTTY_H
 	    sscanf(fields[1], "%ho", &d_prbitc);
 	    sscanf(fields[2], "%ho", &d_prbiti);
 	    sscanf(fields[3], "%ho", &d_prbito);
@@ -347,18 +347,18 @@ d_cmdproc (command, nfields, fields)
 		d_prbitc, d_prbiti, d_prbito, d_prbitl);
 #endif /* D_LOG */
 
-#else /* SYS5 */
+#else /* HAVE_SGTTY_H */
 	    /*  Could use fields[1&2], but let's check consistancy  */
 	    sscanf(fields[1], "%o", &d_pron);
 	    sscanf(fields[2], "%o", &d_proff);
 #ifdef D_LOG
 	    d_log("d_cmdproc", "%s %o %o", fields[0], d_pron, d_proff);
 #endif /* D_LOG */
-#endif /* SYS5 */
+#endif /* HAVE_SGTTY_H */
 	    return (D_CONTIN);
 
 	case S_SCTTY:
-#ifdef SYS5
+#ifndef HAVE_SGTTY_H
 	    sscanf(fields[1], "%ho", &d_scbitc);
 	    sscanf(fields[2], "%ho", &d_scbiti);
 	    sscanf(fields[3], "%ho", &d_scbito);
@@ -376,7 +376,7 @@ d_cmdproc (command, nfields, fields)
 #ifdef D_LOG
 	    d_log("d_cmdproc", "%s %o %o", fields[0], d_scon, d_scoff);
 #endif /* D_LOG */
-#endif /* SYS5 */
+#endif /* HAVE_SGTTY_H */
 	    return (D_CONTIN);
 
 	case S_MARK:

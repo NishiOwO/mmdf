@@ -109,7 +109,7 @@ int d_xretry = NSENDTRY;     /*  Init # of retries to make  */
 int d_toack = DACKWAIT;      /*  Init time out time for ack */
 int d_todata = DATAWAIT;     /*  Init time out for data  */
 
-#ifdef SYS5
+#ifndef HAVE_SGTTY_H
 unsigned short d_prbitc = PORTPONC;	/* terminal protocol bit on */
 unsigned short d_prbiti = PORTPONI;
 unsigned short d_prbito = PORTPONO;

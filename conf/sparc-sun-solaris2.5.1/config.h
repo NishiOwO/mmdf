@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.1 1998/04/02 13:56:48 mmdf Exp $
+ * $Id: config.h,v 1.2 1998/04/03 19:25:57 mmdf Exp $
  *
  * please set every configuration-switch here
  *
@@ -105,7 +105,7 @@
  *             you must  also  append  -Drindex=strrchr  and
  *             -Dindex=strchr to CFLAGS.
  */
-#define SYS5
+/* #define SYS5 */
 
 /*             Enables  code  specific to System Vr3.  Note:
  *             if you have the WIN/TCP code you may need  to

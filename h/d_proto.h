@@ -127,7 +127,7 @@
 
 
 
-#ifdef SYS5
+#ifndef HAVE_SGTTY
 
 /* PORT*I is for c_iflag field in termio */
 /* PORT*O is for c_oflag field in termio */
