@@ -153,6 +153,8 @@ char
 
 int     maxhops = 20;               /* number of Via fields permitted   */
 int	mgt_addid = 0;		    /* if set, add message-id if necessary */
+int     mgt_addipaddr = 1;          /* if set, add IP-address */
+int     mgt_addipname = 1;          /* if set, add IP-name */
 int	lnk_listsize = 12;	    /* if more than this many addresses,
 				     * then do not send warning and only
 				     * send citation on return
