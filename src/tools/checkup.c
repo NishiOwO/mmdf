@@ -307,7 +307,7 @@ main (argc, argv)
     if (isstr(mldfldir))
     {                           /* all mail delivered in common dir     */
 	que (LEVEL4, hdrfmt, "Shared receipt directory", mldfldir);
-	chkfile (mldfldir, 1775, 1777, mmdfuid, mmdfgid, MMDFlogin);
+	chkfile (mldfldir, 01775, 01777, mmdfuid, mmdfgid, MMDFlogin);
 	qflush (LEVEL4);
     }
     qflush (LEVEL0);
