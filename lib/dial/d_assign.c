@@ -10,7 +10,7 @@
  */
 #include "d_returns.h"
 
-#ifdef DOASSIGN
+#ifdef HAVE_ASSIGN
 struct {
 	char lobyte;
 	char hibyte;
@@ -68,7 +68,7 @@ char *devname;
 	}
 }
 
-#else
+#else /* HAVE_ASSIGN */
 
 /* Fake routine for systems without "assign" */
 
@@ -80,4 +80,4 @@ d_deassign() {
 	return( D_OK );
 }
 
-#endif
+#endif /* not HAVE_ASSIGN */

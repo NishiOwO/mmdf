@@ -831,7 +831,7 @@ you would add
 CONFIGDEFS is used to build both the CFLAGS and LFLAGS option lines
 (these lines should end with $(CONFIGDEFS)).
 The available preprocessor variables are:
-.IP DOASSIGN 15
+.IP HAVE_ASSIGN 15
 Enables the d_assign code in the dial package.  This code calls the program
 /bin/assign to gain exclusive access to a file.  It does not appear that 
 the d_assign code is ever used so don't bother defining DOASSIGN.
