@@ -40,10 +40,10 @@
 #define NOCC		(char *)0
 #define NOSUBJ		(char *)0
 
-#define SIZEDATE	9
-#define SIZEFROM	30	   	/* ALSO change hdrfmt  */
+#define SIZEDATE	12
+#define SIZEFROM	32	   	/* ALSO change hdrfmt  */
 #define SIZESUBJ	40		/* */
-#define SIZETO		30
+#define SIZETO		32
 
 #define	M_BSIZE		512
 

@@ -35,7 +35,7 @@ extern AP_ptr   findap ();
 extern char *namtab[], *typtab[];	/* In ap_1adr.c */
 extern int debug;			/* In ap_1adr.c */
 
-int tdebug;				/* Top-level debug flag */
+int tdebug = 0;				/* Top-level debug flag */
 #endif
 
 #define MAXCOL 78                 /* # of col positions to use */
@@ -201,6 +201,7 @@ FILE *ain, *aout;
 #if DEBUG > 1
 		    if (tdebug)
 			fprintf (stderr, "Checking fromsite: \"");
+		    ll_log (logptr, LLOGBTR, "Checking fromsite:");
 #endif
 		    if (aptmp = findap (ap_pstrt, APV_DOMN))
 		    {
@@ -214,18 +215,29 @@ FILE *ain, *aout;
 #if DEBUG > 1
 		    if (tdebug)
 			fprintf (stderr, "%s\"\n", fromsite);
+		    ll_log (logptr, LLOGBTR, "fromsite: \"%s\"", fromsite);
 #endif
 		}
 	    }
 
+#ifdef DEBUG
+	    ll_log (logptr, LLOGBTR, "amp_hdr: calling out_adr");
+#endif
 	    res = out_adr (chanptr, fromsite, ourdomain, ap_pstrt);
+#ifdef DEBUG
+	    ll_log (logptr, LLOGBTR, "amp_hdr: out_adr done");
+#endif
 
 	    ap_sqdelete (ap_pstrt, (AP_ptr) 0);
 	    ap_free (ap_pstrt);   /* delete full string                 */
 	    ap_pstrt = (AP_ptr) 0;
 
-	    if(res == MAYBE)
-		return( (long)res);
+	    if(res == MAYBE) {
+#ifdef DEBUG
+	      ll_log (logptr, LLOGBTR, "amp_hdr: returning MAYBE");
+#endif
+	      return( (long)res);
+	    }
 	}
 
 	(void) putc ('\n', out);
@@ -275,6 +287,9 @@ FILE *ain, *aout;
 	    ap_free (ap_pstrt);      /* delete full string         */
 	    ap_pstrt = (AP_ptr) 0;
     }
+#ifdef DEBUG
+    ll_log (logptr, LLOGBTR, "amp_hdr done");
+#endif
 
     return ((ferror(out) || ferror(xin)) ? NOTOK : curpos);
 }
@@ -498,7 +513,9 @@ register AP_ptr ap;
     AP_ptr lrval;
 
 #ifdef DEBUG
-    ll_log (logptr, LLOGFTR, "out_adr (%s, %s)", dflsite, dfldomain);
+    ll_log (logptr, LLOGFTR, "out_adr (%s, %s)",
+	    dflsite ? dflsite : "(null)",
+	    dfldomain ? dfldomain : "(null)");
 #endif
 
     if (ap -> ap_obtype == APV_NIL)

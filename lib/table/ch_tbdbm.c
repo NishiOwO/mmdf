@@ -241,7 +241,7 @@ DBMValues dbm;                      /* put the entry here           */
     char *lastchar;
     register char *p, *cp;
     register struct DBvalues *dp;
-    register cnt;
+    register int cnt;
 
     if (!dbmopen)
     {

@@ -152,7 +152,7 @@ char **argv;
 	Chan *curchan;
 	char    tmp_buf[LINESIZE];
 	char    tmpstr[LINESIZE];
-	char    *Ags[20];
+	char    *Ags[NUMCHANS];
 	int     n, Agc;
 #ifdef HAVE_LIBWRAP
         struct request_info  request;   
@@ -225,7 +225,7 @@ char **argv;
 	 * useful for multiple sources ( As on UCL's ether )
 	 */
 	strcpy (tmp_buf, argv[3]);
-	Agc = str2arg (tmp_buf, 20, Ags, (char *)0);
+	Agc = str2arg (tmp_buf, NUMCHANS, Ags, (char *)0);
 	channel = Ags[Agc-1];
 	for(chanptr = (Chan *)0, n = 0 ; n < Agc ; n++){
 		if ( (curchan = ch_nm2struct(Ags[n])) == (Chan *) NOTOK) {
@@ -882,7 +882,7 @@ confirm()
  */
 help()
 {
-	register i;
+	register int i;
 	register struct comarr *p;
 	char    replybuf[256];
 

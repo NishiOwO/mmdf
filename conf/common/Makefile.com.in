@@ -1,10 +1,19 @@
 #
 #	Common Sub-Makefile for the MMDF System
 #
-MMDF_MAJOR_VERSION  = 2
-MMDF_MINOR_VERSION  = 43
+MMDF_MAJOR_VERSION  = @MMDF_MAJOR_VERSION@
+MMDF_MINOR_VERSION  = @MMDF_MINOR_VERSION@
+MMDF_PATCH_LEVEL    = @MMDF_PATCH_LEVEL@
+VERSION_DATE        = @VERSION_DATE@
 
-HOST		= gandalf
+HOST		= @host@
+a1 = @host@
+a1 = @host_alias@
+a1 = @host_cpu@
+a1 = @host_vendor@
+a1 = @host_os@, @UNAME_MACHINE@, @UNAME_RELEASE@, @UNAME_SYSTEM@, \
+	@UNAME_VERSION@, @UNAME_PROCESSOR@
+
 SYSTEM		= 4.2
 SERVER_SYSTEM		= 4.3
 MMPREF		=

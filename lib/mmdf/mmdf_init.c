@@ -24,6 +24,30 @@ static	char	version[] = "$@(#)MMDFII, Release B, Update 37";
 
 #define MAXARG 100
 
+ 
+#if UWE
+#if defined(sun) || defined(__svr4__)
+unsetenv (name)
+     char  * name;
+{
+  extern char **environ;
+  register char   ** p = environ;
+  register int    len = strlen(name);
+  
+  while (*p && strncmp(*p, name, len))
+    p++;
+  if (*p == (char *) 0)
+    return;
+  p++;
+  while (*p) {
+    *(p-1) = *p;
+    p++;
+  }
+  *--p = (char *) 0;
+}
+#endif
+#endif
+ 
 mmdf_init (pgmname)            /* initialize an mmdf process           */
 char *pgmname;
 {
@@ -35,6 +59,9 @@ char *pgmname;
     int dbind;
 #endif
 
+#if UWE
+    unsetenv ("TZ");
+#endif
     pgmname = (pgmname ? pgmname : "???");	/* Paranoid */
     ll_log (logptr, LLOGPTR, "mmdf_init (%s)", pgmname);
 

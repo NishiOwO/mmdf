@@ -373,7 +373,7 @@ LOCFUN
 	ch_exec (thechan)         /* invoke process which "is" channel  */
 Chan   *thechan;      /* channel descriptor structure       */
 {
-    register  tmp;
+    register  int tmp;
     int     nampipe[2];           /* to xmit process for addr name        */
     int     respipe[2];           /* from xmit process, for responses     */
     int     oldpid;               /* parent pid */

@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.13 1998/01/11 18:38:54 krueger Exp $
+ * $Id: config.h.in,v 1.14 1998/03/19 07:46:55 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -386,7 +386,7 @@
  */
 #undef HAVE_NIS
 #undef HAVE_NN
-#undef HAVE_SR
+#undef HAVE_NOSRCROUTE
 
 /*****************************************************************************/
 #if HAVE_DIRENT_H
