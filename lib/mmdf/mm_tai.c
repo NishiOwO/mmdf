@@ -987,12 +987,18 @@ LOCVAR Cmd
 #define CMDPSEND    7
 #define CMDPNOOP    8
 #define CMDPHOST    9
+#ifdef HAVE_ESMTP
+#  define CMDPESMTP 10
+#endif
 
 LOCVAR Cmd
 	    parmchan[] =
 {
     {"",         CMDPNOOP,   0},
     {"bak",      CMDPBAK,    0},
+#ifdef HAVE_ESMTP
+    {"esmtp",    CMDPESMTP,  0},
+#endif
     {"host",     CMDPHOST,   0},
     {"imm",      CMDPIMM,    0},
     {"pick",     CMDPPICK,   0},
@@ -1251,6 +1257,11 @@ int ch_tai (argc, argv)
 			case CMDPNOOP:
 			    break;      /* noop */
 
+#ifdef HAVE_ESMTP
+			case CMDPESMTP:
+			    chptr -> ch_access |= CH_ESMTP;
+			    break;
+#endif
 			default:
 			    tai_error ("unknown access parm", argv[ind],
 					argc, argv);

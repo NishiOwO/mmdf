@@ -11,6 +11,9 @@
 extern	int	domsg;		/* verbose reporting to controlling tty */
 #define printx if (domsg) printf
 
+typedef enum { PRK_UNKNOWN, PRK_SMTP, PRK_ESMTP } smtp_protocol;
+
+
 /*                      Reply Codes for MMDF
 
  *  Based on: "Revised FTP Reply Codes", by Jon Postel & Nancy Neigus Arpanet

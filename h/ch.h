@@ -174,6 +174,9 @@ struct ch_struct
 #define CH_SEND   040             /*   ok to send mail                  */
 #define MQ_INQ   0100             /* queued under this channel          */
 #define DLVRHST  0200             /* Deliver in host order (MTR)        */
+#ifdef HAVE_ESMTP
+#define CH_ESMTP 0400             /*   esmtp spoken on this channel     */
+#endif
     char   *ch_ppath;             /* path to file containing chan pgm   */
     char   *ch_lname;             /* Official host name of local machine */
 #define DFLNAME     0             /* use locname as our name on chan    */

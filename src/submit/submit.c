@@ -97,7 +97,7 @@ extern char *pathdeliver;     /* file path to mailer proc.          */
 extern int  *regfdary;
 extern int  errno;
 extern int  sys_nerr;
-extern char *sys_errlist[];
+/*extern char *sys_errlist[];*/
 
 char *prm_dupval();
 
@@ -585,6 +585,19 @@ LOCFUN
 	    }
 	    break;
 
+#ifdef HAVE_ESMTP
+	case 'p':                 /* report protocol spoken on channel  */
+	    switch (*(parmptr = mgt_parm (&parmptr[-1])))
+	    {                     /* let management module process it   */
+		case ',':         /* skip to the last char processed    */
+		    err_msg (RP_PARM, "Invalid parameter character ','");
+
+		case '*':
+		    parmptr++;
+	    }
+	    break;
+#endif
+        
 	default:
 	    err_msg (RP_PARM, "Invalid parameter character '%c' in '%s'",
 			parmptr[-1], parmstrt);

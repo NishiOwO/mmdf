@@ -134,9 +134,14 @@ char **argv;
 	}
 	logx("socket open on %d", skt);
 
-	if (bind (skt, (char *)&addr, sizeof addr) < 0) {
-		logx("can't bind socket (errno %d)", errno);
-		exit(98);
+#if 1
+	if (bind (skt, &addr, sizeof addr) < 0)
+#else
+    if (bind (skt, (char *)&addr, sizeof addr) < 0)
+#endif
+    {
+      logx("can't bind socket (errno %d)", errno);
+      exit(98);
 	}
 	listen (skt, Maxconnections+1);
 	logx("old with uid=%d, euid=%d", getuid(), geteuid());
@@ -175,7 +180,7 @@ char **argv;
 			 */
 			char	*rmt;
 
-			hp = gethostbyaddr(&rmtaddr.sin_addr,
+			hp = gethostbyaddr((char *)&rmtaddr.sin_addr,
 					sizeof(rmtaddr.sin_addr), AF_INET);
 			if ((hp == NULL) || !isstr(hp->h_name)) {
 				strcpy(workarea, inet_ntoa(rmtaddr.sin_addr));
