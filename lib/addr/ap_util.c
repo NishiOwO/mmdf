@@ -4,6 +4,9 @@
 #if DEBUG > 1
 extern int debug;
 extern char *typtab[];
+/*#define DEBUG_AP 1*/
+#else
+#undef DEBUG_AP
 #endif
 
 /*  Standard routines for handling address list element nodes */
@@ -40,7 +43,8 @@ AP_ptr
     ap = (AP_ptr) malloc (sizeof (struct ap_node));
     if (ap == (AP_ptr) 0)
 	return ((AP_ptr) 0);
-
+    memset(ap, 0, sizeof (struct ap_node));
+    
     ap_ninit (ap);
     return (ap);
 }
@@ -52,12 +56,17 @@ void ap_ninit (ap)
     ap -> ap_obvalue = (char *) 0;
     ap -> ap_ptrtype = APP_NIL;
     ap -> ap_chain = (AP_ptr) 0;
+    ap -> ap_pchain = (AP_ptr) 0;
 }
 
 void ap_free (ap)                      /* free node's storage                */
 register AP_ptr ap;
 {
-    switch ((int)ap)
+#ifdef DEBUG_AP
+  printf("ap_free(%p)\n", ap);
+#endif /* DEBUG_AP */
+  
+    switch ((int)(ap))
     {                             /* get rid of node, if have one       */
 	case OK:
 	case NOTOK:               /* nothing to free                    */
@@ -71,9 +80,25 @@ register AP_ptr ap;
 		    break;
 
 		default:
-		    free (ap -> ap_obvalue);
+#ifdef DEBUG_AP
+          printf("\t:%p, '%s'\n", (ap) -> ap_obvalue, (ap) -> ap_obvalue);
+#endif /* DEBUG_AP */
+          free (ap -> ap_obvalue);
+          ap -> ap_obvalue = 0;
 	    }
+        if(ap->ap_pchain != (AP_ptr) 0) {
+#ifdef DEBUG_AP
+          printf("\tap->prev->next (%p) = ap (%p), next=%d\n",
+                 ap->ap_pchain -> ap_chain, ap, ap -> ap_chain);
+#endif /* DEBUG_AP */
+          if((ap->ap_pchain -> ap_chain == ap)) {
+            ap->ap_pchain -> ap_ptrtype = ap -> ap_ptrtype;
+            ap->ap_pchain -> ap_chain = ap -> ap_chain;
+          }
+        }
+        memset(ap, 0, sizeof(struct ap_node));
 	    free ((char *) ap);
+        ap = 0;
     }
 }
 
@@ -99,7 +124,7 @@ char   *obvalue;
     register AP_ptr nap;
 
     nap = ap_alloc ();
-    ap_fllnode (nap, obtype, obvalue);
+    if( nap != (AP_ptr) 0 ) ap_fllnode (nap, obtype, obvalue);
     return (nap);
 }
 
@@ -115,10 +140,15 @@ register AP_ptr new;              /* where to insert after              */
     new -> ap_ptrtype = cur -> ap_ptrtype;
     new -> ap_chain = cur -> ap_chain;
 
+ /* Now set backward pointers */
+    if(new -> ap_chain != (AP_ptr) 0) new -> ap_chain -> ap_pchain = new;
+    new -> ap_pchain = cur;
+    
  /* Now point current node at inserted node */
 
     cur -> ap_ptrtype = ptrtype;
     cur -> ap_chain = new;
+    
 }
 
 AP_ptr
@@ -140,24 +170,27 @@ AP_ptr
     otype = cur -> ap_ptrtype;
     cur -> ap_chain = new;
     cur -> ap_ptrtype = type;
+    new -> ap_pchain = cur;
 
     while (new -> ap_ptrtype != APP_NIL &&
 		new -> ap_chain != (AP_ptr) 0 &&
 		new -> ap_chain -> ap_obtype != APV_NIL)
 	new = new -> ap_chain;
 
-    if (new -> ap_chain != (AP_ptr)0 && new -> ap_chain -> ap_obtype == APV_NIL)
+    if (new -> ap_chain != (AP_ptr)0 &&
+        new -> ap_chain -> ap_obtype == APV_NIL)
 	ap_delete (new);
 
     new -> ap_chain = oldptr;
     new -> ap_ptrtype = otype;
+    if(oldptr != (AP_ptr) 0 ) oldptr -> ap_pchain = new;
     return (new);
 }
 
 void ap_delete (ap)                    /* remove next node in sequence       */
 register AP_ptr ap;
 {
-    register AP_ptr next;
+  register AP_ptr next;
 
     if (ap != (AP_ptr) 0 && ap -> ap_ptrtype != APP_NIL)
     {                             /* only if there is something there   */
@@ -165,7 +198,9 @@ register AP_ptr ap;
 
 	ap -> ap_ptrtype = next -> ap_ptrtype;
 	ap -> ap_chain = next -> ap_chain;
-	ap_free (next); 
+    if(next -> ap_chain != (AP_ptr) 0) next -> ap_chain -> ap_pchain = ap;
+	ap_free (next);
+    next = (AP_ptr) 0;
    }
 }
 
@@ -179,8 +214,10 @@ char   *obvalue;
     register AP_ptr nap;
 
     nap = ap_alloc ();
-    ap_fllnode (nap, obtype, obvalue);
-    ap_insert (ap, APP_ETC, nap);
+    if( nap != (AP_ptr) 0 ) {
+      ap_fllnode (nap, obtype, obvalue);
+      ap_insert (ap, APP_ETC, nap);
+    }
     return (nap);
 }
 /**/
@@ -283,7 +320,10 @@ AP_ptr
 
     from -> ap_chain = nodeptr -> ap_chain;
     from -> ap_ptrtype = nodeptr -> ap_ptrtype;
-
+    if(nodeptr -> ap_chain != (AP_ptr) 0)
+      nodeptr -> ap_chain -> ap_pchain = from;
+    nodeptr -> ap_pchain = (AP_ptr) 0;
+    
     ap_insert (to, APP_ETC, nodeptr);
     return (from);      /* next in chain, now */
 }
@@ -442,7 +482,7 @@ void ap_pnsrt (ap, ptrtype)          /* add node to end of parse chain     */
 register AP_ptr ap;
 char    ptrtype;
 {
-    register AP_ptr rap_pcur;
+  register AP_ptr rap_pcur;
 
     if ((rap_pcur = ap_pcur) -> ap_obtype == APV_NIL)
     {                             /* current one can be used            */
@@ -450,9 +490,11 @@ char    ptrtype;
 	rap_pcur -> ap_obvalue = ap -> ap_obvalue;
 	ap -> ap_obvalue = 0;
 	ap_free (ap);
+    ap = (AP_ptr) 0;
     } else {                      /* really do the insert               */
 	rap_pcur -> ap_ptrtype = ptrtype;
 	rap_pcur -> ap_chain = ap;
+    ap -> ap_pchain = rap_pcur;
 	ap_pcur = ap;
     }
 }

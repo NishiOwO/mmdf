@@ -37,6 +37,7 @@ struct ap_node
 
     char   *ap_obvalue;           /* pointer to string value of object  */
     struct ap_node  *ap_chain;    /* pointer to next node               */
+    struct ap_node  *ap_pchain;   /* pointer to prev node               */
 };
 
 typedef struct ap_node *AP_ptr;
