@@ -320,7 +320,11 @@ smtp()
 {
 	char	*smtpd = dupfpath(SMTPSRVR, chndfldir);
 
+#if defined(LINUX)
+	setreuid(geteuid(),geteuid());
+#else
 	setuid(geteuid());	/* Must become "mmdf" for real */
+#endif
 	execl (smtpd, "sendmail-smtp", from, locname, "local", (char *)0);
 	perror(smtpd);
 	exit(9);
