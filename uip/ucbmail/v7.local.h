@@ -8,11 +8,11 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  *
  *  $Log: v7.local.h,v $
- *  Revision 1.2  1985/11/16 14:46:33  galvin
- *  Added comment header for revision history.
+ *  Revision 1.3  1985/11/16 14:49:49  galvin
+ *  Undef SENDMAIL and move a comment to where it belongs.
  *
  * Revision 1.6  86/01/14  16:33:59  galvin
  * Add DAYLIGHT define for use by smtpdate().
