@@ -33,9 +33,9 @@
 #ifdef HAVE_SGTTY_H
 #  include <sgtty.h>
 #endif /* HAVE_SGTTY_H */
-#ifdef V4_2BSD
+#ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
-#endif V4_2BSD
+#endif HAVE_SYS_WAIT_H
 #include "./msg.h"
 
 /*
@@ -52,11 +52,11 @@ xeq( exflag)
 char exflag;
 {
 	int process;
-#ifdef V4_2BSD
+#ifdef HAVE_SYS_WAIT_H
 	union wait pstatus;
-#else V4_2BSD
+#else HAVE_SYS_WAIT_H
 	int	pstatus;
-#endif V4_2BSD
+#endif HAVE_SYS_WAIT_H
 	char *routine;
 
 	tt_norm();
