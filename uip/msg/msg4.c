@@ -289,6 +289,7 @@ int	lfflag;
 
 	case 'Y': 
 	case 'y': 
+	case 'b':
 	case '\004':
 	case ' ':
 	case '\n': 
@@ -302,6 +303,8 @@ int	lfflag;
 
 	case 'N':
 	case 'n': 
+	case 'Q': 				/* "quit", for MORE users */
+	case 'q': 
 	case 003:				/* Ctl/C */
 	case 007:				/* Ctl/G, for EMACS types */
 	case '/':
@@ -325,8 +328,9 @@ int	lfflag;
  * gobbles a line of max length from user, stores into string 'sp'.
  * ASSUMES first char is already in sp[0].
  */
-gather( sp, max)
+gather( sp, max, dolf )
 char *sp;
+int max, dolf;
 {
 	register char c;
 	register char *p;
@@ -344,7 +348,7 @@ char *sp;
 		}
 		else if( c == '\n' || c == '\r' ) {	/* Done */
 			*p = '\0';
-			if (verbose) printf("\r\n");
+			if (verbose && dolf == DOLF) printf("\r\n");
 			return;
 		}
 		else {

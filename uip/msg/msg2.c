@@ -41,6 +41,8 @@
  *	09/10/82  MJM	Modified to use STDIO for output to files, too.
  *
  *	11/14/82  HW	Added keyword filter to ignore Via, Remailed, etc.
+ *
+ *	08/27/98  MJM	Eliminated gets(), re-added message percentage print.
  */
 #include "util.h"
 #include "mmdf.h"
@@ -53,6 +55,10 @@
 #include "./msg.h"
 
 extern FILE *popen();
+static int	curline;
+static int	pcntdn;		/* percent done */
+static int	dobpage = TRUE;	/* do "page back" */
+static long	msgsize;
 
 /*
  *			R D N X T F L D
@@ -97,19 +103,23 @@ int crflag;
 
 	sprintf( lbuf, "%4d%c%c%c%c%c%c%5ld: %-9.9s %-15.15s %.30s%s\n",
 		msgno,
-		mptr->flags & M_NEW ? 'N' : ' ',
-		mptr->flags & M_DELETED ? 'D' : ' ',
-		mptr->flags & M_KEEP ? 'K' : ' ',
-		mptr->flags & M_ANSWERED ? 'A' : ' ',
-		mptr->flags & M_FORWARDED ? 'F' : ' ',
-		mptr->flags & M_PUT ? 'P' : ' ',
+		mptr->flags & MSG_NEW ? 'N' : ' ',
+		mptr->flags & MSG_DELETED ? 'D' : ' ',
+		mptr->flags & MSG_KEEP ? 'K' : ' ',
+		mptr->flags & MSG_ANSWERED ? 'A' : ' ',
+		mptr->flags & MSG_FORWARDED ? 'F' : ' ',
+		mptr->flags & MSG_PUT ? 'P' : ' ',
 		mptr->len,
 		mptr->datestr,
 		mptr->from,
 		mptr->subject,
 		crflag ? "\r" : ""
 	);
+	dobpage = FALSE;	/* filout will ignore back page command */
+	pcntdn = -1;		/* filout will not print % */
+	msgsize = 1;
 	filout( lbuf, fp );
+	dobpage = TRUE;
 }
 
 /*--------------------------------------------------------------------*/
@@ -158,7 +168,7 @@ char	*def;		/* optional default */
 
 	strcpy( oldfile, f);
 
-	if( gets( tmpbuf) == NULL || isnull( tmpbuf[0]))  {
+	if( fgets( tmpbuf, sizeof(tmpbuf), stdin) == NULL || strlen(tmpbuf) <= 1 )  {
 		if( def == (char *)0)
 			error( "no filename specified\r\n");
 		else  {
@@ -166,6 +176,10 @@ char	*def;		/* optional default */
 			printf( "%s...\r\n", f);
 		}
 	}  else  {
+		/* Remove trailing \n */
+		char	*endp = strchr(tmpbuf, '\n');
+		if( endp )  *endp = '\0';
+
 		/* Remove leading whitespace */
 		for( t = tmpbuf; isspace(*t); t++ )
 			;
@@ -361,6 +375,9 @@ putmsg()
 	fwrite( delim1, sizeof(char), len, outfp );
 	writmsg();
 	fwrite( delim2, sizeof(char), len, outfp );
+	/* Check for running out of disk space, etc. */
+	if( fflush( outfp ) != 0 )
+		error("Error writing message to file\r\n");
 	mptr->flags |= MSG_PUT;
 }
 
@@ -371,9 +388,24 @@ writmsg()
 {
 	long size;
 	int count;
-	char tmpbuf[512];
+	char tmpbuf[32*1024];
+	int len = strlen(delim1);
 
-	fseek( filefp,( long)( mptr->start), 0);
+	/* Verify that the message delimeter is intact */
+	fseek( filefp, (long)(mptr->start-len), 0);
+	tmpbuf[0] = '\0';
+	if( fread( tmpbuf, len, 1, filefp ) != 1 )
+		error( "error reading message delimeter\r\n");
+	tmpbuf[len] = '\0';
+	if( strcmp( tmpbuf, delim1 ) != 0 )  {
+		/* Build useful error message in tempbuf, then abort */
+		sprintf(tmpbuf, "Mailbox delimeter corrupted at file offset=%ld.\n\
+Message was From: %s\nSubject: %s\nDate: %s\n\
+Recommend you exit MSG, remove the binary box, and restart.\n",
+			mptr->start, mptr->from, mptr->subject, mptr->datestr);
+		error( tmpbuf );
+	}
+
 	for( size = mptr->len; size > 0; size -= count)  {
 		if( size <( sizeof tmpbuf))
 			count = size;
@@ -423,15 +455,14 @@ writbdy()
 prmsg()
 {
 	char line[LINESIZE];
-	register long size;
 	int	srcstat;
 
 	tt_norm();
 
-	size = mptr->len;
+	msgsize = mptr->len;
 	status.ms_curmsg = msgno;
 
-	printf( "(Message # %d: %ld bytes", msgno, size );
+	printf( "(Message # %d: %ld bytes", msgno, msgsize );
 	if( mptr->flags & MSG_DELETED )	printf(", Deleted");
 	if( mptr->flags & MSG_PUT )	printf(", Put");
 	if( mptr->flags & MSG_NEW )	printf(", New");
@@ -445,12 +476,16 @@ prmsg()
 		mptr->flags &= ~MSG_NEW;		/* Message seen */
 
 	fseek( filefp,( long)( mptr->start), 0);
+	curline = 0;
 
 	srcstat = SP_HNOSP;
-	while( size > 0)  {
+	while( msgsize > 0)  {
 		if( xfgets( line, sizeof( line), filefp) == NULL )
 			break;
 
+		msgsize -= strlen( line );
+		pcntdn = 100-((100*msgsize)/mptr->len);
+		curline++;
 		if( *line == '\n' )
 			srcstat = SP_BODY;
 		/* filter obnoxious lines */
@@ -467,7 +502,6 @@ prmsg()
 		else
 			filout( line, stdout);
 
-		size -= strlen( line );
 	}
 	tt_raw();
 	mptr->flags &= ~MSG_NEW;		/* Message seen */
@@ -798,6 +832,7 @@ filout(line, ofp)
 	FILE *ofp;
 {
 	register int cmd;
+	char tmpbuf[40];
 
 	if( paging ) {
 		linecount += (strlen( line ) / linelength ) + 1;
@@ -811,9 +846,13 @@ filout(line, ofp)
 			linecount = 0;
 		}
 
-		if ( linecount >= pagesize - 2) {
+		if ( linecount >= pagesize - 2 && msgsize != 0 ) {
 			tt_raw();
-			if( (cmd = confirm("Continue?",NOLF)) == FALSE )
+			if( pcntdn < 0 )
+				sprintf(tmpbuf,"Continue?");
+			else
+				sprintf(tmpbuf,"Continue (%d%%)?",pcntdn);
+			if( (cmd = confirm(tmpbuf,NOLF)) == FALSE )
 				error("");
 			tt_norm();
 			switch( cmd ) {
@@ -821,6 +860,15 @@ filout(line, ofp)
 			case '\n':		/* One more line */
 				linecount = pagesize;
 				break;
+				
+			case 'b':		/* Back one page */
+				if( dobpage == TRUE ) {
+					fprintf(stdout,"...Back 1 page...\n");
+					skipln(curline-2*pagesize);
+					linecount = 0;
+					return;
+				}
+				/* else fall through */
 				
 			default:
 				linecount = 0;
@@ -875,4 +923,37 @@ makedrft() {
 	strcpy( outfile, draft_original );
 	cpyiter( lstmsg, DOIT, (int(*)()) 0 );
 
+}
+/* Returns the number of the "current" message or does an
+ *  error() return if no messages in box
+ */
+curno() {
+
+	if( status.ms_curmsg == 0)  {
+		if( status.ms_nmsgs != 0)
+			status.ms_curmsg = 1;
+		else
+		if( status.ms_curmsg > status.ms_nmsgs)
+			error( "no current message\r\n");
+	}
+
+	return(status.ms_curmsg);
+}
+/* Seek to the beginning of a message and then skip to the given line */
+skipln(line)
+int line;
+{
+	char linebuf[LINESIZE];
+
+	fseek( filefp, mptr->start, 0);
+	msgsize = mptr->len;
+	curline = 0;
+
+	if( line <= 0 )
+		return;
+
+	do {
+		xfgets( linebuf, sizeof(linebuf), filefp);
+		msgsize -= strlen(linebuf);
+	} while( ++curline < line );
 }

@@ -24,6 +24,10 @@
  *	06/09/82  MJM	Split the enormous MSG program into pieces.
  *
  *	03/16/83  MJM	Decoupled "inverse" from "all".
+ *
+ *	08/27/98  MJM	Re-added newline as synonym for current field
+ *			in gitrtype(), so "hf\n" shows all messages from
+ *			sender of current message.
  */
 #include "util.h"
 #include "mmdf.h"
@@ -239,6 +243,7 @@ gitr()
  */
 gitrtype()
 {
+	register char *cp;
 	char cmd;
 
 	cmd = nxtchar;
@@ -249,6 +254,12 @@ gitrtype()
 		/* Only numerics valid for GOTO command */
 		if( isalpha( nxtchar) && nxtchar != 'c' && nxtchar != 'm')
 			error( "...not legal for this command\r\n");
+	}
+
+	if( cmd == '@' ) {
+		/* Do NOT allow inverse - creates infinite loop */
+		if( nxtchar == 'i' )
+			error("...not possible for this command\r\n");
 	}
 
 	switch( nxtchar)  {
@@ -267,14 +278,7 @@ gitrtype()
 	case 'c': 
 		if( verbose)
 			printf( "current\r\n");
-		if( status.ms_curmsg == 0)  {
-			if( status.ms_nmsgs != 0)
-				status.ms_curmsg = 1;
-			else
-				if( status.ms_curmsg > status.ms_nmsgs)
-					error( "no current message\r\n");
-		}
-		setrange( status.ms_curmsg, status.ms_curmsg);
+		setrange( curno(), curno() );
 		break;
 
 	case 'd': 
@@ -289,7 +293,7 @@ gitrtype()
 		if( verbose)
 			printf( "expression: ");
 		key[0] = rdnxtfld();
-		gather( key, 79);
+		gather( key, 79, DOLF );
 		if (key[0])
 			settype( 'e');
 		break;
@@ -298,8 +302,13 @@ gitrtype()
 		if( verbose)
 			printf( "from: ");
 		key[0] = rdnxtfld();
-		gather( key, 79);
-		if (key[0])
+		gather( key, 79, NOLF );
+		if( key[0] == '\0' ) {
+			strncpy(key,msgp[curno() - 1]->from,79);
+			printf("%s",key);
+		}			
+		printf("\r\n");
+		if( key[0] )
 			settype( 'f');
 		break;
 
@@ -370,8 +379,16 @@ gitrtype()
 		if( verbose)
 			printf( "subject: ");
 		key[0] = rdnxtfld();
-		gather( key, 79);
-		if (key[0])
+		gather( key, 79, NOLF );
+		if( key[0] == '\0' ) {
+			for( cp = msgp[curno()-1]->subject
+			    ; prefix( cp, "Re:" ) == TRUE; )
+				cp = strend("Re:",cp);
+			strncpy(key,cp,79);
+			printf("%s",key);
+		}			
+		printf("\r\n");
+		if( key[0] )
 			settype( 's');
 		break;
 
@@ -379,8 +396,13 @@ gitrtype()
 		if( verbose)
 			printf( "to: ");
 		key[0] = rdnxtfld();
-		gather( key, 79);
-		if (key[0])
+		gather( key, 79, NOLF );
+		if( key[0] == '\0' ) {
+			strncpy(key,msgp[curno() - 1]->to,79);
+			printf("%s",key);
+		}			
+		printf("\r\n");
+		if( key[0] )
 			settype( 't');
 		break;
 
@@ -415,16 +437,9 @@ gitrtype()
 		error(" ^D\r\n");
 
 	case '\n': 
-		if( status.ms_curmsg == 0)  {
-			if( status.ms_nmsgs != 0)
-				status.ms_curmsg = 1;
-			else
-				if( status.ms_curmsg > status.ms_nmsgs)
-					error( "no current message\r\n");
-		}
 		if( cmd == 'g' && status.ms_markno > 0 && status.ms_markno <= status.ms_nmsgs )
 			status.ms_curmsg = status.ms_markno;
-		setrange( status.ms_curmsg, status.ms_curmsg);
+		setrange( curno(), curno() );
 		switch( cmd)  {
 
 		case 'a': 
@@ -461,7 +476,7 @@ gitrnum()
 	unsigned int mbegin, mend;
 
 	key[0] = nxtchar;
-	gather( key, 78 );
+	gather( key, 78, DOLF );
 	gc = key;
 
 	while( *gc != '\000' )  {
@@ -575,6 +590,9 @@ char type;
 {
 	register struct message **mp;
 	register unsigned int i;
+	register char *cp;
+	char c;
+	int len;
 
 	switch( type )  {
 
@@ -604,7 +622,19 @@ char type;
 
 	case 's':
 		for( i = status.ms_nmsgs; i-- != 0; )
-			if( strindex( key, msgp[i]->subject) >= 0)
+			/* Attempt to match truncated subject lines */
+			if( strlen(msgp[i]->subject) == SIZESUBJ-1 ) {
+				for( cp = msgp[i]->subject
+				    ; prefix( cp, "Re:" ) == TRUE; )
+					cp = strend("Re:",cp);
+				/* temporarily shorten key to match len */
+				c = key[ len = strlen(cp) ];
+				key[len] = '\0';	/* temp truncate */
+				if( strindex( key, msgp[i]->subject) >= 0)
+					msgp[i]->flags |= MSG_PROCESS_IT;
+				key[len] = c;		/* restore old key */
+			}
+			else if( strindex( key, msgp[i]->subject) >= 0)
 				msgp[i]->flags |= MSG_PROCESS_IT;
 		break;
 
@@ -789,7 +819,14 @@ sortbox() {
 				for( pj = msgp[j]->subject; prefix( pj, "Re:" ) == TRUE; )
 					pj = strend("Re:",pj);
 
-				if( lexnequ( pi, pj, SIZESUBJ ) != TRUE )
+				if( strlen(msgp[i]->subject) == SIZESUBJ-1 ||
+				    strlen(msgp[j]->subject) == SIZESUBJ-1 ){
+					    if( lexnequ( pi, pj, (strlen(pi) <
+					        strlen(pj)) ? strlen(pi) :
+						strlen(pj)) != TRUE )
+						    continue;
+				}
+				else if( lexnequ( pi, pj, SIZESUBJ ) != TRUE )
 					continue;
 
 				/* Match - move rest down a slot */

@@ -409,6 +409,14 @@ int     setflg;
 			if( !isnull( fromstr[0]))  {
 				parsadr( fromstr, name, mbox, (char *)0);
 
+#if 0
+				/*
+				 * BRL users want their name instead of the
+				 * single To: name that this lists for the
+				 * From: entry.
+				 */
+				{
+#else
 				if( prefix( username, mbox) && !isnull( tostr[0]))  {
 					/* sender was self */
 					parsadr(tostr, name, mbox,( char *) 0);
@@ -417,6 +425,7 @@ int     setflg;
 					else
 						sprintf( fromstr, "To: %s%c", mbox, '\0');
 				}  else  {
+#endif
 					if( !isnull( name[0]))
 						strncpy(fromstr,name,SIZEFROM);
 					else
@@ -838,13 +847,20 @@ binbuild()
 	binheaderupdate();
 
 	for( i=0; i < status.ms_nmsgs; i++ )  {
-		fwrite( msgp[i], sizeof(struct message), 1, binfp );
+		if( fwrite( msgp[i], sizeof(struct message), 1, binfp ) == 0) {
+			fclose(binfp);
+			unlink(tempfile);
+			error("can't write to new binarybox; update cancelled.\r\n");
+		}
 		if( bdots == ON && bprint == ON ) {
 			putchar( '.' );
 			fflush( stdout );
 		}
 	}
-	fclose( binfp );
+	if( fclose( binfp ) != 0 ) {
+		unlink(tempfile);
+		error("can't write to new binarybox; update cancelled.\r\n");
+	}
 	if( unlink( binarybox ) < 0)
 			error( "can't delete old binarybox\r\n");
 	if( link( tempfile, binarybox ) < 0)  {

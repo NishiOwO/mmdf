@@ -45,7 +45,6 @@
 #define DOWARN  1                 /* indicate delay                     */
 #define DOFAIL  0                 /* indicate final timeout failure     */
 
-extern FILE    *mq_rfp;
 #ifdef line
 time_t   curtime;		/* keep lint happy - defined in other module */
 #else

@@ -45,7 +45,7 @@
 #define SIZESUBJ	40		/* */
 #define SIZETO		32
 
-#define	MSG_BSIZE		512
+#define	MSG_BSIZE	2048		/* temp line buffer size */
 
 #define SPSIGS		0400007
 
@@ -64,7 +64,7 @@ struct message {
 #define MSG_DELETED	0000001		/* Msg flagged for deletion */
 #define	MSG_PUT		0000002		/* Msg put to another file */
 #define MSG_NEW		0000004		/* Msg not seen yet */
-#define MSG_KEEP		0000010		/* Msg to be kept in this file */
+#define MSG_KEEP	0000010		/* Msg to be kept in this file */
 #define MSG_ANSWERED	0000020		/* Msg has been answered */
 #define MSG_FORWARDED	0000040		/* Msg has been forwarded */
 

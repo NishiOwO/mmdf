@@ -52,6 +52,10 @@
  *
  *	7/88	#ifndef'ed out code that was removing file locks on SYS5
  *		systems. Edward C. Bennett <edward@engr.uky.edu>
+ *	8/98	Made all file access go through stdio.
+ *		Centralized flag changing, added error checking.
+ *		Avoids GNU LIBC bug and general messiness.
+ *		Mike Muuss <Mike@ARL.MIL>
  *
  */
 #include "util.h"
@@ -91,29 +95,80 @@ extern	int	lk_open();
 
 LOCFUN long	mq_gtnum();	/* reads long ascii # from addr file		*/
 
-LOCVAR	int	mq_fd;		/* read file descriptor, saved 		*/
-LOCVAR	FILE	*mq_rfp;	/* read handle, for getting entries	*/
+LOCVAR	int	mq_fd;		/* read/write file descriptor, saved	*/
+LOCVAR	FILE	*mq_fp;		/* read/wr handle, for getting entries	*/
 LOCVAR	char	mq_dlm;		/* mq_gtnum's delimeter char		*/
 LOCVAR	long	mq_curpos;	/* Current offset of read pointer (rfp)	*/
 LOCVAR	long	mq_lststrt;	/* Offset to start of addr list		*/
 LOCVAR	long	mq_optstrt;	/* Offset to options			*/
 LOCVAR	Msg	*mq_curmsg;	/* SEK handle on current message	*/
+/**/
+
+/*
+ *			M Q _ C H A N G E F L A G
+ *
+ * Change flag in address file from 'from' to 'to'.
+ * As address files are damaged when lseek fails (either due to GNU LIBC
+ * bug, or due to sys-admin editing the files out from under us),
+ * employ conservative strategy of verifying that flag character is
+ * either 'from' or 'to' already, else abort.
+ *
+ *  Returns -
+ *	-1	failure
+ *	0	success
+ */
+static int
+mq_changeflag (pos, from, to)
+    long pos;
+    int from;
+    int to;
+{
+	char	buf[8];
+	int	got;
+
+	buf[0] = '?';
+	if( fseek ( mq_fp, pos, 0 ) != 0 || fread ( buf, 1, 1, mq_fp ) != 1 )  {
+		ll_log (logptr, LLOGFAT,
+			"mq_changeflag (pos=%ld, from=%c, to=%c) fseek/fread error",
+			pos, from, to );
+		return -1;
+	}
+	if( (got=buf[0]) != from && got != to )  {
+		ll_log (logptr, LLOGFAT,
+			"mq_changeflag (pos=%ld, from=%c, to=%c) got=%c, aborting",
+			pos, from, to, got );
+		return -1;
+	}
+	buf[0] = (char)to;
+	if( fseek ( mq_fp, pos, 0 ) != 0 || fwrite( buf, 1, 1, mq_fp ) != 1 )  {
+		/* perror("mq_changeflag: write") */
+		ll_log (logptr, LLOGFAT,
+			"mq_changeflag (pos=%ld, from=%c, to=%c) fseek/fwrite failure",
+			pos, from, to );
+		return -1;
+	}
+	ll_log (logptr, LLOGFTR,
+		"mq_changeflag (pos=%ld, from=%c, to=%c) was=%c, OK",
+		pos, from, to, got );
+	return 0;
+}
+/**/
 
 mq_rkill (type)			/* give-up access to msg info		*/
     int type;			/* type of ending (currently ignored)	*/
 {
 #ifdef DEBUG
-     ll_log (logptr, LLOGBTR, "mq_rkill (type=%d, mq_fd=%d, mq_rfp=%o)",
-		type, mq_fd, mq_rfp);
+     ll_log (logptr, LLOGBTR, "mq_rkill (type=%d, mq_fd=%d, mq_fp=%o)",
+		type, mq_fd, mq_fp);
 #endif
 
     if (mq_fd != NOTOK)
 	lk_close (mq_fd, (char *) 0, lckdfldir, mq_curmsg -> mg_mname);
-    if (mq_rfp != (FILE *) EOF && mq_rfp != (FILE *) NULL)
-	fclose (mq_rfp);
+    if (mq_fp != (FILE *) EOF && mq_fp != (FILE *) NULL)
+	fclose (mq_fp);
 
     mq_fd = NOTOK;
-    mq_rfp = NULL;
+    mq_fp = NULL;
 }
 /**/
 
@@ -125,7 +180,6 @@ mq_rinit (thechan, themsg, retadr)	/* gain access to info on the msg */
     char msgname[LINESIZE];
     extern int errno;
     register short     len;
-    int       tmpfd;
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "mq_rinit ()");
 #endif
@@ -142,9 +196,9 @@ mq_rinit (thechan, themsg, retadr)	/* gain access to info on the msg */
 		squepref, thechan -> ch_queue, themsg -> mg_mname);
     }
 
+    /* Make stdio FILE capable of reading & writing */
     if ((mq_fd = lk_open (msgname, 2, lckdfldir, themsg -> mg_mname, 20)) < OK ||
-	(tmpfd = dup (mq_fd)) < OK ||
-	(mq_rfp = fdopen (tmpfd, "r")) < (FILE *)NULL)
+	(mq_fp = fdopen (mq_fd, "r+")) < (FILE *)NULL)
     {				/* msg queued in file w/its name */
 	switch (errno)
 	{
@@ -174,7 +228,7 @@ mq_rinit (thechan, themsg, retadr)	/* gain access to info on the msg */
 				/* whether warning been sent */
     mq_optstrt = mq_lststrt - 1;	/* Offset to option bits */
     themsg -> mg_stat |= (char) mq_gtnum ();
-    if (fgets (retadr, ADDRSIZE, mq_rfp) == NULL)
+    if (fgets (retadr, ADDRSIZE, mq_fp) == NULL)
     {
 	ll_err (logptr, LLOGTMP, "Can't read %s sender name", themsg -> mg_mname);
 	mq_rkill (OK);
@@ -184,10 +238,10 @@ mq_rinit (thechan, themsg, retadr)	/* gain access to info on the msg */
     len = strlen (retadr);
     mq_lststrt += len;
     if (retadr[len - 1] != '\n') {
-	while (fgetc(mq_rfp) != '\n')
+	while (fgetc(mq_fp) != '\n')
 	{
 	    mq_lststrt++;
-	    if (feof(mq_rfp) || ferror(mq_rfp)) {
+	    if (feof(mq_fp) || ferror(mq_fp)) {
 		ll_err (logptr, LLOGTMP, "Can't read %s sender name", themsg -> mg_mname);
 		mq_rkill (OK);
 		retadr[0] = '\0';	/* eliminate old sender name */
@@ -205,14 +259,14 @@ mq_rinit (thechan, themsg, retadr)	/* gain access to info on the msg */
     mq_curpos = mq_lststrt;
 #ifdef DEBUG
    ll_log (logptr, LLOGFTR, "name='%s' ret='%s' (fd=%d)",
-	       themsg -> mg_mname, retadr, fileno (mq_rfp));
+	       themsg -> mg_mname, retadr, fileno (mq_fp));
 #endif
     return (OK);
 }
 /**/
 
 /*
- *  mq_setpos() repositions the read pointer (rfp) but because mq_rfp is
+ *  mq_setpos() repositions the read pointer (mq_fp) but because mq_fp is
  *	just a dup of mq_fd, mq_fd is repositioned as well.  Be careful!
  */
 mq_setpos (offset)
@@ -221,32 +275,12 @@ mq_setpos (offset)
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "mq_setpos (%ld)", offset);
 #endif
-
-#ifndef SYS5
-    /*
-     *  The following is needed due to a bug in V7/SysIII/4.nBSD Stdio
-     *  which will not allow you to invalidate the incore buffer of
-     *  of a file fopened for reading.   (DPK @ BRL)
-     *
-     *  This segment must be omitted on SYS5 machines because the act of
-     *  closing and reopening the mq_rfp removes the lock that mq_fd is
-     *  supposed to be holding. We can safely omit this because System V
-     *  doesn't seem to have the stdio bug. (ECB 7/88)
-     */
-    fclose (mq_rfp);
-    mq_rfp = NULL;
-    if ((mq_rfp = fdopen (dup(mq_fd), "r")) == NULL) {
-	mq_rkill (NOTOK);
-	ll_log (logptr, LLOGFAT, "mq_setpos(), cannot reopen address list");
-    }
-#endif
-
     if (offset == 0L) {
-	fseek (mq_rfp, mq_lststrt, 0);
+	fseek (mq_fp, mq_lststrt, 0);
     	mq_curpos = mq_lststrt;
     }
     else {
-	fseek (mq_rfp, offset, 0);
+	fseek (mq_fp, offset, 0);
     	mq_curpos = offset;
     }
 }
@@ -261,22 +295,15 @@ mq_radr (theadr)	/* obtain next address in msg's queue */
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "mq_radr ()");
     ll_log (logptr, LLOGBTR, "----> (pos=%d, cur=%ld, lseek=%ld)", 
-           mq_curpos, ftell(mq_rfp), lseek(mq_fd, 0, SEEK_CUR));
-#endif
-#ifdef LINUX
-    lseek(mq_fd, ftell(mq_rfp), SEEK_SET);
-#endif
-#ifdef DEBUG
-    ll_log (logptr, LLOGBTR, "----> (pos=%d, cur=%ld, lseek=%ld)", 
-	    mq_curpos, ftell(mq_rfp), lseek(mq_fd, 0, SEEK_CUR));
+           mq_curpos, ftell(mq_fp), lseek(mq_fd, 0, SEEK_CUR));
 #endif
 
     theadr -> adr_que = 0;	/* null it to indicate empty entry */
     theadr -> adr_pos = mq_curpos;
     for (;;) {
-	if (fgets (theadr->adr_buf, sizeof (theadr->adr_buf), mq_rfp) == NULL)
+	if (fgets (theadr->adr_buf, sizeof (theadr->adr_buf), mq_fp) == NULL)
 	{
-	    if (feof (mq_rfp))
+	    if (feof (mq_fp))
 	    {
 #ifdef DEBUG
 		ll_log (logptr, LLOGFTR, "end of list");
@@ -330,8 +357,6 @@ RP_Buf *rply;
 Msg *themsg;
 struct adr_struct *theadr;
 {
-    char donechr;
-
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "mq_wrply (%s)", themsg -> mg_mname);
 #endif
@@ -344,9 +369,7 @@ struct adr_struct *theadr;
 	    ll_log (logptr, LLOGFTR,
 		"AOK @ offset(%ld)", (long) (theadr -> adr_pos + ADR_TMOFF));
 #endif
-	    donechr = ADR_AOK;		/* temporary mark */
-	    lseek (mq_fd, (long) (theadr -> adr_pos + ADR_TMOFF), 0);
-	    write (mq_fd, &donechr, 1);
+	    mq_changeflag ( (long)(theadr->adr_pos + ADR_TMOFF), ADR_CLR, ADR_AOK);
 	    break;
 
 	case RP_NDEL:		/* won't be able to deliver */
@@ -355,9 +378,7 @@ struct adr_struct *theadr;
 	    ll_log (logptr, LLOGFTR,
 		"DONE @ offset(%ld)", (long) (theadr -> adr_pos + ADR_DLOFF));
 #endif
-	    donechr = ADR_DONE;
-	    lseek (mq_fd, (long) (theadr -> adr_pos + ADR_DLOFF), 0);
-	    write (mq_fd, &donechr, 1);
+	    mq_changeflag ( (long)(theadr->adr_pos + ADR_DLOFF), ADR_MAIL, ADR_DONE);
 	    break;
 
 	case RP_NOOP:		/* not processed, this time */
@@ -369,31 +390,10 @@ struct adr_struct *theadr;
 		ll_log (logptr, LLOGFTR,
 		"CLR @ offset(%ld)", (long) (theadr -> adr_pos + ADR_TMOFF));
 #endif
-		donechr = ADR_CLR;
-		lseek (mq_fd, (long) (theadr -> adr_pos + ADR_TMOFF), 0);
-		write (mq_fd, &donechr, 1);
+		mq_changeflag ( (long)(theadr->adr_pos + ADR_TMOFF), ADR_AOK, ADR_CLR);
 	    }
     }
-
-#ifndef SYS5
-    /*
-     *  The following is needed due to a bug in V7/SysIII/4.nBSD Stdio
-     *  which will not allow you to invalidate the incore buffer of
-     *  of a file fopened for reading.   (DPK @ BRL)
-     *
-     *  This segment must be omitted on SYS5 machines because the act of
-     *  closing and reopening the mq_rfp removes the lock that mq_fd is
-     *  supposed to be holding. We can safely omit this because System V
-     *  doesn't seem to have the stdio bug. (ECB 7/88)
-     */
-    fclose (mq_rfp);
-    mq_rfp = NULL;
-    if ((mq_rfp = fdopen (dup(mq_fd), "r")) == NULL) {
-	mq_rkill (NOTOK);
-	ll_log (logptr, LLOGFAT, "mq_wrply(), cannot reopen address list");
-    }
-#endif
-    fseek (mq_rfp, mq_curpos, 0);	/* Back to where we were */
+    fseek (mq_fp, mq_curpos, 0);	/* Back to where we were */
 }
 /**/
 
@@ -406,7 +406,7 @@ mq_gtnum ()			/* read a long number from adr queue	*/
 #ifdef DEBUG
     ll_log (logptr, LLOGFTR, "mq_gtnum");
 #endif
-    for (thenum = 0; isdigit (c = getc (mq_rfp));
+    for (thenum = 0; isdigit (c = getc (mq_fp));
 	    thenum = thenum * 10 + (c - '0'), mq_lststrt++);
     mq_lststrt++;
 
@@ -421,43 +421,19 @@ mq_gtnum ()			/* read a long number from adr queue	*/
 mq_rwarn (theadr)			/* note that warning has been sent	*/
 struct adr_struct *theadr;
 {
-    static char donechr = ADR_DONE;
-    long curpos;
-    
 #ifdef OLD_WARN
 #ifdef DEBUG
     ll_log (logptr, LLOGFTR, "WARN @ offset(%ld)", (long) (mq_optstrt));
 #endif
 
-    lseek (mq_fd, mq_optstrt, 0);
-    write (mq_fd, &donechr, 1);
-#ifndef SYS5
-    /*
-     *  The following is needed due to a bug in V7/SysIII/4.nBSD Stdio
-     *  which will not allow you to invalidate the incore buffer of
-     *  of a file fopened for reading.   (DPK @ BRL)
-     *
-     *  This segment must be omitted on SYS5 machines because the act of
-     *  closing and reopening the mq_rfp removes the lock that mq_fd is
-     *  supposed to be holding. We can safely omit this because System V
-     *  doesn't seem to have the stdio bug. (ECB 7/88)
-     */
-    fclose (mq_rfp);
-    mq_rfp = NULL;
-    if ((mq_rfp = fdopen (dup(mq_fd), "r")) == NULL) {
-	mq_rkill (NOTOK);
-	ll_log (logptr, LLOGFAT, "mq_rwarn(), cannot reopen address list");
-    }
-#endif
-    fseek (mq_rfp, mq_curpos, 0);	/* Back to where we were */
+    mq_changeflag ( mq_optstrt, ADR_MAIL, ADR_DONE);
+    fseek (mq_fp, mq_curpos, 0);	/* Back to where we were */
 #else /* OLD_WARN */
 #ifdef DEBUG
     ll_log (logptr, LLOGFTR,
             "WARN @ offset(%ld)", (long) (theadr -> adr_pos + ADR_WFOFF));
 #endif
-    donechr = ADR_WARN;		/* temporary mark */
-    lseek (mq_fd, (long) (theadr -> adr_pos + ADR_WFOFF), 0);
-    write (mq_fd, &donechr, 1);
-    lseek (mq_fd, mq_curpos, 0);	/* Back to where we were */
+    mq_changeflag ( (long)(theadr->adr_pos + ADR_WFOFF), ADR_CLR, ADR_WARN);
+    fseek (mq_fp, mq_curpos, 0);	/* Back to where we were */
 #endif /* OLD_WARN */
 }

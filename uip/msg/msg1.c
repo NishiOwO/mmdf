@@ -497,13 +497,10 @@ ignore:		nxtchar = ttychar();
 				error( "" );
 			}
 			unset();
-			if( status.ms_curmsg == 0)  {
-				if( status.ms_nmsgs != 0)
-					status.ms_curmsg = 1;
-				else
-					if( status.ms_curmsg > status.ms_nmsgs)
-						error( "no current message\r\n");
-			}
+			if( status.ms_curmsg == 0)
+				status.ms_curmsg = 1;
+			else if( status.ms_curmsg > status.ms_nmsgs)
+				error( "no current message\r\n");
 			setrange( status.ms_curmsg, status.ms_curmsg);
 			doiter( delmsg);
 			/* Fall Through to case 'n' */
