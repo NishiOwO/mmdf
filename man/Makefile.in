@@ -63,14 +63,14 @@ PGMPROT		= @PGMPROT@
 all: man5/mmdftailor.5
 
 install:
-	for dir in ${SUBDIR}; do \
+	for dir in man?; do \
 		(cd $${dir}; make ${MFLAGS} install); done
 
 clean:
 	rm -f man5/mmdftailor.5
 	rm -f ${SEDFILE}
 
-distclean:
+distclean: clean
 	rm -f */*~ *~ #*# */#*#
 	rm -f Makefile
 
@@ -104,7 +104,7 @@ ${SEDFILE}: Makefile
 	sed -e 's/\\@/@/g' -e 's/\//\\\//g' ${SEDFILE}> dummy
 	sed -e 's/^s\\\/@/s\/@/g' -e 's/@\\\//@\//g' -e 's/\\\/g/\/g/g' \
 		dummy > ${SEDFILE}
-#	rm -f dummy
+	rm -f dummy
 
 man5/mmdftailor.5: ${SEDFILE} man5/mmdftailor.5.in
 	sed -f ${SEDFILE} man5/mmdftailor.5.in > man5/mmdftailor.5 
