@@ -13,17 +13,17 @@ VPRINT	= ${VPRINT}
 LIBES=
 AS=	-as
 RM=	-rm
-OBJS=	version.o aux.o cmd1.o cmd2.o cmd3.o cmdtab.o collect.o \
+OBJS=	version.o utils.o cmd1.o cmd2.o cmd3.o cmdtab.o collect.o \
 	config.o dateparse.o edit.o fio.o \
 	getname.o head.o v7.local.o lex.o list.o main.o names.o \
 	next_address.o optim.o popen.o quit.o send.o strings.o temp.o tty.o \
 	vars.o str.o
-SRCS=	aux.c cmd1.c cmd2.c cmd3.c cmdtab.c collect.c config.c dateparse.c \
+SRCS=	utils.c cmd1.c cmd2.c cmd3.c cmdtab.c collect.c config.c dateparse.c \
 	edit.c fio.c \
 	getname.c head.c v7.local.c lex.c list.c main.c \
 	names.c optim.c popen.c quit.c send.c strings.c temp.c tty.c vars.c \
 	version.c
-MODULES= aux cmd1 cmd2 cmd3 cmdtab collect config dateparse \
+MODULES= utils cmd1 cmd2 cmd3 cmdtab collect config dateparse \
 	edit fio \
 	getname head v7.local lex list main \
 	names optim popen quit send strings temp tty vars \
@@ -113,8 +113,8 @@ sc:
 
 # DO NOT DELETE THIS LINE -- make depend uses it
 
-aux.o: aux.c
-aux.o: rcv.h
+utils.o: utils.c
+utils.o: rcv.h
 cmd1.o: cmd1.c
 cmd1.o: rcv.h
 cmd2.o: cmd2.c
