@@ -52,7 +52,7 @@ d_numparse(string, numtab, maxnums, filename, lineno)
     num = 0;
 #ifdef D_DBGLOG
     d_dbglog("d_numparse", "parsing '%s'", string);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
 /*  treat each speed/phone number pair separately  */
 
@@ -106,7 +106,7 @@ d_numparse(string, numtab, maxnums, filename, lineno)
 #ifdef D_DBGLOG
 	d_dbglog ("d_numparse", "%d: (speed %d) num '%s'",
 		    num, numtab[num].t_speed, numtab[num].t_number);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
         num++;
 
         continue;
@@ -232,7 +232,7 @@ d_numparse(string, numtab, maxnums, filename, lineno)
 #ifdef D_DBGLOG
       d_dbglog ("d_numparse", "%d: (speed %d) num '%s'",
 		  num, numtab[num].t_speed, numtab[num].t_number);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
       num++;
       }
     }

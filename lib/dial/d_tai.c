@@ -15,9 +15,9 @@ extern char *def_trn;
 extern struct ll_struct ph_log;
 #ifdef lint
 char *tai_eptr;		/* keep lint happy -- defined in ../mmdf/mm_tai.c */
-#else
+#else /* lint */
 extern char *tai_eptr;
-#endif
+#endif /* lint */
 extern int errno;
 extern struct dialports  *d_prts;
 extern int d_numprts;
@@ -73,7 +73,7 @@ LOCVAR Cmd cmddparm[] =
     "access",   CMDPACCESS, 1,
 #ifdef NVRCOMPIL
     "post",     CMDPPOST,   1,
-#endif
+#endif /* NVRCOMPIL */
     0,          0,          0
 };
 

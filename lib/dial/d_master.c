@@ -96,13 +96,13 @@ d_masdrop(sndquit, doscript)
       {
 #ifdef D_LOG
       d_log("d_masdrop", "Resuming script file.");
-#endif D_LOG
+#endif /* D_LOG */
       result = d_script();
       }
 
 #ifdef D_LOG
     d_log("d_masdrop", "master dropped connection");
-#endif D_LOG
+#endif /* D_LOG */
 
     /*  drop the connection.  close the transcript and log  */
     d_drop();
@@ -133,7 +133,7 @@ d_masstart()
 
 #ifdef D_DBGLOG
     d_dbglog("d_masstart", "Beginning master host startup sequence");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     /*  get the XPATH and RPATH packets from the slave. then build
      *  the local transmit code vector.
@@ -143,14 +143,14 @@ d_masstart()
 
 #ifdef D_DBGLOG
     d_dbglog("d_masstart", "XPATH received ok.");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     if ((result = d_getpath(RPATH, &d_rrmax, d_rrill)) < 0)
       return(result);
 
 #ifdef D_DBGLOG
     d_dbglog("d_masstart", "RPATH received ok.");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     /*  If appropriate, send the packet describing how we are buffering
      *  packets.  This cannot be sent to some sites, as they do not
@@ -164,7 +164,7 @@ d_masstart()
     d_maxtext = d_minimum(d_lxmax, d_rrmax);
 #ifdef D_DBGLOG
     d_dbglog("d_masstart", "Maximum transmit packet size set to %d", d_maxtext);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
     d_maxtext -= (LHEADER + LTERM);
 
     /*  now send the XPATH and RPATH to the slave  */
@@ -173,14 +173,14 @@ d_masstart()
 
 #ifdef D_DBGLOG
     d_dbglog("d_masstart", "XPATH sent ok.");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     if ((result = d_snpath(RPATH, d_lrmax, d_lrill)) < 0)
       return(result);
 
 #ifdef D_DBGLOG
     d_dbglog("d_masstart", "RPATH sent ok.");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     /*  get the escape code we're to use for encoding text sent
      *  to the remote host.
@@ -191,18 +191,18 @@ d_masstart()
 #ifdef D_DBGLOG
     d_dbglog("d_masstart", "ESCAPE received ok.  Transmit escape '%c'",
 	d_snesc);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     if ((result = d_snfescape()) < 0)
       return(result);
 
 #ifdef D_DBGLOG
     d_dbglog("d_masstart", "ESCAPE sent ok.  Receive escape '%c'", d_rcvesc);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
 #ifdef D_LOG
     d_log("d_masstart", "Master protocol startup completed ok.");
-#endif D_LOG
+#endif /* D_LOG */
 
     return(D_OK);
 }

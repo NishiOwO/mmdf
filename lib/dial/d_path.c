@@ -38,7 +38,7 @@ d_snpath(type, maxleng, bitvector)
     {
 #ifdef D_LOG
 	d_log("d_snpath", "max packet len > 255 (%d)", maxleng);
-#endif D_LOG
+#endif /* D_LOG */
 	maxleng = 255;            /* should be safe to trim it down     */
     }
     txtbuf[0] = d_tohex((maxleng >> 4) & 017);
@@ -123,7 +123,7 @@ d_setpath(packet, length, maxleng, bitvector)
       {
 #ifdef D_LOG
       d_log("d_setpath", "bad length (%d) path packet received", length);
-#endif D_LOG
+#endif /* D_LOG */
       d_errno = D_PATHERR;
       return(D_FATAL);
       }
@@ -138,7 +138,7 @@ d_setpath(packet, length, maxleng, bitvector)
 #ifdef D_LOG
       d_log("d_setpath", "bad hex character in path (length '%c%c', type '%c')",
           dig1, dig2, packet[TYPEOFF]);
-#endif D_LOG
+#endif /* D_LOG */
       d_errno = D_PATHERR;
       return(D_FATAL);
       }
@@ -150,7 +150,7 @@ d_setpath(packet, length, maxleng, bitvector)
 #ifdef D_LOG
       d_log("d_setpath", "bad max packet size (%d) in path packet, type '%c'",
           max, packet[TYPEOFF]);
-#endif D_LOG
+#endif /* D_LOG */
       d_errno = D_PATHERR;
       return(D_FATAL);
       }

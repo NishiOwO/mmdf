@@ -45,7 +45,7 @@ d_bldcvec(hexvec, codevec)
           {
 #ifdef D_LOG
           d_log("d_bldcvec", "bad hex digit in path illegal character field");
-#endif D_LOG
+#endif /* D_LOG */
           d_errno = D_PACKERR;
           return(D_FATAL);
           }
@@ -175,7 +175,7 @@ d_decode(input, ninput, output)
               {
 #ifdef D_LOG
               d_log("d_decode", "illegal character encoding");
-#endif D_LOG
+#endif /* D_LOG */
               d_errno = D_PACKERR;
               return(D_FATAL);
               }

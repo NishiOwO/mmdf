@@ -161,7 +161,7 @@ d_dollar(line)
 #ifdef D_DBGLOG
 	     d_dbglog("d_dollar", "variable number: %d, max: %d", 
 		      index, d_nfields);
-#endif
+#endif /* D_DBGLOG */
      	     if ((index <= 0) || (index > d_nfields))
      	        return(-4);
 	     if (addout(templine,&len, d_fields[index],strlen(d_fields[index])))

@@ -77,7 +77,7 @@ int     tson,
 #ifdef D_LOG
 	d_log ("d_slvconn", "error getting port parameters (errno=%d)",
 			errno);
-#endif D_LOG
+#endif /* D_LOG */
 	d_errno = D_PRTSGTTY;
     }
 
@@ -107,7 +107,7 @@ int     sndquit;
 
 #ifdef D_LOG
     d_log ("d_slvdrop", "slave dropped connection");
-#endif D_LOG
+#endif /* D_LOG */
 
     if (d_ttrestore () < 0)
     {                             /* restory tty characteristics        */
@@ -143,7 +143,7 @@ d_slvstart ()
 
 #ifdef D_DBGLOG
     d_dbglog ("d_slvstart", "Beginning slave host startup sequence");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     sleep (2);  /* wait for line-settling */
 
@@ -156,7 +156,7 @@ d_slvstart ()
 
 #ifdef D_DBGLOG
     d_dbglog ("d_slvstart", "XPATH sent ok.");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     if ((result = d_snpath (RPATH, d_lrmax, d_lrill))
 	    < 0)
@@ -164,7 +164,7 @@ d_slvstart ()
 
 #ifdef D_DBGLOG
     d_dbglog ("d_slvstart", "RPATH sent ok.");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     /*  get XPATH and RPATH from the master.  then form the
      *  local transmission encoding vector.
@@ -174,21 +174,21 @@ d_slvstart ()
 
 #ifdef D_DBGLOG
     d_dbglog ("d_slvstart", "XPATH received ok.");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     if ((result = d_getpath (RPATH, &d_rrmax, d_rrill)) < 0)
 	return (result);
 
 #ifdef D_DBGLOG
     d_dbglog ("d_slvstart", "RPATH received ok.");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     d_orbitvec (d_lxill, d_rrill, d_lcvec);
 
     d_maxtext = d_minimum (d_lxmax, d_rrmax);
 #ifdef D_DBGLOG
     d_dbglog ("d_slvstart", "Maximum transmit packet size set to %d", d_maxtext);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
     d_maxtext -= LHEADER;
 
     /*  send our receive escape code to the master and get his  */
@@ -197,7 +197,7 @@ d_slvstart ()
 
 #ifdef D_DBGLOG
     d_dbglog ("d_slvstart", "ESCAPE sent ok.  Receive escape '%c'", d_rcvesc);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     if ((result = d_getescape ()) < 0)
 	return (result);
@@ -205,11 +205,11 @@ d_slvstart ()
 #ifdef D_DBGLOG
     d_dbglog ("d_slvstart", "ESCAPE received ok.  Transmit escape '%c'",
 	    d_snesc);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
 #ifdef D_LOG
     d_log ("d_slvstart", "Slave protocol startup completed ok.");
-#endif D_LOG
+#endif /* D_LOG */
 
     return (D_OK);
 }

@@ -36,7 +36,7 @@ extern int d_wpack;
 #ifndef HAVE_SGTTY_H
 extern unsigned short d_prbitc, d_prbiti, d_prbito, d_prbitl;
 extern unsigned short d_scbitc, d_scbiti, d_scbito, d_scbitl;
-#else
+#else /* HAVE_SGTTY_H */
 extern int d_pron, d_proff, d_scon, d_scoff;
 #endif /* HAVE_SGTTY_H */
 extern int d_nbuff;
@@ -104,7 +104,7 @@ struct scrcmds
 #ifndef HAVE_SGTTY_H
 		    "stty-pr", S_PRTTY, 3, 5,
 		    "stty-sc", S_SCTTY, 3, 5,
-#else
+#else /* HAVE_SGTTY_H */
 		    "stty-pr", S_PRTTY, 3, 3,
 		    "stty-sc", S_SCTTY, 3, 3,
 #endif /* HAVE_SGTTY_H */
@@ -369,7 +369,7 @@ d_cmdproc (command, nfields, fields)
 		d_scbitc, d_scbiti, d_scbito, d_scbitl);
 #endif /* D_LOG */
 
-#else
+#else /* HAVE_SGTTY_H */
 
 	    sscanf(fields[1], "%o", &d_scon);
 	    sscanf(fields[2], "%o", &d_scoff);

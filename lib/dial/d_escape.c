@@ -28,13 +28,13 @@ char
 #ifdef D_DBGLOG
         d_dbglog("d_findesc", "Character '%c' selected as escape for receiving",
             *cp);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
         return(*cp);
         }
 
 #ifdef D_LOG
     d_log("d_findesc", "Can't find suitable escape character");
-#endif D_LOG
+#endif /* D_LOG */
     d_errno = D_NOESC;
     return(D_FATAL);
 }
@@ -54,7 +54,7 @@ d_snfescape()
 
 #ifdef D_DBGLOG
     d_dbglog("d_snfescape", "sending ESCAPE to other end");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     /*  find an escape character  */
     if ((d_rcvesc = d_findesc()) < 0)
@@ -92,7 +92,7 @@ d_getescape()
 
 #ifdef D_DBGLOG
     d_dbglog("d_getescape", "looking for ESCAPE from other end");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
 /*  set timer so we don't wait forever  */
 
@@ -105,7 +105,7 @@ d_getescape()
     {
 #ifdef D_DBGLOG
       d_dbglog("d_escape", "bad ESCAPE packet length (%d)", length);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
       d_errno = D_INITERR;
       return (D_FATAL);
     }

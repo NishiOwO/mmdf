@@ -24,7 +24,7 @@ d_snstream(buffer, nbytes)
 
 #ifdef D_DBGLOG
     d_dbglog("d_snstream", "sending  '%.*s'", nbytes, buffer);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     bp = buffer;
 
@@ -76,7 +76,7 @@ d_sneot()
     *d_xqpt = '\0';
 #ifdef D_DBGLOG
     d_dbglog("d_sneot", "packet '%s'", d_xqueue);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     result = d_sndata(1);
     return(result);

@@ -16,7 +16,7 @@ d_snquit()
 
 #ifdef D_LOG
     d_log("d_snquit", "sending QUIT");
-#endif D_LOG
+#endif /* D_LOG */
 
 /*  build and send the QUIT packet  */
 

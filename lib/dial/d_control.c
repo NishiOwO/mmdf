@@ -45,7 +45,7 @@ d_control (packet, length)
 #ifdef D_LOG
 		d_log ("d_control", "NBUFF: Bad hex char in packet ('%c%c')",
 				packet[LHEADER], packet[LHEADER+1]);
-#endif D_LOG
+#endif /* D_LOG */
 		return (D_NONFATAL);
 	    }
 
@@ -56,7 +56,7 @@ d_control (packet, length)
 	case QUIT:
 #ifdef D_LOG
 	    d_log ("d_control", "received QUIT packet");
-#endif D_LOG
+#endif /* D_LOG */
 	    if (length == LQUIT)
 	    {
 		d_errno = D_RCVQUIT;
@@ -64,7 +64,7 @@ d_control (packet, length)
 	    }
 #ifdef D_LOG
 	    d_log ("d_control", "Quit packet bad length (%d)", length);
-#endif D_LOG
+#endif /* D_LOG */
 	    return (D_NONFATAL);
 
 	default:
@@ -73,7 +73,7 @@ d_control (packet, length)
 	     */
 #ifdef D_LOG
 	    d_log ("d_control", "Bad packet type '%s'", packet);
-#endif D_LOG
+#endif /* D_LOG */
 	    return (D_NONFATAL);
     }
 }

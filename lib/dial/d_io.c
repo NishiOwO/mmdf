@@ -33,18 +33,18 @@ static int replay;	/*  set if we are doing a replay		*/
 
 #ifdef V4_2BSD
 static int rbuff[BUFFSIZE];
-#else
+#else /* V4_2BSD */
 static char rbuff[BUFFSIZE];
-#endif
+#endif /* V4_2BSD */
 
 d_getc (channel)
 register FILE *channel;
 {
 #ifdef V4_2BSD
     register int c;
-#else
+#else /* V4_2BSD */
     char c;
-#endif
+#endif /* V4_2BSD */
 
 
     /*  Check to see if we are replaying the input  */

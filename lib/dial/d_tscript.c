@@ -26,7 +26,7 @@ d_tsopen(filename)
       {
 #ifdef D_LOG
       d_log("d_tsopen", "transcript started on standard output");
-#endif D_LOG
+#endif /* D_LOG */
       d_tsfd = 1;
       return(D_OK);
       }
@@ -35,7 +35,7 @@ d_tsopen(filename)
       {
 #ifdef D_LOG
       d_log("d_tsopen", "can't create transcript file '%s'", filename);
-#endif D_LOG
+#endif /* D_LOG */
       d_errno = D_TSOPEN;
       return(D_FATAL);
       }
@@ -43,7 +43,7 @@ d_tsopen(filename)
     chmod (filename, 0662);
 #ifdef D_LOG
     d_log("d_tsopen", "transcript file '%s' created", filename);
-#endif D_LOG
+#endif /* D_LOG */
     return(D_OK);
     }
 
@@ -67,7 +67,7 @@ d_tsclose()
 
 #ifdef D_LOG
     d_log("d_tsclose", "transcript stopped");
-#endif D_LOG
+#endif /* D_LOG */
 
     return(D_OK);
     }
@@ -97,7 +97,7 @@ d_tscribe(text, length)
 	  {
 #ifdef D_LOG
 	  d_log("d_tscribe", "error writing on transcript file");
-#endif D_LOG
+#endif /* D_LOG */
 	  d_errno = D_TSWRITE;
 	  return(D_NONFATAL);
 	  }

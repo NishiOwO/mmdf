@@ -46,7 +46,7 @@ d_getdata()
 
 #ifdef D_DBGLOG
     d_dbglog("d_getdata", "called for more stuff");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     length = d_watch(packet, DATA);
 

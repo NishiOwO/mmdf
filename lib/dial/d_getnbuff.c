@@ -20,7 +20,7 @@ d_getnbuff()
 
 #ifdef D_DBGLOG
     d_dbglog("d_getnbuff", "looking for NBUFF from other end");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
 /*  set timer so we don't wait forever  */
 
@@ -33,7 +33,7 @@ d_getnbuff()
     {
 #ifdef D_DBGLOG
       d_dbglog("d_getnbuff", "bad NBUFF packet length (%d)", length);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
       d_errno = D_INITERR;
       return (D_FATAL);
     }

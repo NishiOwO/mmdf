@@ -9,15 +9,15 @@
 #  include  <sgtty.h>
 #  ifdef HAVE_SYS_STRTIO_H
 #    include <sys/strtio.h>
-#  endif
-#else HAVE_SGTTY_H
+#  endif /* HAVE_SYS_STRTIO_H */
+#else /* HAVE_SGTTY_H */
 # include <termio.h>
 # include <fcntl.h>
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
 # include  <sys/stat.h>
 #if defined(HAVE_SYS_FILE_H)
 # include  <sys/file.h>
-#endif HAVE_SYS_FILE_H
+#endif /* HAVE_SYS_FILE_H */
 
 /*  Jun 81  Dave Crocker    fixed some text, referring to errno
  *  Aug 81  Dave Crocker    added sleep before kill & alarm around
@@ -47,7 +47,7 @@ extern struct speedtab d_spdtab[];
 extern char **d_typelist();
 #ifndef __STDC__
 extern char *strdup();
-#endif
+#endif /* __STDC__ */
 extern char *multcat();
 extern int  d_lckfd;
 
@@ -82,7 +82,7 @@ int     nnumb,
 #ifdef D_DBGLOG
     d_dbglog ("d_connect", "nnumb %d, ntries %d, interval %d",
 	    nnumb, ntries, interval);
-#endif
+#endif /* D_DBGLOG */
 
 /*  make sure we were given some numbers to dial  */
 
@@ -90,7 +90,7 @@ int     nnumb,
     {
 #ifdef D_LOG
 	d_log ("d_connect", "no connection paths given!");
-#endif D_LOG
+#endif /* D_LOG */
 	d_errno = D_NONUMBS;
 	return (D_FATAL);
     }
@@ -104,7 +104,7 @@ int     nnumb,
 #ifdef D_DBGLOG
 	    d_dbglog ("d_connect", "%d: (speed %d) num '%s'",
 			num, numtab[num].t_speed, numtab[num].t_number);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 	    if (numtab[num].t_speed == 0)
 		result = d_direct (numtab[num].t_number);
 
@@ -121,14 +121,14 @@ int     nnumb,
 	{
 #ifdef D_DBGLOG
 	    d_dbglog ("d_connect", "sleeping for %d seconds", interval);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 	    sleep ((unsigned) interval);
 	}
     }
 
 #ifdef D_LOG
     d_log ("d_connect", "couldn't make connection.");
-#endif D_LOG
+#endif /* D_LOG */
     return (D_FATAL);
 }
 
@@ -148,10 +148,10 @@ register char  *linename;
     register int    result;
 #ifdef D_LOG
     register int    i;
-#endif D_LOG
+#endif /* D_LOG */
 #ifndef HAVE_SGTTY_H
     struct termio hupbuf;
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
 
 /*  see if a direct line with the given name is available  */
 
@@ -168,7 +168,7 @@ register char  *linename;
 	   break;
 	}
     }
-#endif D_LOG
+#endif /* D_LOG */
 
 /*  found a line.  set an alarm in case the open hangs  */
 
@@ -176,7 +176,7 @@ register char  *linename;
 #ifdef D_LOG
 	    d_log ("d_direct", "direct line open timeout for %s",
 			d_ptline -> l_tty);
-#endif D_LOG
+#endif /* D_LOG */
 	d_errno = D_PORTOPEN;
 	return (D_FATAL);
     }
@@ -184,32 +184,32 @@ register char  *linename;
 #ifndef V4_2BSD
 #ifndef HAVE_SGTTY_H
     if ((fd = open (d_ptline -> l_tty, O_RDWR | O_NDELAY)) >= 0) {
-#else
+#else /* HAVE_SGTTY_H */
     if ((fd = open (d_ptline -> l_tty, 2)) >= 0) {
-#endif HAVE_SGTTY_H
-#else V4_2BSD
+#endif /* HAVE_SGTTY_H */
+#else /* V4_2BSD */
     if ((fd = open (d_ptline -> l_tty, O_RDWR | O_NDELAY)) >= 0) {
-#endif V4_2BSD
+#endif /* V4_2BSD */
 
 #ifndef HAVE_SGTTY_H
 	ioctl (fd, TCGETA, &hupbuf);
 	hupbuf.c_cflag |= HUPCL;
 	if (ioctl (fd, TCSETA, &hupbuf) < OK) {
-#else
+#else /* HAVE_SGTTY_H */
 	if (ioctl (fd, TIOCHPCL, 0) < OK) {
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
 #ifdef D_LOG
 	    d_log ("d_direct", "problem setting close-on-hangup; errno = %d", errno);
-#endif D_LOG
+#endif /* D_LOG */
 	}
 #ifdef	TIOCEXCL
 	if (ioctl (fd, TIOCEXCL, 0) < OK) { /* gain exclusive access [mtr] */
 #ifdef D_LOG
 	    d_log ("d_direct",
 			"problem gaining exclusive access; errno = %d", errno);
-#endif D_LOG
+#endif /* D_LOG */
 	}
-#endif	TIOCEXCL
+#endif	/* TIOCEXCL */
     }
     s_alarm (0);
 
@@ -220,13 +220,13 @@ register char  *linename;
 #ifdef D_LOG
 	    d_log ("d_direct", "direct line open timeout for %s",
 			d_ptline -> l_tty);
-#endif D_LOG
+#endif /* D_LOG */
 	} else
-#endif V4_2BSD
+#endif /* V4_2BSD */
 #ifdef D_LOG
 	    d_log ("d_direct", "direct line open errno %d for %s",
 			errno, d_ptline -> l_tty);
-#endif D_LOG
+#endif /* D_LOG */
 
 	d_errno = D_PORTOPEN;
 	return (D_FATAL);
@@ -240,7 +240,7 @@ register char  *linename;
 #ifdef D_LOG
 	d_log ("d_direct",
 		    "can't set direct-line parameters; errno = %d", errno);
-#endif D_LOG
+#endif /* D_LOG */
 	(void) close (fd);
 	fd = NOTOK;     /* make sure it hangs up, later       */
 	d_errno = D_PORTOPEN;
@@ -249,11 +249,11 @@ register char  *linename;
 
 #ifndef HAVE_SGTTY_H
     fcntl (fd, F_SETFL, (fcntl (fd, F_GETFL, 0) & ~O_NDELAY));
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
 
 #ifdef D_LOG
     d_log ("d_direct", "Open");
-#endif D_LOG
+#endif /* D_LOG */
     return (D_OK);
 }
 
@@ -288,7 +288,7 @@ int     speed;
 
 #ifdef D_LOG
     d_log ("d_dial", "port %s at %d", d_prtpt -> p_port, d_baudrate);
-#endif D_LOG
+#endif /* D_LOG */
 
     /*  do the dialing  */
     if ((result = d_dodial (number)) < 0)
@@ -320,12 +320,12 @@ char **typelist;
     register int    result;
 #ifdef D_LOG
     register int    i;
-#endif D_LOG
+#endif /* D_LOG */
     char **tpt;
 
 #ifdef D_DBGLOG
     d_dbglog ("d_avport", "looking for port with speed %d", speed);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
 /* for each type in the typelist, look at each of the known dial-out    */
 /* ports.  if the type and speed match, check the access list (if there */
@@ -337,7 +337,7 @@ char **typelist;
     {
 #ifdef D_DBGLOG
 	d_dbglog("d_avport", "checking for type: %s", *tpt);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
 	for (dpt = d_prts; dpt -> p_port; dpt++)
 	{
@@ -384,11 +384,11 @@ char **typelist;
 	   break;
 	}
     }
-#endif D_LOG
+#endif /* D_LOG */
     if (typelist[1] != 0) {
 #ifdef D_LOG
         d_log ("d_avport", "of type: %s", typelist[0]);
-#endif D_LOG
+#endif /* D_LOG */
     } else {
 	char *cp, *textlist;
 	textlist = strdup(typelist[0]);
@@ -400,7 +400,7 @@ char **typelist;
 	}
 #ifdef D_LOG
         d_log("d_avport", "of types: %s", textlist);
-#endif D_LOG
+#endif /* D_LOG */
     }
 
     d_errno = D_NOPORT;
@@ -424,7 +424,7 @@ register char  *linename;
     register int    result;
 #ifdef D_LOG
     int foundone = 0;      /* any lines exist at all? */
-#endif D_LOG
+#endif /* D_LOG */
 
 /*  cycle through the available direct lines  */
 
@@ -435,7 +435,7 @@ register char  *linename;
 
 #ifdef D_LOG
 	foundone = 1;
-#endif D_LOG
+#endif /* D_LOG */
 
 /*  check the access (if there is one)  */
 
@@ -468,7 +468,7 @@ register char  *linename;
 	d_log ("d_avline", "No %s direct lines available", linename);
     else
 	d_log ("d_avline", "No direct lines named '%s' are known", linename);
-#endif D_LOG
+#endif /* D_LOG */
     d_errno = D_NOPORT;
     return (D_NONFATAL);
 }
@@ -493,17 +493,17 @@ char   *number;
     int     errcode;
 #ifndef HAVE_SGTTY_H
     struct termio hupbuf;
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
 
 #ifdef D_DBGLOG
     d_dbglog ("d_dodial", "about to attempt to call '%s'", number);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
     parentpid = getpid ();
     if ((childpid = d_tryfork ()) == -1)
     {
 #ifdef D_LOG
 	d_log ("d_dodial", "couldn't fork to dial");
-#endif D_LOG
+#endif /* D_LOG */
 	d_errno = D_FORKERR;
 	return (D_FATAL);
     }
@@ -514,7 +514,7 @@ char   *number;
 #ifdef D_DBGLOG
 	d_dbglog ("d_dodial", "dialing parent opening '%s'",
 		d_prtpt -> p_port);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     	if (setjmp (timerest)) {
 	    d_ttrestore ();
@@ -526,7 +526,7 @@ char   *number;
 	d_errno = errno;      /* save, so kill does not overwrite   */
 #ifdef D_DBGLOG
 	d_dbglog ("d_dodial", "parent open return (errno=%d)", d_errno);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
 	d_cstart (number,d_prtpt -> p_ltype); /* carrier: start call timer */
 
@@ -535,7 +535,7 @@ char   *number;
 				  /* gather up the dialing child        */
 #ifdef D_DBGLOG
 	d_dbglog ("d_dodial", "acu child exit error code %d", errcode);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
 	if (fd < 0)
 	{
@@ -544,7 +544,7 @@ char   *number;
 #ifdef D_LOG
 		d_log ("d_dodial", "can't open port '%s', errno #%d",
 			d_prtpt -> p_port, d_errno);
-#endif D_LOG
+#endif /* D_LOG */
 		d_errno = D_PORTOPEN;
 		return (D_FATAL);
 	    }
@@ -555,14 +555,14 @@ char   *number;
 	    ioctl(fd, TCGETA, &hupbuf);
 	    hupbuf.c_cflag |= HUPCL;
 	    if (ioctl (fd, TCSETA, &hupbuf) < OK)
-#else
+#else /* HAVE_SGTTY_H */
 	    if (ioctl (fd, TIOCHPCL, 0) < OK)
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
 	    {
 #ifdef D_LOG
 		d_log ("d_dodial",
 			    "problem setting hangup on close; errno = %d", errno);
-#endif D_LOG
+#endif /* D_LOG */
 		(void) close (fd);
 		fd = NOTOK;     /* make sure it hangs up, later       */
 		d_errno = D_PORTOPEN;
@@ -577,7 +577,7 @@ char   *number;
 #ifdef D_LOG
 		    d_log ("d_dodial",
 				"can't set dial-port parameters; errno = %d", errno);
-#endif D_LOG
+#endif /* D_LOG */
 		    (void) close (fd);
 		    fd = NOTOK;     /* make sure it hangs up, later       */
 		    d_errno = D_PORTOPEN;
@@ -622,7 +622,7 @@ char   *number;
     exit (d_errno);
 #ifdef lint
 	return D_FATAL;
-#endif lint
+#endif /* lint */
 }
 
 /*
@@ -643,9 +643,9 @@ char   *number;
     char linebuf[100];
 #if defined(HAVE_SGTTY_H)
     struct sgttyb acubuf;
-#else HAVE_SGTTY_H
+#else /* HAVE_SGTTY_H */
     struct termio acubuf;    
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
     /*
      * These can't be "register" because some setjmp()'s act as
      * this quote from the Sun setjmp() manual page.
@@ -669,14 +669,14 @@ char   *number;
     len = strlen (linebuf);
 #ifdef D_DBGLOG
     d_dbglog ("d_drvacu", "about to write '%s' on acu", linebuf);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     while (1)
     {                             /* make sure open & write don't hang  */
 				/* this doesn't really work under 4.2 */
 #ifdef D_DBGLOG
 	d_dbglog ("d_drvacu", "opening dialer");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
     	if (setjmp (timerest)) {
     	    break;
     	}
@@ -684,7 +684,7 @@ char   *number;
 	acufd = open (d_prtpt -> p_acu, 2);
 #ifdef D_DBGLOG
 	d_dbglog ("d_drvacu", "dialer open (errno=%d)", errno);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
 /*  if we get it, then try to dial the number.  if that goes alright,  */
 /*  return                                                             */
@@ -699,26 +699,26 @@ char   *number;
         	acubuf.c_cflag |= HUPCL;
 		(void) ioctl(acufd, TCSETA, &acubuf);
 	    }
-#else
+#else /* HAVE_SGTTY_H */
 	    if ( ioctl(acufd, TIOCGETP, &acubuf) >= 0) {
 		acubuf.sg_ispeed = B2400;
 		acubuf.sg_ospeed = B2400;
 		(void) ioctl(acufd, TIOCSETP, &acubuf);
 		(void) ioctl(acufd, TIOCHPCL, 0);
 	    }
-#endif HAVE_SGTTY_H		   
+#endif /* HAVE_SGTTY_H */
 
 	    sleep ((unsigned) 1);  /* let things settle down           */
 #ifdef D_LOG
 	    d_log ("d_drvacu", "Dialing...");
-#endif D_LOG
+#endif /* D_LOG */
 	    if (write (acufd, linebuf, len) != len)
 		break;
 
 	    (void) close (acufd);      /* free the dialer */
 #ifdef D_DBGLOG
 	    d_dbglog ("d_drvacu", "acu successful write");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 	    s_alarm (0);
 	    return (D_OK);
 	}
@@ -729,7 +729,7 @@ char   *number;
 	s_alarm(0);
 #ifdef D_DBGLOG
 	d_dbglog ("d_drvacu", "acu open (errno=%d)", errno);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
 	if (errno != EBUSY)
 	    break;
@@ -740,7 +740,7 @@ char   *number;
 	{
 #ifdef D_LOG
 	    d_log ("d_drvacu", "waiting for dialer.");
-#endif D_LOG
+#endif /* D_LOG */
 	    warning = 1;
 	}
 	sleep ((unsigned) 5);
@@ -756,7 +756,7 @@ char   *number;
 
 #ifdef D_LOG
 	    d_log ("d_drvacu", "That number is busy.");
-#endif D_LOG
+#endif /* D_LOG */
 	    d_errno = D_BUSY;
 	    return (D_NONFATAL);
 
@@ -764,7 +764,7 @@ char   *number;
 
 #ifdef D_LOG
 	    d_log ("d_drvacu", "dialer power off");
-#endif D_LOG
+#endif /* D_LOG */
 	    d_errno = D_NOPWR;
 	    return (D_FATAL);
 
@@ -772,7 +772,7 @@ char   *number;
 
 #ifdef D_LOG
 	    d_log ("d_drvacu", "call abandoned");
-#endif D_LOG
+#endif /* D_LOG */
 	    d_clog (LOG_ABAN);
 	    d_errno = D_ABAN;
 	    return (D_NONFATAL);
@@ -781,7 +781,7 @@ char   *number;
 
 #ifdef D_LOG
 	    d_log ("d_drvacu", "internal error: bad digit to dialer");
-#endif D_LOG
+#endif /* D_LOG */
 	    d_errno = D_SYSERR;
 	    return (D_FATAL);
 
@@ -789,7 +789,7 @@ char   *number;
 
 #ifdef D_LOG
 	    d_log ("d_drvacu", "system errno #%d", errno);
-#endif D_LOG
+#endif /* D_LOG */
 	    d_errno = D_INTERR;
 	    return (D_FATAL);
     }
@@ -808,11 +808,11 @@ d_drop ()
 {
 #ifndef HAVE_SGTTY_H
     struct termio hupbuf;
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
 
 #ifdef D_DBGLOG
     d_dbglog ("d_drop", "dropping connection.");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     /*  restore the line to its old state  */
     d_ttrestore ();
@@ -829,7 +829,7 @@ d_drop ()
 	ioctl (fileno(d_prtfp), TCGETA, &hupbuf);
 	hupbuf.c_cflag &= ~CBAUD;	/* set 0 baud -- hangup */
 	ioctl (fileno(d_prtfp), TCSETA, &hupbuf);
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
 
 	fclose (d_prtfp);
 	s_alarm (0);
@@ -839,7 +839,7 @@ d_drop ()
 	{
 #ifdef D_LOG
 	    d_log ("d_drop", "problem closing connection line.");
-#endif D_LOG
+#endif /* D_LOG */
 	    return;     /* leave the line locked, in case of major problem */
 	}
 

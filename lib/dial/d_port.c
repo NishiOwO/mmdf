@@ -66,7 +66,7 @@ char   *packet;
     {
 #ifdef D_LOG
 	d_log("d_rdport", "*** no more alarm time left");
-#endif D_LOG
+#endif /* D_LOG */
 	d_errno = D_TIMEOUT;
 	return(D_INTRPT);
     }
@@ -74,7 +74,7 @@ char   *packet;
     if (setjmp (timerest)) {
 #ifdef D_LOG
 	d_log("d_rdport", "read alarm");
-#endif D_LOG
+#endif /* D_LOG */
 	d_errno = D_TIMEOUT;
 	return(D_INTRPT);
     }
@@ -91,7 +91,7 @@ char   *packet;
 		    {
 #ifdef D_LOG
 			d_log("d_rdport", "read alarm");
-#endif D_LOG
+#endif /* D_LOG */
 			d_errno = D_TIMEOUT;
 			return(D_INTRPT);
 		    }
@@ -106,17 +106,17 @@ char   *packet;
 		    {
 #ifdef D_LOG
 			d_log("d_rdport", "port read EOF");
-#endif D_LOG
+#endif /* D_LOG */
 			d_errno = D_PORTEOF;
 			return(D_NONFATAL);
 		    }
-#endif V4_2BSD
+#endif /* V4_2BSD */
 		    else
 		    {
 #ifdef D_LOG
 			d_log("d_rdport",
 				"port read errno %d", errno);
-#endif D_LOG
+#endif /* D_LOG */
 			d_errno = D_PORTRD;
 			return(D_FATAL);
 		    }
@@ -126,7 +126,7 @@ char   *packet;
 		    d_alrmtim = s_alarm (0);
 #ifdef D_LOG
 		    d_log("d_rdport", "port read eof");
-#endif D_LOG
+#endif /* D_LOG */
 		    d_errno = D_PORTEOF;
 		    return(D_NONFATAL);
 		}
@@ -150,7 +150,7 @@ char   *packet;
 		    if (op == packet && !isxdigit (c)) {
 #ifdef D_DBGLOG
 			d_dbglog ("d_rdport", "noise '%c'", c);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 		    } else {       /* packets begin with hex digits      */
 			*op++ = c;
 			count++;
@@ -164,7 +164,7 @@ char   *packet;
 #ifdef D_LOG
 	    d_log ("d_rdport", "rcv too long (%dc) '%s'",
 			count, packet);
-#endif D_LOG
+#endif /* D_LOG */
 	    d_tscribe (packet, count);
 	}
 
@@ -178,7 +178,7 @@ char   *packet;
 #ifdef D_LOG
 	    if (count > 0)  /* ignore blank lines */
 	        d_log ("d_rdport", "rcv len err (%d)", count);
-#endif D_LOG
+#endif /* D_LOG */
 	    continue;
 	}
 
@@ -186,7 +186,7 @@ char   *packet;
 	{
 #ifdef D_LOG
 	    d_log ("d_rdport", "rcv checksum err '%s'", packet);
-#endif D_LOG
+#endif /* D_LOG */
 	    continue;
 	}
 
@@ -199,7 +199,7 @@ char   *packet;
 	{
 #ifdef D_LOG
 	    d_log ("d_rdport", "rcv from self");
-#endif D_LOG
+#endif /* D_LOG */
 	    continue;
 	}
 
@@ -211,7 +211,7 @@ char   *packet;
 
 #ifdef D_DBGLOG
 	d_dbglog ("d_rdport", "Received packet '%s'", packet);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
 	switch (d_ackpack (packet[TYPEOFF], seqnum))
 	{
@@ -262,7 +262,7 @@ d_waitprompt ()
                     if (d_prompt == toascii(c)) return(0);
 #ifdef D_LOG
                         d_log("d_waitprompt","prompt alarm for %d",d_prompt);
-#endif D_LOG
+#endif /* D_LOG */
                         d_errno = D_TIMEOUT;
 			return(D_INTRPT);
 		    }
@@ -270,7 +270,7 @@ d_waitprompt ()
 		    {
 #ifdef D_LOG
 			d_log("d_waitprompt","port read errno %d", errno);
-#endif D_LOG
+#endif /* D_LOG */
 			d_errno = D_PORTRD;
 			return(D_FATAL);
 		    }
@@ -280,7 +280,7 @@ d_waitprompt ()
 		    d_alrmtim = alarm (0);
 #ifdef D_LOG
 		    d_log("d_waitprompt", "port read eof");
-#endif D_LOG
+#endif /* D_LOG */
 		    d_errno = D_PORTEOF;
 		    return(D_NONFATAL);
 		}
@@ -345,7 +345,7 @@ register int    length;
 	d_errno = D_TIMEOUT;
 #ifdef D_LOG
 	d_log ("d_wrtport", "write alarm");
-#endif D_LOG
+#endif /* D_LOG */
 	return (D_INTRPT);
     }
     s_alarm (XMITWAIT);
@@ -366,7 +366,7 @@ register int    length;
 	d_errno = D_TIMEOUT;
 #ifdef D_LOG
 	d_log ("d_wrtport", "write alarm");
-#endif D_LOG
+#endif /* D_LOG */
 	return (D_INTRPT);
     }
 
@@ -389,7 +389,7 @@ d_brkport()
 	ioctl (fileno (d_prtfp), TIOCSBRK, 0);
 	sleep ((unsigned) 1);
 	ioctl (fileno (d_prtfp), TIOCCBRK, 0);
-#else
+#else /* IOCTL */
 
 #if defined(HAVE_SGTTY_H)
 #include <sgtty.h>
@@ -403,9 +403,9 @@ d_brkport()
 	d_wrtport("\0\0\0\0\0", 5);
 	ttybuf.sg_ospeed = spdsave;
 	ioctl (fileno (d_prtfp), TIOCSETP, &ttybuf);
-#else HAVE_SGTTY_H
+#else /* HAVE_SGTTY_H */
 #include <termio.h>
 	ioctl (fileno(d_prtfp), TCSBRK, 0);
-#endif HAVE_SGTTY_H
-#endif HAVE_IOCTL_TIOCSBRK
+#endif /* HAVE_SGTTY_H */
+#endif /* HAVE_IOCTL_TIOCSBRK */
 }

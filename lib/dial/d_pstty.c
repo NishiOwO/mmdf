@@ -1,7 +1,7 @@
 # include  "util.h"
 #if defined(HAVE_SGTTY_H)
 # include  <sgtty.h>
-#else
+#else /* HAVE_SGTTY_H */
 # include <termio.h>
 # include <fcntl.h>
 #endif /* HAVE_SGTTY_H */
@@ -48,13 +48,13 @@ d_ttsave (fp, fname)              /* save the current setting           */
 
 #ifdef D_DBGLOG
     d_dbglog("d_ttsave", "saving terminal modes, fd = %d", d_savfd);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
 #if defined(HAVE_SGTTY_H)
     if ((retval = ioctl (d_savfd, TIOCGETP, &d_savtty)) >= 0)
-#else
+#else /* HAVE_SGTTY_H */
     if ((retval = ioctl (d_savfd, TCGETA, &d_savtty)) >= 0)
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
     {
 	if ((retval = fstat (d_savfd, &statbuf)) >= 0)
 	{
@@ -73,19 +73,19 @@ d_ttrestore ()                    /*  restore initial setting           */
 #ifdef D_DBGLOG
     d_dbglog ("d_ttrestore", "restoring terminal characteristics, fd = %d",
 	d_savfd);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     if (d_savalid == 0) {
 #ifdef D_DBGLOG
 	d_dbglog("d_ttrestore", "didn't have to");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
     	return(0);
     }
 #if defined(HAVE_SGTTY_H)
     retval = ioctl (d_savfd, TIOCSETP, &d_savtty);
-#else
+#else /* HAVE_SGTTY_H */
     retval = ioctl (d_savfd, TCSETAW, &d_savtty);
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
     if (!isnull (d_savfname[0]))
 	chmod( d_savfname, d_savmode );
 
@@ -99,36 +99,36 @@ d_ttscript (baudrate)             /* tty will be following call script  */
 #if defined(HAVE_SGTTY_H)
     struct sgttyb sttybuf;
     extern int d_scon, d_scoff;
-#else
+#else /* HAVE_SGTTY_H */
     struct termio sttybuf;
     extern unsigned short d_scbitc, d_scbiti, d_scbito, d_scbitl;
     int rc;
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
 
     if (!isnull (d_savfname[0]))
 	chmod( d_savfname, 0600 );
 
 #if !defined(HAVE_SGTTY_H)
     ioctl(d_savfd, TCGETA, &sttybuf);
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
 
     if (baudrate != 0)
     {                             /*  use special speed                 */
 #if defined(HAVE_SGTTY_H)
 	sttybuf.sg_ispeed = baudrate;
 	sttybuf.sg_ospeed = baudrate;
-#else
+#else /* HAVE_SGTTY_H */
 	sttybuf.c_cflag = (baudrate & CBAUD);
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
     }
     else
     {                             /*  use current speed                 */
 #if defined(HAVE_SGTTY_H)
 	sttybuf.sg_ispeed = d_savtty.sg_ispeed;
 	sttybuf.sg_ospeed = d_savtty.sg_ospeed;
-#else
+#else /* HAVE_SGTTY_H */
 	sttybuf.c_cflag = (d_savtty.c_cflag & CBAUD);
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
     }
 
 #if defined(HAVE_SGTTY_H)
@@ -138,7 +138,7 @@ d_ttscript (baudrate)             /* tty will be following call script  */
 				  /* force on  special bits for script  */
     sttybuf.sg_flags  &=  ~((int) d_scoff);
 				  /* force off special bits for script  */
-#else
+#else /* HAVE_SGTTY_H */
     sttybuf.c_cc[VERASE] = '\010';	/* erase control-h */
     sttybuf.c_cc[VKILL] = '\030';	/* kill control-x */
     sttybuf.c_cc[VTIME] = 0;		/* delay */
@@ -148,15 +148,15 @@ d_ttscript (baudrate)             /* tty will be following call script  */
     sttybuf.c_iflag = d_scbiti;
     sttybuf.c_oflag = d_scbito;
     sttybuf.c_lflag = d_scbitl;
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
 
 #if defined(HAVE_SGTTY_H)
     return (ioctl (d_savfd, TIOCSETP, &sttybuf));
-#else
+#else /* HAVE_SGTTY_H */
     rc = ioctl (d_savfd, TCSETAW, &sttybuf);
     fcntl (d_savfd, F_SETFL, fcntl (d_savfd, F_GETFL, 0) & ~O_NDELAY);
     return (rc);
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
 }
 
 
@@ -166,36 +166,36 @@ d_ttproto (baudrate)
 #if defined(HAVE_SGTTY_H)
     struct sgttyb sttybuf;
     extern int d_pron, d_proff;
-#else
+#else /* HAVE_SGTTY_H */
     struct termio sttybuf;
     extern unsigned short d_prbitc, d_prbiti, d_prbito, d_prbitl;
     int rc;
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
 
     if (!isnull (d_savfname[0]))
 	chmod( d_savfname, 0600 );
 
 #if !defined(HAVE_SGTTY_H)
     ioctl (d_savfd, TCGETA, &sttybuf);
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
 
     if (baudrate != 0)
     {                             /*  use special speed                 */
 #if defined(HAVE_SGTTY_H)
 	sttybuf.sg_ispeed = baudrate;
 	sttybuf.sg_ospeed = baudrate;
-#else
+#else /* HAVE_SGTTY_H */
 	sttybuf.c_cflag = (baudrate & CBAUD);
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
     }
     else
     {                             /*  use current speed                 */
 #if defined(HAVE_SGTTY_H)
 	sttybuf.sg_ispeed = d_savtty.sg_ispeed;
 	sttybuf.sg_ospeed = d_savtty.sg_ospeed;
-#else
+#else /* HAVE_SGTTY_H */
 	sttybuf.c_cflag = (d_savtty.c_cflag & CBAUD);
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
     }
 
 #if defined(HAVE_SGTTY_H)
@@ -205,7 +205,7 @@ d_ttproto (baudrate)
 				  /* force on  special bits for protocol*/
     sttybuf.sg_flags  &=  ~((int) d_proff);
 				  /* force off special bits for protocol*/
-#else
+#else /* HAVE_SGTTY_H */
     sttybuf.c_cc[VERASE] = '\010';	/* erase control-h */
     sttybuf.c_cc[VKILL] = '\030';	/* kill control-x */
     sttybuf.c_cc[VEOL] = '\n';
@@ -215,13 +215,13 @@ d_ttproto (baudrate)
     sttybuf.c_iflag = d_prbiti;
     sttybuf.c_oflag = d_prbito;
     sttybuf.c_lflag = d_prbitl;
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
 
 #if defined(HAVE_SGTTY_H)
     return( ioctl (d_savfd, TIOCSETP, &sttybuf) );
-#else
+#else /* HAVE_SGTTY_H */
     rc = ioctl (d_savfd, TCSETAW, &sttybuf);
     fcntl (d_savfd, F_SETFL, fcntl (d_savfd, F_GETFL, 0) & ~O_NDELAY);
     return(rc);
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
 }

@@ -59,7 +59,7 @@ int     seqnum,
 #ifdef D_DBGLOG
     d_dbglog ("d_bldpack", "building packet - type '%c', seqnum %d, eof %d",
 	    type, seqnum, eof);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     buffer[TYPEOFF] = type;
 
@@ -124,7 +124,7 @@ int     length;
 
 #ifdef D_DBGLOG
     d_dbglog ("d_snpkt", "sending packet - code '%c'", packet[TYPEOFF]);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
 	/*
 	 * Should we wait for an outstanding packet before sending this one?
@@ -158,7 +158,7 @@ int     length;
 		default:
 #ifdef D_LOG
 			d_log ("d_snpkt", "Unknown return (%d) from d_confirm", result);
-#endif D_LOG
+#endif /* D_LOG */
 			return (D_FATAL);
 		}
 	}
@@ -205,7 +205,7 @@ int     length;
 		while (nout > 0) {
 #ifdef D_DBGLOG
 			d_dbglog ("d_snpkt", "nout = %d, pack index = %d", nout, first);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 			result = d_confirm (&packst[first]);
 			/*  See note above for explanation of next two lines  */
 			first = (first + 1) % NBUFFMAX;
@@ -221,7 +221,7 @@ int     length;
 #ifdef D_LOG
 				d_log ("d_snpkt", "Unknown return (%d) from d_transmit",
 				        result);
-#endif D_LOG
+#endif /* D_LOG */
 				return (D_FATAL);
 			}
 		}
@@ -254,14 +254,14 @@ d_transmit(pack)
 
 #ifdef D_DBGLOG
     d_dbglog ("d_transmit", "transmitting '%s'", pack->p_data);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     if ((result = d_wrtport (pack->p_data, pack->p_length)) < 0)
     {
 #ifdef D_LOG
 	d_log ("d_transmit", "on packet [%c](%d)'%s'",
 		pack->p_pktype, pack->p_length, pack->p_data);
-#endif D_LOG
+#endif /* D_LOG */
 	return (result);
     }
 
@@ -370,7 +370,7 @@ struct pkbuff *packet;
 #ifdef D_DBGLOG
 	d_dbglog("d_confirm", "Looking for ack of packet [%c](%d)'%s'", 
 		packet->p_pktype, packet->p_length, packet->p_data);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
 	while (retries++ < d_xretry) {
 		/*  The packet was sent once before this routine was called.
@@ -390,16 +390,16 @@ struct pkbuff *packet;
 			 */
 #ifdef D_DBGLOG
 			d_dbglog("d_confirm", "Retransmitting %d packet[s]", nout);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 #ifdef D_LOG
 			d_log ("d_confirm", "separating");
-#endif D_LOG
+#endif /* D_LOG */
 			d_wrtport ("\n\n", 2);
 			for(index = 0;  index < nout;  index++) {
 				if (d_transmit (&packst[(first+index) % NBUFFMAX]) < 0) {
 #ifdef D_DBGLOG
 					d_dbglog("d_confirm", "Error on retransmission");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 					return (D_FATAL);
 				}
 			}
@@ -409,7 +409,7 @@ struct pkbuff *packet;
 		/*  An unknown error  */
 #ifdef D_DBGLOG
 		d_dbglog ("d_confirm", "Unknown error from 'getack()'");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 		return (result);
 	}
 
@@ -417,7 +417,7 @@ struct pkbuff *packet;
 	d_log ("d_confirm", "retransmissions (%d) exhausted", retries-1);
 	d_log ("d_confirm", "on packet [%c](%d)'%s'",
 		packet->p_pktype, packet->p_length, packet->p_data);
-#endif D_LOG
+#endif /* D_LOG */
 	d_errno = D_NORESP;
 	return (D_FATAL);
 }
@@ -450,7 +450,7 @@ d_getack (pack)
 #ifdef D_DBGLOG
     d_dbglog ("d_getack", "Wanted: ack type '%c', seqnum %d",
 				pack->p_acktype, pack->p_seqnum);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
     for ( ;; )
     {
 	if ((result = d_rdport (respbuff)) < D_OK)
@@ -470,18 +470,18 @@ d_getack (pack)
 	    {
 #ifdef D_DBGLOG
 		d_dbglog ("d_getack", "response received");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 		return (D_OK);
 	    }
 #ifdef D_LOG
 	    else
 		d_log ("d_getack", "bad packet seq num '%s'", respbuff);
-#endif D_LOG
+#endif /* D_LOG */
 	}
 #ifdef D_LOG
 	else
 	    d_log ("d_getack", "bad packet type '%s'", respbuff);
-#endif D_LOG
+#endif /* D_LOG */
     }
 
 }
@@ -516,7 +516,7 @@ register int    seqnum;
 #ifdef D_DBGLOG
     d_dbglog ("d_ackpack", "acknowledging packet type '%c', seqnum %d",
 	    type, seqnum);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     /*  switch on the type.  some packet don't get ack's sent  */
     switch (type)
@@ -540,7 +540,7 @@ register int    seqnum;
     {
 #ifdef D_DBGLOG
 	d_dbglog("d_ackpack", "packet way out of seq--no ack--d_rcvseq %d", d_rcvseq);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
     	return(D_OK);
     }
 
@@ -580,7 +580,7 @@ register int    seqnum;
 	default: 
 #ifdef D_LOG
 	    d_log ("d_ackpack", "unknown packet type '%c'", type);
-#endif D_LOG
+#endif /* D_LOG */
 	    return (D_NONFATAL);
     }
 
@@ -610,7 +610,7 @@ char    type;
 
 #ifdef D_DBGLOG
     d_dbglog ("d_watch", "watching for packet with code '%c'", type);
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     switch (type)		  /* set timer, for delayed packets     */
     {
@@ -647,7 +647,7 @@ char    type;
 	{
 #ifdef D_LOG
 	    d_log ("d_watch", "bad watch read (%d)", length);
-#endif D_LOG
+#endif /* D_LOG */
 	    break;
 	}
 	recvseq = d_fromhex (packet[FLAGOFF]) & 03;
@@ -659,7 +659,7 @@ char    type;
 		    "packet out of sequence - type '%c', got %d, expected %d",
 		    packet[TYPEOFF], recvseq, d_rcvseq);
 	    d_log ("d_watch", "in '%s'", packet);
-#endif D_LOG
+#endif /* D_LOG */
 	    continue;
 	}
 

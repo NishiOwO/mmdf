@@ -43,7 +43,7 @@ d_clslog()
 
 #ifdef D_DBGLOG
     d_dbglog("d_clslog", "closing log file");
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 
     if (d_logptr) {
 	ll_close(d_logptr);
@@ -79,9 +79,9 @@ d_log(routine, format, a, b, c, d, e, f, g, h)
     if (d_debug)        /*  print routine name if debugging  */
 	d_dbglog (routine, format, a, b, c, d, e, f, g, h);
     else
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 	ll_log(d_logptr, LLOGGEN, format, a, b, c, d, e, f, g, h);
-#endif D_LOG
+#endif /* D_LOG */
 
     return(D_OK);
 }
@@ -114,7 +114,7 @@ d_dbglog(routine, format, a, b, c, d, e, f, g, h)
 	sprintf (fmtbuf, "%s%s", "%s: ", format);
 	ll_log(d_logptr, LLOGBTR, fmtbuf, routine, a, b, c, d, e, f, g, h);
     }
-#endif D_DBGLOG
+#endif /* D_DBGLOG */
 }
 
 
@@ -163,7 +163,7 @@ d_fillog(filename, linenum, routine, format, a, b, c, d, e, f, g, h)
     }
     else
 	d_log(routine, format, a, b, c, d, e, f, g, h);
-#endif D_LOG
+#endif /* D_LOG */
 }
 
 

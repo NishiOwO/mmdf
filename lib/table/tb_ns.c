@@ -71,19 +71,19 @@ LOCFUN int cachehit();
 
 #ifndef MAXADDR
 #define MAXADDR		30
-#endif
+#endif /* MAXADDR */
 
 #ifndef MAXADDR_PER
 #define MAXADDR_PER	6
-#endif
+#endif /* MAXADDR_PER */
 
 #ifndef MAXDATA
 #define MAXDATA (4 * PACKETSZ)		/* tcp tried after udp */
-#endif
+#endif /* MAXDATA */
 
 #ifndef MAXMX
 #define MAXMX	(MAXADDR)		/* shouldn't be < MAXADDR */
-#endif
+#endif /* MAXMX */
 
 extern  struct  ll_struct *logptr;
 extern  char *locfullmachine, *locfullname;
@@ -115,7 +115,7 @@ struct ns_cache {
 
 LOCVAR  struct ns_cache *dmncache[NSCACHE];
 LOCVAR  struct ns_cache *chncache[NSCACHE];
-#endif
+#endif /* NSCACHE */
 
 /*
  * table fetch routine for ns
@@ -137,7 +137,7 @@ int     first;          /* I: now used */
 	table->tb_flags, key, first);
     ll_log(logptr, LLOGFTR, "ns_fetch: timeout (%d), rep (%d), servers (%d)",
 	_res.retrans, _res.retry, _res.nscount);
-#endif
+#endif /* DEBUG */
 
 	/* _res.options |= ((int) RES_DEBUG); /* In case it's needed again -- DSH */
 
@@ -188,7 +188,7 @@ int     first;          /* I: now used */
 		ll_log(logptr, LLOGFTR, "nameserver query timed out");
 	    else
 		ll_log(logptr, LLOGFTR, "nameserver query failed");
-#endif
+#endif /* DEBUG */
 	    return(rval);
 	}
     }
@@ -221,7 +221,7 @@ int     first;          /* I: now used */
     
 #ifdef  DEBUG
     ll_log(logptr, LLOGFTR, "NS returns '%s'", value);
-#endif
+#endif /* DEBUG */
     return(OK);
 }
 
@@ -249,7 +249,7 @@ int namelen;
 
 #ifdef DEBUG
     ll_log(logptr, LLOGFTR, "ns_getcn(%s)",key);
-#endif
+#endif /* DEBUG */
 
     /*
      * We usually query for MX.  This should get us CNAME RRs if any
@@ -262,34 +262,34 @@ int namelen;
     /* turn off resolver name-completion tricks */
 #ifdef RES_DNSRCH
     _res.options &= ~((int) (RES_DEFNAMES | RES_DNSRCH));
-#else
+#else /* RES_DNSRCH */
     _res.options &= ~((int) RES_DEFNAMES);
-#endif
+#endif /* RES_DNSRCH */
 
 
 #ifdef ROBUST
     n = res_mkquery(QUERY, key, C_IN, T_CNAME, (char *)0, 0,
 #ifdef LINUX
 	(struct rrec *)0,
-#else
+#  else /* LINUX */
 	(char *)0,
-#endif
+#  endif /* LINUX */
 	(char *)&qbuf, sizeof(qbuf));
-#else
+#else /* ROBUST */
     n = res_mkquery(QUERY, key, C_IN, T_MX, (char *)0, 0,
 #ifdef LINUX
 	(struct rrec *)0,
-#else
+#  else /* LINUX */
 	(char *)0,
-#endif
+#  endif /* LINUX */
 	(char *)&qbuf, sizeof(qbuf));
-#endif
+#endif /* ROBUST */
 
     /* what else can we do? */
     if (n < 0) {
 #ifdef DEBUG
 	ll_log(logptr, LLOGFTR, "res_mkquery: n=%d, errno=%d, h_errno=%d", n, errno, h_errno);
-#endif
+#endif /* DEBUG */
 	return(NOTOK);
     }
 
@@ -301,7 +301,7 @@ int namelen;
 	ll_log(logptr, LLOGFTR,
 		"ns_getcn: bad return from res_send, n=%d, errno=%d, h_errno=%d",
 		n, errno, h_errno);
-#endif
+#endif /* DEBUG */
 	return(MAYBE);
     }
 
@@ -316,7 +316,7 @@ int namelen;
     /* only get here on NOERRR with ancount != 0 */
 #ifdef DEBUG
     ll_log(logptr, LLOGFTR, "ns_getcn: parsing answer to query, hp->ancount=%d", count);
-#endif
+#endif /* DEBUG */
 
     /* skip header */
     eom = ((char *)&abuf)+n;
@@ -344,7 +344,7 @@ int namelen;
 
 #ifdef DEBUG
 		ll_log(logptr, LLOGFTR, "ns_getcn: %s -> %s",key,name);
-#endif
+#endif /* DEBUG */
 	    return(OK);
 	}
 
@@ -360,7 +360,7 @@ realname:
     (void) strncpy(name,key,namelen);
 #ifdef DEBUG
     ll_log(logptr, LLOGFTR, "ns_getcn: %s -> %s",key,name);
-#endif
+#endif /* DEBUG */
     return(OK);
 }
 
@@ -396,7 +396,7 @@ tb_ns_param_def *param;
 
 #ifdef DEBUG
     ll_log(logptr, LLOGFTR, "ns_getmx(%s, %x, %x, %d)",key,max,mxtab,tsize);
-#endif
+#endif /* DEBUG */
 
 restart:
 
@@ -444,7 +444,7 @@ restart:
 
 #ifdef DEBUG
     ll_log(logptr, LLOGFTR, "ns_getmx: sending ns query (%d bytes)",n);
-#endif
+#endif /* DEBUG */
 
     n = res_send((char *)&qbuf,n,(char *)&abuf, sizeof(abuf));
 
@@ -453,7 +453,7 @@ restart:
 	ll_log(logptr, LLOGFTR,
 		"ns_getmx: bad return from res_send, n=%d, errno=%d, h_errno=%d",
 		n, errno, h_errno);
-#endif
+#endif /* DEBUG */
 	return(MAYBE);
     }
 
@@ -461,14 +461,14 @@ restart:
 
 #ifdef OLDSERVER
     if ((hp->rcode != NOERROR) && (hp->rcode != FORMERR))
-#else
+#else /* OLDSERVER */
     if (hp->rcode != NOERROR) 
 #endif /* OLDSERVER */
 	return(ns_error(hp));
 
 #ifdef OLDSERVER
     if ((ntohs(hp->ancount) == 0) || (hp->rcode == FORMERR)) {
-#else
+#else /* OLDSERVER */
     if (ntohs(hp->ancount) == 0) {
 #endif /* OLDSERVER */
 	mxcount = 1;
@@ -496,7 +496,7 @@ restart:
 
 #ifdef DEBUG
     ll_log(logptr, LLOGFTR, "ns_getmx: %d answers to query",count);
-#endif
+#endif /* DEBUG */
 
     while ((cp < eom) && (count--)) {
 	n = dn_expand((char *)&abuf,eom, cp, buf, sizeof(buf));
@@ -528,7 +528,7 @@ restart:
 		continue;	/* pray? */
 #ifdef DEBUG
 	    ll_log(logptr,LLOGFTR,"ns_getmx: %s -> %s (new query)",key,newkey);
-#endif DEBUG
+#endif /* DEBUG */
 	    key = newkey;
 	    goto restart;
 	}
@@ -605,7 +605,7 @@ doaddr:
     /* now build the address list */
 #ifdef DEBUG
     ll_log(logptr, LLOGFTR,"ns_getmx: using %d mx hosts",mxcount);
-#endif
+#endif /* DEBUG */
 
     for(i=0,j=0; (i < mxcount) && (j < tsize); i++) {
 	/*
@@ -619,7 +619,7 @@ doaddr:
 #ifdef DEBUG
 	    ll_log(logptr, LLOGFTR, "ns_getmx: no addresses for %s",
 		mx_list[i].mxname);
-#endif
+#endif /* DEBUG */
 	    if (h_errno == TRY_AGAIN) {
 		tryagains++;
 		continue;
@@ -644,7 +644,7 @@ doaddr:
 #ifdef DEBUG
 	ll_log(logptr, LLOGFTR, "ns_getmx: %d addresses saved for %s",
 		n, mx_list[i].mxname);
-#endif
+#endif /* DEBUG */
     }
     *max = j;
 
@@ -670,7 +670,7 @@ quit:                                  /* escape hatch for parsing problems */
 
 #ifdef DEBUG
 	ll_log(logptr, LLOGFTR, "ns_getmx: problems parsing response to query");
-#endif
+#endif /* DEBUG */
 
     return(MAYBE);
 }
@@ -686,7 +686,7 @@ register HEADER *hp;
 
 #ifdef DEBUG
     ll_log(logptr, LLOGFTR, "ns_error: server returned code %d",hp->rcode);
-#endif
+#endif /* DEBUG */
 
     switch (hp->rcode)
     {
@@ -795,7 +795,7 @@ int     ns_time;
 #ifdef DEBUG
     ll_log(logptr, LLOGFTR, "ns_timeo: servers(%d), retrans(%d), retry(%d)",
 	_res.nscount, _res.retrans, _res.retry);
-#endif
+#endif /* DEBUG */
     return 0;
 }
 
@@ -992,7 +992,7 @@ int rval;
     cp->nc_next = dmncache[i];
     dmncache[i] = cp;
 }
-#endif NSCACHE
+#endif /* NSCACHE */
 
 extern int tb_ns_tai();
 extern int tb_ns_check();

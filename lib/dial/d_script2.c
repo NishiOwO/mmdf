@@ -36,7 +36,7 @@ d_scopen (scriptfile, nfields, fields)
     {
 #ifdef D_LOG
 	d_log ("d_scopen", "Too many files opened");
-#endif D_LOG
+#endif /* D_LOG */
 	return (D_FATAL);
     }
 
@@ -71,7 +71,7 @@ d_scopen (scriptfile, nfields, fields)
 #ifdef D_LOG
 	d_log ("d_scopen", "Can't open script file '%s' (errno %d)",
 						scriptfile, errno);
-#endif D_LOG
+#endif /* D_LOG */
 	/*  restore the old file setup incase this was part of a failed
 	 *  alternate.
 	 */
@@ -84,7 +84,7 @@ d_scopen (scriptfile, nfields, fields)
 
 #ifdef D_LOG
     d_log ("d_scopen", "script file '%s' being used", scriptfile);
-#endif D_LOG
+#endif /* D_LOG */
 
     return (D_OK);
 }
@@ -101,7 +101,7 @@ d_scclose()
 	fclose (d_scfp);
 #ifdef D_LOG
     d_log ("d_scclose", "Closing script file '%s'", d_scfile);
-#endif D_LOG
+#endif /* D_LOG */
     for (i=0; i < d_nfields; i++)
 	free(d_fields[i]);
 
@@ -117,7 +117,7 @@ d_scclose()
 	free (d_files[index]);
 #ifdef D_LOG
 	d_log ("d_scclose", "Resuming use of script file '%s'", d_scfile);
-#endif D_LOG
+#endif /* D_LOG */
 	return (d_nopen);
     }
 
