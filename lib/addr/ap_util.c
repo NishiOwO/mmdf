@@ -167,9 +167,8 @@ register AP_ptr ap;
 
 	ap -> ap_ptrtype = next -> ap_ptrtype;
 	ap -> ap_chain = next -> ap_chain;
-
-	ap_free (next);
-    }
+	ap_free (next); 
+   }
 }
 
 AP_ptr
