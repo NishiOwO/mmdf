@@ -67,7 +67,6 @@
 #include "ap.h"
 
 #define MAXLOOPS 10
-
 extern struct ll_struct *logptr;
 extern char *ch_dflnam;
 extern char *locname;
@@ -170,11 +169,11 @@ adr_check (local, domain, route) /* check & save an address            */
 #ifdef DEBUG
 	    ll_log (logptr, LLOGFTR, "local address");
 #endif
-	    if(adr_level++ == 0)
-		adr_orgspec = NULL;
-	    retval = adr_local (local -> ap_obvalue);
-	    adr_level--;
-	    return (retval);
+        if(adr_level++ == 0)
+          adr_orgspec = NULL;
+        retval = adr_local (local -> ap_obvalue);
+        adr_level--;
+        return (retval);
 	}
 
 /*
@@ -391,7 +390,7 @@ adr_check (local, domain, route) /* check & save an address            */
  *  validated non-reflexive address is enqueued
  */
 storeit:
-
+    
      if (domain == (AP_ptr) 0)
      {
 #ifdef DEBUG
@@ -893,4 +892,350 @@ char  *name;                      /* search key                         */
     }
 
     return (FALSE);               /* return failure                     */
+}
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+Chan *adr_check_sender (local, domain, route, retval) /* check & save an address            */
+    AP_ptr  local,             /* beginning of local-part */
+	    domain,            /* basic domain reference */
+	    route;             /* beginning of 733 forward routing */
+    int *retval;
+{
+  extern Domain *dm_v2route ();
+  Dmn_route dmrt;
+  Dmn_route tmpdmrt;
+  AP_ptr hptr;               /* 'next' host */
+  Chan   *thechan = (Chan *)NOTOK;
+  char    tstline[LINESIZE],
+    official[LINESIZE],
+    tmpstr[LINESIZE];
+  int    i;
+  int    nextchan;
+  AP_ptr ap;
+  char   *cp = (char *)0;
+  int loopcnt = 0;
+
+#ifdef DEBUG
+  ll_log (logptr, LLOGBTR, "adr_check (loc='%s', dom='%s', rt='%s')",
+          local -> ap_obvalue,
+          domain != (AP_ptr) 0 ? domain -> ap_obvalue : "[NIL]",
+          route != (AP_ptr) 0 ? route -> ap_obvalue : "[NIL]");
+#endif
+
+  /* Limit the number of time we loop looking up routes to domains */
+  /* (Sort of a cop-out for foo.bar where foo isn't in the channel table */
+  for (thechan = (Chan *) NOTOK; ; loopcnt++)
+  {
+	if (loopcnt > MAXLOOPS) {
+      *retval = RP_BADR;
+      return((Chan *)NOTOK);
+    }
+	/*
+	 * This if-then-else clause selects the nxt domain to be
+	 * evaluated or calls adr_local if there are none left.
+	 */
+	if (route != (AP_ptr) 0) {	/* have explicit routing info */
+      hptr = route;		/* a list of fields             */
+      FOREVER
+	    {
+          switch (route -> ap_ptrtype) {
+              case APP_NIL:
+              case APP_NXT:
+                route = (AP_ptr) 0;
+                break;  /* no more route */
+
+              case APP_ETC:
+                route = route -> ap_chain;
+                if(route == (AP_ptr)0)
+                  break;
+                switch (route -> ap_obtype) {
+                    case APV_DLIT:
+                    case APV_DOMN:
+                      break;
+
+                    case APV_CMNT:
+                      continue;
+
+                    default:
+                      route = (AP_ptr) 0;
+                      break;  /* no more route */
+                }
+          }
+          break; /* no route */
+	    }
+	}
+	else                    /* just use the primary reference */
+      if (domain != (AP_ptr) 0) {	/* domain ref is a single field */
+	    hptr = domain;
+	    domain = (AP_ptr) 0;
+      }
+      else {
+#ifdef DEBUG
+	    ll_log (logptr, LLOGFTR, "local address");
+#endif
+        if(adr_level++ == 0)
+          adr_orgspec = NULL;
+/*        *retval = adr_local (local -> ap_obvalue);*/
+        *retval = RP_OK;
+        adr_level--;
+        return ((Chan *)NOTOK);
+      }
+
+/*
+ *  a single domain reference is evaluated
+ */
+#ifdef DEBUG
+	ll_log (logptr, LLOGFTR, "testing '%s'", hptr -> ap_obvalue);
+#endif
+
+	if (thechan != (Chan *) NOTOK) {
+      /* Last time through was channel reference */
+      /* Check the specified table this time */
+#ifdef DEBUG
+      ll_log (logptr, LLOGFTR, "chan specified, checking '%s'",
+              thechan -> ch_show);
+#endif
+      /* SEK if lookup fails, may still be domain */
+      /* reference, so fall into code down below */
+      *retval = tb_k2val(thechan->ch_table,TRUE,hptr->ap_obvalue, tstline);
+      if(*retval == MAYBE) {
+        *retval = RP_NS;
+        return((Chan *)NOTOK);
+      }
+      else if(*retval == OK)
+      {
+		strcpy (tstline, hptr -> ap_obvalue);
+		strcpy (official, tstline); /* no domain */
+		goto storeit_sender;
+      }
+	}
+
+	if (thechan == (Chan *) NOTOK)
+	{
+      if (lexequ (hptr -> ap_obvalue, locname) ||
+          lexequ (hptr -> ap_obvalue, adr_fulldmn) ||
+          lexequ (hptr -> ap_obvalue, locmachine) ||
+          lexequ (hptr -> ap_obvalue, adr_fmc)) {
+#ifdef DEBUG
+        ll_log (logptr, LLOGFTR, "loc ref '%s' found", hptr ->
+                ap_obvalue);
+#endif
+        /* SEK shortcut normalised address      */
+        continue;
+      }
+	}
+  
+	switch ((int)dm_v2route (hptr -> ap_obvalue, official, &dmrt)) {
+	    case MAYBE:
+          *retval = RP_NS;
+          return ((Chan *)NOTOK);
+          /* obtain a host reference            */
+	    case OK:              /* 'tis us                            */
+#ifdef DEBUG
+          ll_log (logptr, LLOGFTR, "local domain reference");
+#endif
+          continue;         /* go to next domain reference        */
+
+	    case NOTOK:		  /* Not a valid hostname */
+				  /* SEK: first check for explicit       */
+				  /* channel refs (somehow)              */
+          
+          if (cp = strrchr(hptr -> ap_obvalue, '#')) {
+		    *cp = 0;
+		    if ((thechan = ch_nm2struct (hptr -> ap_obvalue))
+                != (Chan *) NOTOK) {
+#ifdef DEBUG
+              ll_log (logptr, LLOGFTR, "explicit chan spec '%s'",
+                      thechan -> ch_name);
+#endif
+              cp = 0;
+              continue;
+		    }
+          }
+          if ((thechan = ch_nm2struct("badhosts")) != (Chan *)NOTOK) {
+		    strcpy (tstline, thechan->ch_host ? thechan->ch_host : "");
+		    strcpy (official, hptr -> ap_obvalue);
+		    goto storeit_sender;
+          }
+
+          /*
+           * Bad name - really not known, and no place to send it.
+           */
+          *retval = RP_BADR;
+          return ((Chan *)NOTOK);
+
+	    default:
+          if (thechan != (Chan *) NOTOK) {
+#ifdef DEBUG
+		    ll_log (logptr, LLOGFTR, "chan specified, checking '%s'",
+                    thechan -> ch_show);
+#endif
+		    if (dmrt.dm_argc != 1) {
+              *retval = RP_BADR;
+              return ((Chan *)NOTOK);
+            }
+            
+		    switch(tb_k2val (thechan -> ch_table, TRUE,
+                             dmrt.dm_argv[0], tstline)) {
+                case MAYBE:
+                  *retval = RP_NS;
+                  return ((Chan *)NOTOK);
+                case OK:
+                  break;
+                default:
+                  *retval = RP_BADR;
+                  return ((Chan *)NOTOK);
+		    }
+		    strcpy (tstline, dmrt.dm_argv[0]);
+		    goto storeit_sender;                /* store it */
+          }
+
+          for (i = 0; i < (dmrt.dm_argc - 1); i++) {
+				/* algorithm - first component in table is */
+				/* last component in route, but before     */
+				/* route in  address.                      */
+				/* Thus take route components from the     */
+				/* left, and add to front of explictit     */
+				/* route                                   */
+		    if (domain == (AP_ptr) 0) {
+#ifdef DEBUG
+              ll_log (logptr,LLOGFTR,"Adding local (1) component '%s'",
+                      dmrt.dm_argv[i]);
+#endif
+              domain = ap_new (APV_DOMN, dmrt.dm_argv[i]);
+		    }
+		    else {
+#ifdef DEBUG
+              ll_log (logptr, LLOGFTR, "Adding route component 1 '%s'",
+                      dmrt.dm_argv[i]);
+#endif
+              ap = ap_new (APV_DOMN, dmrt.dm_argv[i]);
+              if (route != (AP_ptr) 0)
+			    ap -> ap_ptrtype = APP_ETC;
+              ap -> ap_chain = route;
+              route = ap;
+		    }
+          }
+#ifdef DEBUG
+          ll_log (logptr, LLOGFTR, "Checking '%s' in channel tables",
+                  dmrt.dm_argv [dmrt.dm_argc - 1]);
+#endif
+          switch ((int)(thechan = ch_h2chan
+                        (dmrt.dm_argv [dmrt.dm_argc -1], 1)))
+          {
+              case MAYBE:
+				/* NS failure */
+				*retval = RP_NS;
+                return((Chan *)NOTOK);
+              case OK:      /* 'tis us                            */
+				/* SEK first check for self to avoid    */
+				/* loops due to references to           */
+				/* non-existent local subdomains        */
+                if (dmrt.dm_argc > 1)
+                  if (lexequ (dmrt.dm_argv [dmrt.dm_argc - 2],
+                              official))
+                  {
+                    /* Check first to see if previous entry is */
+                    /* in channel tables, for handling locmachine */
+                    switch ((int)(thechan = ch_h2chan
+                                  (dmrt.dm_argv [dmrt.dm_argc -2], 1)))
+                    {
+                        case MAYBE:
+                          *retval = RP_NS;
+                          return((Chan *)NOTOK);
+                        case OK:
+                        case NOTOK:
+#ifdef DEBUG
+                          ll_log (logptr, LLOGTMP,
+                                  "Found unknown subdomain '%s'",
+                                  hptr -> ap_obvalue);
+#endif
+                          *retval = RP_NS;
+                          return ((Chan *)NOTOK);
+
+                        default:
+                          /* Found host ref               */
+                          strcpy (tstline, dmrt.dm_argv [dmrt.dm_argc  - 2]);
+                          strcpy (official, tstline);
+                          /* Now remove first component of */
+                          /* route                         */
+                          if (route == (AP_ptr) 0) {
+                            ap_free (domain);
+                            domain = (AP_ptr) 0;
+                          }
+                          else {
+                            ap = route;
+                            route = ap -> ap_chain;
+                            ap_free (ap);
+                          }
+                          goto storeit_sender;
+                    }
+                  }
+#ifdef DEBUG
+                ll_log (logptr, LLOGFTR, "local host reference");
+#endif
+                thechan = (Chan *) NOTOK;               /* DPK */
+                continue; /* go to next domain reference        */
+
+              case NOTOK:   /* hmmm, unknown                      */
+                switch((int)dm_v2route (dmrt.dm_argv[dmrt.dm_argc -1],
+                                        tmpstr, &tmpdmrt)) {
+                    case NOTOK:
+                      *retval = RP_NS;
+                      return ((Chan *)NOTOK);
+                    case MAYBE:
+                      *retval = RP_NS;
+                      return ((Chan *)NOTOK);
+                }
+                thechan = (Chan *) NOTOK;
+                ap = ap_new (APV_DOMN, dmrt.dm_argv[dmrt.dm_argc -1]);
+                if (route != (AP_ptr) 0)
+                  ap -> ap_ptrtype = APP_ETC;
+			ap -> ap_chain = route;
+			route = ap;
+			continue;
+		    default:
+			strcpy (tstline,
+				dmrt.dm_argv [dmrt.dm_argc - 1]);
+			if (dmrt.dm_argc > 1)
+			    strcpy(official, tstline);
+				/* make sure official has full domain   */
+			goto storeit_sender;
+		}
+	}
+    	/*NOTREACHED*/
+  }
+  
+
+/*
+ *  validated non-reflexive address is enqueued
+ */
+  storeit_sender:
+  
+  if(thechan == (Chan *) NOTOK) {
+    *retval = NOTOK;
+  }
+  else {
+    *retval = RP_OK;
+  }
+
+  bugout_sender:
+#if 0
+  if (domain != (AP_ptr) 0)
+  {
+	ap_sqdelete (domain, (AP_ptr) 0);
+	ap_free (domain);
+  }
+  if (route != (AP_ptr) 0)
+  {
+	ap_sqdelete (route, (AP_ptr) 0);
+	ap_free (route);
+  }
+#endif
+  if (cp && cp != (char *)MAYBE)
+	free (cp);
+  
+  return (thechan);
 }

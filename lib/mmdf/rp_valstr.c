@@ -142,6 +142,12 @@ char   *
 	case RP_NAUTH:
 	    return ("NAUTH");
 
+	case RP_BADR:
+	    return ("BADR");
+
+	case RP_BCHN:
+	    return ("BCHN");
+
 	default:                  /* print illegal octal value          */
 	    noval[15] = rp_gbbit (val) + '0';
 	    noval[16] = rp_gcbit (val) + '0';

@@ -683,6 +683,8 @@ char   *fmt,
 	    case RP_HUH:          /* not if it was a user error         */
 	    case RP_PARM:
 	    case RP_USER:
+	    case RP_BADR:
+	    case RP_BCHN:
 		break;
 
 	    default:
