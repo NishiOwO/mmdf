@@ -11,12 +11,16 @@
 #include "mmdf.h"
 #include "ap.h"
 
-extern	char	*ap_s2p();
-extern	char	*ap_p2s();
-extern	char	*compress();
 extern	int	ap_outtype;
 extern	LLog	*logptr;
 
+extern	char	*ap_s2p();
+extern	char	*ap_p2s();
+extern	char	*compress();
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 void parsadr(thestr, name, mbox, host)
 register char *thestr;		/* string with an address	*/
 char	*name,			/* where to put name part	*/

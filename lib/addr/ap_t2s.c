@@ -16,6 +16,9 @@ extern LLog *logptr;
 extern char *ap_p2s();
 extern AP_ptr ap_t2parts();
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 AP_ptr
 	ap_t2s (thetree, strpp)
     AP_ptr thetree;             /* the parse tree */

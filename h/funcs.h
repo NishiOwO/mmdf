@@ -1,5 +1,5 @@
 /*
- * $Id: funcs.h,v 1.3 1998/05/25 20:17:00 krueger Exp $
+ * $Id: funcs.h,v 1.4 2000/08/08 20:38:02 krueger Exp $
  */
 
 #ifdef HAVE_MALLOC_H
@@ -64,12 +64,12 @@ extern int strindex ();
 /* util/ll_err.c */
 extern int ll_err();
 
-/* util/ll_log.c */
+/* util/ll_log.c * /
 extern int ll_open ();
 extern int ll_close();
 extern int ll_hdinit();
 extern int ll_init();
-extern int ll_log();
+extern int ll_log(); */
 
 /* err_abrt.c */
 /* extern void err_abrt (); */
@@ -78,3 +78,8 @@ extern int cmdbsrch ();
 /* util/tai_packages.c */
 extern int tai_pgm ();
 extern int tai_log ();
+
+/* util/gcread.c */
+extern int gcread ();
+extern int qread ();
+

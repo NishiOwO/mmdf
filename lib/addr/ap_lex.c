@@ -54,6 +54,9 @@ char   *namtab[] =
 
 /**/
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 int ap_lex (lexval)
 char    lexval[];
 {
@@ -61,7 +64,7 @@ char    lexval[];
 		   *lexptr;
     register int    retval;
 
-    while ((retval = ap_lxtable[c = ap_char ()]) == LT_SPC)
+    while ((retval = ap_lxtable[(int)(c = ap_char ())]) == LT_SPC)
 	;                         /* Skip space, tab and newline          */
     lexptr = lexval;
     *lexptr++ = c;
@@ -100,7 +103,7 @@ char    lexval[];
 /* ***********************  PERSON ADDRESS LIST  ************************ */
 
 	case LT_LES:              /* less-than-sign "<"  -- person list   */
-	    if (ap_lxtable[c = ap_char ()] == LT_LES)
+	    if (ap_lxtable[(int)(c = ap_char ())] == LT_LES)
 		retval = LV_FROM; /* << implies redirection               */
 	    else {
 		ap_peek = c;      /* restore xtra char                    */
@@ -118,7 +121,7 @@ char    lexval[];
 	case LT_SQT:              /* single-quote "'"  -- just char, here */
 	case LT_RPR:              /* right paren ")" -- just char, here   */
 	    for (;;) {
-		switch (ap_lxtable[*lexptr++ = c = ap_char ()]) {
+		switch (ap_lxtable[(int)(*lexptr++ = c = ap_char ())]) {
 		    case LT_LTR:
 		    case LT_SQT:
 		    case LT_RPR:
@@ -152,7 +155,7 @@ char    lexval[];
 	    retval = LV_WORD;
 	    --lexptr;           /* don't put quotes into obvalue  - SEK   */
 	    for (;;) {
-		switch (ap_lxtable[*lexptr++ = c = ap_char ()]) {
+		switch (ap_lxtable[(int)(*lexptr++ = c = ap_char ())]) {
 		    case LT_QOT:
 			--lexptr;
 			break;
@@ -172,7 +175,7 @@ char    lexval[];
 	case LT_LPR:              /* left paren "("  -- comment start     */
 	    lexptr--;             /* remove left-most paren */
 	    for (retval = 0;;) {  /* retval is count of comment nesting   */
-		switch (ap_lxtable[*lexptr++ = c = ap_char ()]) {
+		switch (ap_lxtable[(int)(*lexptr++ = c = ap_char ())]) {
 		    case LT_LPR:  /* nested comments                      */
 			retval++; /* just drop on through                 */
 		    default: 

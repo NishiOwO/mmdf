@@ -1,6 +1,6 @@
 /* h/config.h.in.  Generated automatically from configure.in by autoheader.  */
 /*
- * $Id: config.h.in,v 1.44 2000/04/04 20:50:05 krueger Exp $
+ * $Id: config.h.in,v 1.45 2000/08/08 20:38:02 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -648,11 +648,11 @@ char *strchr (), *strrchr ();
 #    define TIOCSETN
 #  endif
 */
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
 
 #ifndef HAVE_MALLOC_H
 extern char * malloc(), *calloc();
-#endif HAVE_MALLOC_H
+#endif /* HAVE_MALLOC_H */
 /*****************************************************************************/
 /* for compatability, until erverything is working with configure on         *
  *      ALL plaforms, include the old defines here                           *

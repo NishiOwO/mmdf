@@ -103,7 +103,7 @@ register struct ll_struct *loginfo;
 }
 /* *********************  LOG INITIALIZATION  *********************** */
 
-int ll_hdinit (loginfo, pref)              /* make header field unique           */
+void ll_hdinit (loginfo, pref)              /* make header field unique           */
 register struct ll_struct *loginfo;
 register char *pref;
 {

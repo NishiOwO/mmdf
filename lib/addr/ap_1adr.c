@@ -3,6 +3,10 @@
 #include "ap.h"
 #include "ap_lex.h"
 
+#ifdef DEBUG
+#include "ll_log.h"
+#endif
+
 /*  ADDRESS PARSER, as per:
 
     "Standard for the Format of ARPA Network Text Messages", D.  Crocker,
@@ -104,15 +108,6 @@ int ap_grplev = 0;                /* Group nesting depth                  */
 int ap_perlev = 0;                /* <> nesting depth                     */
 int ap_routing;                   /* parsing a route                    */
 
-LOCFUN void ap_7to8();
-
-#ifdef DEBUG
-#include "ll_log.h"
-
-extern LLog *logptr;
-extern AP_ptr ap_sqinsert ();
-#endif
-
 #if DEBUG > 1
 int	debug;                    /* True if in debug mode                */
 char   *statnam[] =
@@ -133,14 +128,25 @@ char   *typtab[] =
     "Person", "NPersn", "EPersn", "Group", "NGroup", "EGroup", "DomainLit"
 };
 #endif
+
+#ifdef DEBUG
+extern LLog *logptr;
+extern AP_ptr ap_sqinsert ();
+#endif
+
+LOCFUN void ap_7to8();
+
 /**/
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 int ap_1adr ()
 {
     struct ap_node basenode;
-    AP_ptr ap_sp;        /* Saved ap node ptr                    */
-    AP_ptr r822ptr,
-	   r733prefptr;
+    AP_ptr ap_sp = (AP_ptr)0;        /* Saved ap node ptr                    */
+    AP_ptr r822ptr = (AP_ptr)0,
+	   r733prefptr = (AP_ptr)0;
     int    got822;
     char    buf[LINESIZE];
     register int    state;
@@ -454,7 +460,9 @@ int ap_1adr ()
 }
 
 
-
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 LOCFUN void
 ap_7to8 (r733prefptr, r822ptr)
     AP_ptr r733prefptr,

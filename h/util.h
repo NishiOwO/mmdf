@@ -7,8 +7,17 @@
 #include "config.h"
 
 #include <stdio.h>                /* minus the ctype stuff */
+#include <stdlib.h>
 #include <ctype.h>
 #include <setjmp.h>
+#ifdef HAVE_UNISTD_H
+#  include <unistd.h>
+#endif /* HAVE_UNISTD_H */
+#include <sys/stat.h>
+#ifdef HAVE_FCNTL_H
+#  include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
+
 #include <sys/types.h>	/* ONLY include this file from here, any other file
 			 * which needs sys/types.h should #include "util.h".
 			 * Not all Unix systems have tricks so that you
@@ -23,11 +32,12 @@
 #ifdef DECLARE_SPRINTF
 extern SPRINTF_RETURN sprintf ();
 #endif /* DECLARE_SPRINTF */
+
 #if !defined(__STDC__) || defined(DECLARE_GETPWNAM)
 extern struct passwd *getpwnam(), *getpwuid();
 #else
 #  ifdef HAVE_LIBIO_H
-#  include <libio.h>
+#    include <libio.h>
 #  endif /* HAVE_LIBIO_H */
 #endif /* not LINUX */
 

@@ -101,7 +101,7 @@ int     ret,                      /* allow return mail to sender?       */
 char    *sub,                     /* subject line                       */
         *from;			  /* from field                         */
 {
-    static first_ml = TRUE;
+    static int first_ml = TRUE;
     char linebuf[LINESIZE];
     char datbuf[64];
     struct passwd  *pwdptr;

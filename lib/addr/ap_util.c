@@ -49,6 +49,9 @@ AP_ptr
     return (ap);
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 void ap_ninit (ap)
     register AP_ptr ap;
 {
@@ -59,6 +62,9 @@ void ap_ninit (ap)
     ap -> ap_pchain = (AP_ptr) 0;
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 void ap_free (ap)                      /* free node's storage                */
 register AP_ptr ap;
 {
@@ -102,6 +108,9 @@ register AP_ptr ap;
     }
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 void ap_fllnode (ap, obtype, obvalue)     /* add data to node at end of chain     */
 register AP_ptr ap;
 char   obtype;
@@ -112,7 +121,7 @@ register char  *obvalue;
 
 #if DEBUG > 1
     if (debug)
-	printf ("(%s/'%s')", typtab[obtype], obvalue);
+	printf ("(%s/'%s')", typtab[(int)obtype], obvalue);
 #endif
 }
 
@@ -151,6 +160,9 @@ register AP_ptr new;              /* where to insert after              */
     
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 AP_ptr
 	ap_sqinsert (cur, type, new)    /* insert sequence */
     register AP_ptr cur,
@@ -187,6 +199,9 @@ AP_ptr
     return (new);
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 void ap_delete (ap)                    /* remove next node in sequence       */
 register AP_ptr ap;
 {
@@ -204,6 +219,9 @@ register AP_ptr ap;
    }
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 AP_ptr
 	ap_append (ap, obtype, obvalue)
 				  /* alloc, fill, insert node           */
@@ -222,6 +240,9 @@ char   *obvalue;
 }
 /**/
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 AP_ptr
        ap_add (ap, obtype, obvalue)
 				  /* try to append data to current node   */
@@ -258,6 +279,9 @@ register char  *obvalue;
 
 /**/
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 AP_ptr
 	ap_sqdelete (strt_node, end_node) /* remove nodes, through end node     */
 register AP_ptr strt_node;
@@ -279,6 +303,9 @@ register AP_ptr end_node;
     return ((AP_ptr) 0);          /* end of chain                       */
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 AP_ptr
 	ap_1delete (ap)                   /* remove all nodes of address to NXT */
 register AP_ptr ap;               /* starting node                      */
@@ -291,6 +318,9 @@ register AP_ptr ap;               /* starting node                      */
     return ((AP_ptr) 0);                   /* end of chain              */
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 void ap_sqtfix (strt, end, obtype)     /* alter obtype of a node subsequence */
 register AP_ptr strt;
 register AP_ptr end;
@@ -306,6 +336,9 @@ register char   obtype;
 
 /**/
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 AP_ptr
 	ap_move (to, from)  /* move node after from to be after to   */
     register AP_ptr to,
@@ -328,6 +361,9 @@ AP_ptr
     return (from);      /* next in chain, now */
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 AP_ptr
 	ap_sqmove (to, from, endtype)    /* move sequence */
     register AP_ptr to,
@@ -362,12 +398,18 @@ int     (*gfunc) ();
     ap_peek = -1;                 /* No lex peek char                   */
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 void ap_clear ()                     /* Clear out the parser state           */
 {
     ap_grplev = 0;                 /* Zero group nesting depth          */
     ap_perlev = 0;                 /* Zero <> nesting depth             */
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 AP_ptr
        ap_pinit (gfunc)           /* init, alloc & set start node       */
 int     (*gfunc) ();
@@ -376,10 +418,12 @@ int     (*gfunc) ();
     return (ap_pstrt = ap_pcur = ap_alloc ());
 }
 
-/*  parse state saving uses a linked list of state information,
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *  parse state saving uses a linked list of state information,
  *  recorded in ap_prevstruct structures.
  *  the list is manipulated as a simple stack.
- */
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
 int ap_ppush (gfunc)                  /* save parse context, ap_iinit    */
 int     (*gfunc) ();
@@ -401,6 +445,9 @@ int     (*gfunc) ();
     return (OK);
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 void ap_ppop ()                        /* restore previous parse state       */
 {
     register struct ap_prevstruct  *tfil;
@@ -415,9 +462,11 @@ void ap_ppop ()                        /* restore previous parse state       */
 }
 /**/
 
-/*  the next three routines handle most of the overhead for acquiring
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *  the next three routines handle most of the overhead for acquiring
  *  the address list from a file.
- */
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
 int ap_flget ()                      /* get character from included file   */
 {
@@ -431,6 +480,9 @@ int ap_flget ()                      /* get character from included file   */
     return (c);
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 int ap_fpush (file)                  /* indirect input from file           */
 char   file[];
 {
@@ -445,6 +497,9 @@ char   file[];
     return (OK);
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 void ap_fpop ()                       /* pop the stack, if any input nested */
 {
     if (ap_fle -> ap_curfp != NULL)
@@ -465,6 +520,9 @@ void ap_palloc ()                      /* alloc, insert after pcur           */
     ap_pnsrt (ap_alloc (), APP_ETC);
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 void ap_pfill (obtype, obvalue)        /* add data to node at end of chain     */
 char   obtype;
 register char  *obvalue;
@@ -474,10 +532,13 @@ register char  *obvalue;
 		(obvalue == (char *) 0) ? (char *) 0 : strdup (obvalue);
 #if DEBUG > 1
     if (debug)
-	printf ("(%s/'%s')", typtab[obtype], obvalue);
+	printf ("(%s/'%s')", typtab[(int)obtype], obvalue);
 #endif
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 void ap_pnsrt (ap, ptrtype)          /* add node to end of parse chain     */
 register AP_ptr ap;
 char    ptrtype;
@@ -499,6 +560,9 @@ char    ptrtype;
     }
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 void ap_pappend (obtype, obvalue)      /* alloc, fill, append at end         */
 char    obtype;
 char   *obvalue;
@@ -507,6 +571,9 @@ char   *obvalue;
     ap_fllnode (ap_pcur, obtype, obvalue);
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 void ap_padd (obtype, obvalue)         /* try to append data to current node */
 char    obtype;
 char  *obvalue;

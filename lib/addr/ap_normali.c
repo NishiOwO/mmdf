@@ -27,6 +27,9 @@ LOCFUN void ap_ptinit();
 
 /**/
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 AP_ptr
 	ap_normalize (dflhost, dfldomain, thetree, exorchan)
     char *dflhost,             /* string to append, as host name */
@@ -301,6 +304,9 @@ AP_ptr
 }
 /**/
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 LOCFUN void
 	ap_ptinit (baseprefptr, perptr, r822prefptr, mbxprefptr, dmprefptr,
 				lstcmntprefptr, lastptr, grpptr)
@@ -423,6 +429,9 @@ LOCFUN void
 
 }
 /**/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #ifndef	JNTMAIL
 
 void ap_locnormalize (obaseptr, or822prefptr, ombxprefptr, odmprefptr)
@@ -440,7 +449,9 @@ void ap_locnormalize (obaseptr, or822prefptr, ombxprefptr, odmprefptr)
 	   lstcmntprefptr,
 	   lastptr,
 	   grpptr;
-    char *cptr;
+#ifdef DONE_IN_SUBMIT
+    char *cptr = NULL;
+#endif /* DONE_IN_SUBMIT */
 
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "ap_locnormalize ()");
@@ -455,7 +466,7 @@ void ap_locnormalize (obaseptr, or822prefptr, ombxprefptr, odmprefptr)
 	     *cptr != '\0'; cptr++)
 	    if (*cptr == '.' || *cptr == '%')
 		*cptr = '@';
-#endif
+#endif /* DONE_IN_SUBMIT */
 
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "parsing '%s'", (*ombxprefptr) -> ap_chain -> ap_obvalue);
@@ -523,6 +534,9 @@ void ap_locnormalize (obaseptr, or822prefptr, ombxprefptr, odmprefptr)
 
 /**/
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 int ap_dmnormalize (dmptr, thechan)
 register AP_ptr dmptr;
 Chan *thechan;
@@ -584,6 +598,9 @@ Chan *thechan;
 
 /**/
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #ifdef DEBUG
 LOCFUN void
      logtree(thetree, text)  /* if FTR, convert tree to string & log */

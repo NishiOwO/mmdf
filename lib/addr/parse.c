@@ -1,8 +1,11 @@
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/parse.c,v 1.6 2000/07/06 17:43:42 krueger Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/parse.c,v 1.7 2000/08/08 20:38:02 krueger Exp $ */
 /* $Log: parse.c,v $
-/* Revision 1.6  2000/07/06 17:43:42  krueger
-/* some minor compiler fixes
+/* Revision 1.7  2000/08/08 20:38:02  krueger
+/* 1. Cleanups warnings of gcc -Wall --pedantic
 /*
+ * Revision 1.6  2000/07/06 17:43:42  krueger
+ * some minor compiler fixes
+ *
  * Revision 1.6  2000/07/06 17:28:00  krueger
  * some minor compiler fixes
  *
@@ -59,6 +62,9 @@ extern char *namtab[],
 	   *typtab[];
 extern int debug;
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 main (argc, argv)
 {
     AP_ptr ap_fp;
@@ -97,6 +103,9 @@ main (argc, argv)
     exit (0);
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 getach ()
 {
     int	c;
@@ -109,6 +118,9 @@ getach ()
     return (c);
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 void pretty (ap)
 register AP_ptr ap;
 {

@@ -12,7 +12,7 @@
  *      success is being able to create and stat the final directory.
  */
 
-creatdir (dirptr, mode, owner, group)
+int creatdir (dirptr, mode, owner, group)
     register char *dirptr;     /* pathname to directory                */
     int mode;
     int owner,                  /* non-zero uid of for dir owner        */

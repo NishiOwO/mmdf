@@ -17,6 +17,9 @@ extern LLog *logptr;
 
 LOCVAR	int perlev, grplev;
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 AP_ptr
 	ap_t2parts (tree, group, name, local, domain, route)
     register AP_ptr  tree;      /* the parse tree */

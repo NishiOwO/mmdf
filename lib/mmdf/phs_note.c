@@ -1,8 +1,9 @@
 #include "config.h"
 #include "mmdf.h"
-#include <sys/stat.h>
 #include "ch.h"
 #include "phs.h"
+
+extern int creatdir ();
 
 /*      note mmdf channel activity phases               */
 
@@ -33,7 +34,7 @@ int phs_note (thechan, phase)               /* make a timestamp */
 {
     char stamploc[LINESIZE];
     char stampdir[LINESIZE];
-    char *fmt;
+    char *fmt = NULL;
 
     switch (phase)
     {
@@ -157,7 +158,7 @@ time_t
 {
     struct stat statbuf;
     char stamploc[LINESIZE];
-    char *fmt;
+    char *fmt = NULL;
 
     switch (phase)
     {

@@ -6,7 +6,7 @@
 /*   Neither eof nor error will be indicated until buffer is emptied  */
 /* Modified by Phil Cockcroft UCL Mar 85 to handle quoted strings properly */
 
-gcread (fp, obuf, len, endchrs)
+int gcread (fp, obuf, len, endchrs)
 FILE  *fp;
 int       len;                  /* maximum allowed to xfer              */
 char   *obuf,                   /* destination buffer                   */
@@ -16,7 +16,7 @@ char   *obuf,                   /* destination buffer                   */
 	return (qread (fp, obuf, len, endchrs, 0));
 }
 
-qread (fp, obuf, len, endchrs, quotechar)
+int qread (fp, obuf, len, endchrs, quotechar)
 FILE  *fp;
 int       len;                  /* maximum allowed to xfer              */
 char   *obuf,                   /* destination buffer                   */

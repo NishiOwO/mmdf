@@ -2,14 +2,17 @@
 #include "util.h"
 #include "conf.h"
 
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/ap_lxtable.c,v 1.4 1999/08/12 13:15:36 krueger Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/ap_lxtable.c,v 1.5 2000/08/08 20:38:02 krueger Exp $ */
 /* $Log: ap_lxtable.c,v $
-/* Revision 1.4  1999/08/12 13:15:36  krueger
-/* Added patch 2.44b3 and 2.44b4
+/* Revision 1.5  2000/08/08 20:38:02  krueger
+/* 1. Cleanups warnings of gcc -Wall --pedantic
 /*
-/* Revision 1.3.2.2  1999/08/06 07:21:50  krueger
-/* fixed some compiler warnings
-/*
+ * Revision 1.4  1999/08/12 13:15:36  krueger
+ * Added patch 2.44b3 and 2.44b4
+ *
+ * Revision 1.3.2.2  1999/08/06 07:21:50  krueger
+ * fixed some compiler warnings
+ *
  * Revision 1.3.2.1  1999/08/04 12:16:00  krueger
  *
  *  	Makefile.in addr/ap_1adr.c addr/ap_lxtable.c addr/parse.c

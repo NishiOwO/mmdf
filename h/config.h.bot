@@ -63,11 +63,11 @@ char *strchr (), *strrchr ();
 #    define TIOCSETN
 #  endif
 */
-#endif HAVE_SGTTY_H
+#endif /* HAVE_SGTTY_H */
 
 #ifndef HAVE_MALLOC_H
 extern char * malloc(), *calloc();
-#endif HAVE_MALLOC_H
+#endif /* HAVE_MALLOC_H */
 /*****************************************************************************/
 /* for compatability, until erverything is working with configure on         *
  *      ALL plaforms, include the old defines here                           *

@@ -16,7 +16,9 @@
  */
 
 extern   int     domsg;
-#define printx if (domsg>1) printf
+#ifndef printx
+#  define printx if (domsg>1) printf
+#endif
 
 extern LLog *logptr;
 extern int ap_outtype;
@@ -26,6 +28,9 @@ extern Domain *dm_v2route();
 
 LOCFUN void val2str();
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 char *
 ap_p2s (group, name, local, domain, route)
     AP_ptr  group,             /* beginning of group name  */
@@ -40,7 +45,7 @@ ap_p2s (group, name, local, domain, route)
     int         inperson,
 		ingroup;
     register char *strp;        /* The string we are building */
-    register char *cp;
+    register char *cp = NULL;
     register AP_ptr curptr;
     char *flipptr;
     char *stripptr;
@@ -385,14 +390,16 @@ else
 }
 
 
-/*
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
  *  This function is just barely usable.  The hole problem of
  *  quoted strings is hard to get right especially when the
  *  mail system is trying to make up for human forgetfulness.
  *                              -DPK-
  *  SEK - have improved this somewhat by giving knowledge of
  *  the various object types.  Does not handle strings of spaces.
- */
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 LOCFUN void
 	val2str (buf, value, obtype)      /* convert to canonical string */
     char *buf,
@@ -476,20 +483,21 @@ LOCFUN void
 		break;
 
 	    case ' ':
-		if (inquote == FALSE)
+          if (inquote == FALSE) {
 		    if ((obtype == APV_DOMN) || (obtype == APV_MBOX)) {
-			gotspcl = TRUE;
-			goto copyit;
+              gotspcl = TRUE;
+              goto copyit;
 		    } else {
-				/* SEK hack to handle " at "              */
-				/* yes - this really is needed          */
-			if ((uptolow(*(fromptr + 1)) == 'a') &&
-			    (uptolow(*(fromptr + 2)) == 't') &&
-			    (*(fromptr + 3) == ' ')) {
+              /* SEK hack to handle " at "              */
+              /* yes - this really is needed          */
+              if ((uptolow(*(fromptr + 1)) == 'a') &&
+                  (uptolow(*(fromptr + 2)) == 't') &&
+                  (*(fromptr + 3) == ' ')) {
 			    gotspcl = TRUE;
 			    goto copyit;
-			}
+              }
 		    }
+          }
 		break;
 
 	    case '.':

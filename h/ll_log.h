@@ -38,8 +38,8 @@ typedef struct ll_struct Llog;
 
 typedef struct ll_struct LLog;
 
-extern ll_open ();
-extern ll_close ();
-extern ll_hdinit ();
-extern ll_init ();
-extern ll_log ();
+extern int ll_open ();
+extern int ll_close ();
+extern void ll_hdinit ();
+extern int ll_init ();
+extern int ll_log ();

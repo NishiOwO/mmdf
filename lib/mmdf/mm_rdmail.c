@@ -37,7 +37,7 @@ extern struct ll_struct *logptr;
 
 /* ************  (mm_)  LOCAL MAIL-READING SUB-MODULE  **************** */
 
-mm_rinit (info, retadr)          /* get initialization info for msg    */
+int mm_rinit (info, retadr)          /* get initialization info for msg    */
 char   *info,			  /* where to put general init info     */
        *retadr;			  /* where to put return address        */
 {
@@ -85,7 +85,7 @@ char   *info,			  /* where to put general init info     */
 }
 /**/
 
-mm_radr (host, adr)              /* get an address spec from remote    */
+int mm_radr (host, adr)              /* get an address spec from remote    */
 char   *host,			  /* where to stuff name of next host   */
        *adr;			  /* where to stuff rest of address     */
 {
@@ -109,7 +109,7 @@ char   *host,			  /* where to stuff name of next host   */
     return (RP_OK);
 }
 
-mm_rtxt (buffer, len)            /* read next part of msg text         */
+int mm_rtxt (buffer, len)            /* read next part of msg text         */
 char   *buffer;			  /* where to stuff copy of text        */
 int    *len;                      /* where to indicate text's length    */
 {
