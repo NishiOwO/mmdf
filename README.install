@@ -1,17 +1,32 @@
 If you want to change the default switches, you need to run Configure first.
-It is an interactiv shell-script which will ask you a lot of question.
+It is an interactive shell-script which will ask you a lot of questions.
 At the end you may start configure to find out your site dependent defines.
 
 For a default installation
 	./configure
-	make depend
+	make depend (only with gcc)
 	make
 	make install
 
+Tested on:
+
+Linux (redhat 4.2 with libc 5.4.30 or higher)
+Sun Solaris 2.5.1 with cc
+HP9000s735       HP-UX 9.xx  with cc
+HP9000 Series C  HP-UX 10.xx with cc
+
 Comments and Bug list:
 
+1) run "make depend" only if you have gcc
+2) when using dbm-table and libgdbm take care: an open in writing mode
+   of the database will lock this one for reading too. So MMDF is
+   unable to access to its database an will stop running until the
+   database is unlocked (closed for writing)!
+
 on linux:
-1) use at least linc version 5.4.30
-2) don't compile with dbm support because gdbm emulates dbminit() and always
-   lock the mmdf database so that no other program can access to it. =>
-   MMDF is unable to run!
+1) use at least libc version 5.4.30
+
+on HP:
+1) When using gcc and you get an error about '__builtin_va_start'.
+   run configure --disable-gcc
+
