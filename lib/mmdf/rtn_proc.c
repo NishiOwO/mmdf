@@ -131,7 +131,57 @@ rtn_warn (themsg, retadr)         /* notify of delay in delivery        */
 
     return (ml_end (OK));
 }
+
+rtn_warn_init (themsg, retadr)         /* notify of delay in delivery        */
+    Msg *themsg;
+    char *retadr;
+{
+    char   subject[32];
+    sprintf (subject, "%s  (%s)", rtn_yetsnd, themsg -> mg_mname);
+    if (rtn_mlinit (subject, retadr) != OK)
+	return (NOTOK);           /* set up for returning               */
+
+    rtn_heading (DOWARN, themsg);   /* do a warning introduction          */
+	ml_txt ("  No further action is required by you.\n\n");
+	ml_txt ("    Delivery attempts are still pending for the following address(es):\n\n");
+}
+
+
+rtn_warn_per_adr (themsg, theadr, curfailtime) /* notify of delay in delivery */
+    Msg *themsg;
+    struct adr_struct *theadr;
+    int curfailtime;
+{
+  char    linebuf[LINESIZE],
+	    theaddr[LINESIZE];
+    int days;
+    int msghour;
+#ifdef DEBUG
+    ll_log (logptr, LLOGPTR, "rtn_warn_adr ()");
+#endif
+
+	rtn_pnam (theadr, theaddr);
+    sprintf (linebuf, "\t%s\n", theaddr);
+    ml_txt (linebuf);
+    msghour = (int) ((curtime - themsg -> mg_time) / 3600);
+    days = ((curfailtime - msghour) + 23) / 24;
+    days = curfailtime - msghour;
+    sprintf (linebuf, "\t\ttrying for %d more days.\n", days < 0 ? 0 : days);
+    ml_txt (linebuf);
+#if 0
+    rtn_cite (themsg -> mg_mname); /* include message citation           */
+#endif
+    
+/*     return (ml_end (OK)); */
+}
 /**/
+
+rtn_time_per_adr (themsg, theadr, retadr) /* notify of delay in delivery */
+    Msg *themsg;
+    struct adr_struct *theadr;
+    char *retadr;
+{
+}
 
 rtn_time (themsg, retadr)         /* notify of delay in delivery        */
 Msg *themsg;                      /* just cite the text                 */
@@ -158,7 +208,7 @@ char *retadr;
 /**/
 
 LOCFUN
-    rtn_intro (dowarn, themsg)    /* print failure intro                */
+    rtn_heading (dowarn, themsg)    /* print failure intro                */
     int dowarn;                   /* warning or full failure            */
     Msg *themsg;
 {
@@ -174,6 +224,19 @@ LOCFUN
 	    days, ((days == 1) ? "day" : "days"), msghour,
 	    (dowarn ? "has not yet been" : "could not be"));
     ml_txt (linebuf);             /* introductory line                  */
+
+}
+
+LOCFUN
+    rtn_intro (dowarn, themsg)    /* print failure intro                */
+    int dowarn;                   /* warning or full failure            */
+    Msg *themsg;
+{
+    int days;
+    int msghour;
+    char    linebuf[LINESIZE];
+
+    rtn_heading(dowarn, themsg);
 
     if (dowarn)
     {

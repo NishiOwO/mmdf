@@ -17,6 +17,10 @@ struct adr_struct                 /* 1 address entry in queued list     */
 #define ADR_BOTH   'b'            /*   Deliver both ways                */
 #define ADR_TorM   'e'            /*   either tty or else mail          */
 #define ADR_DONE   '*'            /*   No more processing to be done    */
+    char    adr_fail;              /* notification if send failure
+                                     message for that address           */
+#define ADR_WARN   'w'
+#define ADR_FAIL   'f'
     char   *adr_que;              /* name of output channel queue       */
     char   *adr_host;             /* host string                        */
     char   *adr_local;            /* local-part of address              */
@@ -24,5 +28,7 @@ struct adr_struct                 /* 1 address entry in queued list     */
     long   adr_pos;		  /* position in address list of this msg */
 };
 
+#define ADR_WFOFF   4             /* file offset to adr_fail             */
 #define ADR_DLOFF   2             /* file offset to adr_delv             */
 #define ADR_TMOFF   0             /* file offset to adr_tmp              */
+

@@ -298,14 +298,15 @@ mq_radr (theadr)	/* obtain next address in msg's queue */
     }
     theadr -> adr_tmp   = arglist[0][0];
     theadr -> adr_delv  = arglist[1][0];
-    theadr -> adr_que   = arglist[2];
-    theadr -> adr_host  = arglist[3];
-    theadr -> adr_local = arglist[4];
+    theadr -> adr_fail  = arglist[2][0];
+    theadr -> adr_que   = arglist[3];
+    theadr -> adr_host  = arglist[4];
+    theadr -> adr_local = arglist[5];
 
 #ifdef DEBUG
-    ll_log (logptr, LLOGFTR, "adr parts: '%c' '%c' '%s' '%s' '%s'",
-		theadr -> adr_tmp, theadr -> adr_delv, theadr -> adr_que,
-		theadr -> adr_host, theadr -> adr_local);
+    ll_log (logptr, LLOGFTR, "adr parts: '%c' '%c' '%c' '%s' '%s' '%s'",
+            theadr -> adr_tmp, theadr -> adr_delv, theadr -> adr_fail,
+            theadr -> adr_que, theadr -> adr_host, theadr -> adr_local);
 #endif
     return (OK);
 }
@@ -409,10 +410,13 @@ mq_gtnum ()			/* read a long number from adr queue	*/
     return (thenum);
 }
 
-mq_rwarn ()			/* note that warning has been sent	*/
+mq_rwarn (theadr)			/* note that warning has been sent	*/
+struct adr_struct *theadr;
 {
     static char donechr = ADR_DONE;
-
+    long curpos;
+    
+#ifdef OLD_WARN
 #ifdef DEBUG
     ll_log (logptr, LLOGFTR, "WARN @ offset(%ld)", (long) (mq_optstrt));
 #endif
@@ -438,4 +442,14 @@ mq_rwarn ()			/* note that warning has been sent	*/
     }
 #endif
     fseek (mq_rfp, mq_curpos, 0);	/* Back to where we were */
+#else /* OLD_WARN */
+#ifdef DEBUG
+    ll_log (logptr, LLOGFTR,
+            "WARN @ offset(%ld)", (long) (theadr -> adr_pos + ADR_WFOFF));
+#endif
+    donechr = ADR_WARN;		/* temporary mark */
+    lseek (mq_fd, (long) (theadr -> adr_pos + ADR_WFOFF), 0);
+    write (mq_fd, &donechr, 1);
+    lseek (mq_fd, mq_curpos, 0);	/* Back to where we were */
+#endif /* OLD_WARN */
 }

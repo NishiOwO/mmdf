@@ -1,4 +1,4 @@
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.7 1997/12/30 14:46:33 krueger Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.8 1998/05/25 08:32:11 krueger Exp $ */
 /*
  *     MULTI-CHANNEL MEMO DISTRIBUTION FACILITY  (MMDF)
  *     
@@ -211,8 +211,11 @@ char    filename[];
 aclean ()
 {
     Msg  themsg;
+    struct adr_struct theadr;
+    Chan *curchan;
     char retadr[LINESIZE];
     register struct dirtype *dp;
+    int curwarntime, curfailtime, warning_init=0;
 
     if ((quep = opendir (aquedir)) == NULL)
 	    err_abrt (RP_FOPN, "can't open address queue");
@@ -224,7 +227,52 @@ aclean ()
 				  /* get queue entry name (msg name)   */
 	    (void) strcpy (themsg.mg_mname, dp->d_name);
 	    if (mq_rinit ((Chan *) 0, &themsg, retadr) != OK)
-		continue;
+          continue;
+#ifdef NEW_CLEAN
+        printx("MSG:%s, %ld, %d\n", themsg.mg_mname,
+               themsg.mg_time, themsg.mg_stat);
+        while(mq_radr (&theadr) == OK) {
+          curfailtime = failtime;
+          curwarntime = warntime;
+	      curchan = ch_qu2struct(theadr.adr_que);
+	      if(curchan!=(Chan *)NOTOK) {
+            printx("%s: (%c)%s, %d %d\n", curchan->ch_name, theadr.adr_delv,
+                   theadr.adr_que,
+                   curchan->ch_warntime, curchan->ch_failtime);
+            if(curchan->ch_failtime>=0) curfailtime = curchan->ch_failtime;
+            if(curchan->ch_warntime>=0) curwarntime = curchan->ch_warntime;
+	      } else
+            printx("(%c)%s\n", theadr.adr_delv, theadr.adr_que);
+	      
+	      printx("warn=%d, fail=%d\n", curwarntime, curfailtime);
+	      elaphour = (int) ((curtime - themsg.mg_time) / (time_t) 3600);
+#ifdef DEBUG
+	      ll_log (logptr, LLOGFTR,
+		      "%s (%d hrs)", themsg.mg_mname, elaphour);
+#endif
+	      printx("=>%d>%d\n", elaphour, curwarntime);
+	      if (elaphour > curwarntime) /* message is old                   */
+          {
+            printx("Warntime exceeded\n");
+            if(!warning_init && theadr.adr_fail==ADR_CLR) {
+              rtn_warn_init(&themsg, retadr);
+              warning_init=1;
+            }
+            if (elaphour > curfailtime)
+		    {
+              printx("Failtime exceeded\n");
+		      /* old enough to return?            */
+		      /* doreturn (&themsg, &theadr, retadr); */
+/* 		      deque (&themsg); */
+		    }
+            else if (!msg_warned(themsg.mg_stat) &&
+                     theadr.adr_fail==ADR_CLR)
+              dowarn (&themsg, &theadr, retadr, curfailtime);
+          }
+	    }
+        if(warning_init) ml_end(OK);
+        warning_init=0;
+#else NEW_CLEAN
 	    elaphour = (int) ((curtime - themsg.mg_time) / (time_t) 3600);
 #ifdef DEBUG
 	    ll_log (logptr, LLOGFTR,
@@ -241,7 +289,8 @@ aclean ()
 		else if (!msg_warned(themsg.mg_stat))
 		    dowarn (&themsg, retadr);
 	    }
-	    mq_rkill (OK);
+#endif NEW_CLEAN
+        mq_rkill (OK);
 	}
 
     closedir (quep);
@@ -337,39 +386,43 @@ LOCFUN
 }
 /**/
 
-dowarn (themsg, retadr)
+dowarn (themsg, theadr, retadr, curfailtime)
 	Msg *themsg;
+    struct adr_struct *theadr;
 	char retadr[];
+    int curfailtime;
 {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "dowarn (%s, %s)", themsg -> mg_mname, retadr);
 #endif
 
-    printx ("%s:  delivery overdue; ", themsg -> mg_mname);
+    printx ("%s:  delivery overdue for %s; ", themsg -> mg_mname,
+            theadr->adr_local);
     (void) fflush (stdout);
 
     if (msg_nowarn (themsg -> mg_stat)) {
-	printx ("warning not wanted\n");
+      printx ("warning not wanted for %s\n", theadr->adr_local);
     }
-    else if (rtn_warn (themsg, retadr) == OK)
+    else if (rtn_warn_per_adr (themsg, theadr, retadr, curfailtime) == OK)
     {                     /* flag as already warned               */
-	printx ("warning sent\n");
-	ll_log (logptr, LLOGGEN, "warn *** Time warning (%s, %s)",
-		    themsg -> mg_mname, retadr);
+      printx ("warning sent\n");
+      ll_log (logptr, LLOGGEN, "warn *** Time warning (%s, %s)",
+              themsg -> mg_mname, retadr);
     }
     else
     {
-	printx ("couldn't send warning\n");
-	ll_err (logptr, LLOGTMP, "warn *** Couldn't time warn (%s, %s)",
-		    themsg -> mg_mname, retadr);
+      printx ("couldn't send warning\n");
+      ll_err (logptr, LLOGTMP, "warn *** Couldn't time warn (%s, %s)",
+              themsg -> mg_mname, retadr);
     }
     (void) fflush (stdout);
 
-    mq_rwarn ();
+    mq_rwarn (theadr);
 }
 
-doreturn (themsg, retadr)
+doreturn (themsg, theadr, retadr)
     Msg *themsg;
+    struct adr_struct *theadr;
     char retadr[];
 {
 #ifdef DEBUG
@@ -381,7 +434,7 @@ doreturn (themsg, retadr)
     if (msg_noret (themsg -> mg_stat)) {
 	printx (" error return not wanted\n");
     }    
-    else if (rtn_time (themsg, retadr) == OK)
+    else if (rtn_time_per_adr (themsg, retadr) == OK)
     {                         /* dequeue if couldn't notify   */
 	printx (" returned\n");
 	(void) fflush (stdout);
@@ -395,7 +448,7 @@ doreturn (themsg, retadr)
 	(void) sprintf (orphanage, "Orphanage <%s>", supportaddr);
 	printx (" couldn't return,\ntrying orphanage...");
 	(void) fflush (stdout);
-	if (rtn_time (themsg, orphanage) == OK)
+	if (rtn_time_per_adr (themsg, orphanage) == OK)
 	{
 	    printx (" returned to orphanage.\n");
 	    (void) fflush (stdout);
