@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.9 1998/05/25 07:45:23 krueger Exp $
+ * $Id: config.h,v 1.10 1998/06/01 09:42:44 krueger Exp $
  *
  * please set every configuration-switch here
  *
@@ -8,37 +8,6 @@
 
 #ifndef CONFIG_OLD_H
 #define CONFIG_OLD_H
-
-/*             Most sites should enable DEBUG=1 unless there
- *             is  a  serious  crunch  for space.  This will
- *             give you fairly  detailed  debugging  of  the
- *             system  if you need it.  Setting DEBUG=2 will
- *             include  even  more  debugging  for   address
- *             parser  and reformatting code.  If you do not
- *             enable DEBUG=1,  you  will  seriously  affect
- *             your  ability  to trace problems later.  Once
- *             you have your system up an  running  reliably
- *             you  can recompile it without DEBUG of either
- *             kind if you want the space and the very minor
- *             performance increase.
- */
-/* #undef DEBUG 1 */
-
-/*             The  same  caution  applies  for D_LOG as for
- *             DEBUG.  This variable controls logging in the
- *             dial  package.   If you are tight on space or
- *             if you don't use the dial package  (no  phone
- *             or pobox channels) you may safely omit D_LOG.
- */
-/* #undef D_LOG */
-
-/*             This controls more debug logging for the dial
- *             package.  Again, if you have the space and if
- *             you use the dial package  (PhoneNet),  define
- *             it  to  allow  extensive  tracing if problems
- *             arise later.
- */
-/* #undef D_DBGLOG */
 
 /*            This makes the channel programs operate inde-
  *             pendently  from deliver.  It hasn't been used
@@ -73,34 +42,10 @@
  */
 /* #undef SYS5r3 */
 
-/*             Prevents    Domain    Literals    (such    as
- *             [10.0.0.59])  from  appearing  in  addresses.
- *             Since  doesn't currently handle Domain Liter-
- *             als  properly, use of this option is strongly
- *             advised.
- */
-#define NODOMLIT
-
-/*             Enables intpretation of dots as delimiters on
- *             the  LHS  of an @ in addresses.  For example,
- *             "user.host@yourdomain".  Since % or 822-rout-
- *             ing  is  preferred here, only enable LEFTDOTS
- *             if you have historical need to. 
- */
-/* #undef LEFTDOTS */
-
 /*             Define this translation if  your  C  compiler
  *             doesn't understand voids (e.g. V7).
  */
 /* #undef -Dvoid=int */
-
-/*             Define  this variable if your machine doesn't
- *             allow variable numbers  of  arguments  to  be
- *             passed  to  routines  the way Vaxes (and some
- *             others) do.
- *    set by configure in config.h.in
- */
-/* #undef NO_VARARGS */
 
 /*             Define CITATION=n to limit (to n) the  number
  *             of lines of text included in error returns by
@@ -117,47 +62,14 @@
  */
 /* #undef DBMCACHE */
 
-/*             Define  STATSORT  if you want deliver to sort
- *             the mail queue based on a stat(2) of the mes-
- *             sage  text file instead of reading the times-
- *             tamp that is stored in  the  message  address
- *             file.   Using  stat()  is much more efficient
- *             but it assumes the modified date of the  text
- *             file  hasn't  been  changed since the message
- *             was queued.  This is usually a  safe  assump-
- *             tion  so  defining  STATSORT  is recommended.
- *             Tailor the CONFIGDEFS  line  to  your  site's
- *             requirements and system type. 
- */
-/* #undef STATSORT */
-
 /**********************************************************************/
 /*             Enable site depend code
  */
-/* #undef LINUX */
 
 /*             Enable a small fix to slowdown submitm such that the parent
  *             could finish readring the pipe when submit exits. This is
  *             needed on RISC-machines like HP9000s700 an newer.
  */
 /* #undef SUBMIT_TOO_FAST */
-
-/*             Enable 8bit-clean mode when getting messages over smtp.
- */
-/* #undef EIGHT_BIT_CLEAN */
-
-/*             Enable tcp_wrapper implementation in smtpsrvr. With the 
- *             tcp_wrapper package you can monitor and filter incoming request
- *             to the smtp server. Over the ident-protocol (RFC931) you can 
- *             get the calling username.
- *    renamed to HAVE_LIBWRAP
- *    set by configure in config.h.in
- */
-/* #undef HAVE_TCP_WRAPPER */
-
-/*             Enable the yp_match lookup code for accessing tables over
- *             NIS.
- */
-/* #undef HAVE_NIS */
 
 #endif /* CONFIG_OLD_H */
