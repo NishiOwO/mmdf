@@ -53,7 +53,7 @@ SEDFILE		= sed.file
 ## 
 ## various programs
 ##
-INSTALL         = ./install-sh -c
+INSTALL         = ../install-sh -c
 INSTALL_PROGRAM = ${INSTALL}
 CHOWN		= @CHOWN@
 MMDFLOGIN	= @MMDFLOGIN@
