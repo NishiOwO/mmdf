@@ -62,6 +62,15 @@ Mon Aug 16 20:07:18 CEST 1999 Kai Krueger <krueger@mathematik.uni-kl.de>
      new table types.(currently supported: DBM/SEQ, NS, NIS)
    - use tzset() if exists, envirenment variable TZ if not.
 
+Changes from 2.44b2 to 2.44b3
+      * Small bug in ap_lex.c hip@a.cs.okstate.edu
+      * jromine@ics.uci.edu some changes for Solaris 2.5, Sun Pro
+        4.2 Compiler
+      * linux 2.2.7, glibc2.1, egcs 2.91 (redhat 6.0)
+      * sco (first attempt)
+      * jromine@ics.uci.edu, boundary fix smtpsrvr
+      * Small bug in submit/lnk_getaddr.c krueger@mathematik.uni-kl.de
+
 Older Changes:
 - Major cleanup of the defines SYS5, SYS5r3, V4_?BSD, a.s.o.
   added configure and h/config.h with all the new defines for each
