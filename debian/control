@@ -1,0 +1,97 @@
+Source: mmdf
+Section: unknown
+Priority: optional
+Maintainer: Jochen Baltes <baltes@mathematik.uni-kl.de>
+Build-Depends: debhelper (>> 4.0.0)
+Standards-Version: 3.5.8
+
+Package: mmdf
+Architecture: any
+Priority: important
+Provides: mail-transport-agent
+Conflicts: mail-transport-agent
+Replaces: mail-transport-agent
+Depends: mmdf-usertools   
+Description: An MTA (Mail Transport Agent)
+ The Multi-channel Memorandum Distribution Facility (MMDF) is a powerful 
+ and flexible Message Handling System for the  UNIX operating system. 
+ It is a message transport system designed to handle large numbers 
+ of messages in a robust and efficient manner. MMDF's modular design allows
+ flexible choice of User Interfaces, and direct connection to several 
+ different message transfer protocols.
+ FEATURES:
+ .
+ User-level Mail Sorting: MMDF uses the .maildelivery file in the user's 
+ home directory for automatic sorting and delivery control for incoming 
+ messages.
+ .
+ Dynamic Log/Debug Configuration: The MMDF administrator can adjust the 
+ logging/debugging levels without stopping and restarting the mail delivery 
+ processes.
+ .
+ Mail blocking: MMDF can filter email to block transmission of undesirable 
+ ("spam") mail based on where the mail came from, how it arrived here, and 
+ where it is going. Spam blocking is enabled by default.
+ .
+ Modular design: it is easy to add new transport or translation channels 
+ for special email gateways and its easy to understand how the existing 
+ channel software works.
+ .
+ High-capacity: Unlike some other systems (e.g. Sendmail), MMDF is designed 
+ to process very very large message flows and handle very large message 
+ queues efficiently.
+ .
+ Secure Design: MMDF is the only widespread MTA designed using the Principle 
+ of Least Privilege. Nearly all of MMDF runs as an unprivileged user (not as 
+ root), so it is significantly less of a security risk than nearly any other 
+ mail transfer agent. It also performs numerous run-time permission checks 
+ and other security checks to ensure everything is configured securely. Many 
+ sites have converted to MMDF so they won't have to patch the security 
+ hole-of-the-month common with some other mailers.
+ .
+ * Significantly enhanced portability
+ * 8-bit clean mail transer
+ * Support for header lines longer than 256 characters
+ * More detailed information in the "Received:" line of the header
+ * Increased Spam resistance
+ * Compile-time option to support NIS/NIS+
+ * Compile-time option to support TCP Wrappers
+ * Compile-time option to support IdentD
+ * Compile-time option for mail relaying, which defaults to OFF for SPAM 
+ avoidance.
+ * Support for GNU gdbm in addition to ndbm and dbm
+ * Prepared for UUCP (uid=11).
+ * 8bit clean
+ * long header line (1024 bytes)
+ * suppport baduser delivery to postmaster with notification to sender
+ * Rewrite Received: field in header
+ * MTBL supports nis queries
+ * compiled with tcp_wrapper 7.4 within smtpsrvr
+
+Package: mmdf-usertools
+Architecture: any
+Priority: optional
+Description: Usertools for mmdf
+ The Multi-channel Memorandum Distribution Facility (MMDF) is a powerful
+ and flexible Message Handling System for the  UNIX operating system. 
+ .
+ This package provides tools for users. They can use these tools in their 
+ .mmdfdelivery-file.
+
+Package: mmdf-doc
+Architecture: all
+Priority: optional
+Description: Documentation for mmdf
+ The Multi-channel Memorandum Distribution Facility (MMDF) is a powerful
+ and flexible Message Handling System for the  UNIX operating system. 
+ .
+ Examples of mmdftailor and tables. 
+
+Package: mmdf-dev
+Architecture: any
+Priority: optional
+Description: Development-files for mmdf
+ The Multi-channel Memorandum Distribution Facility (MMDF) is a powerful
+ and flexible Message Handling System for the  UNIX operating system. 
+ .
+ Provides libmmdf.a and header-files.

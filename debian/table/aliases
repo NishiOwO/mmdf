@@ -1,0 +1,7 @@
+#############################
+# local alias-file: aliases #
+#############################
+root:		root@localhost
+postmaster:	root@localhost
+mail:		root@localhost
+# user:		user@localhost

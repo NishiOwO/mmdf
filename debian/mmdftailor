@@ -1,0 +1,83 @@
+#########################
+# MMDF - tailoring file #
+#########################
+
+# MLDOMAIN foo.bar
+# MLNAME sitename
+# MLOCMACHINE hostname
+
+MSIG "Mailsystem"
+MLOGIN mail
+MGROUP mail
+# MSUPPORT mmdf@sitename.foo.bar
+# AUTHREQUEST mmdf@msitename.foo.bar
+
+MMAILID 0
+
+MTBLDIR "/etc/mmdf/table"
+
+MDLVRDIR        "/var/mail"
+MMBXNAME        ""
+MMBXPROT        600
+
+# Table & Channel entries
+MTBL    name=domains,  file="domains",       show="Domain Table",
+        type=dbm, flags=route
+MTBL    name=aliases,  file="aliases",       show="LOCAL aliases"
+
+MTBL	chan.localhst, file="chan.localhst", show="LOCALHOST Channel"
+MTBL	chan.smarthst, file="chan.smarthst", show="SMARTHOST Channel"
+MTBL	chan.smtp,     file="chan.smtp",     show="SMTP Channel",
+	flags=channel, flags=partial
+
+# Domain entries
+MDMN    domains, show="Local Domains", dmn="", table=domains
+
+# Aliases
+ALIAS   table=aliases, trusted, public
+
+# Channel for lokal mail 
+MCHN	localhst, show="Local Delivery", 
+	que=localhst, tbl=chan.localhst, 
+	pgm=local, mod=imm, ap=822,
+	level=FST, auth=free, auth=inlog, auth=outlog,
+	log=localhst.log
+
+# Channel for mail to another local host 
+MCHN	local, show="Smarthost Delivery", 
+	que=smarthst, tbl=chan.smarthst,
+	pgm=smtp, mod=esmtp, mod=imm, ap=822, 
+	host=smarthst.mathematik.uni-kl.de,
+	level=FST, auth=free, auth=inlog, auth=outlog,
+	log=smarthst.log 
+
+# Channel for unknown hosts to pseudo-channel badhosts
+MCHN    badhosts, show="Garbage Collection via SMTP/TCP",
+	que=badhosts, tbl=chan.smarthst, 
+	pgm=smtp, mod=esmtp, mod=imm, ap=822, 
+	host=smarthst.mathematik.uni-kl.de,
+	level=FST, auth=free, auth=inlog, auth=outlog,
+	log=smarthst.log 
+
+# Channel for unknown users to pseudo-channel badusers
+MCHN	badusers, show="Garbage Collection via SMTP/TCP", 
+	que=baduser, tbl=chan.smarthst, 
+	pgm=smtp, mod=esmtp, mod=imm, ap=822, 
+	host=smarthst.mathematik.uni-kl.de,
+	level=FST, auth=free, auth=inlog, auth=outlog,
+	log=smarthst.log 
+
+# Channel incoming mail
+MCHN	smtp, show="SMTP/TCP", 
+	que=smtp, tbl=chan.smtp,
+	pgm=smtp, mod=esmtp, mod=imm, ap=822, 
+	level=FST, auth=inlog, auth=outlog, auth=free,
+	log=smtp.log
+
+MMSGLOG     level=FST
+MCHANLOG    level=FST
+AUTHLOG     level=FTR
+
+MADDID      1
+MWARNTIME   24
+MFAILTIME   72

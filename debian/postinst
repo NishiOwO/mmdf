@@ -1,0 +1,83 @@
+#! /bin/sh
+# postinst script for mmdf
+#
+# see: dh_installdeb(1)
+
+set -e
+
+# summary of how this script can be called:
+#        * <postinst> `configure' <most-recently-configured-version>
+#        * <old-postinst> `abort-upgrade' <new version>
+#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
+#          <new-version>
+#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
+#          <failed-install-package> <version> `removing'
+#          <conflicting-package> <version>
+# for details, see http://www.debian.org/doc/debian-policy/ or
+# the debian-policy package
+#
+# quoting from the policy:
+#     Any necessary prompting should almost always be confined to the
+#     post-installation script, and should be protected with a conditional
+#     so that unnecessary prompting doesn't happen if a package's
+#     installation fails and the `postinst' is called with `abort-upgrade',
+#     `abort-remove' or `abort-deconfigure'.
+
+case "$1" in
+    configure)
+	echo "set user and group mail"
+	echo "PATH=$PATH:/usr/lib/mmdf/lib" > /usr/lib/mmdf/.profile
+	chown mail /usr/lib/mmdf/.profile
+	chown -R mail /etc/mmdf 
+	chown mail /usr/lib/mmdf
+	chown mail.mail /usr/lib/mmdf/lib 
+	chown mail.mail /usr/lib/mmdf/chans 
+	chown mail /var/spool/mmdf 
+	chown mail.mail /var/spool/mmdf/home 
+	chown mail.mail /var/spool/mail
+	chown mail.mail /var/mail
+	chown mail.mail /var/state/mmdf 
+	chown mail.mail /var/log/mmdf
+	chown mail /bin/rmail
+	cd /usr/lib/mmdf/lib
+	chown mail submit checkque setlogs v6mail
+
+	echo "set permittions"
+	chmod 711 /etc/mmdf/table
+	chmod 711 /usr/lib/mmdf/lib
+	chmod 711 /var/state/mmdf
+	chmod 711 /var/log/mmdf
+	chmod 4777 /bin/rmail
+	chmod 4755 submit deliver cleanque checkque
+	chmod 700 /usr/lib/mmdf/chans
+	chmod 777 /var/spool/mail
+	chmod 777 /var/mail
+	chmod 700 /var/spool/mmdf 
+	chmod 777 /var/spool/mmdf/home
+	
+	echo "install crontab for user mail:"
+	crontab -u mail - << EOF
+00 01 * * 0 /usr/lib/mmdf/lib/setlogs
+30 00 * * * /usr/lib/mmdf/lib/cleanque
+EOF
+	crontab -u mail -l
+
+	echo "update inet.d"
+	if [ `grep smtpsrvr /etc/inetd.conf | wc -l` = 0 ]; then
+		echo "Adding smtpsrvr to /etc/inetd.conf"
+		echo "#smtp stream tcp nowait mail /usr/lib/mmdf/chans/smtpd smtpd -i -f /usr/lib/mmdf/chans/smtpsrvr local, smtp" >> /etc/inetd.conf
+	fi
+	
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+exit 0

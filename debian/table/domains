@@ -1,0 +1,8 @@
+################
+# domains-file #
+################
+localhost:			localhost
+# hostname:			sitename.foo.bar
+# hostname.sitename.foo.bar	sitename.foo.bar	
+# client				sitename.foo.bar	
+# client.sitename.foo.bar:	sitename.foo.bar
