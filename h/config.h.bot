@@ -1,3 +1,10 @@
+/*****************************************************************************/
+#undef DECLARE_GETPWNAM
+#undef DECLARE_GETPWUID
+#undef DECLARE_EXIT
+#undef DECLARE_ABORT
+
+/*****************************************************************************/
 
 #undef HAVE_ESMTP_DSN
 #undef HAVE_ESMTP_8BITMIME

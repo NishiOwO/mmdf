@@ -15,7 +15,7 @@
 
 
 /*
- * $Id: acconfig.h,v 1.9 2000/01/12 14:49:07 krueger Exp $
+ * $Id: acconfig.h,v 1.10 2000/04/04 14:30:50 krueger Exp $
  *
  */
 
@@ -273,6 +273,7 @@
 
 /* Define if sprintf does not return number of printed chars */
 #undef BSD_SPRINTF
+#undef SPRINTF_TYPE
 
 /* Define if you have the flock function.  */
 #undef HAVE_FLOCK
@@ -497,7 +498,8 @@
 #undef MMDFLOGIN
 #undef MMDFGROUP
 
-
+#undef DECLARE_SPRINTF
+#undef HAVE_STRUCT_TIMEZONE
 
 /* Leave that blank line there!!  Autoheader needs it.
    If you're adding to this file, keep in mind:

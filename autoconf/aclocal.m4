@@ -1,5 +1,5 @@
 dnl
-dnl $Id: aclocal.m4,v 1.7 2000/01/12 14:29:37 krueger Exp $
+dnl $Id: aclocal.m4,v 1.8 2000/04/04 14:30:51 krueger Exp $
 dnl
 dnl
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -349,19 +349,84 @@ AC_PROVIDE(AC_C_SUBST)
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl AC_DEFUN(AC_VAR_TIMEZONE,
+dnl [AC_CACHE_CHECK([whether have long timezone],
+dnl   ac_cv_var_timezone,
+dnl [AC_TRY_RUN([
+dnl #include <sys/types.h>
+dnl #include <time.h>
+dnl main()
+dnl { struct tm im; long i = im.tm_gmtoff; exit(0);}],
+dnl   ac_cv_var_timezone=no, ac_cv_var_timezone=yes, ac_cv_var_timezone=no)])
+dnl if test $ac_cv_var_timezone = yes; then
+dnl   AC_DEFINE(HAVE_VAR_TIMEZONE)
+dnl fi
+dnl ])
+dnl AC_PROVIDE(AC_VAR_TIMEZONE)
+
 AC_DEFUN(AC_VAR_TIMEZONE,
-[AC_CACHE_CHECK([whether have long timezone],
-  ac_cv_var_timezone,
-[AC_TRY_RUN([
-#include <sys/types.h>
+[AC_CACHE_CHECK([for struct timezone or long timezone], ac_cv_long_timezone,
+[AC_TRY_RUN([#include <sys/types.h>
+#if TIME_WITH_SYS_TIME
+# include <sys/time.h>
+# include <time.h>
+#else
+# if HAVE_SYS_TIME_H
+#  include <sys/time.h>
+# else
 #include <time.h>
-main()
-{ struct tm im; long i = im.tm_gmtoff; exit(0);}],
-  ac_cv_var_timezone=no, ac_cv_var_timezone=yes, ac_cv_var_timezone=no)])
-if test $ac_cv_var_timezone = yes; then
+# endif
+#endif
+main() { long my_tz = timezone; exit(0);} ],
+  ac_cv_long_timezone=yes, ac_cv_long_timezone=no, ac_cv_long_timezone=3)])
+
+echo "### ac_cv_long_timezone: $ac_cv_long_timezone"
+
+if test "$ac_cv_long_timezone" = yes; then
+  echo "===>HAVE_LONG_TIMEZONE"
   AC_DEFINE(HAVE_VAR_TIMEZONE)
+else
+  echo "===>HAVE_STRUCT_TIMEZONE"
+  AC_DEFINE(HAVE_STRUCT_TIMEZONE)
 fi
 ])
 AC_PROVIDE(AC_VAR_TIMEZONE)
 
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+AC_DEFUN(AC_MYCHECK_SPRINTF,
+[AC_CACHE_CHECK([if sprintf should be declared], ac_cv_declare_sprint,
+[save_CFLAGS=$CFLAGS
+CFLAGS=$CFLAGS" -Ih -DDECLARE_SPRINTF"
+AC_TRY_COMPILE([#include "h/util.h"
+], [],ac_cv_declare_sprintf=yes,ac_cv_declare_sprintf=no)])
+CFLAGS=$save_CFLAGS
+if test "$ac_cv_declare_sprintf" = yes; then
+   AC_MSG_RESULT(yes)
+   AC_DEFINE(DECLARE_SPRINTF)
+else
+   AC_MSG_RESULT(no)
+fi
+])
+AC_PROVIDE(AC_MYCHECK_SPRINTF)
+dnl 
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl
+dnl AC_MYCHECK_FUNCTION(,,code,var)
+AC_DEFUN(AC_MYCHECK_FUNCTION,
+[AC_CACHE_CHECK([if $3 should be declared], ac_cv_declare_$3,
+[save_CFLAGS=$CFLAGS
+if test "$1" != ""; then
+  line="$1"
+else
+  line=""
+fi
+AC_TRY_COMPILE([$line
+], [$2],ac_cv_declare_$3=yes,ac_cv_declare_$3=no)])
+if test "$ac_cv_declare_$3" = yes; then
+   var=`echo $3 | tr 'abcdefghijklmnopqrstuvwxyz' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'`
+   AC_DEFINE_UNQUOTED(DECLARE_$var, 1)
+fi
+])
+AC_PROVIDE(AC_MYCHECK_FUNCTION)
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
