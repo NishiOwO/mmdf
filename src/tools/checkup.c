@@ -167,6 +167,8 @@ main (argc, argv)
     char tmpfile[FILNSIZE];
     struct passwd *pwdptr;
     int ind;
+    char postmaster[13];
+    strcpy(postmaster, "Postmaster");
 
     /*  check for the verbosity flag  */
     flaginit (argc, argv);
@@ -248,10 +250,10 @@ main (argc, argv)
 	qflush (LEVEL7);
     }
 
-    que (BACKGROUND, hdrfmt, "Trouble report address", "Postmaster");
+    que (BACKGROUND, hdrfmt, "Trouble report address", postmaster);
     que (LEVEL7, subhdrfmt, "", "alias this to root or systems staff");
     qflush (LEVEL7);
-    chkalias ("Postmaster");    /*  make sure the name is aliased  */
+    chkalias (postmaster);    /*  make sure the name is aliased  */
     qflush (LEVEL0);
 
     if ((pwdptr = getpwuid (0)) != (struct passwd *) NULL)
@@ -571,6 +573,10 @@ chktab ()
 				    ch_tbsrch[ind] -> ch_lname);
 	que (LEVEL6, subhdrfmt, "  Local domain name",
 				    ch_tbsrch[ind] -> ch_ldomain);
+	que (LEVEL6, "    %-20s: %d\n", "  warntime",
+	     ch_tbsrch[ind] -> ch_warntime);
+	que (LEVEL6, "    %-20s: %d\n", "  failtime",
+	     ch_tbsrch[ind] -> ch_failtime);
 	qflush (LEVEL6);
 
 	cktable (ch_tbsrch[ind] -> ch_table, "Channel table");
