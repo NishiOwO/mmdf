@@ -49,6 +49,7 @@ char **argv;
 	int	retval;
 	int     len;
     char real_user[128];
+    char buf[256];	/* flags for submit */
 
 	mmdf_init(argv[0]);
 
@@ -205,6 +206,8 @@ char **argv;
 	if (verify && extract)
 		syserr("Verify mode not supported on header components");
 
+        memset(subflags, 0, sizeof(subflags));
+        memset(buf, 0, sizeof(buf));
 	strncpy(subflags, "ml", sizeof(subflags));
 	if (rewritefrom)
 		strcat(subflags, "t");
@@ -214,7 +217,8 @@ char **argv;
 		strcat(subflags, "v");
 	else
 		strcat(subflags, "xto,cc,bcc*");
-    snprintf( subflags, sizeof(subflags), "%sF%s*", subflags, pwdptr->pw_name );
+        snprintf(buf, sizeof(buf), "%sF%s*", subflags, pwdptr->pw_name );
+ 	strncpy(subflags, buf, sizeof(subflags));
 
 	if (rp_isbad (mm_init ()) || rp_isbad (mm_sbinit ()))
 		syserr("Unable to submit mail at this time");
