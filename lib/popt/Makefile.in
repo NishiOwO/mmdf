@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4a from Makefile.am
+# Makefile.in generated automatically by automake 1.4 from Makefile.am
 
 # Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -48,10 +48,9 @@ AUTOMAKE = @AUTOMAKE@
 AUTOHEADER = @AUTOHEADER@
 
 INSTALL = @INSTALL@
-INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
-INSTALL_STRIP_FLAG =
 transform = @program_transform_name@
 
 NORMAL_INSTALL = :
@@ -116,6 +115,8 @@ libpopt_la_OBJECTS =  popt.lo findme.lo poptparse.lo poptconfig.lo \
 popthelp.lo
 PROGRAMS =  $(noinst_PROGRAMS)
 
+libpopt_a_OBJECTS =  popt.o findme.o poptparse.o poptconfig.o popthelp.o
+
 test1_OBJECTS =  test1.o
 test1_DEPENDENCIES =  libpopt.la
 test1_LDFLAGS = 
@@ -144,7 +145,7 @@ DEP_FILES =  .deps/findme.P .deps/popt.P .deps/poptconfig.P \
 SOURCES = $(libpopt_la_SOURCES) $(test1_SOURCES)
 OBJECTS = $(libpopt_la_OBJECTS) $(test1_OBJECTS)
 
-all: all-redirect
+all: all-redirect real-default
 .SUFFIXES:
 .SUFFIXES: .S .c .lo .o .s
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
@@ -453,7 +454,7 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$d/$$file $(distdir)/$$file; \
+	    cp -pr $$/$$file $(distdir)/$$file; \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
@@ -528,7 +529,7 @@ uninstall: uninstall-recursive
 all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(MANS) $(HEADERS) config.h
 all-redirect: all-recursive-am
 install-strip:
-	$(MAKE) $(AM_MAKEFLAGS) INSTALL_STRIP_FLAG=-s install
+	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
 installdirs: installdirs-recursive
 installdirs-am:
 	$(mkinstalldirs)  $(DESTDIR)$(libdir) $(DESTDIR)$(mandir)/man3 \
@@ -619,6 +620,12 @@ archive:
 	@rm -f /tmp/$(PACKAGE)-$(VERSION).tar.gz 
 	@echo " "
 	@echo "The final archive is ./$(PACKAGE)-$(VERSION).tar.gz."
+
+real-default: ../popt-made
+../popt-made: $(libpopt_a_OBJECTS)
+	$(AR) r ../libmmdf.a $(libpopt_a_OBJECTS)
+	-touch ../popt-made
+	-@echo "popt routines built normally"
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
