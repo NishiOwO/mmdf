@@ -1,5 +1,5 @@
 /*
- * $Id: rbl_match.c,v 1.5 2000/08/08 16:36:39 krueger Exp $
+ * $Id: rbl_match.c,v 1.6 2001/01/19 13:25:11 mmdf Exp $
  *
  *
  */
@@ -11,11 +11,11 @@
 #include "ch.h"
 
 #if defined(HAVE_NAMESERVER) && defined(HAVE_RBL)
-#include <arpa/nameser.h>
-#include <resolv.h>
 #include <string.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <arpa/nameser.h>
+#include <resolv.h>
 
 extern int tb_rbl_tai();
 extern int tb_rbl_fetch();
@@ -132,7 +132,7 @@ int     first;                    /* I: start at beginning of list?        */
     return(rbl_match(param->domain, h_hostid));
   }
 
-  return (NOTOK);
+  /*return (NOTOK);*/
 }
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -168,7 +168,6 @@ char   *rbl_hostaddr;                         /* hostaddr */
   int rbl_size = 0;
   unsigned long hp_addr;
   int ret = NOTOK;
-  extern char *malloc();
  
   if ((hp_addr = my_dot_quad_addr(rbl_hostaddr)) == NOTOK) {
     /*tcpd_warn("unable to convert %s to address", rbl_hostaddr);*/
