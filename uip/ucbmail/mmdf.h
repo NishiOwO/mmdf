@@ -8,11 +8,11 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  *
  *  $Log: mmdf.h,v $
- *  Revision 1.2  1985/11/20 14:37:19  galvin
- *  First set of needed MMDF global variables.  We can read the maildrop now.
+ *  Revision 1.3  1985/12/18 13:24:03  galvin
+ *  Add declaration of sentprotect.
  *
  * Revision 1.4  86/01/02  16:23:51  galvin
  * Add some defines from "util.h" since we can not include
