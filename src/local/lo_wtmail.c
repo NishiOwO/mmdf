@@ -238,7 +238,20 @@ char	*mboxname;
 		printx (", failed\r\n");
 		return (retval);
 	}
+      if (lo_sender && *lo_sender) {
+          char buffer[BUFSIZ];
+          int len;
+
+          (void) sprintf (buffer, "Return-Path: <%s>\n", lo_sender);
+          len = strlen(buffer);
+          if (write (mbx_fd, buffer, len) != len) {
+              ll_err (logptr, LLOGTMP, "error writing out return-path");
+              retval = RP_LIO;
+              goto closeit;
+          }
+      }
 	retval = qu2lo_txtcpy (mbx_fd, TRUE);
+	closeit:
 	mbx_close (mboxname);
 	printx (rp_isgood (retval) ? ", succeeded\r\n" : ", failed\r\n");
 	return (retval);
