@@ -25,12 +25,19 @@ extern int sprintf ();
 #else
 extern char *sprintf ();
 #endif
+#ifndef LINUX
 extern struct passwd *getpwnam(), *getpwuid();
+#else
+#  include <libio.h>
+#endif /* not LINUX */
 
 #if defined(SYS5) || defined(__STDC__)
 #define sigtype void
 #else
 #define sigtype int
+#endif
+#ifdef LINUX
+#define SIGSYS SIGUSR2
 #endif
 
 /* */
