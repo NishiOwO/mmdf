@@ -22,9 +22,9 @@
 #include <sys/stat.h>
 
 #include "ns.h"
-#ifndef LINESIZE
+/*#ifndef LINESIZE
 #  define LINESIZE 1024
-#endif
+#endif*/
 
 extern	int	errno;
 
