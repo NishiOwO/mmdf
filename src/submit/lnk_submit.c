@@ -66,6 +66,17 @@ short  lnk_nentries;         /* current number of entries in list  */
 LOCVAR struct lnk_struct    lnk_strt;
 				  /* 1st address in list                */
 
+char *lnk_getaddr()
+{
+  char buf[256];
+  struct lnk_struct *cur = lnk_strt.lnk_nxt;
+  if(cur!=NULL)
+    sprintf(buf, "%s", cur->lnk_mbox);
+  else
+    strcpy(buf, "");
+  return(buf);
+}
+
 lnk_adinfo (thechan, hostr, mbox) /* given constituents, add to list    */
 Chan *thechan;                 /* internal chan name/code            */
 char *hostr,                   /* official name of host              */

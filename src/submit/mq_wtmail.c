@@ -173,14 +173,15 @@ mq_adwrite (achan, ahost, ambox)  /* put an address in the queue */
     char linebuf[LINESIZE];
     static char tmpchr[2] = { ADR_CLR };
     static char typchr[2] = { ADR_MAIL };
+    static char failchr[2] = { ADR_CLR };
 #ifdef DEBUG
     ll_log (logptr, LLOGFTR, "%s %8s/%s", achan -> ch_queue, ahost, ambox);
 #endif
 
 /* this format conforms to the structure specified in adr_queue.h       */
 
-    arg2lstr (0, LINESIZE, linebuf, tmpchr, typchr, achan -> ch_queue,
-	ahost, ambox, (char *)0);
+    arg2lstr (0, LINESIZE, linebuf, tmpchr, typchr, failchr,
+              achan -> ch_queue, ahost, ambox, (char *)0);
     fprintf (mq_tffp, "%s\n", linebuf);
     achan -> ch_access |= MQ_INQ; /* message goes into this sub-queue   */
 }

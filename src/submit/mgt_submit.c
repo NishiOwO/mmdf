@@ -63,6 +63,7 @@ extern char *multcat();
 extern Chan *ch_nm2struct();
 extern Domain *dm_v2route();
 
+extern char *lnk_getaddr();
 LOCFUN mgt_forward(), mgt_author(), mgt_messageid(), mst_srcinfo(),
 	mgt_via(), mgt_rcv();
 
@@ -100,6 +101,7 @@ char *mgt_txsrc = NULL;           /* some text for Source-Info:         */
 char *mgt_return = NULL;          /* return address                     */
 int	mgt_gotid;		  /* have seen a message-id: field	*/
 int     mgt_inalias;              /* is address in alias file           */
+int     mgt_gotfrom;              /* have seen a from: field            */
 
 short   mgt_s2return = FALSE;     /* get return from Sender             */
 
@@ -134,6 +136,7 @@ char *mgt_helo = NULL;
 char *mgt_fromhost = NULL;
 /**/
 
+LOCFUN mgt_fromline();
 LOCFUN mgt_srcinfo();
 LOCFUN mgt_nohelo();
 
@@ -187,7 +190,8 @@ mgt_minit ()                      /* initialize for new message         */
 	mgt_sncnt =
 	mgt_gotid =
 	mgt_loops =
-	mgt_hops = 0;
+    mgt_gotfrom =
+    mgt_hops = 0;
 
     for (chanptr = ch_tbsrch; *chanptr != 0; chanptr++)
 	(*chanptr) -> ch_access &= ~DLVRDID;
@@ -678,6 +682,10 @@ dorplyto:
     {
 	mgt_gotid++;
     }
+    if (lexequ ("From", name))
+    {
+      mgt_gotfrom++;
+    }
     return (RP_OK);     /* no management policies, for this one         */
 }
 /**/
@@ -706,7 +714,8 @@ mgt_hend ()
 
     if (mgt_addid && !mgt_gotid)
 	mgt_messageid ();
-
+    if(!mgt_gotfrom) mgt_fromline();
+    
     if (mgt_trust == FLGFROM || mgt_txsrc != 0)
 	mgt_srcinfo ();           /* this must follow the above "if"    */
 
@@ -833,6 +842,20 @@ LOCFUN
 }
 
 LOCFUN
+mgt_fromline()
+{
+#ifdef DEBUG
+  ll_log (logptr, LLOGBTR, "mgt_fromline ()");
+#endif
+  if(mgt_return!= NULL) {
+    fputs("From: ", mq_mffp);
+    fputs (mgt_return, mq_mffp);
+    putc ('\n', mq_mffp);
+  }
+  
+}
+
+LOCFUN
 	mgt_srcinfo ()            /* add Source-Info field, maybe       */
 {
 #ifdef DEBUG
@@ -940,7 +963,7 @@ LOCFUN
       }
     }
 
-#ifndef UCL
+#  ifndef UCL
     /* We must have a seperate "locmachine" here since the name we
      * want to record is dependant on the channel.
      * What confuses me is why doesn't the UCL portion have the domain
@@ -959,9 +982,9 @@ LOCFUN
 		mgt_vchan.mgt_achan -> ch_ldomain);
     if (adr_orgspec != (char *) 0)
 	len = mgt_rcv (len, "for %s", adr_orgspec);
-    len = mgt_rcv (len, "id %s;", &mq_munique[4]);
+    len = mgt_rcv (len, "id %s", &mq_munique[4]);
 			/* skip the "msg." preface */
-#else /* UCL */
+#  else /* UCL */
     if (isstr (locmachine))
 	len = mgt_rcv (len, "by %s.%s.%s ", locmachine, locname, locdomain);
     else
@@ -972,10 +995,12 @@ LOCFUN
 	len = mgt_rcv (len, " with Delay channel");
     else
 	len = mgt_rcv (len, " %s", mgt_vchan.mgt_achan -> ch_show);
-    len = mgt_rcv (len, " id %s;", &mq_munique[4]);
+    len = mgt_rcv (len, " id %s", &mq_munique[4]);
 			/* skip the "msg." preface */
-#endif /* UCL */
-
+#  endif /* UCL */
+    if(lnk_nadrs==1)
+      len = mgt_rcv (len, "for <%s>;", lnk_getaddr());
+    else len = mgt_rcv (len, ";");
 #endif /* VIATRACE */
     (void) mgt_rcv (len, "%s\n", thedate);
 }
