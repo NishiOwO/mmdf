@@ -15,7 +15,7 @@
 
 
 /*
- * $Id: acconfig.h,v 1.8 1999/10/31 09:46:30 krueger Exp $
+ * $Id: acconfig.h,v 1.9 2000/01/12 14:49:07 krueger Exp $
  *
  */
 
@@ -127,6 +127,9 @@
 /* Define if you don't have tm_zone but do have the external array
    tzname.  */
 #undef HAVE_TZNAME
+
+/* Define if you have extern long timezone */
+#undef HAVE_VAR_TIMEZONE
 
 /* Define if you have <unistd.h>.  */
 #undef HAVE_UNISTD_H
