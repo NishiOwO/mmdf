@@ -12,12 +12,14 @@
 
 #include "util.h"
 #include "mmdf.h"
+#include "tb_check.h"
 #include "ch.h"
 #include "cmd.h"
 
 extern LLog *logptr, chanlog;
 extern int tb_test_tai();
 extern int tb_test_fetch();
+extern int tb_test_check();
 
 int tb_test_init(tblptr)
 Table *tblptr;
