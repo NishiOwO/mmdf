@@ -23,6 +23,9 @@ $(BINDIR)/snd:	xsnd
 	-$(CHOWN) $(MMDFLOGIN) $(BINDIR)/snd
 	-chmod $(PGMPROT) $(BINDIR)/snd
 
+version.c:
+	./mkversion
+
 version.o: $(SOURCES) $(MMDFLIBS) ../../VERSION
 	./mkversion
 	$(CC) $(CFLAGS) -c version.c
