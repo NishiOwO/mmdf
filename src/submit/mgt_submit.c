@@ -441,7 +441,8 @@ char *hostr,                      /* official name of host              */
 mgt_aend ()
 {                                 /* record some stats                  */
     char sizstr[11];
-
+    char p[6];
+    
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "mgt_aend ()");
 #endif
@@ -454,7 +455,7 @@ mgt_aend ()
     if (mgt_vchan.mgt_achan == 0) /* local submission                   */
 	ll_log (logptr, LLOGBST, "lin %s (%d, %s) %s %s %s",
 		mq_munique, lnk_nadrs, sizstr, mgt_chdfl->ch_queue, mailid,
-            print_via_protocol());
+            print_via_protocol(p, sizeof(p)));
     else
     {                             /* claiming to be a relay             */
 	if (!mgt_s2return &&       /* hack past possible bad parsing     */
@@ -471,7 +472,7 @@ mgt_aend ()
 	ll_log (logptr, LLOGBST, "rin %s (%d, %s) %s %s %s %s",
 		mq_munique, lnk_nadrs, sizstr,
 		mgt_vchan.mgt_achan -> ch_queue, mgt_vchan.mgt_ahost,
-		mgt_return, print_via_protocol());
+		mgt_return, print_via_protocol(p, sizeof(p)));
 
     }
     auth_end ();
@@ -1100,15 +1101,16 @@ mgt_dstgen()
 			"&", mgt_vchan.mgt_ahost, (char *)0));
 }
 
-LOCFUN char *print_via_protocol()
+LOCFUN char *print_via_protocol(p, len)
+char *p;
+int len;
 {
-  char p[6];
-  memset(p, 0, sizeof(p));
+  memset(p, 0, len);
   
 #ifdef HAVE_ESMTP
   switch(mgt_protocol) {
-    case PRK_SMTP:  strncpy(p, "SMTP", sizeof(p)); break;
-    case PRK_ESMTP: strncpy(p, "ESMTP", sizeof(p)); break;
+      case PRK_SMTP:  strncpy(p, "SMTP", len); break;
+      case PRK_ESMTP: strncpy(p, "ESMTP", len); break;
   }
 #endif
   return p;
