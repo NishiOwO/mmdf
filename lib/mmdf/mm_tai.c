@@ -41,6 +41,17 @@ extern int
 	    mailsleep,
 	    sentprotect;
 
+#ifdef HAVE_ESMTP
+long
+        message_size_limit = -1;
+#   ifdef HAVE_ESMTP_8BITMIME
+int     accept_8bitmime    = 0;
+#   endif /* HAVE_ESMTP_8BITMIME */
+#   ifdef HAVE_ESMTP_DSN
+int     dsn = 0;
+#   endif /* HAVE_ESMTP_DSN */
+#endif /* HAVE_ESMTP */
+
 extern LLog
 	    msglog,
 	    chanlog,
@@ -126,13 +137,18 @@ extern char
 #define MMMAILIDS       45
 #define MMLCKDIR        46
 #define AUTHLOG         47
-#define AUTHREQUEST	48
+#define AUTHREQUEST	    48
 #define MMCHAN          49
 #define UUname          50
 #define MADDIPADDR      51
 #define MADDIPNAME      52
+#ifdef HAVE_ESMTP
+#  define MMSGSIZELIMIT 53
+#  define M8BITMIME     54
+#  define MDSN          55
+#endif
 #define MMNOOP         100
-
+  
 /**/
 
 /* These tables must be in alphabetical order because they're searched
@@ -143,9 +159,15 @@ extern char
 Cmd cmdtab[] =
 {
     {"",            MMNOOP,     0},
+#ifdef HAVE_ESMTP
+    {"accept8bitmime",M8BITMIME, 1},
+#endif
     {"alias",	    ALIAS,      1},
     {"authlog",     AUTHLOG,    1},
-    {"authrequest", AUTHREQUEST,1},
+    {"authrequest", AUTHREQUEST, 1},
+#ifdef HAVE_ESMTP
+    {"dsn",         MDSN,       1},
+#endif
     {"maddid",	    MADDID,     1},
     {"maddipaddr",  MADDIPADDR, 1},
     {"maddipname",  MADDIPNAME, 1},
@@ -182,6 +204,9 @@ Cmd cmdtab[] =
     {"mpkup",       MMPICKUP,   1},
     {"mquedir",     MMQUEDIR,   1},
     {"mqueprot",    MMQUEPROT,  1},
+#ifdef HAVE_ESMTP
+    {"msgsizelimit",MMSGSIZELIMIT, 1},
+#endif
     {"msig",        MMSIGN,     1},
     {"msleep",      MMSLEEP,    1},
     {"msubmit",     MMSUBMIT,   1},
@@ -419,8 +444,19 @@ int mm_tai (argc, argv)     /* process mmdf tailor info     */
 	    break;
 
 	case ALIAS:
-    	    al_tai (argc, &argv[1]);
-    	    break;
+      al_tai (argc, &argv[1]);
+      break;
+#ifdef HAVE_ESMTP
+        case MMSGSIZELIMIT:
+          message_size_limit = atol(argv[1]);
+          break;
+        case M8BITMIME:
+          accept_8bitmime = atoi(argv[1]);
+          break;
+        case MDSN:
+          dsn = atoi(argv[1]);
+          break;
+#endif /* HAVE_ESMTP */
     }
 
 #ifdef DEBUG
