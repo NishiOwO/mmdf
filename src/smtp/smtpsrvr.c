@@ -1,4 +1,4 @@
-static char Id[] = "$Id: smtpsrvr.c,v 1.25 1999/09/06 11:53:28 krueger Exp $";
+static char Id[] = "$Id: smtpsrvr.c,v 1.26 1999/09/06 14:38:48 krueger Exp $";
 /*
  *                      S M T P S R V R . C
  *
@@ -552,7 +552,12 @@ char *field;
 /*
  *  Process the HELO command
  */
+#ifdef __STDC__
 helo(int cmdnr)
+#else
+helo(cmdnr)
+int cmdnr;
+#endif
 {
 	char replybuf[128];
 
@@ -622,7 +627,12 @@ helo(int cmdnr)
 #ifdef HAVE_NOSRCROUTE
 extern int ap_outtype;
 #endif
+#ifdef __STDC__
 mail(int cmdnr)
+#else
+mail(cmdnd)
+int cmdnr;
+#endif
 {
 	static char    replybuf[256];
 	static char    info[1024];
@@ -804,10 +814,12 @@ mail(int cmdnr)
 	 */
 
 #ifdef NODOMLIT
-	if(themknown && ((ap_sender = ap_s2tree(sender)) != (AP_ptr)NOTOK)){
+	if(themknown && ((ap_sender = ap_s2tree(sender)) != (AP_ptr)NOTOK))
 #else
-	if ((ap_sender = ap_s2tree(sender)) != (AP_ptr)NOTOK){
+	if ((ap_sender = ap_s2tree(sender)) != (AP_ptr)NOTOK)
 #endif /* NODOMLIT */
+    {
+      
 		/*
 		 * this must be a bit of a sledge hammer approach ??
 		 */
@@ -847,12 +859,12 @@ mail(int cmdnr)
 #if 0
         if(domain==(AP_ptr)0)
           sender = ap_p2s((AP_ptr)0, (AP_ptr)0, mbox, route, (AP_ptr)0);
-	if ((ap_sender = ap_s2tree(sender)) != (AP_ptr)NOTOK){
-      netreply("test1\r\n");
-      ap_t2parts(ap_sender, (AP_ptr *)0, (AP_ptr *)0,
-						&mbox, &domain, &route);
-      netreply("test1\r\n");
-    }
+        if ((ap_sender = ap_s2tree(sender)) != (AP_ptr)NOTOK){
+          netreply("test1\r\n");
+          ap_t2parts(ap_sender, (AP_ptr *)0, (AP_ptr *)0,
+                     &mbox, &domain, &route);
+          netreply("test1\r\n");
+        }
 #endif
 		sender = ap_p2s((AP_ptr)0, (AP_ptr)0, mbox, domain, route);
 		if(sender == (char *)MAYBE){    /* help !! */
@@ -966,8 +978,13 @@ char *them, *from;
 /*
  *  Process the RCPT command  ("RCPT TO:<forward-path>")
  */
+#ifdef __STDC__
 rcpt(int cmdnr)
-{
+#else
+rcpt(cmdnr)
+int cmdnr;
+#endif
+  {
 	register char *p;
 	struct rp_bufstruct thereply;
 	char    replybuf[256];
@@ -1190,7 +1207,12 @@ data(int cmdnr)
 /*
  *  Process the RSET command
  */
+#ifdef __STDC__
 rset(int cmdnr)
+#else
+rset(cmdnr)
+int cmdnr;
+#endif
 {
 	mm_end( NOTOK );
 	sender = (char *)0;
@@ -1211,7 +1233,12 @@ mmdfstart()
 /*
  *  handle the QUIT command
  */
+#ifdef __STDC__
 quit(int cmdnr)
+#else
+quit(cmdnr)
+int cmdnr;
+#endif
 {
 	time_t  timenow;
 
@@ -1236,7 +1263,12 @@ int retval;
 /*
  *  Reply that the current command has been logged and noted
  */
+#ifdef __STDC__
 confirm(int cmdnr)
+#else
+confirm(cmdnr)
+int cmdnr:
+#endif
 {
 	netreply("250 OK\r\n");
 }
@@ -1244,7 +1276,12 @@ confirm(int cmdnr)
 /*
  *  Process the HELP command by giving a list of valid commands
  */
+#ifdef __STDC__
 help(int cmdnr)
+#else
+help(cmdnr)
+int cmdnr:
+#endif
 {
 	register int i;
 	register struct comarr *p;
@@ -1294,7 +1331,12 @@ char *string;
  *
  *      handle the EXPN command  ("EXPN user@host")
  */
+#ifdef __STDC__
 expn(int cmdnr)
+#else
+expn(cmdnr)
+int cmdnr:
+#endif
 {
 
 	if (arg == 0 || *arg == 0) {
@@ -1492,7 +1534,12 @@ expn_dump()
  *
  *      handle the VRFY command  ("VRFY user@host")
  */
+#ifdef __STDC__
 vrfy(int cmdnr)
+#else
+vrfy(cmdnr)
+int cmdnr:
+#endif
 {
 	register int fd;
 	register char *cp;
