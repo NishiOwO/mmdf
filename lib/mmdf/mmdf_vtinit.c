@@ -1,13 +1,13 @@
 /***********************************************************************/
 /** 
  *
- * $Id: mmdf_vtinit.c,v 1.2 2002/10/12 17:54:01 krueger Exp $
+ * $Id: mmdf_vtinit.c,v 1.3 2003/03/02 15:08:36 krueger Exp $
  *
  * (C) 2001 Kai Krueger
  * Email: krueger@mathematik.uni-kl.de
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #ifndef lint
-  static char rcsid[]="@(#) $Revision: 1.2 $ $Date: 2002/10/12 17:54:01 $";
+  static char rcsid[]="@(#) $Revision: 1.3 $ $Date: 2003/03/02 15:08:36 $";
   static char copyright[] =
 "@(#)Copyright (c) 2001 Kai Krueger\n";
 #endif /* lint */
@@ -15,6 +15,9 @@
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
  * HISTORY
  * $Log: mmdf_vtinit.c,v $
+ * Revision 1.3  2003/03/02 15:08:36  krueger
+ * *** empty log message ***
+ *
  * Revision 1.2  2002/10/12 17:54:01  krueger
  * *** empty log message ***
  *
@@ -63,7 +66,6 @@
  *
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 char *mmvirtual_tailor = MMDFCFGDIR"/mmdfvirtual";
-
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
  * External variables

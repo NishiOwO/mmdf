@@ -1,5 +1,8 @@
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/parse.c,v 1.9 2002/09/30 19:30:36 krueger Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/parse.c,v 1.10 2003/03/02 15:08:39 krueger Exp $ */
 /* $Log: parse.c,v $
+/* Revision 1.10  2003/03/02 15:08:39  krueger
+/* *** empty log message ***
+/*
 /* Revision 1.9  2002/09/30 19:30:36  krueger
 /* *** empty log message ***
 /*
@@ -47,9 +50,12 @@
  *  78-80   D. Crocker      Reworked parser into current form
  */
 #include "config.h"
+#include <stdio.h>
+
 #if DEBUG < 2
 main() {
-	fprintf(stderr, "parse is useless when compiled with -DDEBUG=x (x < 2)\n");
+	fprintf(stderr,
+            "parse is useless when compiled with -DDEBUG=x (x < 2)\n");
 }
 #else
 #include "ap_lex.h"

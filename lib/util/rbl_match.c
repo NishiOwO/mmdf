@@ -1,5 +1,5 @@
 /*
- * $Id: rbl_match.c,v 1.7 2001/03/11 10:17:19 krueger Exp $
+ * $Id: rbl_match.c,v 1.8 2003/03/02 15:08:15 krueger Exp $
  *
  *
  */
@@ -91,10 +91,12 @@ int tb_rbl_tai(tbptr, gind, argc, argv)
         break;
 
       case CMDTDMN:
+/*         param->domain = strdup(argv[ind+1]);*/
         param->domain = argv[ind+1];
         break;
 
       case CMDTLINK:
+/*         param->link = strdup(argv[ind+1]);*/
         param->link = argv[ind+1];
         break;
         
@@ -132,7 +134,7 @@ int     first;                    /* I: start at beginning of list?        */
     return(rbl_match(param->domain, h_hostid));
   }
 
-  /*return (NOTOK);*/
+  return (NOTOK);
 }
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
