@@ -76,6 +76,14 @@ default:
 MLOGIN is the user that owns the MMDF transport system.
 .RE
 
+.B MGROUP
+.I <mmdf-groupname>
+default:
+.I @MMDFGROUP@
+.RS
+MGROUP is the group that owns mailbox directory of the MMDF transport system.
+.RE
+
 .B MSUPPORT
 "\fI<email-address>\fR"
 .RS
@@ -301,16 +309,9 @@ A display line,
 which is used for pretty printing purposes to explain what
 the table is all about.
 .RE
-.B flags=
-<\fIfile\fR |\fIdbm\fR |\fIns\fR |\fInis\fR |\fIabort\fR |
-\fIchannel\fR |\fIdomain\fR |\fIpartial\fR |\fIroute\fR>
+.B type=
+<\fIfile\fR |\fIdbm\fR |\fIns\fR | \fIregexp\fR>
 .RS
-The flags parameter is used to indicate additional
-properties about the table being defined.
-This can be specified more than once for a given table to set
-more than one flag.
-Currently this is used to specify various table options - source type,
-nameserver lookup parameters, and control of partial lookups.
 .sp
 There are four source types defined: ``file'', ``dbm'', ``ns'' and ``nis''.
 .br
@@ -325,6 +326,17 @@ queries on a nameserver.
 .br
 \fInis\fR means that the table data is obtained by making
 queries on a nis-server.  
+.sp
+
+.B flags=
+<\fIabort\fR | \fIchannel\fR |\fIdomain\fR |\fIpartial\fR |\fIroute\fR>
+.RS
+The flags parameter is used to indicate additional
+properties about the table being defined.
+This can be specified more than once for a given table to set
+more than one flag.
+Currently this is used to specify various table options - source type,
+nameserver lookup parameters, and control of partial lookups.
 .sp
 In the case of an ns-type table,
 the ``flags'' field will also specify the type of nameserver lookup.

@@ -52,6 +52,7 @@ extern char
 	    *locdomain,
 	    *sitesignature,
 	    *mmdflogin,
+	    *mmdfgroup,
 	    *supportaddr;
 
 extern char
@@ -185,6 +186,7 @@ extern char
 #  define M8BITMIME     54
 #  define MDSN          55
 #endif
+#define MMGROUP         56
 #define MMNOOP         100
   
 /**/
@@ -221,6 +223,7 @@ Cmd cmdtab[] =
     {"mdlvrdir",    MMDLVRDIR,  1},
     {"mdmn",        MMDOMAIN,   1},
     {"mfailtime",   MMFAILTIME, 1},
+    {"mgroup",      MMGROUP,    1},
     {"mlckdir",     MMLCKDIR,   1},
     {"mldomain",    MMLOCDOMAIN, 1},
     {"mlistsize",   MLISTSIZE,  1},
@@ -303,6 +306,10 @@ int mm_tai (argc, argv)     /* process mmdf tailor info     */
 
 	case MMLOGIN:
 	    mmdflogin = argv[1];
+	    break;
+
+	case MMGROUP:
+	    mmdfgroup = argv[1];
 	    break;
 
 	case MMSUPPORT:
