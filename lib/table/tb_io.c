@@ -207,7 +207,7 @@ long thepos;
 	case NOTOK:
 	    return (NOTOK);       /* can't open what isn't specified    */
     }
-    switch ((int)(table -> tb_fp))
+    switch ((int)(*table -> tb_fp))
     {                             /* not opened yet                     */
 	case NULL:
 	case EOF:
