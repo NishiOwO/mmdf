@@ -68,7 +68,12 @@ LOCVAR smtp_protocol smtp_mode = PRK_SMTP;
 #  define STRCAP(STRCAP_STRINGX)        STRCAP_STRINGX[sizeof(STRCAP_STRINGX)-1]='\0'
 #  define INFOBOO       if(infoboo<0) STRCAP(linebuf); else infolen+=infoboo
 int	infolen=0, infoboo=0;
+char smtp_use_size = FALSE;
+char smtp_use_dsn = FALSE;
+char smtp_use_8bitmime = FALSE;
+char smtp_use_pipelining = FALSE;
 #endif /* HAVE_ESMTP */
+
 
 /**/
 
@@ -83,23 +88,29 @@ char    *sender;
     infoboo=snprintf(linebuf, sizeof(linebuf), "MAIL FROM:<%s>", sender);
     INFOBOO;
 #  ifdef HAVE_ESMTP
-    if (sm_chptr->ch_access & CH_ESMTP /*smtp_use_size || 1*/)
-    {
-      infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen,
-                        " SIZE=%ld", qu_msglen
-                        /*+ message_linecount + ob->size_addition*/);
-      INFOBOO;
-    }
+    if (smtp_use_size)
+      if (sm_chptr->ch_access & CH_ESMTP /*smtp_use_size || 1*/)
+      {
+        infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen,
+                          " SIZE=%ld", qu_msglen
+                          /*+ message_linecount + ob->size_addition*/);
+        INFOBOO;
+      }
 #endif /* HAVE_ESMTP */
-#if notdef
 #ifdef HAVE_ESMTP_DSN
     if (smtp_use_dsn)
     {
       extern char *qu_msgfile;
-      char dsn_envid[16];
-
-      sscanf(qu_msgfile, "msg.%s", dsn_envid);
+      char dsn_envid[16], *p;
+      memset(dsn_envid, 0, sizeof(dsn_envid));
+      p = strrchr(qu_msgfile, '/');
+      if(p == NULL) p = qu_msgfile;
+      else p++;
       
+      sscanf(p, "msg.%s", dsn_envid);
+      printx(">%s;%s;\n", qu_msgfile, dsn_envid);
+      
+#if notdef
       if (dsn_ret == dsn_ret_hdrs)
       {
         infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen, " RET=HDRS");
@@ -110,13 +121,13 @@ char    *sender;
         infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen, " RET=FULL");
         INFOBOO;
       }
-      if (dsn_envid != NULL)
+#endif
+      if (strlen(dsn_envid)>0)
         infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen,
                           " ENVID=%s", dsn_envid);
         INFOBOO;
     }
 #endif /* HAVE_ESMTP_DSN */
-#endif
 
     if (rp_isbad (sm_cmd (linebuf, SM_STIME)))
 	    return (RP_DHST);
@@ -131,10 +142,11 @@ char    *sender;
           
         case 4:
           switch(sm_rp.sm_rval) {
+              case 452: /* disk size limit exceeded, try again later */
+                return( sm_rp.sm_rval = RP_FSPC);
               case 421:
               case 450:
               case 451:
-              case 452: /* disk size limit exceeded, try again later */
               default:
                 return( sm_rp.sm_rval = RP_AGN);
           }
@@ -142,11 +154,12 @@ char    *sender;
           
         case 5:
           switch(sm_rp.sm_rval) { 
+              case 552: /* size limit exceeded */
+                return( sm_rp.sm_rval = RP_PARM );
               case 500:
               case 501:
               case 550:
               case 551:
-              case 552: /* size limit exceeded */
               case 553:
               case 571:
               default:
@@ -289,6 +302,8 @@ sm_irdrply ()             /* get net reply & stuff into sm_rp   */
 #endif
 
 newrply: 
+    memset(sm_rp.sm_rstr, 0, sizeof(sm_rp.sm_rstr));
+    
     for (more = FALSE, sm_rp.sm_rgot = FALSE, sm_rp.sm_rlen = 0;
 	    rp_isgood (retval = sm_rrec (linebuf, &len));)
     {                             /* 1st col in linebuf gets reply code */
@@ -304,23 +319,34 @@ newrply:
 	tmpmore = FALSE;          /* start fresh                        */
 	tmpreply = atoi (linestrt);
 	blt (linestrt, sm_rp.sm_rstr, 3);       /* Grab reply code      */
+    if(sm_rp.sm_rlen==0) {
+      sm_rp.sm_rlen+=3;
+      blt (sep, &(sm_rp.sm_rstr[sm_rp.sm_rlen]), (sizeof sep) - 1);
+      sm_rp.sm_rlen += (sizeof sep) - 1;
+    }
+    
 	if ((len -= 3) > 0)
 	{
 	    linestrt += 3;
-	    if (len > 0 && *linestrt == '-')
-	    {
-		tmpmore = TRUE;
-		linestrt++;
-		if (--len > 0)
-		    for (; len > 0 && isspace (*linestrt); linestrt++, len--);
-	    }
+	    if (len > 0) {
+          if(*linestrt == '-')
+          {
+            tmpmore = TRUE;
+            linestrt++;len--;
+          }
+          for (; len > 0 && isspace (*linestrt); linestrt++, len--);
+        }
 	}
 
 	if (more)                 /* save reply value from 1st line     */
 	{                         /* we at end of continued reply?      */
-	    if (tmpreply != sm_rp.sm_rval || tmpmore)
+      if (tmpreply != sm_rp.sm_rval || !tmpmore)
+	    more = FALSE;         /* end of continuation                */
+#if 0
+      if (tmpreply != sm_rp.sm_rval || tmpmore)
 		continue;
 	    more = FALSE;         /* end of continuation                */
+#endif
 	}
 	else                      /* not in continuation state          */
 	{
@@ -335,7 +361,7 @@ newrply:
 	    }
 	}
 
-	if ((i = min (len, (LINESIZE - 1) - sm_rp.sm_rlen)) > 0)
+	if ((i = min (len-1, (LINESIZE - 1) - sm_rp.sm_rlen)) > 0)
 	{                         /* if room left, save the human text  */
 	    blt (linestrt, &sm_rp.sm_rstr[sm_rp.sm_rlen], i);
 	    sm_rp.sm_rlen += i;
@@ -476,6 +502,9 @@ int     time;                   /* Max time for sending and getting reply */
 	return( sm_rp.sm_rval = retval );
     }
     s_alarm( 0 );
+    if(sm_rp.sm_rgot) {
+      printx("RPLY:%d'%s'\r\n", sm_rp.sm_rlen, sm_rp.sm_rstr);
+    }
     return (RP_OK);
 }
 /**/
@@ -757,6 +786,11 @@ retry:
       sm_nclose (NOTOK);
       goto retry;		/* try more intelligent host? */
     }
+#ifdef HAVE_ESMTP
+    /* read and evaluate answer */
+    if(smtp_mode == PRK_ESMTP && sm_rp.sm_rgot)
+      sm_collect_options(sm_rp.sm_rstr);
+#endif /* HAVE_ESMTP */
     return (RP_OK);
 }
 /**/
@@ -785,3 +819,34 @@ short     type;                 /* clean or dirty ending              */
 	sm_rfp = sm_wfp = NULL;
 	phs_note (sm_chptr, PHS_CNEND);
 }
+
+#ifdef HAVE_ESMTP
+sm_collect_options(str)
+char *str;
+{
+  char *argv[25];
+  int Agc, i;
+
+  Agc = sstr2arg(str, 25, argv, ";");
+  for(i=0;i<Agc;i++) {
+#  ifdef HAVE_ESMTP_8BITMIME
+    if(equal(argv[i], "8BITMIME", strlen(argv[i]))) {
+      smtp_use_8bitmime = TRUE;
+    } else
+#  endif /* HAVE_ESMTP_8BITMIME */
+#  ifdef HAVE_ESMTP_DSN
+    if(equal(argv[i], "DSN", strlen(argv[i]))) {
+      smtp_use_dsn = TRUE;
+    } else
+#  endif /* HAVE_ESMTP_DSN */
+#  ifdef HAVE_ESMTP_PIPELINING
+      if(equal(argv[i], "PEPILINING", strlen(argv[i]))) {
+      smtp_use_pipelining;
+    } else
+#  endif /* HAVE_ESMTP_PIPELINING */
+    if(equal(argv[i], "SIZE", 4)) {
+      smtp_use_size = TRUE;
+    }
+  }
+}
+#endif /* HAVE_ESMTP */
