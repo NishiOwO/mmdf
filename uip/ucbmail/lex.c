@@ -8,11 +8,12 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  *
  *  $Log: lex.c,v $
- *  Revision 1.2  1985/11/18 12:35:29  galvin
- *  Added comment header for revision history.
+ *  Revision 1.3  1985/11/18 14:34:21  galvin
+ *  Teach setfile how to MMDF lock files.
+ *  Have it use the access system call rather than opening and closing files.
  *
  * Revision 1.5  86/01/14  16:15:18  galvin
  * Change the "mmdf.h" include line.
