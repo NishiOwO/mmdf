@@ -8,14 +8,11 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.5 $
+ *  $Revision: 1.6 $
  *
  *  $Log: fio.c,v $
- *  Revision 1.5  1985/12/18 13:22:33  galvin
- *  Add another argument to send to indicate whether or not this
- *  message should be delimited by MMDF message delimiters.
- *
- *  Change all but "temp" file opens/closes to use MMDF locking routines.
+ *  Revision 1.6  1986/01/13 13:03:48  galvin
+ *  Change format of debug output and delete one.
  *
  * Revision 1.6  86/01/13  13:03:48  galvin
  * Change format of debug output and delete one.
