@@ -1497,12 +1497,16 @@ LOCFUN
 		     */
 		    if (rp_gbval (final) == RP_BNO) {
 			printx ("  Permanent failure for '%s via %s'",
-			    theadr.adr_local, theadr.adr_host);
+                    theadr.adr_local, theadr.adr_host);
 			(void) fflush (stdout);
 			if (msg_noret (msg->mg_stat)) {
 			    printx (", NOT returned on request");
 			    ll_log (logptr, LLOGGEN, "%s err noret",
 				    msg->mg_mname);
+            } else if ( (rp_gval (final) == RP_DATA) &&
+                       (rtn_error (msg, msg_sender, &theadr, ch_rp.rp_line)== OK)) {
+              printx (", returned");
+              ll_log (logptr, LLOGGEN, "%s err ret", msg -> mg_mname);
 			} else if (rtn_error (msg, supportaddr, &theadr,
 					ch_rp.rp_line) == OK) {
 			    printx (", returned to supportaddr");
@@ -1616,6 +1620,11 @@ adr_rrply (therply, chan, themsg, theadr) /* tell channel of address   */
 	    deadhost (&chan -> ch_dead, theadr -> adr_host, RP_BHST,
 			chan -> ch_ttl);
 	    retval = RP_NO;       /* sometimes recoverable...           */
+	    break;
+
+	case RP_DATA:             /* Can't handle host behavior         */
+	    printx ("reject on data command, ");
+	    retval = RP_NDEL;
 	    break;
 
 	case RP_USER:             /* bad address                        */

@@ -474,7 +474,8 @@ RP_Buf *rp;
 
 
     time (&start_time);
-
+    memset(rp->rp_line, 0, sizeof(rp->rp_line));
+    
 	switch( (int)(sm_rp.sm_rval/100) ) {
         case 2:
           switch(sm_rp.sm_rval) {
@@ -488,6 +489,14 @@ RP_Buf *rp;
 
         case 5:
           switch(sm_rp.sm_rval) {
+              case 550:
+                rp->rp_val = RP_DATA;
+                if (sm_rp.sm_rgot)
+                  strncpy (rp->rp_line, sm_rp.sm_rstr, sm_rp.sm_rlen);
+                else
+                  strncpy (rp->rp_line, "Unknown Problem", sizeof(rp->rp_line));
+                break;
+
               case 552:
               case 554:
               default:
