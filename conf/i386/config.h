@@ -1,19 +1,21 @@
 /*
- * $Id: config.h,v 1.5 1997/12/29 20:16:27 krueger Exp $
+ * $Id: config.h,v 1.6 1997/12/31 19:40:30 krueger Exp $
  *
  * please set every configuration-switch here
  *
  */
 
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef CONFIG_OLD_H
+#define CONFIG_OLD_H
 
 /*             Enables  the  d_assign code in the dial pack-
  *             age.  This code calls the program /bin/assign
  *             to  gain exclusive access to a file.  It does
  *             not appear that the  d_assign  code  is  ever
  *             used so don't bother defining DOASSIGN.
+ *    renamed to HAVE_ASSIGN
+ *    set by configure in config.h.in
  */
 /* #undef DOASSIGN */
 
@@ -27,6 +29,8 @@
  *             ify it if necessary.   Vanilla  sites  should
  *             not  define  SECURETTY.   BRL  VAX UNIX sites
  *             must define SECURETTY.
+ *    renamed to HAVE_SECURETTY
+ *    set by configure in config.h.in
  */
 /* #undef SECURETTY */
 
@@ -90,8 +94,10 @@
  *             NODIAL if you do not intend to use the  phone
  *             or  pobox  channels.   (You will also need to
  *             take `dial' out of Makefile.lib, see  below.)
+ *    renamed to HAVE_DIAL
+ *    set by configure in config.h.in
  */
-#define NODIAL
+/* #undef NODIAL */
 
 /*             Enables  code  that does Bell System V tricks
  *             (probably also useful for System III  instal-
@@ -110,12 +116,18 @@
 
 /*             Define this variable  if  you  don't  have  a
  *             dup2() system call or subroutine.
+ *    renamed to HAVE_DUP2
+ *    set by configure in config.h.in
+ *         (work in progress)
  */
-#define NODUP2
+/* #undef NODUP2 */
 
 /*             If  you  defined NODUP2, then you should also
  *             define NOFCNTL if you don't have the fcntl(x,
  *             F_DUPFD) system call either.
+ *    renamed to HAVE_FCNTL_F_DUPFD
+ *    set by configure in config.h.in
+ *         (work in progress)
  */
 /* #undef NOFCNTL */
 
@@ -125,8 +137,10 @@
  *             include either tb_ns.fake.c or tb_ns.<sys>.c.
  *             Currently  there  is  only support for 4.2BSD
  *             networking.  See TB_NS below.
+ *    renamed to HAVE_NAMESERVER
+ *    set by configure in config.h.in
  */
-#define NAMESERVER
+/* #undef NAMESERVER */
 
 /*             Prevents    Domain    Literals    (such    as
  *             [10.0.0.59])  from  appearing  in  addresses.
@@ -153,8 +167,9 @@
  *             allow variable numbers  of  arguments  to  be
  *             passed  to  routines  the way Vaxes (and some
  *             others) do.
+ *    set by configure in config.h.in
  */
-#define NO_VARARGS
+/* #undef NO_VARARGS */
 
 /*             Define CITATION=n to limit (to n) the  number
  *             of lines of text included in error returns by
@@ -204,12 +219,14 @@
  *             tcp_wrapper package you can monitor and filter incoming request
  *             to the smtp server. Over the ident-protocol (RFC931) you can 
  *             get the calling username.
+ *    renamed to HAVE_LIBWRAP
+ *    set by configure in config.h.in
  */
-#define HAVE_TCP_WRAPPER
+/* #undef HAVE_TCP_WRAPPER */
 
 /*             Enable the yp_match lookup code for accessing tables over
  *             NIS.
  */
-#define HAVE_NIS
+/* #undef HAVE_NIS */
 
-#endif /* CONFIG_H */
+#endif /* CONFIG_OLD_H */

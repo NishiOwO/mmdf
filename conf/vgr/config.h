@@ -1,19 +1,21 @@
 /*
- * $Id: config.h,v 1.6 1997/12/29 20:16:38 krueger Exp $
+ * $Id: config.h,v 1.7 1997/12/31 19:40:31 krueger Exp $
  *
  * please set every configuration-switch here
  *
  */
 
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef CONFIG_OLD_H
+#define CONFIG_OLD_H
 
 /*             Enables  the  d_assign code in the dial pack-
  *             age.  This code calls the program /bin/assign
  *             to  gain exclusive access to a file.  It does
  *             not appear that the  d_assign  code  is  ever
  *             used so don't bother defining DOASSIGN.
+ *    renamed to HAVE_ASSIGN
+ *    set by configure in config.h.in
  */
 /* #undef DOASSIGN */
 
@@ -27,6 +29,8 @@
  *             ify it if necessary.   Vanilla  sites  should
  *             not  define  SECURETTY.   BRL  VAX UNIX sites
  *             must define SECURETTY.
+ *    renamed to HAVE_SECURETTY
+ *    set by configure in config.h.in
  */
 /* #undef SECURETTY */
 
@@ -43,7 +47,7 @@
  *             kind if you want the space and the very minor
  *             performance increase.
  */
-/* #undef DEBUG 1 */
+#define DEBUG 1
 
 /*             The  same  caution  applies  for D_LOG as for
  *             DEBUG.  This variable controls logging in the
@@ -77,7 +81,7 @@
  *             They  will  have to compile this manually for
  *             now (or copy it to smtpd.4.2.c).
  */
-/* #undef V4_2BSD */
+#define V4_2BSD
 
 /*             Enables code specific for 4.3BSD.  Right  now
  *             this is limited to the NAMESERVER support.
@@ -90,6 +94,8 @@
  *             NODIAL if you do not intend to use the  phone
  *             or  pobox  channels.   (You will also need to
  *             take `dial' out of Makefile.lib, see  below.)
+ *    renamed to HAVE_DIAL
+ *    set by configure in config.h.in
  */
 /* #undef NODIAL */
 
@@ -110,12 +116,18 @@
 
 /*             Define this variable  if  you  don't  have  a
  *             dup2() system call or subroutine.
+ *    renamed to HAVE_DUP2
+ *    set by configure in config.h.in
+ *         (work in progress)
  */
 /* #undef NODUP2 */
 
 /*             If  you  defined NODUP2, then you should also
  *             define NOFCNTL if you don't have the fcntl(x,
  *             F_DUPFD) system call either.
+ *    renamed to HAVE_FCNTL_F_DUPFD
+ *    set by configure in config.h.in
+ *         (work in progress)
  */
 /* #undef NOFCNTL */
 
@@ -125,6 +137,8 @@
  *             include either tb_ns.fake.c or tb_ns.<sys>.c.
  *             Currently  there  is  only support for 4.2BSD
  *             networking.  See TB_NS below.
+ *    renamed to HAVE_NAMESERVER
+ *    set by configure in config.h.in
  */
 /* #undef NAMESERVER */
 
@@ -134,7 +148,7 @@
  *             als  properly, use of this option is strongly
  *             advised.
  */
-/* #undef NODOMLIT */
+#define NODOMLIT
 
 /*             Enables intpretation of dots as delimiters on
  *             the  LHS  of an @ in addresses.  For example,
@@ -153,6 +167,7 @@
  *             allow variable numbers  of  arguments  to  be
  *             passed  to  routines  the way Vaxes (and some
  *             others) do.
+ *    set by configure in config.h.in
  */
 /* #undef NO_VARARGS */
 
@@ -204,6 +219,8 @@
  *             tcp_wrapper package you can monitor and filter incoming request
  *             to the smtp server. Over the ident-protocol (RFC931) you can 
  *             get the calling username.
+ *    renamed to HAVE_LIBWRAP
+ *    set by configure in config.h.in
  */
 /* #undef HAVE_TCP_WRAPPER */
 
@@ -212,4 +229,4 @@
  */
 /* #undef HAVE_NIS */
 
-#endif /* CONFIG_H */
+#endif /* CONFIG_OLD_H */
