@@ -226,8 +226,8 @@ AC_ARG_ENABLE(nis, \
   [     nis                nis support for tables]                   \
 (disabled))
 AC_ARG_ENABLE(nn, \
-  [     nn                 table mailids and users will be 
-                                 configurable in mmdftailor]               \
+  [     nn                 table mailids and users will be
+                           configurable in mmdftailor]               \
 (disabled))
 AC_ARG_ENABLE(nosrcroute, \
   [     nosrcroute         remove source-routing]                    \
@@ -311,6 +311,13 @@ AC_ARG_ENABLE(fhs, \
 AC_ARG_ENABLE(elf, \
   [     elf                produce elf code, (only on sco)]          \
  (enabled))
+AC_ARG_ENABLE(esmtp, \
+  [     esmtp              enable esmtp-'support' poorly implementation
+                           better disable it]                      \
+ (disabled))
+AC_ARG_ENABLE(filelist, \
+  [     filelist           enable creation of a filelist]           \
+ (disabled))
 
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -981,6 +988,7 @@ AC_ENABLE_DEFAULT_CODE(nn,  no , code,
 	"'mailids' and 'users' configurable in mmdftailor")
 AC_ENABLE_DEFAULT_CODE(nosrcroute,  yes, code, "Source routing")
 AC_ENABLE_DEFAULT_CODE(8bit,        yes, code, "8bit-clean transfer")
+AC_ENABLE_DEFAULT_CODE(esmtp,       no,  code, "ESMTP-support")
 
 if test "$ac_cv_enable_lib_dbm" = "yes"; then
    CH_TB="ch_tbdbm"

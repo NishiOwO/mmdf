@@ -1,5 +1,6 @@
+/* h/config.h.in.  Generated automatically from configure.in by autoheader.  */
 /*
- * $Id: config.h.in,v 1.32 1999/08/12 13:15:35 krueger Exp $
+ * $Id: config.h.in,v 1.33 1999/08/13 07:36:15 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -292,6 +293,11 @@ yourdomain".  Since % or
  *             spam-mails.
  */
 #undef HAVE_NOSRCROUTE
+
+/*          raff preparation for an esmtp implementation
+ *
+ */
+#undef HAVE_ESMTP
 
 /* Define if your system has the define SIGSYS */
 #undef HAVE_DEF_SIGSYS

@@ -15,7 +15,7 @@
 
 
 /*
- * $Id: acconfig.h,v 1.5 1999/08/12 13:15:31 krueger Exp $
+ * $Id: acconfig.h,v 1.6 1999/08/13 07:36:15 krueger Exp $
  *
  */
 
@@ -362,16 +362,6 @@
 #undef HAVE__GETSHORT
 #undef HAVE_GETSHORT
 
-/*             Enables   the   nameserver  lookup  code  for
- *             accessing domain servers.The  HAVE_NAMESERVER
- *             support   is   new.  If  turned  on  it  will
- *             automatically compile the support for  4.2BSD
- *             otherwise the 'fake' code  will  be  compiled
- *             Currently  there  is  only support for 4.2BSD
- *             networking.  See TB_NS below.
- */
-#undef HAVE_NAMESERVER
-
 /*             Prevents    Domain    Literals    (such    as
  *             [10.0.0.59])  from  appearing  in  addresses.
  *             Since  doesn't currently handle Domain Liter-
@@ -447,6 +437,11 @@
  *             needed on RISC-machines like HP9000s700 an newer.
  */
 #undef SUBMIT_TOO_FAST
+
+/*          raff preparation for an esmtp implementation
+ *
+ */
+#undef HAVE_ESMTP
 
 /* Define if your system has the define SIGSYS */
 #undef HAVE_DEF_SIGSYS
