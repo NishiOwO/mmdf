@@ -8,14 +8,14 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.5 $
+ *  $Revision: 1.6 $
  *
  *  $Log: cmd1.c,v $
- *  Revision 1.5  1986/01/07 13:42:35  galvin
- *  Change printhead to use the new parse return value.  Be
- *  lazy and if parse couldn't figure out the date, then use
- *  the contents of the "Date" header field as is.  It probably
- *  should be parsed into something nice, but ... .
+ *  Revision 1.6  1986/01/14 14:09:45  galvin
+ *  Let's not be lazy and use MMDF's smtpdate and makedate to parse the
+ *  date of message into something nice (if we can).  Since the new
+ *  something nice is smaller than the older mess, allow more room for the
+ *  subject line to print.
  *
  * Revision 1.6  86/01/14  14:09:45  galvin
  * Let's not be lazy and use MMDF's smtpdate and makedate to parse the
