@@ -492,6 +492,7 @@ char tbname[];
     datum old;
     char newentry[ENTRYSIZE];
     register char *p;
+    long i;
 
     p = newentry;
     old = fetch (key);
@@ -503,6 +504,12 @@ char tbname[];
 
 	p = blt (old.dptr, p, old.dsize - 1);
 	*p++ = FS;			/* end with a record seperator */
+    }
+
+    if(old.dsize+strlen (tbname)>ENTRYSIZE) {
+      fprintf(stderr,"2 entry to long: %d+%d=%d>%d\n", old.dsize,
+	      strlen (tbname),old.dsize+strlen (tbname),ENTRYSIZE);
+      exit(1);
     }
     p = blt (tbname, p, strlen (tbname));
     *p++ = ' ';
@@ -532,7 +539,7 @@ prdatum(value)
 datum value;
 {
 	int cnt;
-	char data[512];
+	char data[2*LINESIZE];
 
 	blt (value.dptr, data, value.dsize);
 
