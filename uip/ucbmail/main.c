@@ -8,11 +8,11 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  *
  *  $Log: main.c,v $
- *  Revision 1.2  1985/11/18 15:29:35  galvin
- *  Added comment header for revision history.
+ *  Revision 1.3  1985/11/20 12:23:08  galvin
+ *  Added call to mmdf_init.
  *
  * Revision 1.3  85/11/20  12:23:08  galvin
  * Added call to mmdf_init.
