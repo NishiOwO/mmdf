@@ -1,4 +1,9 @@
 
+#undef HAVE_ESMTP_DSN
+#undef HAVE_ESMTP_8BITMIME
+#undef HAVE_WILDCARD
+#undef HAVE_RBL
+
 /*****************************************************************************/
 /* Old defines */
 

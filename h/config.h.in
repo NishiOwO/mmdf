@@ -1,6 +1,6 @@
 /* h/config.h.in.  Generated automatically from configure.in by autoheader.  */
 /*
- * $Id: config.h.in,v 1.39 1999/08/29 12:33:01 krueger Exp $
+ * $Id: config.h.in,v 1.40 1999/09/08 07:58:01 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -417,6 +417,9 @@ yourdomain".  Since % or
 /* Define if you have the sigsetmask function.  */
 #undef HAVE_SIGSETMASK
 
+/* Define if you have the sigsys function.  */
+#undef HAVE_SIGSYS
+
 /* Define if you have the socket function.  */
 #undef HAVE_SOCKET
 
@@ -557,6 +560,11 @@ yourdomain".  Since % or
 
 /* Define if you have the wrap library (-lwrap).  */
 #undef HAVE_LIBWRAP
+
+#undef HAVE_ESMTP_DSN
+#undef HAVE_ESMTP_8BITMIME
+#undef HAVE_WILDCARD
+#undef HAVE_RBL
 
 /*****************************************************************************/
 /* Old defines */
