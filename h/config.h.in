@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.20 1998/05/25 09:18:58 krueger Exp $
+ * $Id: config.h.in,v 1.21 1998/05/25 11:21:22 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -17,6 +17,7 @@
 
 /* Define if you have <sys/wait.h> that is POSIX.1 compatible.  */
 #undef HAVE_SYS_WAIT_H
+#undef HAVE_UNION_WAIT
 
 /* Define if you have the <sys/time.h> header file.  */
 #undef HAVE_SYS_TIME_H

@@ -4397,7 +4397,7 @@ fi
 
 echo $ac_n "checking whether have union wait""... $ac_c" 1>&6
 echo "configure:4400: checking whether have union wait" >&5
-if eval "test \"`echo '$''{'ac_cv_have_STATE'+set}'`\" = set"; then
+if eval "test \"`echo '$''{'ac_cv_have_UNION_WAIT'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   if test "$cross_compiling" = yes; then

@@ -850,7 +850,7 @@ fi
 
 dnl check if we have struct state
 AC_MSG_CHECKING(whether have union wait)
-AC_CACHE_VAL(ac_cv_have_STATE, AC_TRY_RUN( 
+AC_CACHE_VAL(ac_cv_have_UNION_WAIT, AC_TRY_RUN( 
  [#include <sys/wait.h>
  main() { 
 	union wait pstatus;
