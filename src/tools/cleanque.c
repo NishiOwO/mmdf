@@ -1,4 +1,4 @@
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.12 1998/06/17 10:12:24 krueger Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.13 1998/07/14 10:40:10 mmdf Exp $ */
 /*
  *     MULTI-CHANNEL MEMO DISTRIBUTION FACILITY  (MMDF)
  *     
@@ -506,7 +506,7 @@ doreturn (themsg, theadr, retadr)
     if (msg_noret (themsg -> mg_stat)) {
 	printx (" error return not wanted\n");
     }    
-    else if (rtn_time_per_adr (themsg, retadr) == OK)
+    else if (rtn_time (themsg, retadr) == OK)
     {                         /* dequeue if couldn't notify   */
 	printx (" returned\n");
 	(void) fflush (stdout);
@@ -520,7 +520,7 @@ doreturn (themsg, theadr, retadr)
 	(void) sprintf (orphanage, "Orphanage <%s>", supportaddr);
 	printx (" couldn't return,\ntrying orphanage...");
 	(void) fflush (stdout);
-	if (rtn_time_per_adr (themsg, orphanage) == OK)
+	if (rtn_time (themsg, orphanage) == OK)
 	{
 	    printx (" returned to orphanage.\n");
 	    (void) fflush (stdout);
@@ -529,6 +529,7 @@ doreturn (themsg, theadr, retadr)
 	{
 	    ll_err (logptr, LLOGTMP, "ret *** Timeout couldn't return (%s,%s)",
 		    themsg -> mg_mname, retadr);
+	    printx (" returned to dead_letter.\n");
 	    dead_letter (themsg->mg_mname, "Timeout on delivery");
 	}
     }
