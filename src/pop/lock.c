@@ -17,13 +17,6 @@
 
 #define	NULLCP	((char *) 0)
 
-#ifdef	SYS5
-#define	index	strchr
-#define	rindex	strrchr
-#endif	SYS5
-
-
-
 extern int  errno;
 
 /*  */

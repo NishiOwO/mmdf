@@ -6,11 +6,11 @@
 char	*index();
 char	*mktemp();
 char	*rindex();
-#ifndef	SYS5
-char	*sprintf();
-#else /* SYS5 */
+#ifdef	BSD_SPRINTF
 int	sprintf();
-#endif /* SYS5 */
+#else /* BSD_SPRINTF */
+char	*sprintf();
+#endif /* BSD_SPRINTF */
 char	*strcat();
 int	strcmp();
 char	*strcpy();

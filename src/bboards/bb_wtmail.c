@@ -70,10 +70,10 @@ FILE *lk_fopen();
 
 long    lseek ();
 char   *index (), *rindex ();
-#ifdef SYS5
-int sprintf ();
+#ifdef BSD_SPRINTF
+extern char *sprintf ();
 #else
-char *sprintf ();
+extern int sprintf ();
 #endif
 struct passwd  *getpwnam ();
 
