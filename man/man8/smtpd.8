@@ -2,13 +2,9 @@
 .SH NAME
 smtpd, smtpsrvr \- SMTP inbound channel for MMDF
 .SH SYNOPSIS
-smtpd [\-d] [\-f] [\-n maxconnects] smtpsrvr channels  (4.2)
+smtpd [\-d] [\-f] [\-n maxconnects] smtpsrvr channels
 .br
-smtpd smtpsrvr channels port maxconnects network  (4.1 or 5.2)
-.br
-smtpd [\-f] smtpsrvr channels  (4.3)
-.br
-smtpd sourcehost.sourceport  (sun)
+smtpd [\-i] [\-f] smtpsrvr channels
 .sp
 .br
 smtpsrvr remotehost localhost channels
@@ -28,7 +24,7 @@ The
 .I smtpd
 program comes in several flavors depending on your operating system.
 In some cases, the burden of limiting and waiting for inbound connections
-is borne by a standard "daemon of daemons".  In other cases, 
+is borne by a standard "daemon of daemons" (options \-i).  In other cases, 
 .I smtpd 
 performs these operations.  In any case, 
 .I smtpd
@@ -36,17 +32,22 @@ is the link between the network connection and the
 .I smtpsrvr 
 program.
 .PP
-In the synopsis above, the first two versions of 
+In the synopsis above, the first version of 
 .I smtpd
-are standalone network daemons that accept incoming
+is a standalone network daemons that accept incoming
 connections and fork off copies of the smptsrvr to process
-them.  The last two versions are called by the standard 
+them. After preparing itself for accepting connection
+.I smtpd 
+gives up any root-permissions and set its effectiv-userid to the owner
+of the \fIsubmit\fR.
+The last version is called by the standard 
 ``daemon of daemons'' with one connection and fork the smtpsrvr to
 process it.
 The sun version calls the standard 
 .I smtpsrvr
 program with channels set to ``smtp''.
 .PP
+The \-i option tells smtpd that it is started by the super-daemon 'inetd'.
 The \-d option enables debugging prints on the stderr output.
 The \-f option (the \fBf\fRiniky option) causes 
 incoming connections from unknown
