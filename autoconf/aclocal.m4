@@ -1,5 +1,5 @@
 dnl
-dnl $Id: aclocal.m4,v 1.1 1998/10/06 14:53:42 krueger Exp $
+dnl $Id: aclocal.m4,v 1.2 1998/10/10 13:47:51 krueger Exp $
 dnl
 dnl
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -195,9 +195,10 @@ AC_DEFUN(AC_SET_DEFINE,
   AC_MSG_CHECKING(whether define $1)
   if test "$2" != "0"; then
     AC_DEFINE_UNQUOTED($1, $2)
-    AC_MSG_RESULT($2)
+    AC_MSG_RESULT(yes)
   else
-    AC_MSG_RESULT(undefined)
+    dnl AC_MSG_RESULT(undefined)
+    AC_MSG_RESULT(no)
   fi
 ])
 AC_PROVIDE(AC_SET_DEFINE)

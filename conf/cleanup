@@ -46,6 +46,6 @@ cd ..
 rm -f uip/msg/version.c
 rm -f uip/send/version.c
 rm -f uip/snd/version.c
-rm -f uip/ucbmail/version.c
+# rm -f uip/ucbmail/version.c
 find . -name \*.orig -print -exec rm -f {} \;
 exit 0

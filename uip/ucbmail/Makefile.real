@@ -8,9 +8,7 @@
 # Berkeley Mail
 #
 
-#XSTR=	/usr/ucb/xstr
 DESTDIR=
-CTAGS=	/usr/ucb/ctags -w
 VPRINT=	/usr/ucb/print
 LIBES=
 AS=	-as
@@ -67,10 +65,10 @@ ${DESTDIR}/usr/ucb/fmt: xfmt
 version.o:	version.c
 	$(CC) -c -R version.c
 
-$S:
-	sccs get $@;
+#$S:
+#	sccs get $@;
 
-srcs:	$S
+#srcs:	$S
 
 tags:	$(SRCS)
 	${CTAGS} $(SRCS);

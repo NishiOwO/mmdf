@@ -18,12 +18,21 @@ AC_PREFIX_DEFAULT('/usr')
 OUTPUT_FILES="lib/Makefile src/Makefile uip/Makefile"
 OUTPUT_FILES=$OUTPUT_FILES" conf/common/Makefile.com Makefile"
 
+VERSION=`sed -e 's/MMDF //' -e 's/\./ /' ${srcdir}/Version`
+MMDF_MAJOR_VERSION=`echo $VERSION | awk '{print $1}'`
+MMDF_MINOR_VERSION=`echo $VERSION | awk '{print $2}'`
+MMDF_PATCH_LEVEL=`echo $VERSION | awk '{print $3}'`
+VERSION_DATE=`echo $VERSION | awk '{print $4,$5}'`
+echo "configuring for MMDF-$MMDF_MAJOR_VERSION.$MMDF_MINOR_VERSION \
+Patchlevel $MMDF_PATCH_LEVEL ($VERSION_DATE)"
+AC_SUBST(VERSION)dnl
+
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
-MMDF_MAJOR_VERSION=2
-MMDF_MINOR_VERSION=44
-MMDF_PATCH_LEVEL=9
-VERSION_DATE="September 1998"
+dnl MMDF_MAJOR_VERSION=2
+dnl MMDF_MINOR_VERSION=44
+dnl MMDF_PATCH_LEVEL=9
+dnl VERSION_DATE="September 1998"
 MMDFLOGIN=mmdf
 ROOTLOGIN=root
 PGMPROT=755
@@ -157,95 +166,96 @@ AC_ARG_ENABLE(nameserver, \
   [  --enable-PACKAGE        configure and build PACKAGE
      --disable-PACKAGE       do not configure and build PACKAGE
  where PACKAGE can be:
-     nameserver             nameserver-code]                          \
-(enabled))
+     nameserver           nameserver-code]                          \
+ (enabled))
 AC_ARG_ENABLE(dbm, \
-  [     dbm                  tables via dbm, sequential otherwise]     \
-(enabled))
+  [     dbm                tables via dbm, sequential otherwise]     \
+ (enabled))
 AC_ARG_ENABLE(wrap, \
-  [     wrap                 tcpwrapper]                               \
-(enabled))
+  [     wrap               tcpwrapper]                               \
+ (enabled))
 AC_ARG_ENABLE(nis, \
-  [     nis                  nis support for tables]                  \
+  [     nis                nis support for tables]                   \
 (disabled))
 AC_ARG_ENABLE(nn, \
-  [     nn                   mailids and users configurable in mmdftailor] \
+  [     nn                 table mailids and users will be                \
+                                 configurable in mmdftailor]               \
 (disabled))
 AC_ARG_ENABLE(nosrcroute, \
-  [     nosrcroute           remove source-routing]                    \
-(enabled))
+  [     nosrcroute         remove source-routing]                    \
+ (enabled))
 AC_ARG_ENABLE(8bit, \
-  [     8bit                 8bit clean]                               \
-(enabled))
+  [     8bit               8bit clean]                               \
+ (enabled))
 AC_ARG_ENABLE(lock_files, \
-  [     lock_files           use explicily lock-files for filelocking] \
+  [     lock_files         use explicily lock-files for filelocking] \
 (disabled))
 AC_ARG_ENABLE(dial, \
-  [     dial                 dial code]                                \
+  [     dial               dial code]                                \
 (disabled))
 AC_ARG_ENABLE(badusers, \
-  [     badusers             badusers channel-program]                 \
-(enabled))
+  [     badusers           badusers channel-program]                 \
+ (enabled))
 AC_ARG_ENABLE(bboards, \
-  [     bboards              bboards channel-program]                  \
+  [     bboards            bboards channel-program]                  \
 (disabled))
 AC_ARG_ENABLE(blockaddr, \
-  [     blockaddr            blockaddr channel-program]                \
+  [     blockaddr          blockaddr channel-program]                \
 (disabled))
 AC_ARG_ENABLE(delay, \
-  [     delay                delay channel-program]                    \
+  [     delay              delay channel-program]                    \
 (disabled))
 AC_ARG_ENABLE(ean, \
-  [     ean                  ean channel-program]                      \
+  [     ean                ean channel-program]                      \
 (disabled))
 AC_ARG_ENABLE(list, \
-  [     list                 list channel-program]                     \
-(enabled))
+  [     list               list channel-program]                     \
+ (enabled))
 AC_ARG_ENABLE(niftp, \
-  [     niftp                niftp channel-program]                    \
+  [     niftp              niftp channel-program]                    \
 (disabled))
 AC_ARG_ENABLE(phone, \
-  [     phone                phone channel-program]                    \
+  [     phone              phone channel-program]                    \
 (disabled))
 AC_ARG_ENABLE(pobox, \
-  [     pobox                pobox channel-program]                    \
+  [     pobox              pobox channel-program]                    \
 (disabled))
 AC_ARG_ENABLE(pop, \
-  [     pop                  pop channel-program]                      \
-(enabled))
+  [     pop                pop channel-program]                      \
+ (enabled))
 AC_ARG_ENABLE(prog, \
-  [     prog                 prog channel-program]                     \
+  [     prog               prog channel-program]                     \
 (disabled))
 AC_ARG_ENABLE(smphone, \
-  [     smphone              smphone channel-program]                  \
+  [     smphone            smphone channel-program]                  \
 (disabled))
 AC_ARG_ENABLE(smtp, \
-  [     smtp                 smtp channel-program]                     \
-(enabled))
+  [     smtp               smtp channel-program]                     \
+ (enabled))
 AC_ARG_ENABLE(uucp, \
-  [     uucp                 uucp channel-program]                     \
-(enabled))
+  [     uucp               uucp channel-program]                     \
+ (enabled))
 AC_ARG_ENABLE(msg, \
-  [     msg                  msg user agent]                           \
-(enabled))
+  [     msg                msg user agent]                           \
+ (enabled))
 AC_ARG_ENABLE(other, \
-  [     other                malias,mlist,rcv*, resend, sendmail, v6mail]\
-(enabled))
+  [     other              malias,mlist,rcv*,resend,sendmail,v6mail] \
+ (enabled))
 AC_ARG_ENABLE(send, \
-  [     send                 send user agent]                          \
-(enabled))
+  [     send               send user agent]                          \
+ (enabled))
 AC_ARG_ENABLE(snd, \
-  [     snd                  snd user agent]                           \
-(enabled))
+  [     snd                snd user agent]                           \
+ (enabled))
 AC_ARG_ENABLE(ucbmail, \
-  [     ucbmail              ucbmail 'Mail' program]                   \
-(disabled))
+  [     ucbmail            ucbmail 'Mail' program]                   \
+ (enabled))
 AC_ARG_ENABLE(unsupported, \
-  [     unsupported          autores, cvmbox]                          \
+  [     unsupported        autores, cvmbox]                          \
 (disabled))
 AC_ARG_ENABLE(gcc, \
-  [     gcc                  use gcc as compiler]                      \
-(enabled))
+  [     gcc                use gcc as compiler]                      \
+ (enabled))
 
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -296,6 +306,7 @@ AC_PROG_MAKE_SET
 AC_PATH_PROG(AR, ar)
 AC_CHECK_PROG(ASSIGN, assign, assign)
 AC_PATH_PROG(XSTR, xstr)
+AC_PATH_PROG(CTAGS, ctags)
 if test "$ac_cv_prog_ASSIGN" != ""; then
     AC_DEFINE(HAVE_ASSIGN)
 fi
@@ -859,9 +870,9 @@ dnl if test "$enable_statsort" = "yes"; then
 dnl    ac_cv_enable_statsort=$enable_statsort
 dnl    AC_DEFINE(STATSORT)
 dnl fi
-AC_CHECK_DEFINE($enable_nodomlit, NODOMLIT)
-AC_CHECK_DEFINE($enable_leftdots, LEFTDOTS)
-AC_CHECK_DEFINE($enable_statsort, STATSORT)
+dnl AC_CHECK_DEFINE($enable_nodomlit, NODOMLIT)
+dnl AC_CHECK_DEFINE($enable_leftdots, LEFTDOTS)
+dnl AC_CHECK_DEFINE($enable_statsort, STATSORT)
 
 dnl if test "$ac_cv_lib_gdbm_gdbm_open" = "yes" || \
 dnl 	test "$ac_cv_lib_ndbm" = "yes" || \
@@ -929,7 +940,7 @@ AC_ENABLE_DEFAULT(msg,         yes, UIPSUBDIRS)
 AC_ENABLE_DEFAULT(other,       yes, UIPSUBDIRS)
 AC_ENABLE_DEFAULT(send,        yes, UIPSUBDIRS)
 AC_ENABLE_DEFAULT(snd,         yes, UIPSUBDIRS)
-AC_ENABLE_DEFAULT(ucbmail,     no , UIPSUBDIRS)
+AC_ENABLE_DEFAULT(ucbmail,     no,  UIPSUBDIRS)
 AC_ENABLE_DEFAULT(unsupported, no,  UIPSUBDIRS)
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -1040,24 +1051,33 @@ rm -f Makefile.com
 ln -s conf/common/Makefile.com Makefile.com
 
 echo "==============================================================="
-echo "Here are your pathname-settings:"
-echo "prefix        = $prefix"
-echo "exec_prefix   = $exec_prefix"
-echo "varprefix     = $varprefix"
-echo "bindir        = $bindir"
-echo "sbindir       = $sbindir"
-echo "libexecdir    = $libexecdir"
-echo
-echo "mmdfprefix    = $mmdfprefix"
-echo "mmdflibdir    = $mmdflibdir"
-echo "chandir       = $chandir"
-echo "tbldir        = $tbldir"
-echo "datadir       = $datadir"
-echo "configdir     = $sysconfdir"
-echo
-echo "mmdfspooldir  = $mmdfspooldir"
-echo "mmdfphosedir  = $mmdfphasedir"
-echo "mmdflogdir    = $mmdflogdir"
-echo "mmdfdiallog   = $mmdfdiallog"
+echo "
+MMDF version                   : $MMDF_MAJOR_VERSION.$MMDF_MINOR_VERSION
+   Patchlevel                  : $MMDF_PATCH_LEVEL
+   Date                        : $VERSION_DATE
+compiler                       : ${CC}
+compiler flags                 : ${CFLAGS}
+linker flags                   : ${LDFLAGS}
+source code location           : ${srcdir}
+
+   Here are your pathname-settings:
+prefix                         = $prefix
+exec_prefix                    = $exec_prefix
+varprefix                      = $varprefix
+bindir                         = $bindir
+sbindir                        = $sbindir
+libexecdir                     = $libexecdir
+
+mmdfprefix                     = $mmdfprefix
+mmdflibdir                     = $mmdflibdir
+chandir                        = $chandir
+tbldir                         = $tbldir
+datadir                        = $datadir
+configdir                      = $sysconfdir
+
+mmdfspooldir                   = $mmdfspooldir
+mmdfphosedir                   = $mmdfphasedir
+mmdflogdir                     = $mmdflogdir
+mmdfdiallog                    = $mmdfdiallog"
 dnl echo "sharedstatedir= $sharedstatedir"
 dnl echo "localstatedir = $localstatedir"

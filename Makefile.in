@@ -137,20 +137,34 @@ dirs:
 		mkdir -p ${install_prefix}${prefix}; \
 		chmod 755 ${install_prefix}${prefix}; \
 	fi
-	-if test ! -x ${install_prefix}${bindir}; then mkdir -p ${bindir}; fi
-	-if test ! -x ${install_prefix}${sbindir}; then mkdir -p ${sbindir}; fi
-	-if test ! -x ${install_prefix}${libexecdir}; then mkdir -p ${libexecdir}; fi
-	-if test ! -x ${install_prefix}${mmdfspooldir}; then mkdir -p ${mmdfspooldir}; fi
-	-if test ! -x ${install_prefix}${mmdflogdir}; then mkdir -p ${mmdflogdir}; fi
-	-if test ! -x ${install_prefix}${mmdfphasedir}; then mkdir -p ${mmdfphasedir}; fi
-#	-if test ! -x ${sharedstatedir}; then mkdir -p ${sharedstatedir}; fi
-#	-if test ! -x ${localstatedir}; then mkdir -p ${localstatedir}; fi
-	-if test ! -x ${install_prefix}${mmdfprefix}; then mkdir -p ${mmdfprefix}; fi
-	-if test ! -x ${install_prefix}${mmdflibdir}; then mkdir -p ${mmdflibdir}; fi
-	-if test ! -x ${install_prefix}${chandir}; then mkdir -p ${chandir}; fi
-	-if test ! -x ${install_prefix}${tbldir}; then mkdir -p ${tbldir}; fi
-	-if test ! -x ${install_prefix}${sysconfdir}; then mkdir -p ${sysconfdir}; fi
-	-if test ! -x ${install_prefix}${rcvdir}; then mkdir -p ${rcvdir}; fi
+	-if test ! -x ${install_prefix}/usr/lib; then \
+		mkdir -p ${install_prefix}/usr/lib; fi
+	-if test ! -x ${install_prefix}${bindir}; then \
+		mkdir -p ${install_prefix}${bindir}; fi
+	-if test ! -x ${install_prefix}${sbindir}; then \
+		mkdir -p ${install_prefix}${sbindir}; fi
+	-if test ! -x ${install_prefix}${libexecdir}; then \
+		mkdir -p ${install_prefix}${libexecdir}; fi
+	-if test ! -x ${install_prefix}${mmdfspooldir}; then \
+		mkdir -p ${install_prefix}${mmdfspooldir}; fi
+	-if test ! -x ${install_prefix}${mmdflogdir}; then \
+		mkdir -p ${install_prefix}${mmdflogdir}; fi
+	-if test ! -x ${install_prefix}${mmdfphasedir}; then \
+		mkdir -p ${install_prefix}${mmdfphasedir}; fi
+#	-if test ! -x ${install_prefix}${sharedstatedir}; then mkdir -p ${install_prefix}${sharedstatedir}; fi
+#	-if test ! -x ${install_prefix}${localstatedir}; then mkdir -p ${install_prefix}${localstatedir}; fi
+	-if test ! -x ${install_prefix}${mmdfprefix}; then \
+		mkdir -p ${install_prefix}${mmdfprefix}; fi
+	-if test ! -x ${install_prefix}${mmdflibdir}; then \
+		mkdir -p ${install_prefix}${mmdflibdir}; fi
+	-if test ! -x ${install_prefix}${chandir}; then \
+		mkdir -p ${install_prefix}${chandir}; fi
+	-if test ! -x ${install_prefix}${tbldir}; then \
+		mkdir -p ${install_prefix}${tbldir}; fi
+	-if test ! -x ${install_prefix}${sysconfdir}; then \
+		mkdir -p ${install_prefix}${sysconfdir}; fi
+	-if test ! -x ${install_prefix}${rcvdir}; then \
+		mkdir -p ${install_prefix}${rcvdir}; fi
 
 ########################
 #

@@ -333,7 +333,7 @@ Configuration:
   --create-target         force creation of conf/<target>/* if needed
   --mmdf-debug=[0,1,2]    enable more logging information      [default: $mmdfdebug]
   --mmdf-dlog             enable debug-option of dial packages [default: $mmdfdlog]
-  --mmdf-dbglog           enable debug-option of dial packages [default: $mmdfdbglog]
+  --mmdf-dbglog           enable more debug-option of dial packages [default: $mmdfdbglog]
   --mmdf-nodomlit         toggle define NODOMLIT [default: $mmdfnodomlit]
   --mmdf-leftdots         toggle define LEFTDOTS [default: $mmdfleftdots]
   --mmdf-statsort         toggle define STATSORT [default: $mmdfstatsort]
