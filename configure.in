@@ -423,6 +423,12 @@ if test "$ac_cv_prog_LORDER" != ""; then
 else
     LIBFIX="./libfix.linux"
 fi
+dnl AC_CHECK_PROG(VARIABLE, PROG-TO-CHECK-FOR, VALUE-IF-FOUND
+dnl               [, [VALUE-IF-NOT-FOUND] [, [PATH] [, [REJECT]]]])
+AC_PATH_PROG(VPRINT, print)
+if test "$ac_cv_prog_VPRINT" = ""; then
+  AC_PATH_PROG(VPRINT, printf)
+fi
 AC_PROG_RANLIB
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
