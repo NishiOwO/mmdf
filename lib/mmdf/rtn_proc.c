@@ -239,17 +239,24 @@ LOCFUN
 
     rtn_heading(dowarn, themsg);
 
+#if 1
+    msghour = (int) ((curtime - themsg -> mg_time) / 3600);
+                                  /* number of hours already in queue   */
+    days = (msghour + 23) / 24;
+                                  /* round up to nearest whole day      */
+#endif
+
     if (dowarn)
     {
-	ml_txt ("  Attempts to deliver the message will continue\n");
-    	days = ((failtime - msghour) + 23) / 24;
-	sprintf (linebuf, "for %d more days.", days < 0 ? 0 : days);
-	ml_txt (linebuf);             /* send apologetic nonsense  */
-	ml_txt ("  No further action is required by you.\n\n");
-	ml_txt ("    Delivery attempts are still pending for the following address(es):\n\n");
+      ml_txt ("  Attempts to deliver the message will continue\n");
+      days = ((failtime - msghour) + 23) / 24;
+      sprintf (linebuf, "for %d more days.", days < 0 ? 0 : days);
+      ml_txt (linebuf);             /* send apologetic nonsense  */
+      ml_txt ("  No further action is required by you.\n\n");
+      ml_txt ("    Delivery attempts are still pending for the following address(es):\n\n");
     }
     else
-	ml_txt ("\n\n    It failed to be received by the following address(es):\n\n");
+      ml_txt ("\n\n    It failed to be received by the following address(es):\n\n");
 
     rtn_list (FALSE);      /* list who hasn't got it yet         */
 
