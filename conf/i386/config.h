@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.10 1998/03/19 22:41:53 krueger Exp $
+ * $Id: config.h,v 1.11 1998/05/08 09:55:54 krueger Exp $
  *
  * please set every configuration-switch here
  *
@@ -47,7 +47,7 @@
  *             kind if you want the space and the very minor
  *             performance increase.
  */
-#define DEBUG 1
+/* #define DEBUG 1 */
 
 /*             The  same  caution  applies  for D_LOG as for
  *             DEBUG.  This variable controls logging in the
@@ -146,7 +146,7 @@
  *             als  properly, use of this option is strongly
  *             advised.
  */
-#define NODOMLIT
+/* #define NODOMLIT */
 
 /*             Enables intpretation of dots as delimiters on
  *             the  LHS  of an @ in addresses.  For example,
@@ -196,7 +196,7 @@
  *             Tailor the CONFIGDEFS  line  to  your  site's
  *             requirements and system type. 
  */
-#define STATSORT
+/* #define STATSORT */
 
 /**********************************************************************/
 /*             Enable site depend code
@@ -211,7 +211,7 @@
 
 /*             Enable 8bit-clean mode when getting messages over smtp.
  */
-#define EIGHT_BIT_CLEAN
+/* #define EIGHT_BIT_CLEAN */
 
 /*             Enable tcp_wrapper implementation in smtpsrvr. With the 
  *             tcp_wrapper package you can monitor and filter incoming request
