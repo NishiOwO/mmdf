@@ -1,5 +1,11 @@
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/parse.c,v 1.5 1999/08/12 13:15:37 krueger Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/parse.c,v 1.6 2000/07/06 17:43:42 krueger Exp $ */
 /* $Log: parse.c,v $
+/* Revision 1.6  2000/07/06 17:43:42  krueger
+/* some minor compiler fixes
+/*
+ * Revision 1.6  2000/07/06 17:28:00  krueger
+ * some minor compiler fixes
+ *
 /* Revision 1.5  1999/08/12 13:15:37  krueger
 /* Added patch 2.44b3 and 2.44b4
 /*
@@ -103,7 +109,7 @@ getach ()
     return (c);
 }
 
-pretty (ap)
+void pretty (ap)
 register AP_ptr ap;
 {
     register int    depth = 1;
@@ -116,9 +122,9 @@ register AP_ptr ap;
 		depth -= 2;
 	}
 
-	printf ("%.*s%-9s", depth, "          ");
+	printf ("%.*d%-9s", depth, "          ");
     	if (ap -> ap_obtype >= 0 && ap -> ap_obtype <= 13)
-		printf("%s %s", typtab[ap -> ap_obtype],
+		printf("%s %s", typtab[(int)(ap -> ap_obtype)],
 			ap -> ap_obvalue ? ap -> ap_obvalue : "NIL");
     	else
 		printf("BOGUS!(%d) %s", ap -> ap_obtype,
