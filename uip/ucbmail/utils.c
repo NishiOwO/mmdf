@@ -8,11 +8,17 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.3 $
+ *  $Revision: 1.4 $
  *
  * $Log: utils.c,v $
- * Revision 1.3  1985/12/18 13:31:12  galvin
- * Change alter to use the MMDF locking routines.
+ * Revision 1.4  1986/01/14 14:04:40  galvin
+ * Change nameof so it does not delete the comment associated
+ * with an address (it is probably the senders full name).
+ *
+ * Change skin() to use MMDF's parsadr to find the route.
+ *
+ * Add routeq() to use when comparing routes.  The intent is not to
+ * compare the comment part of address when looking for duplicate entries.
  *
  * Revision 1.3  85/12/18  13:31:12  galvin
  * Change alter to use the MMDF locking routines.
