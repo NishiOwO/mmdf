@@ -1,21 +1,31 @@
-Tue Dec 30 22:20:18 1997  Kai Krueger  <krueger@galadriel>
+Tue Dec 30 22:15:59 1997  Kai Krueger  <krueger@galadriel>
 
-        * uip/send/s_main.c, uip/send/s_onint.c, uip/snd/s_input.c, uip/snd/s_main.c, uip/snd/s_onint.c, uip/ucbmail/sigretro.c, src/prog/qu2pr_send.c, src/uucp/qu2uu_send.c, uip/msg/msg.h, uip/msg/msg0.c, uip/msg/msg1.c, uip/msg/msg3.c, uip/msg/msg5.c, uip/send/s_input.c, lib/mmdf/interrupt.c, lib/util/nexec.c, src/badusers/lo_wtmail.c, src/deliver/ch_io.c, src/local/lo_wtmail.c:
+	* Attic/Makefile, configure.in, h/config.h.in, uip/Attic/Makefile:
+	some minor fixes
+
+	* lib/util/strdup.c: added define HAVE_STRDUP
+
+	* ChangeLog: *** empty log message ***
+
+Tue Dec 30 21:20:18 1997  Kai Krueger  <krueger@galadriel>
+
+	* uip/send/s_main.c, uip/send/s_onint.c, uip/snd/s_input.c, uip/snd/s_main.c, uip/snd/s_onint.c, uip/ucbmail/sigretro.c, src/prog/qu2pr_send.c, src/uucp/qu2uu_send.c, uip/msg/msg.h, uip/msg/msg0.c, uip/msg/msg1.c, uip/msg/msg3.c, uip/msg/msg5.c, uip/send/s_input.c, lib/mmdf/interrupt.c, lib/util/nexec.c, src/badusers/lo_wtmail.c, src/deliver/ch_io.c, src/local/lo_wtmail.c:
         change sigtype into RETSIGTYPE determined during runtime of configure
 
-Tue Dec 30 22:00:18 1997  Kai Krueger  <krueger@galadriel>
+Tue Dec 30 21:00:18 1997  Kai Krueger  <krueger@galadriel>
 
-        * uip/ucbmail/def.h, uip/msg/msg0.c, uip/msg/msg1.c, uip/msg/msg2.c, uip/msg/msg3.c, uip/msg/msg4.c, src/local/lo_wtmail.c, src/local/qu2lo_send.c, src/deliver/deliver.c, src/badusers/lo_wtmail.c, src/badusers/qu2lo_send.c, lib/dial/d_connect.c, lib/dial/d_dglobals.c, lib/dial/d_port.c, lib/dial/d_pstty.c:
+	* uip/ucbmail/def.h, uip/msg/msg0.c, uip/msg/msg1.c, uip/msg/msg2.c, uip/msg/msg3.c, uip/msg/msg4.c, src/local/lo_wtmail.c, src/local/qu2lo_send.c, src/deliver/deliver.c, src/badusers/lo_wtmail.c, src/badusers/qu2lo_send.c, lib/dial/d_connect.c, lib/dial/d_dglobals.c, lib/dial/d_port.c, lib/dial/d_pstty.c:
         Added define HAVE_SGTTY_H except for uip/ucbmail.
 
-Tue Dec 30 21:25:00 1997  Kai Krueger  <krueger@galadriel>
+Tue Dec 30 20:25:00 1997  Kai Krueger  <krueger@galadriel>
 
-        * src/smtp/smtpsrvr.c, h/config.h.in:
+	* src/smtp/smtpsrvr.c, h/config.h.in:
         renamed HAVE_TCP_WRAPPER to HAVE_LIBWRAP. Check of existens of libwrap is
         done by configure.
 
-Tue Dec 30 21:00:00 1997  Kai Krueger  <krueger@galadriel>
-        * src/tools/dbmbuild.c, src/tools/tablelist.c, src/submit/mgt_submit.c, src/submit/submit.c, src/smtp/smtpd.4.2.c, src/smtp/smtpd.4.3.c, src/smtp/smtpd.5.2.c, lib/table/tb_ns.4.2.c, lib/table/tb_ns.fake.c, lib/table/Makefile.real, lib/table/ch_tbdbm.c, lib/table/tb_ns.c, h/config.h.in, doc/administrators/building:
+Tue Dec 30 20:00:00 1997  Kai Krueger  <krueger@galadriel>
+        
+	* src/tools/dbmbuild.c, src/tools/tablelist.c, src/submit/mgt_submit.c, src/submit/submit.c, src/smtp/smtpd.4.2.c, src/smtp/smtpd.4.3.c, src/smtp/smtpd.5.2.c, lib/table/tb_ns.4.2.c, lib/table/tb_ns.fake.c, lib/table/Makefile.real, lib/table/ch_tbdbm.c, lib/table/tb_ns.c, h/config.h.in, doc/administrators/building:
         renamed define NAMESERVER to HAVE_NAMESERVER. Define is set/unset by
         configure depending on starting configure with the argument
         '--enable-nameserver'/'--disable-nameserver'.
@@ -24,77 +34,77 @@ Tue Dec 30 21:00:00 1997  Kai Krueger  <krueger@galadriel>
         -lresolv to LIBS
 
 Tue Dec 30 17:00:00 1997  Kai Krueger  <krueger@galadriel>
-
-        * src/tools/checkup.c, lib/mmdf/mmdf_init.c, h/config.h.in, doc/administrators/building:
+        
+	* src/tools/checkup.c, lib/mmdf/mmdf_init.c, h/config.h.in, doc/administrators/building:
         renamed define NODIAL to HAVE_DIAL. Define is set by configure
         depending on starting configure with the argument '--enable-dial'.
         Default: dial is disabled.
-
-        * lib/util/tty_io.c, h/config.h.in, doc/administrators/building:
+        
+	* lib/util/tty_io.c, h/config.h.in, doc/administrators/building:
         renamed define SECURETTY to HAVE_SECURETTY. Define is set by configure
         depending on the existens of /etc/securetty.
 
 Tue Dec 30 16:00:00 1997  Kai Krueger  <krueger@galadriel>
-
-        * Makefile.in: fixed 'distclean': removing h/config.h
-
-        * doc/administrators/building, lib/dial/d_assign.c, h/config.h.in:
+        
+	* Makefile.in: fixed 'distclean': removing h/config.h
+        
+	* doc/administrators/building, lib/dial/d_assign.c, h/config.h.in:
         configure looks for 'assign'. If program is found HAVE_ASSIGN is set.
         (HAVE_ASSIGN replaces DOASSIGN)
-
-        * uip/Makefile.in, src/Makefile.in, lib/Makefile.in, conf/common/Makefile.com.in, conf/cleanup, conf/sitesetup, configure.in, Makefile.in:
+        
+	* uip/Makefile.in, src/Makefile.in, lib/Makefile.in, conf/common/Makefile.com.in, conf/cleanup, conf/sitesetup, configure.in, Makefile.in:
         all changes needed that Makefiles are build by configure.
 
-Tue Dec 30 15:00:00 1997  Kai Krueger  <krueger@galadriel>
-
-        * src/tools/checkque.c, src/tools/cleanque.c, src/deliver/deliver.c, doc/administrators/building, conf/vu44/conf.h, conf/vgr/conf.h, conf/uclvax2/conf.h, conf/test/conf.h, conf/okstate/conf.h, conf/i386/conf.h, conf/hppa1.0/conf.h, conf/csnet-relay/conf.h, conf/bbn/conf.h, conf/4.3vax/conf.h:
+Tue Dec 30 14:00:00 1997  Kai Krueger  <krueger@galadriel>
+        
+	* src/tools/checkque.c, src/tools/cleanque.c, src/deliver/deliver.c, doc/administrators/building, conf/vu44/conf.h, conf/vgr/conf.h, conf/uclvax2/conf.h, conf/test/conf.h, conf/okstate/conf.h, conf/i386/conf.h, conf/hppa1.0/conf.h, conf/csnet-relay/conf.h, conf/bbn/conf.h, conf/4.3vax/conf.h:
         The determination of the location of <dir.h>, <dirent.h>, a.s.o
         has moved to h/config.h.in and should be determined by configure.
         There are four defines: HAVE_DIRENT_H, HAVE_NDIR_H, HAVE_SYS_DIR_H,
         HAVE_SYS_NDIR_H depending on where to find the include.
-
-        * h/config.h.in, Makefile.in, config.guess, config.sub, configure.in:
+        
+	* h/config.h.in, Makefile.in, config.guess, config.sub, configure.in:
         add main part of configure and changed toplevel Makefile for it.
         h/config.h.in contains now old and new defines. The old-ones for backward
         compatability.
 
 Tue Dec 29 21:30:00 1997  Kai Krueger  <krueger@galadriel>
-
-        * src/local/lo_wtmail.c:
+        
+	* src/local/lo_wtmail.c:
         local/lo_wtmail.c: add envelope sender to message.
         Thanks to "John L. Romine" <jromine@yoyodyne.ics.uci.edu>
-
-        * src/tools/checkup.c, src/tools/dbmbuild.c, src/tools/tablelist.c, lib/table/ch_tbdbm.c, lib/table/ch_tbseq.c:
+        
+	* src/tools/checkup.c, src/tools/dbmbuild.c, src/tools/tablelist.c, lib/table/ch_tbdbm.c, lib/table/ch_tbseq.c:
         added new table type: tablefile can come over nis. switch: HAVE_NIS
-
-        * lib/mmdf/mm_tai.c:
+        
+	* lib/mmdf/mm_tai.c:
         added new table type: tablefile can come over nis. switch: HAVE_NIS
 
         flags and filename of special tables 'mailids' and 'users' may be
         set in mmdftailor. (quick hack)
 
 Tue Dec 29 21:00:00 1997  Kai Krueger  <krueger@galadriel>
-
-        * h/ch.h:
+        
+	* h/ch.h:
         added new table type: tablefile can come over nis. switch: HAVE_NIS
-
-        * doc/administrators/runtime:
+        
+	* doc/administrators/runtime:
         added switch HAVE_NIS for MTBL via NIS, description
-
-        * conf/vu44/config.h, conf/vgr/config.h, conf/uclvax2/config.h, conf/test/config.h, conf/okstate/config.h, conf/i386/config.h, conf/hppa1.0/config.h, conf/csnet-relay/config.h, conf/bbn/config.h, conf/4.3vax/config.h:
+        
+	* conf/vu44/config.h, conf/vgr/config.h, conf/uclvax2/config.h, conf/test/config.h, conf/okstate/config.h, conf/i386/config.h, conf/hppa1.0/config.h, conf/csnet-relay/config.h, conf/bbn/config.h, conf/4.3vax/config.h:
         added switch HAVE_NIS for MTBL via NIS
-
-        * conf/hppa1.0/conf.c, conf/hppa1.0/conf.h, conf/hppa1.0/conf_dial.c, conf/hppa1.0/config.h, conf/hppa1.0/d_lock.h, conf/hppa1.0/msgtailor.c, conf/hppa1.0/s_tailor.c, conf/hppa1.0/s_tailor.h, h/util.h, conf/hppa1.0/Makefile.com, conf/hppa1.0/Makefile.lib, conf/hppa1.0/Makefile.src, conf/hppa1.0/chan.c:
+        
+	* conf/hppa1.0/conf.c, conf/hppa1.0/conf.h, conf/hppa1.0/conf_dial.c, conf/hppa1.0/config.h, conf/hppa1.0/d_lock.h, conf/hppa1.0/msgtailor.c, conf/hppa1.0/s_tailor.c, conf/hppa1.0/s_tailor.h, h/util.h, conf/hppa1.0/Makefile.com, conf/hppa1.0/Makefile.lib, conf/hppa1.0/Makefile.src, conf/hppa1.0/chan.c:
         Configuration tree for HP9000s7xx
-
-        * src/smtp/smtpsrvr.c, conf/vu44/config.h, conf/vgr/config.h, conf/uclvax2/config.h, conf/test/config.h, conf/okstate/config.h, conf/i386/Makefile.com, conf/i386/config.h, conf/csnet-relay/config.h, conf/bbn/config.h, conf/4.3vax/config.h:
+        
+	* src/smtp/smtpsrvr.c, conf/vu44/config.h, conf/vgr/config.h, conf/uclvax2/config.h, conf/test/config.h, conf/okstate/config.h, conf/i386/Makefile.com, conf/i386/config.h, conf/csnet-relay/config.h, conf/bbn/config.h, conf/4.3vax/config.h:
         * smtp/smtpsrvr.c: tcp_wrapper and rfc931 support and accesscontrol
           via /etc/hosts.[allow/deny]
           config-switch: HAVE_TCP_WRAPPER
 
 Tue Dec 29 20:45:00 1997  Kai Krueger  <krueger@galadriel>
-
-        * src/submit/mgt_submit.c, src/submit/submit.c, src/smtp/smtpsrvr.c:
+        
+	* src/submit/mgt_submit.c, src/submit/submit.c, src/smtp/smtpsrvr.c:
         * rfc1123 support to submit and smtpsrvr.(part1)
           "Received: line include domain literal"
           Result of rfc931-request is transmited to submit by the flags:
@@ -102,21 +112,21 @@ Tue Dec 29 20:45:00 1997  Kai Krueger  <krueger@galadriel>
              F<from_host>
           Newformat of Received lines:
           from %s ( user@from_host [ip-address] ) by ....
-
-        * conf/i386/conf.h, conf/okstate/conf.h, conf/test/conf.h, conf/uclvax2/conf.h, conf/vgr/conf.h, conf/vu44/conf.h, conf/4.3vax/conf.h, conf/bbn/conf.h, conf/csnet-relay/conf.h:
+        
+	* conf/i386/conf.h, conf/okstate/conf.h, conf/test/conf.h, conf/uclvax2/conf.h, conf/vgr/conf.h, conf/vu44/conf.h, conf/4.3vax/conf.h, conf/bbn/conf.h, conf/csnet-relay/conf.h:
         changes for headerlines of 1024 bytes
-
-        * conf/okstate/config.h, conf/test/config.h, conf/uclvax2/config.h, conf/vgr/config.h, conf/vu44/config.h, src/smtp/smtpsrvr.c, conf/4.3vax/config.h, conf/bbn/config.h, conf/csnet-relay/config.h, conf/i386/config.h:
+        
+	* conf/okstate/config.h, conf/test/config.h, conf/uclvax2/config.h, conf/vgr/config.h, conf/vu44/config.h, src/smtp/smtpsrvr.c, conf/4.3vax/config.h, conf/bbn/config.h, conf/csnet-relay/config.h, conf/i386/config.h:
         smtp/smtpsrvr.c: allow 8bit clean transfer. switch: EIGHT_BIT_CLEAN
-
-        * uip/send/s_get.c:
+        
+	* uip/send/s_get.c:
         compiler problem: char *drft_tmplt = "drft.XXXXXX"; is defined as constant
         and any changes during runtime leads to core!
-
-        * uip/other/sendmail.c, src/submit/submit.c:
+        
+	* uip/other/sendmail.c, src/submit/submit.c:
         linux: use setreuid() instead of setuid()
-
-        * lib/mmdf/mq_rdmail.c:
+        
+	* lib/mmdf/mq_rdmail.c:
         fix for a libc-bug. This path is needed for libc >4.5.xx
         MMDF is using fp=fdopen(dup(fd)) for duplicating an file-descriptor.
         - libc-4.5.xx: no relation between 'fd' and 'fp'
@@ -128,66 +138,66 @@ Tue Dec 29 20:45:00 1997  Kai Krueger  <krueger@galadriel>
                  'fp' can be repositioned.
 
 Tue Dec 29 20:30:00 1997  Kai Krueger  <krueger@galadriel>
-
-        * conf/test/config.h, conf/uclvax2/config.h, conf/vgr/config.h, conf/vu44/config.h, src/submit/submit.c, conf/4.3vax/config.h, conf/bbn/config.h, conf/csnet-relay/config.h, conf/i386/config.h, conf/okstate/config.h:
+        
+	* conf/test/config.h, conf/uclvax2/config.h, conf/vgr/config.h, conf/vu44/config.h, src/submit/submit.c, conf/4.3vax/config.h, conf/bbn/config.h, conf/csnet-relay/config.h, conf/i386/config.h, conf/okstate/config.h:
         submit/submit.c: flushing stdout/stderr before exiting. enable it with SUBMIT_TOO_FAST
-
-        * src/badusers/Makefile.real, src/badusers/ch_local.c, src/badusers/gen, src/badusers/lo_wtmail.c, src/badusers/qu2lo_send.c:
+        
+	* src/badusers/Makefile.real, src/badusers/ch_local.c, src/badusers/gen, src/badusers/lo_wtmail.c, src/badusers/qu2lo_send.c:
         add new channel program for invalid reciepients addresses.
         Sender of bad-addressed mail will get notification that his Email is
         forwarded to badusers for further delivery (by hand).
-
-        * lib/mmdf/qu_io.c: added new message for badusers-delivery
-
-        * uip/ucbmail/def.h, uip/msg/msg0.c, uip/msg/msg1.c, uip/msg/msg2.c, uip/msg/msg3.c:
+        
+	* lib/mmdf/qu_io.c: added new message for badusers-delivery
+        
+	* uip/ucbmail/def.h, uip/msg/msg0.c, uip/msg/msg1.c, uip/msg/msg2.c, uip/msg/msg3.c:
         linux: don't include sgtty.h
-
-        * src/smtp/Makefile.real, src/smtp/tcp.4.3.c:
+        
+	* src/smtp/Makefile.real, src/smtp/tcp.4.3.c:
         linux: copy tcp.4.2.c to tcp.4.3.c
-
-        * src/prog/pr2mm_send.c: linux: don't have sys_siglist[]
-
-        * src/local/lo_wtmail.c, src/local/qu2lo_send.c, src/deliver/deliver.c:
+        
+	* src/prog/pr2mm_send.c: linux: don't have sys_siglist[]
+        
+	* src/local/lo_wtmail.c, src/local/qu2lo_send.c, src/deliver/deliver.c:
         linux: don't include sgtty.h
-
-        * lib/util/Makefile.real, lib/util/creatdir.c:
+        
+	* lib/util/Makefile.real, lib/util/creatdir.c:
         linux: other syntax of mkdir()
-
-        * lib/table/tb_ns.4.2.c:
+        
+	* lib/table/tb_ns.4.2.c:
         linux have struct __res_state and not struct state
 
 Tue Dec 29 20:15:00 1997  Kai Krueger  <krueger@galadriel>
-
-        * lib/libfix.linux: libfix for linux
-
-        * h/util.h:
+        
+	* lib/libfix.linux: libfix for linux
+        
+	* h/util.h:
         linux-config: use libio.h instead of extern struct passwd *getpwnam()
                       define SIGSYS as SIGUSR2
-
-        * conf/vu44/config.h, conf/vgr/config.h, conf/uclvax2/config.h, conf/test/config.h, conf/okstate/config.h:
+        
+	* conf/vu44/config.h, conf/vgr/config.h, conf/uclvax2/config.h, conf/test/config.h, conf/okstate/config.h:
         add define for linux
-
-        * conf/i386/chan.c, conf/i386/conf.c, conf/i386/conf.h, conf/i386/conf_dial.c, conf/i386/config.h, conf/i386/d_lock.h, conf/i386/msgtailor.c, conf/i386/s_tailor.c, conf/i386/s_tailor.h, conf/i386/Makefile.com, conf/i386/Makefile.lib, conf/i386/Makefile.src:
+        
+	* conf/i386/chan.c, conf/i386/conf.c, conf/i386/conf.h, conf/i386/conf_dial.c, conf/i386/config.h, conf/i386/d_lock.h, conf/i386/msgtailor.c, conf/i386/s_tailor.c, conf/i386/s_tailor.h, conf/i386/Makefile.com, conf/i386/Makefile.lib, conf/i386/Makefile.src:
         Configuration tree for Linux
-
-        * conf/csnet-relay/config.h, conf/bbn/config.h, conf/4.3vax/config.h:
+        
+	* conf/csnet-relay/config.h, conf/bbn/config.h, conf/4.3vax/config.h:
         add define for linux
 
 Tue Dec 29 19:30:00 1997  Kai Krueger  <krueger@galadriel>
-
-        * src/uucp/Makefile.real, src/tools/Makefile.real, src/submit/Makefile.real, src/smtp/Makefile.real, src/smphone/Makefile.real, src/prog/Makefile.real, src/pobox/Makefile.real, src/niftp/Makefile.real, src/ean/Makefile.real:
+        
+	* src/uucp/Makefile.real, src/tools/Makefile.real, src/submit/Makefile.real, src/smtp/Makefile.real, src/smphone/Makefile.real, src/prog/Makefile.real, src/pobox/Makefile.real, src/niftp/Makefile.real, src/ean/Makefile.real:
         Modified Files:
                 Makefile.real
          fixes all Makefiles for Linux.
-
-        * src/deliver/Makefile.real, src/delay/Makefile.real, src/blockaddr/Makefile.real, src/bboards/Makefile.real:
+        
+	* src/deliver/Makefile.real, src/delay/Makefile.real, src/blockaddr/Makefile.real, src/bboards/Makefile.real:
         Committing in src/bboards
 
         Modified Files:
                 Makefile.real
          fixes all Makefiles for Linux.
-
-        * h/d_returns.h, h/util.h, conf/vu44/conf.h, conf/vu44/config.h, conf/vgr/conf.h, conf/vgr/config.h, conf/uclvax2/conf.h, conf/uclvax2/config.h, conf/test/conf.h, conf/test/config.h, conf/okstate/conf.h, conf/okstate/config.h, conf/csnet-relay/conf.h, conf/csnet-relay/config.h, conf/bbn/conf.h, conf/bbn/config.h:
+        
+	* h/d_returns.h, h/util.h, conf/vu44/conf.h, conf/vu44/config.h, conf/vgr/conf.h, conf/vgr/config.h, conf/uclvax2/conf.h, conf/uclvax2/config.h, conf/test/conf.h, conf/test/config.h, conf/okstate/conf.h, conf/okstate/config.h, conf/csnet-relay/conf.h, conf/csnet-relay/config.h, conf/bbn/conf.h, conf/bbn/config.h:
         Modified Files:
                 sitesetup conf.h
         Added Files:
@@ -195,8 +205,8 @@ Tue Dec 29 19:30:00 1997  Kai Krueger  <krueger@galadriel>
         add configuration 'config.h' file for each site. This may be used as a
         preparation for autoconf.
         Defines as parameters in Makefile.com no longer needed.
-
-        * conf/4.3vax/conf.h, conf/4.3vax/config.h, conf/cleanup, conf/sitesetup:
+        
+	* conf/4.3vax/conf.h, conf/4.3vax/config.h, conf/cleanup, conf/sitesetup:
         Modified Files:
                 sitesetup
         Added Files:
