@@ -97,3 +97,5 @@ ${SEDFILE}: Makefile
 
 man5/mmdftailor.5: ${SEDFILE} man5/mmdftailor.5.in
 	sed -f ${SEDFILE} man5/mmdftailor.5.in > man5/mmdftailor.5 
+
+depend:
