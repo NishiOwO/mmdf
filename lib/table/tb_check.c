@@ -1,5 +1,5 @@
 /*
- * $Id: tb_check.c,v 1.1 2000/08/08 16:36:39 krueger Exp $
+ * $Id: tb_check.c,v 1.2 2001/07/15 15:40:14 krueger Exp $
  */
 
 #include "util.h"
@@ -9,6 +9,11 @@
 #include <pwd.h>
 #include <grp.h>
 #include <sys/stat.h>
+
+#if !HAVE_SYS_ERRLIST_DECL
+extern	int	sys_nerr;
+extern	char	*sys_errlist[];
+#endif /* HAVE_SYS_ERRLIST_DECL */
 
 /*  maximum number of output lines to be queued at once  */
 #define         QUESIZ          20
