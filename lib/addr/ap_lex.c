@@ -182,7 +182,7 @@ char    lexval[];
 			continue;
 		    case LT_RPR: 
 			if (--retval > 0)
-			    break;
+			    continue;
 			lexptr--;       /* remove right-most paren */
 			retval = LV_COMMENT;
 			break;
