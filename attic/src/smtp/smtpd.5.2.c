@@ -54,10 +54,10 @@ char **argv;
 		fprintf(stderr, "Cannot find service smtp/tcp\n");
 		exit(-1);
 	}
-#ifdef NAMESERVER
+#ifdef HAVE_NAMESERVER
 	/* don't wait forever! */
 	ns_settimeo(NS_NETTIME);
-#endif /* NAMESERVER */
+#endif /* HAVE_NAMESERVER */
 
 	/*
 	 * try to get full name for thishost

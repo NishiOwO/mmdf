@@ -84,10 +84,10 @@ char **argv;
 check (tblptr)
 Table *tblptr;
 {
-#ifdef NAMESERVER
+#ifdef HAVE_NAMESERVER
     if ((tblptr -> tb_flags & TB_SRC) == TB_NS)
 	return;
-#endif /* NAMESERVER */
+#endif /* HAVE_NAMESERVER */
 #ifdef HAVE_NIS
     if ((tblptr -> tb_flags & TB_SRC) == TB_NIS) return;
 #endif /* HAVE_NIS */

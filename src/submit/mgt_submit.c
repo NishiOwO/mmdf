@@ -256,9 +256,9 @@ register char *theparm;
 
 	case 'k':
 	    theparm = prm_dupval (++theparm, &ptr);
-#ifdef NAMESERVER
+#ifdef HAVE_NAMESERVER
 	    ns_settimeo(atoi(ptr));
-#endif
+#endif /* HAVE_NAMESERVER */
 	    free(ptr);
 	    break;
 

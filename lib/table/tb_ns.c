@@ -11,6 +11,8 @@
  */
 
 #include "util.h"
+
+#ifdef HAVE_NAMESERVER
 #include "mmdf.h"
 #include "ch.h"
 #include "ns.h"
@@ -905,3 +907,16 @@ int rval;
     dmncache[i] = cp;
 }
 #endif NSCACHE
+
+#else /* HAVE_NAMESERVER */
+
+/*
+ *	TB_NS.FAKE.C
+ *
+ *	Module to call on host system provided lookup routines.
+ */
+
+/* Place holder only */
+int	dummy_thing_for_namelist;	/* to keep ranlib/lorder quiet */
+
+#endif/* not HAVE_NAMESERVER */

@@ -412,13 +412,13 @@ process (tblptr)
     if (tblptr -> tb_fp == (FILE *)EOF)
 	return;
 
-#ifdef NAMESERVER
+#ifdef HAVE_NAMESERVER
     if ((tblptr -> tb_flags & TB_SRC) == TB_NS) {
     	if (Debug || Verbose)
 	    fprintf (stderr, "   (Nameserver table)\n");
 	return;
     }
-#endif /* NAMESERVER */
+#endif /* HAVE_NAMESERVER */
 #ifdef HAVE_NIS
     if ((tblptr -> tb_flags & TB_SRC) == TB_NIS) {
       if (Debug || Verbose)
@@ -548,10 +548,10 @@ datum value;
 check (tblptr)
 Table *tblptr;
 {
-#ifdef NAMESERVER
+#ifdef HAVE_NAMESERVER
     if ((tblptr -> tb_flags & TB_SRC) == TB_NS)
 	return(0);
-#endif /* NAMESERVER */
+#endif /* HAVE_NAMESERVER */
 #ifdef HAVE_NIS
     if ((tblptr -> tb_flags & TB_SRC) == TB_NIS)
       return(0);

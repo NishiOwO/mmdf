@@ -225,9 +225,9 @@ char   *argv[];
 {
     umask(0);
     mmdf_init (argv[0]);
-#ifdef NAMESERVER
+#ifdef HAVE_NAMESERVER
     ns_settimeo(NS_UIPTIME);	/* set an initial timeout */
-#endif
+#endif /* HAVE_NAMESERVER */
     mn_usinit ();                 /* initial info on who is running us  */
     mn_init (argc, argv);         /* parse args, alloc buffers.         */
     mn_dirinit ();                /* chdir into quedfldir                 */

@@ -4,13 +4,13 @@
 #
 
 MODULES	= dm_struct dm_table ch_tbdbm ch_tbseq \
-	  tb_io tb_ns.$(TB_NS) tb_struct
+	  tb_io tb_ns tb_struct
 
 OBJECTS  =  dm_struct.o dm_table.o $(CH_TB).o \
-	    tb_io.o tb_ns.$(TB_NS).o tb_struct.o
+	    tb_io.o tb_ns.o tb_struct.o
 
 COBJECTS =  dm_struct.c dm_table.c $(CH_TB).c \
-	    tb_io.c tb_ns.$(TB_NS).c tb_struct.c
+	    tb_io.c tb_ns.c tb_struct.c
 
 real-default: ../table-made
 ../table-made:	$(OBJECTS)

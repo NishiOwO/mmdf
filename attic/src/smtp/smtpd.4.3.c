@@ -40,10 +40,10 @@ char	**argv;
 	int	status;
 	int	on = 1;
 
-#ifdef NAMESERVER
+#ifdef HAVE_NAMESERVER
 	/* don't lose connection because NS takes too long */
 	ns_settimeo(NS_NETTIME);
-#endif
+#endif /* HAVE_NAMESERVER */
 	setbuf( stdout, obuf );
 	gethostname( thishost, sizeof(thishost));	/* current hostname */
 

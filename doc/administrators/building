@@ -896,11 +896,12 @@ Define this variable if you don't have a dup2() system call or subroutine.
 .IP NOFCNTL 15
 If you defined NODUP2, then you should also define NOFCNTL if you don't have
 the fcntl(x, F_DUPFD) system call either.
-.IP NAMESERVER 15
+.IP HAVE_NAMESERVER 15
 Enables the nameserver lookup code for accessing domain servers.  The
-NAMESERVER support is new.  You will be required to include either
-tb_ns.fake.c or tb_ns.<sys>.c.  Currently there is only support for
-4.2BSD networking.  See TB_NS below.
+NAMESERVER support is new.  If  turned  on  it  will
+automatically compile the support for  4.2BSD otherwise the 'fake' code
+will  be  compiled Currently  there  is  only support for 4.2BSD
+networking.
 .IP NODOMLIT 15
 Prevents Domain Literals (such as [10.0.0.59]) from appearing in addresses.
 Since \*M doesn't currently handle Domain Literals properly, use of this option
@@ -978,7 +979,7 @@ searched tables.
 The TB_NS variable indicates which nameserver module to use.
 There are currently only
 two choices, `fake' and `4.2'.  `fake' is appropriate
-if you didn't specify -DNAMESERVER in CFLAGS above
+if you didn't specify -DHAVE_NAMESERVER in CFLAGS above
 or if your system is a non-BSD4.2 Unix.
 .XX
 Tailor TB_NS.

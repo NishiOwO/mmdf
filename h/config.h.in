@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.4 1997/12/30 16:12:16 krueger Exp $
+ * $Id: config.h.in,v 1.5 1997/12/30 20:22:58 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -274,14 +274,14 @@
 /* #undef NOFCNTL *//* old */
 
 /*             Enables   the   nameserver  lookup  code  for
- *             accessing  domain  servers.   The  NAMESERVER
- *             support  is  new.   You  will  be required to
- *             include either tb_ns.fake.c or tb_ns.<sys>.c.
+ *             accessing domain servers.The  HAVE_NAMESERVER
+ *             support   is   new.  If  turned  on  it  will
+ *             automatically compile the support for  4.2BSD
+ *             otherwise the 'fake' code  will  be  compiled
  *             Currently  there  is  only support for 4.2BSD
  *             networking.  See TB_NS below.
  */
-#undef HAVE_NAMESERVER /* new */
-#define NAMESERVER     /* old */
+#undef HAVE_NAMESERVER
 
 /*             Prevents    Domain    Literals    (such    as
  *             [10.0.0.59])  from  appearing  in  addresses.

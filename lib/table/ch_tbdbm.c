@@ -74,9 +74,9 @@ int     pos;                    /* which position to get  (0 = first) */
     DBMValues   dbm;
     Chan	**chp;
     char        hostname[ADDRSIZE];
-#ifdef	NAMESERVER
+#ifdef	HAVE_NAMESERVER
     int         ns_done = 0;
-#endif /* NAMESERVER */
+#endif /* HAVE_NAMESERVER */
     int         dbm_done = 0;
 
 /*  the list of channel name tables is first searched.  If a hit is found
@@ -93,7 +93,7 @@ int     pos;                    /* which position to get  (0 = first) */
 	ll_log( logptr, LLOGFTR, "h2chan table '%s'",
 		chanptr->ch_table->tb_name);
 #endif
-#ifdef NAMESERVER
+#ifdef HAVE_NAMESERVER
 	if ((chanptr -> ch_table -> tb_flags & TB_SRC) == TB_NS) {
 	    if (!ns_done) {
 		/*
@@ -127,7 +127,7 @@ int     pos;                    /* which position to get  (0 = first) */
 	    return( chanptr );
 	}
 	else
-#endif /* NAMESERVER */
+#endif /* HAVE_NAMESERVER */
 	{
 	    if (!dbm_done) {
 		dbm_done++;
@@ -184,7 +184,7 @@ char    *dmbuf;                 /* Domain route buffer */
 	if (((dmnptr -> dm_table -> tb_flags & TB_PARTIAL) != TB_PARTIAL) ||
 	    (!isstr(dmnptr->dm_domain)))
 	    continue;
-#ifdef NAMESERVER
+#ifdef HAVE_NAMESERVER
 	if ((dmnptr -> dm_table -> tb_flags & TB_SRC) == TB_NS) {
 	    sprintf(sdbuf, "%s.%s", subdomain, dmnptr->dm_domain);
 	    switch (ns_fetch(dmnptr->dm_table,sdbuf,official,1)) {
@@ -197,7 +197,7 @@ char    *dmbuf;                 /* Domain route buffer */
 	    }
 	}
 	else
-#endif /* NAMESERVER */
+#endif /* HAVE_NAMESERVER */
 	{
 	    if (!dbm_done) {
 		dbm_done++;
@@ -313,7 +313,7 @@ char   *buf;                      /* put value int this buffer          */
 LOCVAR DBMValues dbm;
 LOCVAR struct DBvalues *dp = (struct DBvalues *) 0;
     register char *cp;
-#if defined(NAMESERVER) || defined(HAVE_NIS)
+#if defined(HAVE_NAMESERVER) || defined(HAVE_NIS)
     int retval;
 #endif
 #ifdef HAVE_NIS
@@ -328,7 +328,7 @@ LOCVAR struct DBvalues *dp = (struct DBvalues *) 0;
 			table -> tb_name, first, name);
 #endif
 
-#ifdef NAMESERVER
+#ifdef HAVE_NAMESERVER
     if ((table->tb_flags&TB_SRC) == TB_NS) {
 	if ((retval = ns_fetch (table, name, buf, first)) != NOTOK)
 	    return (retval);
@@ -338,7 +338,7 @@ LOCVAR struct DBvalues *dp = (struct DBvalues *) 0;
 	(void) strcpy (buf, "(ERROR)");
 	return (NOTOK);
     }
-#endif /* NAMESERVER */
+#endif /* HAVE_NAMESERVER */
 
 #ifdef HAVE_NIS
     if ((table->tb_flags&TB_SRC) == TB_NIS) {
