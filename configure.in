@@ -470,12 +470,16 @@ fi
 dnl check if we have struct state
 AC_MSG_CHECKING(whether have struct __res_state)
 AC_CACHE_VAL(ac_cv_have_STATE, AC_TRY_RUN( 
- [#include <resolv.h> 
+ [#include <netinet/in.h>
+#include <netdb.h>
+#include <sys/socket.h>
+#include <arpa/nameser.h>
+#include <resolv.h> 
  main() { struct __res_state res; exit(0); }],
    ac_cv_have_STATE=yes,
    ac_cv_have_STATE=no,
    ac_cv_have_STATE=no))
-if test "$ac_cv_have_STATE" = yes; then
+if test "$ac_cv_have_STATE" = "yes"; then
   AC_MSG_RESULT(yes)
   AC_DEFINE(HAVE_RES_STATE)
 else

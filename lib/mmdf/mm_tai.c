@@ -1027,7 +1027,7 @@ LOCVAR Cmd
     "nodots",   CMDANODOTS,     0,
 #ifdef HAVE_NOSRCROUTE
     "nosrcrt",  CMDANOSRCRT,    0,
-    "rejsrcrt", CMDANOSRCRT,    0,
+    "rejsrcrt", CMDAREJSRCRT,   0,
 #endif
     "same",     CMDASAME,       0,
     "try",	CMDATRY,	0,

@@ -71,7 +71,8 @@ LOCALUTIL = tai_file.o lk_lock.o
 default:	real-default
 
 .c.o:
-	$(CC) $(CFLAGS) $(TARGET_ARCH) -c $<
+	$(CC) $(CFLAGS) -c $<
+#	$(CC) $(CFLAGS) $(TARGET_ARCH) -c $<
 
 .SUFFIXES: .o .c
 
