@@ -1,5 +1,5 @@
 /*
- * $Id: table_test.c,v 1.1 1999/10/24 16:50:01 krueger Exp $
+ * $Id: table_test.c,v 1.2 2001/01/09 20:19:02 krueger Exp $
  *
  *  This program ist used to check 
  */
@@ -79,8 +79,10 @@ int argc;
 char *argv[];
 {
   char key[LINESIZE];
+  char buf[LINESIZE];
+  int flags;
   
-  Tdebug = 0;
+  Tdebug = 2;
   
   if(argc!=2) {
     printf("usage: %s key\n", argv[0]);
@@ -89,6 +91,8 @@ char *argv[];
   strcpy(key, argv[1]);
   mmdf_init(argv[0]);
 
+  aliasfetch(TRUE, key, buf, &flags);
+  printf("%-10sRES='%s'\n", key, buf);
   do_table_get(key);
   do_channel_get(key);
   do_domain_get(key);
