@@ -140,7 +140,7 @@ char *ccstr;		/* where to save cc       field */
 char *subjstr;		/* where to save Subj     field */
 {
 	char line[LINESIZE];
-	char curhdr[M_BSIZE];
+	char curhdr[MSG_BSIZE];
 
 	if( fromstr != 0)
 		fromstr[0] = '\0';
@@ -242,7 +242,7 @@ char *dest;		/* where to put data part at end */
 	}  else  {
 		/* add to end of field, if room */
 		destlen = strlen( dest);
-		if( (strlen( src) + destlen) < M_BSIZE - 1)
+		if( (strlen( src) + destlen) < MSG_BSIZE - 1)
 			sprintf( &dest[destlen], "\n%s%c", src, '\0');
 	}
 	return( TRUE);

@@ -45,7 +45,7 @@
 #define SIZESUBJ	40		/* */
 #define SIZETO		32
 
-#define	M_BSIZE		512
+#define	MSG_BSIZE		512
 
 #define SPSIGS		0400007
 
@@ -61,15 +61,15 @@ struct message {
 };
 
 /* Flags values in msg[] struct */
-#define M_DELETED	0000001		/* Msg flagged for deletion */
-#define	M_PUT		0000002		/* Msg put to another file */
-#define M_NEW		0000004		/* Msg not seen yet */
-#define M_KEEP		0000010		/* Msg to be kept in this file */
-#define M_ANSWERED	0000020		/* Msg has been answered */
-#define M_FORWARDED	0000040		/* Msg has been forwarded */
+#define MSG_DELETED	0000001		/* Msg flagged for deletion */
+#define	MSG_PUT		0000002		/* Msg put to another file */
+#define MSG_NEW		0000004		/* Msg not seen yet */
+#define MSG_KEEP		0000010		/* Msg to be kept in this file */
+#define MSG_ANSWERED	0000020		/* Msg has been answered */
+#define MSG_FORWARDED	0000040		/* Msg has been forwarded */
 
-#define M_RESTMAIL	0040000		/* Special for OverWrite only */
-#define M_PROCESS_IT	0100000		/* Msg flagged for processing */
+#define MSG_RESTMAIL	0040000		/* Special for OverWrite only */
+#define MSG_PROCESS_IT	0100000		/* Msg flagged for processing */
 
 #ifndef NOEXTERNS
 /* MMDF GLOBALS */
@@ -163,7 +163,7 @@ extern FILE *fpmsgrc;			/* User options FILEp */
 extern char    ttyobuf[];
 extern char    sndto[];
 extern char    sndcc[];
-extern char	sndsubj[M_BSIZE + 9];
+extern char	sndsubj[MSG_BSIZE + 9];
 
 extern char	lastc;
 extern int	istty;

@@ -269,7 +269,7 @@ char   *argv[];
 			newmessage();	/* anything arrived recently? */
 		printf( "<- ");
 		fflush( stdout);
-		unset();		/* turn off M_PROCESS_IT bit */
+		unset();		/* turn off MSG_PROCESS_IT bit */
 		ascending = TRUE;
 		linecount = 0;
 
@@ -309,7 +309,7 @@ ignore:		nxtchar = ttychar();
 				error( "no prior message\r\n");
 			msgno = --status.ms_curmsg;
 			mptr = msgp[status.ms_curmsg - 1];
-			if( mptr->flags & M_DELETED)
+			if( mptr->flags & MSG_DELETED)
 				printf( "# %d deleted\r\n", msgno);
 			else
 				prmsg();
@@ -389,11 +389,11 @@ ignore:		nxtchar = ttychar();
 				 * seen by the user yet.
 				 */
 				for( mp = &msgp[0]; mp < &msgp[status.ms_nmsgs]; mp++ )  {
-					if( (*mp)->flags & (M_KEEP) )
-						(*mp)->flags &= ~M_PROCESS_IT;
-					if( (*mp)->flags & (M_NEW) ) {
+					if( (*mp)->flags & (MSG_KEEP) )
+						(*mp)->flags &= ~MSG_PROCESS_IT;
+					if( (*mp)->flags & (MSG_NEW) ) {
 
-						(*mp)->flags &= ~M_PROCESS_IT;
+						(*mp)->flags &= ~MSG_PROCESS_IT;
 					}
 				}
 
@@ -518,7 +518,7 @@ ignore:		nxtchar = ttychar();
 				error( "no next message\r\n");
 			mptr = msgp[status.ms_curmsg];
 			msgno = ++status.ms_curmsg;
-			if( mptr->flags & M_DELETED)
+			if( mptr->flags & MSG_DELETED)
 				printf( "message %d deleted\r\n", msgno);
 			else
 				prmsg();

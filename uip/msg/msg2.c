@@ -97,12 +97,12 @@ int crflag;
 
 	sprintf( lbuf, "%4d%c%c%c%c%c%c%5ld: %-9.9s %-15.15s %.30s%s\n",
 		msgno,
-		mptr->flags & M_NEW ? 'N' : ' ',
-		mptr->flags & M_DELETED ? 'D' : ' ',
-		mptr->flags & M_KEEP ? 'K' : ' ',
-		mptr->flags & M_ANSWERED ? 'A' : ' ',
-		mptr->flags & M_FORWARDED ? 'F' : ' ',
-		mptr->flags & M_PUT ? 'P' : ' ',
+		mptr->flags & MSG_NEW ? 'N' : ' ',
+		mptr->flags & MSG_DELETED ? 'D' : ' ',
+		mptr->flags & MSG_KEEP ? 'K' : ' ',
+		mptr->flags & MSG_ANSWERED ? 'A' : ' ',
+		mptr->flags & MSG_FORWARDED ? 'F' : ' ',
+		mptr->flags & MSG_PUT ? 'P' : ' ',
 		mptr->len,
 		mptr->datestr,
 		mptr->from,
@@ -121,19 +121,19 @@ gomsg()
 
 delmsg()
 {
-	mptr->flags |= M_DELETED;
-	mptr->flags &= ~M_KEEP;
+	mptr->flags |= MSG_DELETED;
+	mptr->flags &= ~MSG_KEEP;
 }
 
 undelmsg()
 {
-	mptr->flags &= ~(M_DELETED|M_KEEP);
+	mptr->flags &= ~(MSG_DELETED|MSG_KEEP);
 }
 
 keepmsg()
 {
-	mptr->flags |= M_KEEP;
-	mptr->flags &= ~M_DELETED;
+	mptr->flags |= MSG_KEEP;
+	mptr->flags &= ~MSG_DELETED;
 }
 
 /*
@@ -313,17 +313,17 @@ lstmsg()
 
 	if( prettylist) {
 		fprintf(outfp, "(Message # %d: %ld bytes", msgno, mptr->len );
-		if( mptr->flags & M_DELETED )	fprintf(outfp, ", Deleted");
-		if( mptr->flags & M_PUT )	fprintf(outfp, ", Put");
-		if( mptr->flags & M_NEW )	fprintf(outfp, ", New");
-		if( mptr->flags & M_KEEP )	fprintf(outfp, ", KEEP");
-		if( mptr->flags & M_ANSWERED )	fprintf(outfp, ", Answered");
-		if( mptr->flags & M_FORWARDED )	fprintf(outfp, ", Forwarded");
+		if( mptr->flags & MSG_DELETED )	fprintf(outfp, ", Deleted");
+		if( mptr->flags & MSG_PUT )	fprintf(outfp, ", Put");
+		if( mptr->flags & MSG_NEW )	fprintf(outfp, ", New");
+		if( mptr->flags & MSG_KEEP )	fprintf(outfp, ", KEEP");
+		if( mptr->flags & MSG_ANSWERED )	fprintf(outfp, ", Answered");
+		if( mptr->flags & MSG_FORWARDED )	fprintf(outfp, ", Forwarded");
 		fprintf(outfp, ")\n");
 	}
         
 	writmsg();
-	mptr->flags &= ~M_NEW;		/* Message seen */
+	mptr->flags &= ~MSG_NEW;		/* Message seen */
 }
 
 /*
@@ -338,7 +338,7 @@ lstbdy()
 	lstmore = TRUE;
 
 	writbdy();
-	mptr->flags &= ~M_NEW;		/* Message seen */
+	mptr->flags &= ~MSG_NEW;		/* Message seen */
 }
 
 /*
@@ -361,7 +361,7 @@ putmsg()
 	fwrite( delim1, sizeof(char), len, outfp );
 	writmsg();
 	fwrite( delim2, sizeof(char), len, outfp );
-	mptr->flags |= M_PUT;
+	mptr->flags |= MSG_PUT;
 }
 
 /*
@@ -432,17 +432,17 @@ prmsg()
 	status.ms_curmsg = msgno;
 
 	printf( "(Message # %d: %ld bytes", msgno, size );
-	if( mptr->flags & M_DELETED )	printf(", Deleted");
-	if( mptr->flags & M_PUT )	printf(", Put");
-	if( mptr->flags & M_NEW )	printf(", New");
-	if( mptr->flags & M_KEEP )	printf(", KEEP");
-	if( mptr->flags & M_ANSWERED )	printf(", Answered");
-	if( mptr->flags & M_FORWARDED )	printf(", Forwarded");
+	if( mptr->flags & MSG_DELETED )	printf(", Deleted");
+	if( mptr->flags & MSG_PUT )	printf(", Put");
+	if( mptr->flags & MSG_NEW )	printf(", New");
+	if( mptr->flags & MSG_KEEP )	printf(", KEEP");
+	if( mptr->flags & MSG_ANSWERED )	printf(", Answered");
+	if( mptr->flags & MSG_FORWARDED )	printf(", Forwarded");
 	printf(")\n");
 	fflush( stdout );
 
 	if(quicknflag == ON )
-		mptr->flags &= ~M_NEW;		/* Message seen */
+		mptr->flags &= ~MSG_NEW;		/* Message seen */
 
 	fseek( filefp,( long)( mptr->start), 0);
 
@@ -470,7 +470,7 @@ prmsg()
 		size -= strlen( line );
 	}
 	tt_raw();
-	mptr->flags &= ~M_NEW;		/* Message seen */
+	mptr->flags &= ~MSG_NEW;		/* Message seen */
 }
 
 /*--------------------------------------------------------------------*/
@@ -618,12 +618,12 @@ again:
  */
 ansmsg()
 {
-	char tmpfrom[M_BSIZE],
-	tmprply[M_BSIZE],
-	tmpsender[M_BSIZE],
-	tmpto[M_BSIZE],
-	tmpcc[M_BSIZE],
-	tmpsubj[M_BSIZE];
+	char tmpfrom[MSG_BSIZE],
+	tmprply[MSG_BSIZE],
+	tmpsender[MSG_BSIZE],
+	tmpto[MSG_BSIZE],
+	tmpcc[MSG_BSIZE],
+	tmpsubj[MSG_BSIZE];
 	register unsigned int ind;
 	int llenleft;
 
@@ -682,7 +682,7 @@ ansmsg()
 /*--------------------------------------------------------------------*/
 ansend() {		/* Set the A flag */
 
-	mptr->flags |= M_ANSWERED;
+	mptr->flags |= MSG_ANSWERED;
 }
 /*--------------------------------------------------------------------*/
 /*
@@ -720,7 +720,7 @@ fwditer()
  */
 fwdmsg()
 {
-	char line[M_BSIZE];
+	char line[MSG_BSIZE];
 	int	llenleft;
 	
 	fwdnum++;
@@ -751,7 +751,7 @@ fwdmsg()
 
 	writmsg();
 
-	mptr->flags |= M_FORWARDED;
+	mptr->flags |= MSG_FORWARDED;
 }
 
 /*

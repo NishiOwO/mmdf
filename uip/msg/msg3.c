@@ -521,7 +521,7 @@ gitrnum()
 /*
  *			U N S E T
  *
- * Clear all the M_PROCESS_IT flags.  Used prior to setting ranges, etc.
+ * Clear all the MSG_PROCESS_IT flags.  Used prior to setting ranges, etc.
  */
 unset()
 {
@@ -529,7 +529,7 @@ unset()
 
 	/* set all the flags to zero */
 	for( mp = &msgp[status.ms_nmsgs]; mp-- != &msgp[0]; )
-		(*mp)->flags &= ~M_PROCESS_IT;
+		(*mp)->flags &= ~MSG_PROCESS_IT;
 }
 
 /*
@@ -544,7 +544,7 @@ cntproc()
 
 	nproc = 0;
 	for( mp = &msgp[status.ms_nmsgs]; mp-- != &msgp[0]; )
-		if( (*mp)->flags & M_PROCESS_IT)
+		if( (*mp)->flags & MSG_PROCESS_IT)
 			nproc++;
 	return( nproc);
 }
@@ -564,7 +564,7 @@ register unsigned int mend;
 		mend = Nmsgs;
 
 	while( mend-- >= mbegin)
-		msgp[mend]->flags |= M_PROCESS_IT;
+		msgp[mend]->flags |= MSG_PROCESS_IT;
 }
 
 /*
@@ -580,66 +580,66 @@ char type;
 
 	case 'd':
 		for( mp = &msgp[status.ms_nmsgs]; mp-- != &msgp[0]; )
-			if( (*mp)->flags & M_DELETED)
-				(*mp)->flags |= M_PROCESS_IT;
+			if( (*mp)->flags & MSG_DELETED)
+				(*mp)->flags |= MSG_PROCESS_IT;
 		break;
 
 	case 'n':
 		for( mp = &msgp[status.ms_nmsgs]; mp-- != &msgp[0]; )
-			if( (*mp)->flags & M_NEW)
-				(*mp)->flags |= M_PROCESS_IT;
+			if( (*mp)->flags & MSG_NEW)
+				(*mp)->flags |= MSG_PROCESS_IT;
 		break;
 
 	case 'k':
 		for( mp = &msgp[status.ms_nmsgs]; mp-- != &msgp[0]; )
-			if( (*mp)->flags & M_KEEP)
-				(*mp)->flags |= M_PROCESS_IT;
+			if( (*mp)->flags & MSG_KEEP)
+				(*mp)->flags |= MSG_PROCESS_IT;
 		break;
 
 	case 'u':
 		for( i = status.ms_nmsgs; i-- != 0;)
-			if( !(msgp[i]->flags & M_DELETED))
-				msgp[i]->flags |= M_PROCESS_IT;
+			if( !(msgp[i]->flags & MSG_DELETED))
+				msgp[i]->flags |= MSG_PROCESS_IT;
 		break;
 
 	case 's':
 		for( i = status.ms_nmsgs; i-- != 0; )
 			if( strindex( key, msgp[i]->subject) >= 0)
-				msgp[i]->flags |= M_PROCESS_IT;
+				msgp[i]->flags |= MSG_PROCESS_IT;
 		break;
 
 	case 'f':
 		for( i = status.ms_nmsgs; i-- != 0; )
 			if( prefix( msgp[i]->from, "To:"))  {
 				if( prefix( key, username))
-					msgp[i]->flags |= M_PROCESS_IT;
+					msgp[i]->flags |= MSG_PROCESS_IT;
 			}  else  {
 				if( strindex( key, msgp[i]->from) >= 0)
-					msgp[i]->flags |= M_PROCESS_IT;
+					msgp[i]->flags |= MSG_PROCESS_IT;
 			}
 		break;
 
 	case 't':
 		for( i = status.ms_nmsgs; i-- != 0; )
 			if( strindex( key, msgp[i]->to ) >= 0 )
-				msgp[i]->flags |= M_PROCESS_IT;
+				msgp[i]->flags |= MSG_PROCESS_IT;
 		break;
 
 	case 'e':
 		tt_norm();
 		for( msgno = 0; msgno < status.ms_nmsgs; msgno++)
 			if(txtmtch())
-				msgp[msgno]->flags |= M_PROCESS_IT;
+				msgp[msgno]->flags |= MSG_PROCESS_IT;
 		tt_raw();
 		break;
 
 	case 'l':
 		tt_norm();
 		for( mp = &msgp[status.ms_nmsgs]; mp-- != &msgp[0]; )
-			if(    !((*mp)->flags & M_KEEP)
-			    && !((*mp)->flags & M_DELETED)
-			    && !((*mp)->flags & M_NEW))
-				(*mp)->flags |= M_PROCESS_IT;
+			if(    !((*mp)->flags & MSG_KEEP)
+			    && !((*mp)->flags & MSG_DELETED)
+			    && !((*mp)->flags & MSG_NEW))
+				(*mp)->flags |= MSG_PROCESS_IT;
 		tt_raw();
 		break;
 
@@ -705,14 +705,14 @@ int ( *fn)();
 	if( ascending == TRUE )  {
 		/* process in ascending order */
 		for( msgno = 1; msgno <= status.ms_nmsgs; msgno++)
-			if( (mptr = msgp[msgno-1])->flags & M_PROCESS_IT)  {
+			if( (mptr = msgp[msgno-1])->flags & MSG_PROCESS_IT)  {
 				(*fn)();
 				lastdone = msgno;
 			}
 	}  else  {
 		/* Process in inverse (descending) order */
 		for( msgno = status.ms_nmsgs; msgno > 0; msgno-- )
-			if( (mptr = msgp[msgno-1])->flags & M_PROCESS_IT)  {
+			if( (mptr = msgp[msgno-1])->flags & MSG_PROCESS_IT)  {
 				(*fn)();
 				lastdone = msgno;
 			}
@@ -738,7 +738,7 @@ resendmsg() {
 	prettylist = OFF;
 	cpyiter( lstmsg, NOIT,( int( *)()) 0);
 	prettylist = savepretty;
-	mptr->flags |= M_FORWARDED;
+	mptr->flags |= MSG_FORWARDED;
 }
 /*			S O R T B O X
  *  

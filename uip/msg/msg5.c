@@ -65,12 +65,12 @@ int     setflg;
 	char    line[LINESIZE];
 	char	name[LINESIZE];
 	char	mbox[LINESIZE];
-	char    datestr[M_BSIZE];	/* where to save Date field */
-	char	fromstr[M_BSIZE];	/* where to save From field */
-	char	sndstr[M_BSIZE];	/* where to save Sender field */
-	char	tostr[M_BSIZE];		/* where to save To field */
-	char	subjstr[M_BSIZE];	/* where to save Subj field */
-	char	curhdr[M_BSIZE];	/* Scratch for gothdr() */
+	char    datestr[MSG_BSIZE];	/* where to save Date field */
+	char	fromstr[MSG_BSIZE];	/* where to save From field */
+	char	sndstr[MSG_BSIZE];	/* where to save Sender field */
+	char	tostr[MSG_BSIZE];		/* where to save To field */
+	char	subjstr[MSG_BSIZE];	/* where to save Subj field */
+	char	curhdr[MSG_BSIZE];	/* Scratch for gothdr() */
 	char	digsubject[SIZESUBJ];	/* Scratch for undigest function */
 	char	*cpy, *cpz;
 	int	needscan;
@@ -369,7 +369,7 @@ int     setflg;
 				}
 				status.ms_nmsgs++;
 				msgp[ msgno++ ] = mptr;
-				mptr->flags = M_NEW;
+				mptr->flags = MSG_NEW;
 			}
 
 			mptr->start = curpos;
@@ -432,12 +432,12 @@ int     setflg;
 					strncpy(mptr->from,indent,SIZEFROM-1);
 				}
 
-				mptr->flags |= M_NEW;
+				mptr->flags |= MSG_NEW;
 			}
 
 			/* Process Subject field, if any */
 			if( !isnull( subjstr[0]))  {
-				subjstr[M_BSIZE-1] = '\0';
+				subjstr[MSG_BSIZE-1] = '\0';
 				if( (cpz = index(subjstr,'\n')) != 0 )
 					*cpz = '\0';
 				if( filoutflag == ON ) {
@@ -542,7 +542,7 @@ vputmsg()
 	fputs( delim1, outfp );
 
 	pos = ftell( outfp );
-	if( mptr->flags & M_RESTMAIL ) {
+	if( mptr->flags & MSG_RESTMAIL ) {
 		/* Write the rest of the mail file */
 		fseek(filefp, mptr->start, 0);
 		while( (tt = fread(tbuf, sizeof(char), sizeof(tbuf), filefp)) == sizeof(tbuf) )
@@ -575,10 +575,10 @@ overwrit()
 		error("READONLY mode - overwrite ignored\n");
 
 	for( ndeleted = 0, i = status.ms_nmsgs; i-- != 0; ) {
-		if( msgp[i]->flags & M_RESTMAIL )
-			msgp[i]->flags &= ~M_DELETED;
+		if( msgp[i]->flags & MSG_RESTMAIL )
+			msgp[i]->flags &= ~MSG_DELETED;
 
-		if( msgp[i]->flags & M_DELETED )
+		if( msgp[i]->flags & MSG_DELETED )
 			ndeleted++;		/* how many dead messages */
 	}
 	
@@ -670,7 +670,7 @@ overwrit()
 	ii = status.ms_markno;
 	for( msgno = 1; msgno <= status.ms_nmsgs; msgno++ )  {
 	
-		if( (*inp)->flags & M_DELETED )  {
+		if( (*inp)->flags & MSG_DELETED )  {
 			ndeleted++;
 			free(*inp++);
 			if( msgno < i )
@@ -719,7 +719,7 @@ overwrit()
 		 *  be recovered by newmessage()
 		 */
 		for( i = status.ms_nmsgs; i-- != 0; )
-			if( msgp[i]->flags & M_RESTMAIL )
+			if( msgp[i]->flags & MSG_RESTMAIL )
 				status.ms_eofpos = msgp[i]->start;
 		status.ms_nmsgs--;
 		status.ms_time = 0;
@@ -932,7 +932,7 @@ nomem() {
 		}
 	}
 
-	mptr->flags |= M_RESTMAIL;
+	mptr->flags |= MSG_RESTMAIL;
 	outmem = TRUE;
 	printf("\n\007***********************************************\n");
 	printf("\007Out of memory - Move or delete existing messages then overwrite\n");

@@ -57,9 +57,9 @@ unsigned int fwdnum;
 FILE *fpmsgrc;			/* User options FILEp */
 
 char    ttyobuf[BUFSIZ];
-char    sndto[M_BSIZE];
-char    sndcc[M_BSIZE];
-char    sndsubj[M_BSIZE + 9];
+char    sndto[MSG_BSIZE];
+char    sndcc[MSG_BSIZE];
+char    sndsubj[MSG_BSIZE + 9];
 
 int	istty;
 extern int	wmsgflag;
