@@ -238,12 +238,12 @@ lo_master()
 	case OK:
 		ll_close (logptr);      /* since the process is splitting */
 
-#ifdef V4_2BSD
+#ifdef HAVE_INITGROUPS
 		if (initgroups (lo_pw->pw_name, lo_pw->pw_gid) == NOTOK
 		  || setgid (lo_pw->pw_gid) == NOTOK
-#else
+#else /* HAVE_INITGROUPS */
 		if (setgid (lo_pw->pw_gid) == NOTOK
-#endif /* V4_2BSD */
+#endif /* HAVE_INITGROUPS */
 		  || setuid (lo_pw->pw_uid) == NOTOK) {
 			ll_err (logptr, LLOGTMP, "can't set id's (%d,%d)",
 				lo_pw->pw_uid, lo_pw->pw_gid);
