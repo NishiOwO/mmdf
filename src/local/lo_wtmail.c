@@ -17,9 +17,9 @@
 #include <pwd.h>
 #include <sys/stat.h>
 #include <signal.h>
-#ifndef LINUX
-#include <sgtty.h>
-#endif  /* Not LINUX */
+#ifdef HAVE_SGTTY_H
+#  include <sgtty.h>
+#endif  /* HAVE_SGTTY_H */
 #include "adr_queue.h"
 #include "hdr.h"
 

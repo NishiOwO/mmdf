@@ -72,9 +72,9 @@ extern char *verdate;
 #include <pwd.h>
 #include <signal.h>
 #include <sys/stat.h>
-#ifndef LINUX
-#include <sgtty.h>
-#endif
+#ifdef HAVE_SGTTY_H
+#  include <sgtty.h>
+#endif /* HAVE_SGTTY_H */
 #ifdef V4_2BSD
 #include <sys/ioctl.h>
 #endif V4_2BSD

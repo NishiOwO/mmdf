@@ -1,10 +1,10 @@
 # include  "util.h"
-#ifdef SYS5
+#if defined(HAVE_SGTTY_H) && !defined(SYS5)
+# include  <sgtty.h>
+#else
 # include <termio.h>
 # include <fcntl.h>
-#else
-# include  <sgtty.h>
-#endif SYS5
+#endif /* HAVE_SGTTY_H */
 # include  <sys/stat.h>
 # include  "d_proto.h"
 # include  "d_returns.h"
@@ -24,11 +24,11 @@ extern int errno;
 
 LOCVAR int d_savfd;            /*  handle on the opened tty          */
 LOCVAR char d_savfname[25];      /*  name of tty                       */
-#ifdef SYS5
-LOCVAR struct termio d_savtty;
-#else
+#if defined(HAVE_SGTTY_H) && !defined(SYS5)
 LOCVAR struct sgttyb d_savtty;   /*  where to stash original setting   */
-#endif SYS5
+#else /* HAVE_SGTTY_H */
+LOCVAR struct termio d_savtty;
+#endif /* HAVE_SGTTY_H */
 LOCVAR int d_savmode;            /*  protections on tty                */
 LOCVAR int d_savalid;
 
@@ -50,11 +50,11 @@ d_ttsave (fp, fname)              /* save the current setting           */
     d_dbglog("d_ttsave", "saving terminal modes, fd = %d", d_savfd);
 #endif D_DBGLOG
 
-#ifdef SYS5
-    if ((retval = ioctl (d_savfd, TCGETA, &d_savtty)) >= 0)
-#else
+#if defined(HAVE_SGTTY_H) && !defined(SYS5)
     if ((retval = ioctl (d_savfd, TIOCGETP, &d_savtty)) >= 0)
-#endif SYS5
+#else
+    if ((retval = ioctl (d_savfd, TCGETA, &d_savtty)) >= 0)
+#endif HAVE_SGTTY_H
     {
 	if ((retval = fstat (d_savfd, &statbuf)) >= 0)
 	{
@@ -81,11 +81,11 @@ d_ttrestore ()                    /*  restore initial setting           */
 #endif D_DBGLOG
     	return(0);
     }
-#ifdef SYS5
-    retval = ioctl (d_savfd, TCSETAW, &d_savtty);
-#else
+#if defined(HAVE_SGTTY_H) && !defined(SYS5)
     retval = ioctl (d_savfd, TIOCSETP, &d_savtty);
-#endif
+#else
+    retval = ioctl (d_savfd, TCSETAW, &d_savtty);
+#endif HAVE_SGTTY_H
     if (!isnull (d_savfname[0]))
 	chmod( d_savfname, d_savmode );
 
@@ -96,42 +96,49 @@ d_ttrestore ()                    /*  restore initial setting           */
 d_ttscript (baudrate)             /* tty will be following call script  */
     int baudrate;
 {
-#ifdef SYS5
+#if defined(HAVE_SGTTY_H) && !defined(SYS5)
+    struct sgttyb sttybuf;
+    extern int d_scon, d_scoff;
+#else
     struct termio sttybuf;
     extern unsigned short d_scbitc, d_scbiti, d_scbito, d_scbitl;
     int rc;
-#else
-    struct sgttyb sttybuf;
-    extern int d_scon, d_scoff;
-#endif SYS5
+#endif HAVE_SGTTY_H
 
     if (!isnull (d_savfname[0]))
 	chmod( d_savfname, 0600 );
 
-#ifdef SYS5
+#if !defined(HAVE_SGTTY_H) || defined(SYS5)
     ioctl(d_savfd, TCGETA, &sttybuf);
-#endif SYS5
+#endif HAVE_SGTTY_H
 
     if (baudrate != 0)
     {                             /*  use special speed                 */
-#ifdef SYS5
-	sttybuf.c_cflag = (baudrate & CBAUD);
-#else
+#if defined(HAVE_SGTTY_H) && !defined(SYS5)
 	sttybuf.sg_ispeed = baudrate;
 	sttybuf.sg_ospeed = baudrate;
-#endif SYS5
+#else
+	sttybuf.c_cflag = (baudrate & CBAUD);
+#endif HAVE_SGTTY_H
     }
     else
     {                             /*  use current speed                 */
-#ifdef SYS5
-	sttybuf.c_cflag = (d_savtty.c_cflag & CBAUD);
-#else
+#if defined(HAVE_SGTTY_H) && !defined(SYS5)
 	sttybuf.sg_ispeed = d_savtty.sg_ispeed;
 	sttybuf.sg_ospeed = d_savtty.sg_ospeed;
-#endif SYS5
+#else
+	sttybuf.c_cflag = (d_savtty.c_cflag & CBAUD);
+#endif HAVE_SGTTY_H
     }
 
-#ifdef SYS5
+#if defined(HAVE_SGTTY_H) && !defined(SYS5)
+    sttybuf.sg_erase  = '\010';   /* erase = control-H                  */
+    sttybuf.sg_kill   = '\030';   /* kill = control-X                   */
+    sttybuf.sg_flags  |=  d_scon;
+				  /* force on  special bits for script  */
+    sttybuf.sg_flags  &=  ~((int) d_scoff);
+				  /* force off special bits for script  */
+#else
     sttybuf.c_cc[VERASE] = '\010';	/* erase control-h */
     sttybuf.c_cc[VKILL] = '\030';	/* kill control-x */
     sttybuf.c_cc[VTIME] = 0;		/* delay */
@@ -141,65 +148,64 @@ d_ttscript (baudrate)             /* tty will be following call script  */
     sttybuf.c_iflag = d_scbiti;
     sttybuf.c_oflag = d_scbito;
     sttybuf.c_lflag = d_scbitl;
+#endif HAVE_SGTTY_H
 
+#if defined(HAVE_SGTTY_H) && !defined(SYS5)
+    return (ioctl (d_savfd, TIOCSETP, &sttybuf));
 #else
-    sttybuf.sg_erase  = '\010';   /* erase = control-H                  */
-    sttybuf.sg_kill   = '\030';   /* kill = control-X                   */
-    sttybuf.sg_flags  |=  d_scon;
-				  /* force on  special bits for script  */
-    sttybuf.sg_flags  &=  ~((int) d_scoff);
-				  /* force off special bits for script  */
-#endif SYS5
-
-#ifdef SYS5
     rc = ioctl (d_savfd, TCSETAW, &sttybuf);
     fcntl (d_savfd, F_SETFL, fcntl (d_savfd, F_GETFL, 0) & ~O_NDELAY);
     return (rc);
-#else
-    return (ioctl (d_savfd, TIOCSETP, &sttybuf));
-#endif SYS5
+#endif HAVE_SGTTY_H
 }
 
 
 d_ttproto (baudrate)
     int baudrate;
 {
-#ifdef SYS5
+#if defined(HAVE_SGTTY_H) && !defined(SYS5)
+    struct sgttyb sttybuf;
+    extern int d_pron, d_proff;
+#else
     struct termio sttybuf;
     extern unsigned short d_prbitc, d_prbiti, d_prbito, d_prbitl;
     int rc;
-#else
-    struct sgttyb sttybuf;
-    extern int d_pron, d_proff;
-#endif SYS5
+#endif HAVE_SGTTY_H
 
     if (!isnull (d_savfname[0]))
 	chmod( d_savfname, 0600 );
 
-#ifdef SYS5
+#if !defined(HAVE_SGTTY_H) || defined(SYS5)
     ioctl (d_savfd, TCGETA, &sttybuf);
-#endif
+#endif HAVE_SGTTY_H
 
     if (baudrate != 0)
     {                             /*  use special speed                 */
-#ifdef SYS5
-	sttybuf.c_cflag = (baudrate & CBAUD);
-#else
+#if defined(HAVE_SGTTY_H) && !defined(SYS5)
 	sttybuf.sg_ispeed = baudrate;
 	sttybuf.sg_ospeed = baudrate;
-#endif SYS5
+#else
+	sttybuf.c_cflag = (baudrate & CBAUD);
+#endif HAVE_SGTTY_H
     }
     else
     {                             /*  use current speed                 */
-#ifdef SYS5
-	sttybuf.c_cflag = (d_savtty.c_cflag & CBAUD);
-#else
+#if defined(HAVE_SGTTY_H) && !defined(SYS5)
 	sttybuf.sg_ispeed = d_savtty.sg_ispeed;
 	sttybuf.sg_ospeed = d_savtty.sg_ospeed;
-#endif SYS5
+#else
+	sttybuf.c_cflag = (d_savtty.c_cflag & CBAUD);
+#endif HAVE_SGTTY_H
     }
 
-#ifdef SYS5
+#if defined(HAVE_SGTTY_H) && !defined(SYS5)
+    sttybuf.sg_erase  = '\010';   /* erase = control-H                  */
+    sttybuf.sg_kill   = '\030';   /* kill = control-X                   */
+    sttybuf.sg_flags  |= d_pron;  
+				  /* force on  special bits for protocol*/
+    sttybuf.sg_flags  &=  ~((int) d_proff);
+				  /* force off special bits for protocol*/
+#else
     sttybuf.c_cc[VERASE] = '\010';	/* erase control-h */
     sttybuf.c_cc[VKILL] = '\030';	/* kill control-x */
     sttybuf.c_cc[VEOL] = '\n';
@@ -209,23 +215,13 @@ d_ttproto (baudrate)
     sttybuf.c_iflag = d_prbiti;
     sttybuf.c_oflag = d_prbito;
     sttybuf.c_lflag = d_prbitl;
+#endif HAVE_SGTTY_H
 
+#if defined(HAVE_SGTTY_H) && !defined(SYS5)
+    return( ioctl (d_savfd, TIOCSETP, &sttybuf) );
 #else
-
-    sttybuf.sg_erase  = '\010';   /* erase = control-H                  */
-    sttybuf.sg_kill   = '\030';   /* kill = control-X                   */
-    sttybuf.sg_flags  |= d_pron;  
-				  /* force on  special bits for protocol*/
-    sttybuf.sg_flags  &=  ~((int) d_proff);
-				  /* force off special bits for protocol*/
-
-#endif SYS5
-
-#ifdef SYS5
     rc = ioctl (d_savfd, TCSETAW, &sttybuf);
     fcntl (d_savfd, F_SETFL, fcntl (d_savfd, F_GETFL, 0) & ~O_NDELAY);
     return(rc);
-#else
-    return( ioctl (d_savfd, TIOCSETP, &sttybuf) );
-#endif SYS5
+#endif HAVE_SGTTY_H
 }

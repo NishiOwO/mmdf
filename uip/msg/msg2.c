@@ -47,9 +47,9 @@
 #include <pwd.h>
 #include <signal.h>
 #include <sys/stat.h>
-#ifndef LINUX
-#include <sgtty.h>
-#endif
+#ifdef HAVE_SGTTY_H
+#  include <sgtty.h>
+#endif /* HAVE_SGTTY_H */
 #include "./msg.h"
 
 extern FILE *popen();

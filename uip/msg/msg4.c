@@ -45,13 +45,13 @@
 #include <pwd.h>
 #include <signal.h>
 #include <sys/stat.h>
-#ifdef SYS5
-#include <termio.h>
-#include <string.h>
-#else SYS5
-#include <sgtty.h>
-#include <strings.h>
-#endif SYS5
+#if defined(HAVE_SGTTY_H) && !defined(SYS5)
+#  include <sgtty.h>
+#  include <strings.h>
+#else HAVE_SGTTY_H
+#  include <termio.h>
+#  include <string.h>
+#endif /* HAVE_SGTTY_H */
 #include "./msg.h"
 
 char	*keywds[MAXKEYS] = {
@@ -406,42 +406,42 @@ ttychar()
 }
 /*--------------------------------------------------------------------*/
 
-#ifdef SYS5
+#if !defined(HAVE_SGTTY_H) || defined(SYS5)
 static struct termio orig_ioctl;
 static struct termio raw_ioctl;
 #define	TIOCSETN TCSETAW		/* Crafty... (be careful!) */
-#else SYS5
+#else 
 static struct sgttyb   orig_ioctl;
 static struct sgttyb   raw_ioctl;
-#endif SYS5
+#endif /* HAVE_SGTTY_H */
 
 /*
  *			T T _ I N I T
  */
 tt_init()
 {
-#ifdef SYS5
+#if !defined(HAVE_SGTTY_H) || defined(SYS5)
 	if( ioctl( fileno( stdin), TCGETA, &orig_ioctl) == -1) {
-#else
+#else HAVE_SGTTY_H
 	if( ioctl( fileno( stdin), TIOCGETP, &orig_ioctl) == -1) {
-#endif
+#endif /* HAVE_SGTTY_H */
 		verbose = 0;
 		istty = FALSE;
 	}
 	else {
 		raw_ioctl = orig_ioctl;
-#ifdef SYS5
+#if !defined(HAVE_SGTTY_H) || defined(SYS5)
 		ch_erase = orig_ioctl.c_cc[VERASE];
 		raw_ioctl.c_iflag &= ~(ISTRIP | INLCR | IGNCR | ICRNL);
 		raw_ioctl.c_oflag &= ~OPOST;
 		raw_ioctl.c_lflag &= ~(ICANON | ECHO);
 		raw_ioctl.c_cc[4] = 1;
 		raw_ioctl.c_cc[5] = 0;
-#else
+#else HAVE_SGTTY_H
 		ch_erase = orig_ioctl.sg_erase;
 		raw_ioctl.sg_flags |= CBREAK;
 		raw_ioctl.sg_flags &= ~ECHO;
-#endif
+#endif /* HAVE_SGTTY_H */
 		istty = TRUE;
 	}
 }

@@ -5,12 +5,12 @@
 # include  "d_proto.h"
 # include  "d_returns.h"
 # include  "d_structs.h"
-#ifdef SYS5
+#if defined(HAVE_SGTTY_H) && !defined(SYS5)
+# include  <sgtty.h>
+#else HAVE_SGTTY_H
 # include <termio.h>
 # include <fcntl.h>
-#else
-# include  <sgtty.h>
-#endif SYS5
+#endif HAVE_SGTTY_H
 # include  <sys/stat.h>
 #ifdef V4_2BSD
 # include  <sys/file.h>
@@ -636,11 +636,11 @@ char   *number;
 {
     int len;
     char linebuf[100];
-#ifdef SYS5
-    struct termio acubuf;    
-#else
+#if defined(HAVE_SGTTY_H) && !defined(SYS5)
     struct sgttyb acubuf;
-#endif
+#else HAVE_SGTTY_H
+    struct termio acubuf;    
+#endif HAVE_SGTTY_H
     /*
      * These can't be "register" because some setjmp()'s act as
      * this quote from the Sun setjmp() manual page.

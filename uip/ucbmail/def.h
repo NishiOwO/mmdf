@@ -10,9 +10,9 @@
 #include <sys/param.h>		/* includes <sys/types.h> */
 #include <signal.h>
 #include <stdio.h>
-#ifndef LINUX
+#ifdef HAVE_SGTTY_H
 #include <sgtty.h>
-#endif  /*  LINUX  */
+#endif  /*  HAVE_SGTTY_H  */
 #include "./local.h"
 
 /*

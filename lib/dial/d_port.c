@@ -390,10 +390,7 @@ d_brkport()
 	ioctl (fileno (d_prtfp), TIOCCBRK, 0);
 #else
 
-#ifdef SYS5
-#include <termio.h>
-	ioctl (fileno(d_prtfp), TCSBRK, 0);
-#else
+#if defined(HAVE_SGTTY_H) && !defined(SYS5)
 #include <sgtty.h>
 	struct sgttyb ttybuf;
 	int spdsave;
@@ -405,6 +402,9 @@ d_brkport()
 	d_wrtport("\0\0\0\0\0", 5);
 	ttybuf.sg_ospeed = spdsave;
 	ioctl (fileno (d_prtfp), TIOCSETP, &ttybuf);
-#endif SYS5
+#else HAVE_SGTTY_H
+#include <termio.h>
+	ioctl (fileno(d_prtfp), TCSBRK, 0);
+#endif HAVE_SGTTY_H
 #endif V4_2BSD
 }

@@ -1,9 +1,9 @@
 # include  "util.h"
-#ifdef SYS5
-# include <termio.h>
-#else
-# include  <sgtty.h>
-#endif SYS5
+#if defined(HAVE_SGTTY_H) && !defined(SYS5)
+#  include  <sgtty.h>
+#else HAVE_SGTTY_H
+#  include <termio.h>
+#endif HAVE_SGTTY_H
 # include  "d_proto.h"
 # include  <stdio.h>
 # include  "d_structs.h"
