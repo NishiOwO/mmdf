@@ -79,8 +79,8 @@ int ded = 0;
 struct passwd *pw;
 char *midp;
 char *d_subargs = "vm";
-char *tmp_tmplt = "tmpdrft.XXXXXX";
-char *drft_tmplt = "drft.XXXXXX";
+char tmp_tmplt[] = "tmpdrft.XXXXXX";
+char drft_tmplt[] = "drft.XXXXXX";
 char linebuf[128];
 char tmpline[128];
 
