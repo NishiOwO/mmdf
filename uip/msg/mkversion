@@ -1,0 +1,3 @@
+p=`grep "Update #" ../../VERSION| sed -e s/.*Update.#//`
+d=`date | awk '{ print $3 " " $2 " " $(NF) }'`
+echo "char      *verdate = \"$d Update #$p\";" > version.c

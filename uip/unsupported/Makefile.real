@@ -1,0 +1,58 @@
+#
+#	Makefile for unsupported
+#
+
+OBJS	= autores.o cvmbox.o
+
+SOURCES	= autores.c cvmbox.c
+
+MODULES	= autores cvmbox
+
+#LDFLAGS = -Mm -F 4096
+#CFLAGS 	= -NT tuns -Mm -O -I../../h $(CONFIGDEFS)
+real-default:	all	
+
+all: xautores xcvmbox
+
+xautores: autores.o $(MMDFLIBS)
+	$(CC) $(LDFLAGS) -o $@ autores.o $(MMDFLIBS) $(SYSLIBS)
+
+xcvmbox: cvmbox.o $(MMDFLIBS)
+	$(CC) $(LDFLAGS) -o $@ cvmbox.o $(MMDFLIBS) $(SYSLIBS)
+
+install:	$(LIBDIR)/autores $(BINDIR)/cvmbox
+
+$(LIBDIR)/autores: xautores
+	cp xautores $(LIBDIR)/autores
+	-$(CHOWN) $(MMDFLOGIN) $(LIBDIR)/autores
+	-chmod $(PGMPROT) $(LIBDIR)/autores
+	-mkdir $(LIBDIR)/distribution
+	-$(CHOWN) $(MMDFLOGIN) $(LIBDIR)/distribution
+	-chmod $(PGMPROT) $(LIBDIR)/distribution
+
+$(BINDIR)/cvmbox: xcvmbox
+	cp xcvmbox $(BINDIR)/cvmbox
+	-$(CHOWN) $(MMDFLOGIN) $(BINDIR)/cvmbox
+	-chmod $(PGMPROT) $(BINDIR)/cvmbox
+
+lint:
+	$(LINT) $(LFLAGS) $(SOURCES) $(LLIBS)
+
+clean:
+	-rm -f *.o xautores xcvmbox core tags
+
+
+# DO NOT DELETE THIS LINE -- make depend uses it
+
+autores.o: autores.c
+autores.o: /usr/include/stdio.h
+autores.o: /usr/include/ctype.h
+autores.o: /usr/include/sys/types.h
+autores.o: /usr/include/fcntl.h
+autores.o: ../../h/cnvtdate.h
+autores.o: /usr/include/string.h
+cvmbox.o: cvmbox.c
+cvmbox.o: /usr/include/stdio.h
+# DEPENDENCIES MUST END AT END OF FILE
+# IF YOU PUT STUFF HERE IT WILL GO AWAY
+# see make depend above

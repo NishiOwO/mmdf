@@ -1,0 +1,38 @@
+;  Simple mmdftailor file.  See the document "A Simple MMDF-II Configuration
+;  Guide" for instructions.
+
+MLNAME		"simplehost"
+MLDOMAIN	"my.domain"
+
+; Table entires
+; Aliases
+
+MTBL	aliases, file="aliases", show="User Alias File"
+
+; Domain tables
+
+MTBL	dom-topl, file="topdomain", flags=route, flags=partial
+
+; Channel tables
+
+MTBL	ch-local, file="localchannel", flags=partial
+
+; Alias entries
+
+ALIAS	table=aliases
+
+; Domain entries
+
+MDMN    "lcl-top", table="dom-topl", dmn="", show="Local Top Level"
+
+; Channel entries
+
+MCHN	local, que=local, tbl="ch-local", pgm="local", mod=imm, ap=822,
+	ap=try, mod=send, show="Local Channel", ap=try
+
+;logging levels
+
+MMSGLOG		level=FST
+MCHANLOG	level=FAT
+PHLOG		level=FAT
+AUTHLOG		level=FST

@@ -1,0 +1,74 @@
+#
+#	Makefile for snd
+#
+
+OBJS	= s_main.o s_arginit.o s_gather.o s_input.o s_onint.o s_drfile.o \
+	  s_post.o s_do.o s_get.o s_tailor.o alias.o version.o
+
+SOURCES	= s_main.c s_arginit.c s_gather.c s_input.c s_onint.c s_drfile.c \
+	  s_post.c s_do.c s_get.c s_tailor.c alias.c version.c
+
+MODULES	= s_main s_arginit s_gather s_input s_onint s_drfile \
+	  s_post s_do s_get s_tailor alias version
+
+real-default:	xsnd
+
+xsnd: $(OBJS) $(MMDFLIBS)
+	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(MMDFLIBS) $(SYSLIBS)
+
+install:	$(BINDIR)/snd
+
+$(BINDIR)/snd:	xsnd
+	cp xsnd $(BINDIR)/snd
+	-$(CHOWN) $(MMDFLOGIN) $(BINDIR)/snd
+	-chmod $(PGMPROT) $(BINDIR)/snd
+
+version.o: $(SOURCES) $(MMDFLIBS) ../../VERSION
+	./mkversion
+	$(CC) $(CFLAGS) -c version.c
+
+lint:
+	$(LINT) $(LFLAGS) $(SOURCES) $(LLIBS)
+
+clean:
+	-rm -f *.o xsnd core tags
+
+
+# DO NOT DELETE THIS LINE -- make depend uses it
+
+s_main.o: s_main.c
+s_main.o: s.h
+s_arginit.o: s_arginit.c
+s_arginit.o: s.h
+s_arginit.o: s_externs.h
+s_gather.o: s_gather.c
+s_gather.o: s.h
+s_gather.o: s_externs.h
+s_input.o: s_input.c
+s_input.o: s.h
+s_input.o: s_externs.h
+s_onint.o: s_onint.c
+s_onint.o: s.h
+s_onint.o: s_externs.h
+s_drfile.o: s_drfile.c
+s_drfile.o: s.h
+s_drfile.o: s_externs.h
+s_post.o: s_post.c
+s_post.o: s.h
+s_post.o: s_externs.h
+s_do.o: s_do.c
+s_do.o: s.h
+s_do.o: s_externs.h
+s_get.o: s_get.c
+s_get.o: /usr/include/stdio.h
+s_get.o: s.h
+s_get.o: s_externs.h
+s_tailor.o: s_tailor.c
+alias.o: alias.c
+alias.o: /usr/include/stdio.h
+alias.o: ../../h/../h/util.h
+alias.o: ../../h/../h/mmdf.h
+version.o: version.c
+# DEPENDENCIES MUST END AT END OF FILE
+# IF YOU PUT STUFF HERE IT WILL GO AWAY
+# see make depend above
