@@ -1,12 +1,13 @@
-/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+/***********************************************************************/
+/** 
  *
- * $Id: mmdf_vtinit.c,v 1.1 2001/04/26 22:02:13 krueger Exp $
+ * $Id: mmdf_vtinit.c,v 1.2 2002/10/12 17:54:01 krueger Exp $
  *
  * (C) 2001 Kai Krueger
  * Email: krueger@mathematik.uni-kl.de
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #ifndef lint
-  static char rcsid[]="@(#) $Revision: 1.1 $ $Date: 2001/04/26 22:02:13 $";
+  static char rcsid[]="@(#) $Revision: 1.2 $ $Date: 2002/10/12 17:54:01 $";
   static char copyright[] =
 "@(#)Copyright (c) 2001 Kai Krueger\n";
 #endif /* lint */
@@ -14,6 +15,9 @@
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
  * HISTORY
  * $Log: mmdf_vtinit.c,v $
+ * Revision 1.2  2002/10/12 17:54:01  krueger
+ * *** empty log message ***
+ *
  * Revision 1.1  2001/04/26 22:02:13  krueger
  * Added support for virtual hosts
  *
@@ -74,6 +78,52 @@ extern char *logdfldir;
  * External functions
  *
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+char *mmdf_parse_args(argc, argv)
+int argc;
+char *argv[];
+
+{
+  int c;
+  int this_option_optind = optind ? optind : 1;
+  int option_index = 0;
+  static struct option long_options[] = {
+    {"virual", 1, 0, 0},
+    {0, 0, 0, 0}
+  };
+  return argv[0];
+  printf("start c=%d, argc=%d, idx=%d\n", c, argc, option_index);
+  while (1) {
+    c = getopt_long(argc, argv, "abc:d:0123456789",
+                    long_options, &option_index);
+    printf("c=%d, argc=%d, idx=%d\n", c, argc, option_index);
+    
+    if (c == EOF)
+      break;
+    switch (c) {
+        case 0:
+          printf("option %s", long_options[option_index].name);
+          if (optarg)
+            printf(" with arg %s", optarg);
+          printf("\n");
+          break;
+        case '?':
+          break;
+
+        default:
+          printf("?? getopt returned character code 0%o %c ??\n", c, c);
+    }
+  }
+
+  if (optind < argc) {
+    printf("non-option ARGV-elements: ");
+    while (optind < argc)
+      printf("%s ", argv[optind++]);
+    printf("\n");
+  }
+  printf("Ende of mmdf_parse_args()\n");
+  
+  return argv[0];
+}
 
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -368,6 +418,19 @@ struct sockaddr_in *addr;
 
   memcpy(&(addr->sin_addr), hp->h_addr, sizeof(struct in_addr));
   return 0;
+}
+
+#else /* HAVE_VIRTUAL_DOMAINS */
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * External functions
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+char *mmdf_parse_args(argc, argv)
+int argc;
+char *argv[];
+
+{
+  return argv;
 }
 
 #endif /* HAVE_VIRTUAL_DOMAINS */

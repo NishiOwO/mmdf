@@ -1,28 +1,106 @@
+/***********************************************************************/
+/** 
+ *
+ * $Id: mmdf_init.c,v 1.8 2002/10/12 17:54:01 krueger Exp $
+ *
+ * @author Kai Krueger
+ * (C) 2001 ITWM Kaiserslautern
+ * Email: krueger@itwm.uni-kl.de
+ **/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ * $Log: mmdf_init.c,v $
+ * Revision 1.8  2002/10/12 17:54:01  krueger
+ * *** empty log message ***
+ *
+ * Revision 1.2  2002/07/02 12:35:39  krueger
+ * *** empty log message ***
+ *
+ * Revision 1.1  2002/01/28 08:38:48  krueger
+ * *** empty log message ***
+ *
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Feature test switches
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+//#define _POSIX_SOURCE 1
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * System headers
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Local headers
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #include "util.h"
 #include "mmdf.h"
 #include "ch.h"
 
-extern LLog *logptr;
-extern char *mmtailor;         /* where the tailoring file is          */
-extern char *logdfldir;
-       char *locfullname, *locfullmachine;
-extern char *locmachine, *locname, *locdomain;
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Macros
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+#define MAXARG 100
 
-extern char *multcat(), *ap_dmflip();
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Structures and unions
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
-extern int mid_enable;
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * File scope Variables (Variables share by several functions in
+ *                       the same file )
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+static	char	version[] = "$@(#)MMDFII, Release B, Update 37";
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * External Variables
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+extern LLog  *logptr;
+extern char  *mmtailor;         /* where the tailoring file is          */
+extern char  *logdfldir;
+       char  *locfullname;
+       char  *locfullmachine;
+extern char  *locmachine;
+extern char  *locname;
+extern char  *locdomain;
+extern int   mid_enable;
 extern Table tb_mailids;
 extern Table tb_users;
 extern Table tb_mc;
 extern Table **tb_list;
-extern int tb_numtables;
-extern int tb_maxtables;
+extern int   tb_numtables;
+extern int   tb_maxtables;
 
-static	char	version[] = "$@(#)MMDFII, Release B, Update 37";
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Extern Functions declarations
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+extern char *multcat();
+extern char *ap_dmflip();
 
-#define MAXARG 100
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Functions declarations
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
- 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/** 
+ * unsetenv()
+ * @param  char  * name
+ * @return NONE
+ * 
+ **/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #if UWE
 #if defined(sun) || defined(__svr4__)
 void unsetenv (name)
@@ -46,14 +124,15 @@ void unsetenv (name)
 #endif
 #endif
  
-void mmdf_init (pgmname, virtual_name)  /* initialize an mmdf process */
-char *pgmname;
-char *virtual_name;
+void mmdf_init (pgmargc, pgmargv)  /* initialize an mmdf process */
+int  pgmargc;
+char *pgmargv;
 {
     extern char *dupfpath ();
     char *argv[MAXARG];
     int  argc;
     char *savelog;      /* SEK hold log file name                       */
+    char *pgmname = pgmargv;
 #ifdef DEBUG
     int dbind;
 #endif
@@ -82,7 +161,7 @@ char *virtual_name;
 
 #ifdef HAVE_VIRTUAL_DOMAINS
     /* we need to find the right mmtailor file for our virtual domain */
-    mmdf_init_mmtailor(virtual_name);
+    mmdf_init_mmtailor(NULL);
 #endif /* HAVE_VIRTUAL_DOMAINS */
 
     if (tai_init (mmtailor) != OK)
