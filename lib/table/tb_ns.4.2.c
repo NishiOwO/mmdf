@@ -682,7 +682,11 @@ ns_settimeo(ns_time)
 int     ns_time;
 {
     static int called = 0;
+#if defined(LINUX)
+    static struct __res_state oldres;
+#else /* LINUX */
     static struct state oldres;
+#endif /* LINUX */
 
     if ((_res.options & RES_INIT) == 0)
 	    res_init ();
