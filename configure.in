@@ -48,8 +48,28 @@ dnl MMDF_MAJOR_VERSION=2
 dnl MMDF_MINOR_VERSION=44
 dnl MMDF_PATCH_LEVEL=9
 dnl VERSION_DATE="September 1998"
-MMDFLOGIN=mmdf
-ROOTLOGIN=root
+if test "${with_mmdflogin+set}" != set; then
+  AC_DEFINE_UNQUOTED(MMDFLOGIN, "mmdf")
+  mmdflogin=mmdf
+else
+  AC_DEFINE_UNQUOTED(MMDFLOGIN, "${with_mmdflogin}")
+  mmdflogin=${with_mmdflogin}
+fi
+AC_SUBST(mmdflogin)
+if test "${with_mmdfgroup+set}" != set; then
+  AC_DEFINE_UNQUOTED(MMDFGROUP, "mmdf")
+  mmdfgroup=mmdf
+else
+  AC_DEFINE_UNQUOTED(MMDFGROUP, "${with_mmdfgroup}")
+  mmdfgroup=${with_mmdfgroup}
+fi
+AC_SUBST(mmdfgroup)
+if test "${with_rootlogin+set}" != set; then
+  ROOTLOGIN=root
+else
+  ROOTLOGIN=${with_rootlogin}
+fi
+AC_SUBST(ROOTLOGIN)
 dnl PGMPROT=755
 PGMPROT=511
 MMDFLIBS="\${top_srcdir}/lib/libmmdf.a"
@@ -210,6 +230,16 @@ dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl
 dnl CHECK --without arguments
 dnl
+AC_ARG_WITH(
+  mmdflogin,
+  [  --with-mmdflogin=MMDFLOGIN   (default is mmdf)])
+AC_ARG_WITH(
+  mmdfgroup,
+  [  --with-mmdfgroup=MMDFGROUP   (default is mmdf)])
+AC_ARG_WITH(
+  rootlogin,
+  [  --with-rootlogin=ROOTLOGIN   (default is root)])
+
 AC_ARG_ENABLE(nameserver, \
   [  --enable-PACKAGE        configure and build PACKAGE
      --disable-PACKAGE       do not configure and build PACKAGE
@@ -1138,8 +1168,6 @@ AC_SUBST(UIPSUBDIRS)
 
 AC_SUBST(WHAT_DEPEND)
 AC_SUBST(DEPEND_FLAG)
-AC_SUBST(MMDFLOGIN)
-AC_SUBST(ROOTLOGIN)
 AC_SUBST(PGMPROT)
 AC_SUBST(MMDFLIBS)
 AC_SUBST(CXXTEMPLFLAGS)

@@ -1,6 +1,6 @@
 /* h/config.h.in.  Generated automatically from configure.in by autoheader.  */
 /*
- * $Id: config.h.in,v 1.41 1999/10/24 16:48:20 krueger Exp $
+ * $Id: config.h.in,v 1.42 1999/10/31 09:46:30 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -344,6 +344,11 @@ yourdomain".  Since % or
 #undef LINUX
 #undef HPUX
 #undef MKDIR_HAVE_SECOND_ARG
+
+/*****************************************************************************/
+/* login and group names */
+#undef MMDFLOGIN
+#undef MMDFGROUP
 
 /* Define if you have the bcopy function.  */
 #undef HAVE_BCOPY
