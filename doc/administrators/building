@@ -835,13 +835,14 @@ The available preprocessor variables are:
 Enables the d_assign code in the dial package.  This code calls the program
 /bin/assign to gain exclusive access to a file.  It does not appear that 
 the d_assign code is ever used so don't bother defining DOASSIGN.
-.IP SECURETTY 15
+.IP HAVE_SECURETTY 15
 Many sites are running their systems with TTYs in more secure mode
 than generally writable.  Usually these systems use the execute bit
 to indicate write permission and have a privileged program make the
 access.  If you are such a site, you will want to investigate
-the effect of SECURETTY and modify it if necessary.  Vanilla sites
-should not define SECURETTY.  BRL VAX UNIX sites must define SECURETTY.
+the effect of HAVE_SECURETTY and modify it if necessary.  Vanilla sites
+should not define HAVE_SECURETTY.  BRL VAX UNIX sites must define 
+HAVE_SECURETTY.
 .IP DEBUG 15
 Most sites should enable DEBUG=1 unless there is a serious
 crunch for space.  This will give you fairly detailed debugging of
