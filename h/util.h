@@ -1,3 +1,8 @@
+/* 
+ *  include Config-Switches
+ */
+#include "config.h"
+
 #ifndef DIDUTIL
 #define DIDUTIL
 #include <stdio.h>                /* minus the ctype stuff */

@@ -1,3 +1,8 @@
+/* 
+ *  include Config-Switches
+ */
+#include "config.h"
+
 #
 /*          This contains the most site-dependent definitions             */
 

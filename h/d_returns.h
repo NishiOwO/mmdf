@@ -1,3 +1,8 @@
+/* 
+ *  include Config-Switches
+ */
+#include "config.h"
+
 # define  D_CONTIN	   2	 /*  continue with process  */
 # define  D_OK             1     /*  everything is fine  */
 # define  D_NO             0     /*  something is wrong  */
