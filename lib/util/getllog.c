@@ -1,8 +1,9 @@
 #include "util.h"
-#include <pwd.h>
-#include <utmp.h>
-#ifdef HAVE_LASTLOG_H
-#include <lastlog.h>
+#ifdef HAVE_UTMP_H
+#  include <pwd.h>
+#  include <utmp.h>
+#  ifdef HAVE_LASTLOG_H
+#    include <lastlog.h>
 
 /* get informtion about who is logged in */
 
@@ -79,7 +80,7 @@ char name[];
 
 	return (getllog ());
 }
-#else HAVE_LASTLOG_H
+#  else HAVE_LASTLOG_H
 LOCVAR char LLPATH[]  = "/usr/adm/lastlog";
 LOCVAR FILE *llogfp = NULL;
 LOCVAR union tmpunion
@@ -119,7 +120,7 @@ char name[];
 	return(p);
 }
 
-#endif HAVE_LASTLOG_H
+#  endif HAVE_LASTLOG_H
 
 endllog()
 {
@@ -129,3 +130,26 @@ endllog()
 	}
 }
 
+#else HAVE_UTMP_H
+/* For systems that have no easy way to find last login time */
+/* For example: SYSVR2  --  "Consider it stranded." */
+
+setllog()
+{
+}
+
+endllog()
+{
+}
+
+getllog()
+{
+	return (0);
+}
+
+getllnam(name)
+char *name;
+{
+	return (0);
+}
+#endif HAVE_UTMP_H

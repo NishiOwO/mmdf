@@ -9,7 +9,7 @@ MODULES =	tty_io ll_err ll_log tai_packages cmdsrch \
 		compress multcpy multcat strdup gcread gettys \
 		zero blt expand sstr2arg nexec \
 		tai_file tai_noop \
-		gwdir gwdir.4.2 lk_lock mydbm \
+		gwdir gwdir.4.2 lk_lock mydbm getllog \
 		getllog.v7 getllog.bsd getllog.fak
 
 STANDARD =	tty_io.o ll_err.o ll_log.o tai_packages.o cmdsrch.o \
@@ -18,7 +18,8 @@ STANDARD =	tty_io.o ll_err.o ll_log.o tai_packages.o cmdsrch.o \
 		strindex.o equwrd.o equal.o endstr.o initstr.o lexrel.o \
 		prefix.o strequ.o lexequ.o chrcnv.o getutmp.o getgroup.o \
 		compress.o multcpy.o multcat.o strdup.o gcread.o gettys.o \
-		zero.o blt.o expand.o sstr2arg.o nexec.o lk_lock.o mydbm.o
+		zero.o blt.o expand.o sstr2arg.o nexec.o lk_lock.o \
+		mydbm.o getllog.o
 
 STDSRCS =	tty_io.c ll_err.c ll_log.c tai_packages.c cmdsrch.c \
 		cmdbsrch.o cnvtdate.c creatdir.c getfpath.c getwho.c \
@@ -26,22 +27,23 @@ STDSRCS =	tty_io.c ll_err.c ll_log.c tai_packages.c cmdsrch.c \
 		strindex.c equwrd.c equal.c endstr.c initstr.c lexrel.c \
 		prefix.c strequ.c lexequ.c chrcnv.c getutmp.c getgroup.c \
 		compress.c multcpy.c multcat.c strdup.c gcread.c gettys.c \
-		zero.c blt.c expand.c sstr2arg.c nexec.c lk_lock.c mydbm.c
+		zero.c blt.c expand.c sstr2arg.c nexec.c lk_lock.c \
+		mydbm.c getllog.c
 
-v7objs =	getllog.v7.o gwdir.o
-v7srcs =	getllog.v7.c gwdir.c
+v7objs =	gwdir.o
+v7srcs =	gwdir.c
 
-5.2objs =	getllog.fak.o gwdir.o
-5.2srcs =	getllog.fak.c gwdir.c
+5.2objs =	gwdir.o
+5.2srcs =	gwdir.c
 
-4.1objs = 	getllog.bsd.o gwdir.o
-4.1srcs = 	getllog.bsd.c gwdir.c
+4.1objs = 	gwdir.o
+4.1srcs = 	gwdir.c
 
-4.2objs =	getllog.bsd.o gwdir.4.2.o
-4.2srcs =	getllog.bsd.c gwdir.4.2.c
+4.2objs =	gwdir.4.2.o
+4.2srcs =	gwdir.4.2.c
 
-4.3objs =	getllog.bsd.o gwdir.4.2.o
-4.3srcs =	getllog.bsd.c gwdir.4.2.c
+4.3objs =	gwdir.4.2.o
+4.3srcs =	gwdir.4.2.c
 
 real-default: ../util-made
 ../util-made:	${STANDARD} ${LOCALUTIL} ../${SYSTEM}-made
@@ -97,18 +99,13 @@ clean:
 
 tty_io.o: tty_io.c
 tty_io.o: ../../h/util.h
-tty_io.o: /usr/include/pwd.h
-tty_io.o: /usr/include/sys/stat.h
-tty_io.o: /usr/include/utmp.h
 ll_err.o: ll_err.c
 ll_err.o: ../../h/util.h
 ll_err.o: ../../h/ll_log.h
 ll_log.o: ll_log.c
 ll_log.o: ../../h/util.h
 ll_log.o: ../../h/conf.h
-ll_log.o: /usr/include/sys/stat.h
 ll_log.o: ../../h/ll_log.h
-ll_log.o: /usr/include/sys/file.h
 tai_packages.o: tai_packages.c
 tai_packages.o: ../../h/util.h
 tai_packages.o: ../../h/ll_log.h
@@ -125,7 +122,6 @@ cnvtdate.o: ../../h/conf.h
 cnvtdate.o: ../../h/cnvtdate.h
 creatdir.o: creatdir.c
 creatdir.o: ../../h/util.h
-creatdir.o: /usr/include/sys/stat.h
 getfpath.o: getfpath.c
 getfpath.o: ../../h/util.h
 getwho.o: getwho.c
@@ -137,10 +133,8 @@ cstr2arg.o: cstr2arg.c
 cstr2arg.o: ../../h/util.h
 gpwlnam.o: gpwlnam.c
 gpwlnam.o: ../../h/util.h
-gpwlnam.o: /usr/include/pwd.h
 ggrlnam.o: ggrlnam.c
 ggrlnam.o: ../../h/util.h
-ggrlnam.o: /usr/include/grp.h
 strindex.o: strindex.c
 equwrd.o: equwrd.c
 equwrd.o: ../../h/util.h
@@ -158,7 +152,6 @@ lexequ.o: ../../h/util.h
 chrcnv.o: chrcnv.c
 getutmp.o: getutmp.c
 getutmp.o: ../../h/util.h
-getutmp.o: /usr/include/utmp.h
 getgroup.o: getgroup.c
 compress.o: compress.c
 compress.o: ../../h/util.h
@@ -170,7 +163,6 @@ strdup.o: ../../h/util.h
 gcread.o: gcread.c
 gcread.o: ../../h/util.h
 gettys.o: gettys.c
-gettys.o: /usr/include/stdio.h
 gettys.o: ../../h/gettys.h
 zero.o: zero.c
 blt.o: blt.c
@@ -181,28 +173,17 @@ sstr2arg.o: ../../h/util.h
 nexec.o: nexec.c
 nexec.o: ../../h/util.h
 nexec.o: ../../h/nexec.h
-nexec.o: /usr/include/signal.h
-nexec.o: /usr/include/fcntl.h
 tai_file.o: tai_file.c
 tai_file.o: ../../h/util.h
-tai_file.o: /usr/include/sys/stat.h
 tai_noop.o: tai_noop.c
 tai_noop.o: ../../h/util.h
 gwdir.o: gwdir.c
 gwdir.o: ../../h/util.h
 gwdir.o: ../../h/conf.h
-gwdir.o: /usr/include/sys/stat.h
 gwdir.4.2.o: gwdir.4.2.c
 gwdir.4.2.o: ../../h/util.h
-getllog.v7.o: getllog.v7.c
-getllog.v7.o: ../../h/util.h
-getllog.v7.o: /usr/include/utmp.h
-getllog.bsd.o: getllog.bsd.c
-getllog.bsd.o: ../../h/util.h
-getllog.bsd.o: /usr/include/pwd.h
-getllog.bsd.o: /usr/include/utmp.h
-getllog.bsd.o: /usr/include/lastlog.h
-getllog.fak.o: getllog.fak.c
+getllog.o: getllog.c
+getllog.o: ../../h/util.h
 mydbm.o: mydbm.c
 # DEPENDENCIES MUST END AT END OF FILE
 # IF YOU PUT STUFF HERE IT WILL GO AWAY

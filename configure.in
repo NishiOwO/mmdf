@@ -6,8 +6,8 @@ AC_PREFIX_DEFAULT('/usr')
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 MMDF_MAJOR_VERSION=2
-MMDF_MINOR_VERSION=45
-MMDF_PATCH_LEVEL=56
+MMDF_MINOR_VERSION=44
+MMDF_PATCH_LEVEL=58
 VERSION_DATE="April 1998"
 MMDFLOGIN=mmdf
 ROOTLOGIN=root
@@ -563,7 +563,7 @@ AC_CHECK_HEADERS(lastlog.h libio.h malloc.h memory.h termio.h)
 AC_CHECK_HEADER(sgtty.h,ac_cv_header_sgtty_h="yes")
 AC_CHECK_HEADERS(syslog.h)
 AC_CHECK_HEADERS(sys/file.h sys/ioctl.h sys/time.h sys/termio.h sys/termios.h)
-AC_CHECK_HEADERS(varargs.h)
+AC_CHECK_HEADERS(utmp.h varargs.h)
 if test "$ac_cv_header_varargs_h" != "yes"; then
     AC_MSG_WARN(you don't have varargs.h)
     AC_MSG_WARN(          lib/util/multcat.c will not compile)
@@ -882,8 +882,8 @@ AC_ENABLE_DEFAULT_CODE(dbm, yes, lib, "dbm")
 AC_ENABLE_DEFAULT_CODE(nis, no , code, "tables can come via NIS")
 AC_ENABLE_DEFAULT_CODE(nn,  no , code,
 	"'mailids' and 'users' configurable in mmdftailor")
-AC_ENABLE_DEFAULT_CODE(nosrcroute,  no , code, "Source routing")
-AC_ENABLE_DEFAULT_CODE(8bit,        no , code, "8bit-clean transfer")
+AC_ENABLE_DEFAULT_CODE(nosrcroute,  yes, code, "Source routing")
+AC_ENABLE_DEFAULT_CODE(8bit,        yes, code, "8bit-clean transfer")
 
 if test "$ac_cv_enable_lib_dbm" = "yes"; then
    CH_TB="ch_tbdbm"
