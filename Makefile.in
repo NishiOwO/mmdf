@@ -76,7 +76,7 @@ distclean:
 	for dir in ${SUBDIR}; do \
 		(cd $${dir}; make $@); done
 	rm -f config.cache config.log config.status
-	rm -f TAGS* *.gz *.tar config.h *~ #*#
+	rm -f TAGS* *.gz *.tar h/config.h *~ #*#
 	rm -f Makefile.com conf/common/Makefile.com
 	rm -f Makefile
 
