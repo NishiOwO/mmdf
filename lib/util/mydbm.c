@@ -1,5 +1,5 @@
 /*
- * $Id: mydbm.c,v 1.2 1998/09/18 11:39:45 krueger Exp $
+ * $Id: mydbm.c,v 1.3 2001/10/26 13:42:37 krueger Exp $
  *
  * When using the gdbm-library, gdbm provides an dbminit() functions that
  * always open the database in RW-mode and locks it. So no other program
@@ -66,7 +66,63 @@ mydbmclose()
 }
 
 #else /* HAVE_GDBM */
+#include <sys/fcntl.h>
 #include <ndbm.h>
+#ifdef HAVE_DBM_OPEN
+static DBM *dbf;
+extern int errno;
+
+int mydbminit(file, mode)
+char *file,
+     *mode;
+{
+  int filemode=10644;
+  
+  if(!strcmp(mode, "r"))
+    dbf = dbm_open (file, DBM_RDONLY, filemode);
+  
+  if(!strcmp(mode, "rw"))
+    dbf = dbm_open (file, O_RDWR, filemode);
+
+  if(dbf==0) return -errno;
+  return 0;
+}
+
+int mystore(key, content)
+datum key, content;
+{
+  return(dbm_store (dbf, key, content,1));
+}
+
+datum myfetch(key)
+datum key;
+{
+  return(dbm_fetch (dbf, key));
+}
+
+datum myfirstkey()
+{
+  return(dbm_firstkey(dbf));
+}
+
+datum mynextkey(key)
+datum key;
+{
+  return(dbm_nextkey(dbf));
+}
+
+int mydelete(key)
+datum key;
+{
+  return(dbm_delete (dbf, key));
+}
+
+mydbmclose()
+{
+  dbm_close(dbf);
+  return 0;
+}
+#else /* HAVE_DBM_OPEN */
 extern datum fetch(),
   firstkey(),
   nextkey();
@@ -105,5 +161,5 @@ mydbmclose()
 {
   return(dbmclose());
 }
-
+#endif /* HAVE_DBM_OPEN */
 #endif /* HAVE_GDBM */

@@ -428,7 +428,7 @@ char *filename;
 
 dbfclose()
 {
-    return (dbmclose());
+    return (mydbmclose());
 }
 
 /*

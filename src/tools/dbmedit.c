@@ -288,7 +288,7 @@ delall:		if ((lckfd = lk_open(dblock, 0, (char *)0, (char *)0, 10)) < 0) {
 				 tbldbm);
 			return(1);
 		}
-		if(delete(dcons(argv[1])) < 0)
+		if(mydelete(dcons(argv[1])) < 0)
 			fprintf(stderr, "Delete failed\n");
 
 #ifdef HAVE_DBMCACHEDUMP
