@@ -15,6 +15,7 @@
 #ifdef HAVE_NAMESERVER
 #include "mmdf.h"
 #include "ch.h"
+#include "cmd.h"
 #include "ns.h"
 #include <netdb.h>
 #include <sys/socket.h>
@@ -25,10 +26,21 @@
 
 extern int   h_errno;
 
+extern int Tdebug;
+#define  logx    if (Tdebug) printf
+
+typedef struct tb_ns_param {
+  char *ns_server;
+  int  flags;
+#define TB_USE_A   1
+#define TB_USE_MX  2
+} tb_ns_param_def;
+
 LOCFUN ns_getcn();
 LOCFUN ns_getmx();
 LOCFUN ns_error();
 LOCFUN char *ns_skiphdr();
+LOCFUN int cachehit();
 
 /* T_UNSPEC was defined only in more recent versions of BIND */
 
@@ -93,6 +105,7 @@ LOCVAR  char local[MAXDNAME];
 #ifdef NSCACHE
 struct ns_cache {
     int nc_rval;		/* OK/NOTOK/MAYBE */
+    int nc_type;        /* MX or IN entry */
     int nc_count;
     char *nc_key;
     char *nc_data;
@@ -107,16 +120,17 @@ LOCVAR  struct ns_cache *chncache[NSCACHE];
  * table fetch routine for ns
  */
 
-ns_fetch(table, key, value, first)
-Table   *table;          /* What "table" are we searching */
-char    *key;
-char    *value;         /* Where to put result */
-int     first;          /* now used */
+int ns_fetch(table, key, value, first)
+Table   *table;         /* I: What "table" are we searching */
+char    *key;           /* I: */
+char    *value;         /* O: Where to put result */
+int     first;          /* I: now used */
 {
     register char *tmp;
     int	type;
     int rval;
-
+    tb_ns_param_def *param = (tb_ns_param_def *)table->tb_parameters;
+    
 #ifdef  DEBUG
     ll_log(logptr, LLOGFTR, "ns_fetch (%o, %s, %d)",
 	table->tb_flags, key, first);
@@ -141,15 +155,20 @@ int     first;          /* now used */
     {
 	max_mxa = on_mxa = -1;
 
-	if (!cachehit(key,&rval,type))
+          logx("1 search '%s' in '%s' (%d)\n", key, table->tb_name,
+                 param->flags);
+	if (!cachehit(key,&rval,type, param))
 	{
 	    if (type == TB_CHANNEL)
 	    {
-		if ((rval = ns_getmx(key, &max_mxa, mx_addrs, MAXADDR))==OK)
-		    on_mxa = 0;
-
+          logx("2 search '%s' in '%s' (%d)\n", key, table->tb_name,
+                 param->flags);
+          
+          if ((rval = ns_getmx(key, &max_mxa, mx_addrs, MAXADDR, param))==OK)
+            on_mxa = 0;
+          
 #ifdef NSCACHE
-		cachechn(key,rval,max_mxa,mx_addrs);
+          cachechn(key,rval,max_mxa,mx_addrs, param);
 #endif
 	    }	
 	    else
@@ -349,11 +368,12 @@ realname:
  */
 
 LOCFUN
-ns_getmx(key, max, mxtab, tsize)
+ns_getmx(key, max, mxtab, tsize, param)
 char *key;
 int *max;
 struct in_addr mxtab[];
 int tsize;
+tb_ns_param_def *param;
 {
     register char *cp;
     register int i, j, n;
@@ -392,13 +412,28 @@ restart:
     _res.options &= ~((int) RES_DEFNAMES);
 #endif
 
-    n = res_mkquery(QUERY, key, C_IN, T_MX, (char *)0, 0,
+    switch (param->flags) {
+        case TB_USE_MX:
+          n = res_mkquery(QUERY, key, C_IN, T_MX, (char *)0, 0,
 #ifdef LINUX
-	(struct rrec *)0,
+                          (struct rrec *)0,
 #else
-	(char *)0,
+                          (char *)0,
 #endif
-	(char *)&qbuf, sizeof(qbuf));
+                          (char *)&qbuf, sizeof(qbuf));
+          break;
+
+        case TB_USE_A:
+          n = res_mkquery(QUERY, key, C_IN, T_A, (char *)0, 0,
+#ifdef LINUX
+                          (struct rrec *)0,
+#else
+                          (char *)0,
+#endif
+                          (char *)&qbuf, sizeof(qbuf));
+          break;
+    }
+    
 
     /* what else can we do? */
     if (n < 0) {
@@ -497,7 +532,13 @@ restart:
 	    goto restart;
 	}
 
-	if (type != T_MX) {
+	if (type != T_MX && param->flags==TB_USE_MX) {
+	    ll_log(logptr,LLOGTMP,"ns_getmx: RR of type %d in response",type);
+	    cp += dsize;
+	    continue;       /* keep trying */
+	}
+
+	if (type != T_A && param->flags==TB_USE_A) {
 	    ll_log(logptr,LLOGTMP,"ns_getmx: RR of type %d in response",type);
 	    cp += dsize;
 	    continue;       /* keep trying */
@@ -692,6 +733,24 @@ register char *eom;
 }
 
 /*
+ * routine to set an other nameser to use
+ */
+int ns_setnameserver(ns_server)
+char *ns_server;
+{
+#if defined(HAVE_RES_STATE)
+  static struct __res_state oldres;
+#else /* HAVE_RES_STATE */
+  static struct state oldres;
+#endif /* HAVE_RES_STATE */
+  /*
+    _res.nscount = 1;
+    _res.nsaddr_list[0]= address of ns.
+   */
+  return 0;
+}
+
+/*
  * routine to set the resolver timeouts
  * takes maximum number of seconds you are willing to wait
  */
@@ -758,15 +817,16 @@ int     ns_time;
  */
 #ifdef NSCACHE
 
-static cachehash(key)
+static cachehash(key, type)
 register char *key;
+register int type;
 {
     register int i;
     register unsigned c;
     register unsigned sum;
     extern char chrcnv[];
 
-    sum = 0;
+    sum = type;
 
     for(i=0; *key != '\0'; i++, key++)
     {
@@ -777,10 +837,11 @@ register char *key;
     return(sum % NSCACHE);
 }
 
-cachehit(key,rval,tbltype)
+static cachehit(key,rval,tbltype, param)
 char *key;
 int *rval;
 int tbltype;
+tb_ns_param_def *param;
 {
     register int i;
     register struct ns_cache *cp;
@@ -788,7 +849,7 @@ int tbltype;
 
     *rval = OK;
 
-    i = cachehash(key);
+    i = cachehash(key, param->flags);
 
     ll_log(logptr,LLOGFTR,"ns: key %s -> %d\n",key,i);
 
@@ -816,8 +877,9 @@ int tbltype;
 	    switch (tbltype)
 	    {
 		case TB_CHANNEL:
+          if(cp->nc_type != param->flags) continue;
 		    /* fill mx cache */
-		    max_mxa = cp->nc_count;
+            max_mxa = cp->nc_count;
 		    on_mxa = 0;
 
 		    ip1 = (struct in_addr *)cp->nc_data;
@@ -844,10 +906,11 @@ int tbltype;
 }
 
 
-cachechn(key,rval,count,list)
+cachechn(key,rval,count,list, param)
 char *key;
 int rval, count;
 struct in_addr *list;
+tb_ns_param_def *param;
 {
     register struct ns_cache *cp;
     register struct in_addr *ip1, *ip2;
@@ -870,6 +933,7 @@ struct in_addr *list;
 	return;
     }
 
+    cp->nc_type = param->flags;
     cp->nc_count = count;
     cp->nc_rval = rval;
 
@@ -880,7 +944,7 @@ struct in_addr *list;
 	*ip2++ = *ip1++;
 
     /* stuff it in */
-    i = cachehash(cp->nc_key);
+    i = cachehash(cp->nc_key, param->flags);
 
     cp->nc_next = chncache[i];
     chncache[i] = cp;
@@ -922,12 +986,99 @@ int rval;
     cp->nc_rval = rval;
 
     /* stuff it in */
-    i = cachehash(cp->nc_key);
+    i = cachehash(cp->nc_key, 0);
 
     cp->nc_next = dmncache[i];
     dmncache[i] = cp;
 }
 #endif NSCACHE
+
+extern int tb_ns_tai();
+extern int tb_ns_check();
+
+int tb_ns_init(tblptr)
+Table *tblptr;
+{
+  struct tb_ns_param *param;
+#ifdef DEBUG
+  ll_log (logptr, LLOGBTR, "tb_ns_init (%p)", tblptr);
+#endif
+  logx( "tb_ns_init (%p, %s)\n", tblptr, tblptr -> tb_name);
+
+  tblptr -> tb_tai   = &tb_ns_tai;
+  /*tblptr -> tb_k2val = &tb_ns_k2val;*/
+  tblptr -> tb_fetch = &ns_fetch;
+  /*tblptr -> tb_print = &tb_ns_print;*/
+  tblptr -> tb_check = &tb_ns_check;
+
+  tblptr->tb_parameters = param =
+    (tb_ns_param_def *)malloc(sizeof(tb_ns_param_def));
+  memset(param, 0, sizeof(tb_ns_param_def));
+  param->flags = TB_USE_MX;
+  
+  return;
+}
+
+#define CMDTNOOP    0
+#define CMDTSERVER  1
+#define CMDTNOMX    2
+LOCVAR Cmd
+	    cmdtbl[] =
+{
+    {"",         CMDTNOOP,   0},
+    {"server",   CMDTSERVER, 1},
+    {"usemx",    CMDTNOMX,   1},
+    {0,          0,          0}
+};
+
+#define CMDTBENT ((sizeof(cmdtbl)/sizeof(Cmd))-1)
+
+int tb_ns_tai(tbptr, gind, argc, argv)
+    Table *tbptr;
+    int *gind;
+    int argc;
+    char *argv[];
+{
+  int ind = *gind/* - 1*/;
+  tb_ns_param_def *param = (tb_ns_param_def *)tbptr->tb_parameters;
+  
+#ifdef DEBUG
+	    ll_log (logptr, LLOGFTR, "tb_ns_tai '%s'(%d)",
+                argv[ind], argc - ind);
+#endif
+  
+  switch (cmdbsrch (argv[ind-1], argc - ind, cmdtbl, CMDTBENT))
+  {
+      case CMDTNOMX:
+        logx("Using no-MX for %s, ar=%s\n", tbptr->tb_name, argv[ind]);
+        if(atoi(argv[ind]) == 0)
+              param->flags = TB_USE_A;
+        break;
+
+      case CMDTSERVER:
+        logx("Using SERVER '%s' for %s\n", argv[ind], tbptr->tb_name);
+        param->ns_server = strdup(argv[ind]);
+        break;
+        
+      default:
+        *gind = ind-1;
+        return 1;
+        break;
+  }
+
+  return 0;
+}
+
+#define         LEVEL6            050
+int tb_ns_check(que, tb, hdrfmt, title)
+int (*que)();
+Table *tb;
+char *hdrfmt;
+char *title;
+{
+  que(LEVEL6, hdrfmt, title, "(via nameserver)");
+  return 0;
+}
 
 #else /* HAVE_NAMESERVER */
 
