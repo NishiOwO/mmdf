@@ -8,11 +8,16 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  *
  *  $Log: cmd3.c,v $
- *  Revision 1.2  1986/01/07 13:53:36  galvin
- *  Added comment header for revision history.
+ *  Revision 1.3  1986/01/14 14:16:30  galvin
+ *  respond() needed some tuning.  Basically, we use a Reply-To over
+ *  the From or Sender.  Also, we reply to all address, to and cc, even
+ *  if we find a Reply-To.  Previously, the existance of a Reply-To
+ *  caused respond() to behave like Respond().  Change delname() to use
+ *  routeq() and eliminate a couple skin()'s since MMDF likes full names.
+ *  Finally make sure we delimit addresses by "," where appropriate.
  *
  * Revision 1.3  86/01/14  14:16:30  galvin
  * respond() needed some tuning.  Basically, we use a Reply-To over
