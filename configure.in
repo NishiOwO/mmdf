@@ -14,7 +14,7 @@ ROOTLOGIN=root
 PGMPROT=755
 MMDFLIBS="\${top_srcdir}/lib/libmmdf.a"
 mmdf_prefix="\${prefix}/mmdf"
-libdir="\${mmdf_prefix}/lib"
+libexecdir="\${mmdf_prefix}/lib"
 chandir="\${mmdf_prefix}/chans"
 tbldir="\${mmdf_prefix}/table"
 rcvdir="\${exec_prefix}/lib/mh"
@@ -479,6 +479,9 @@ dnl
 dnl Checks for libraries.
 dnl AC_CHECK_LIB(BSD, atof)
 dnl AC_CHECK_LIB(bsd, atof)
+AC_CHECK_LIB(socket, socket)
+AC_CHECK_LIB(nsl, inet_ntoa)
+
 if test "$ac_cv_enable_code_dbm" != "no"; then
    AC_CHECK_FUNC(dbm_open,ac_cv_lib_dbm="yes",[
       AC_CHECK_LIB(gdbm, gdbm_open)
@@ -509,8 +512,6 @@ if test "$ac_cv_enable_code_wrap" != "no"; then
    fi
 fi
 
-AC_CHECK_LIB(socket, socket)
-AC_CHECK_LIB(nsl, inet_ntoa)
 
 dnl AC_CHECK_LIB(inet, atof)
 dnl AC_CHECK_LIB(X11, atof)
