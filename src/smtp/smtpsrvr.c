@@ -1,4 +1,4 @@
-static char Id[] = "$Id: smtpsrvr.c,v 1.19 1999/08/12 13:15:41 krueger Exp $";
+static char Id[] = "$Id: smtpsrvr.c,v 1.20 1999/08/16 10:04:08 krueger Exp $";
 /*
  *                      S M T P S R V R . C
  *
@@ -630,6 +630,46 @@ mail(int cmdnr)
 	 * then add on the extra part of the route.
 	 */
 
+#if notdef
+    if( (strcmp(name, "SIZE")==0) && () ){
+      if (message_size_limit > 0 && size > message_size_limit) {
+        snprintf(replybuf, sizeof(replybuf), "552 Message size exceeds maximum permitted\r\n");
+        netreply(replybuf);
+        return;
+      }
+    }
+    
+    if (smtp_check_spool_space)
+    {
+      if (!accept_check_fs(size + 5000))
+      {
+        snprintf(replybuf, sizeof(replybuf), "452 space shortage, please try later\r\n");
+        netreply(replybuf);
+        return;
+      }
+      size_checked = TRUE;    /* No need to check again below */
+    }
+    
+    if (accept_8bitmime && strcmpic(name, "BODY") == 0 &&
+        (strcmpic(value, "8BITMIME") == 0 ||
+         strcmpic(value, "7BIT") == 0)) {}
+
+#ifdef HAVE_DSN
+    if (dsn && strcmpic(name, "RET") == 0)
+      dsn_ret = (strcmpic(value, "HDRS") == 0)? dsn_ret_hdrs :
+      (strcmpic(value, "FULL") == 0)? dsn_ret_full : 0;
+
+    else if (dsn && strcmpic(name, "ENVID") == 0)
+      dsn_envid = string_copy(value);
+#endif /* HAVE_DSN */
+
+    if (!size_checked && !accept_check_fs(0))
+    {
+      snprintf(replybuf, sizeof(replybuf), "452 space shortage, please try later\r\n");
+      netreply(replybuf);
+      return;
+    }
+#endif /* notdef */
 #ifdef NODOMLIT
 	if(themknown && ((ap_sender = ap_s2tree(sender)) != (AP_ptr)NOTOK)){
 #else
@@ -723,10 +763,9 @@ mail(int cmdnr)
       INFOBOO;
     }
 #ifdef HAVE_ESMTP
-    infoboo=snprintf( info+infolen, sizeof(info)-infolen, "%sp%d*",
-                      info, smtp_proto);
-#endif
+    infoboo=snprintf( info+infolen, sizeof(info)-infolen, "p%d*", smtp_proto);
     INFOBOO;
+#endif
   
     /* bug found: snprintf glibc2.1.1 clobbers destination before copy source.
        was recent addition (no wonder!) -u@q.net */
@@ -818,6 +857,28 @@ rcpt(int cmdnr)
 	p = strchr( arg, ':' ) + 1;
 	p = addrfix( p );
 
+#if notdef
+#ifdef HAVE_DSN
+    if (strcmpic(name, "ORCPT") == 0) orcpt = string_copy(value);
+    else if (strcmpic(name, "NOTIFY") == 0)
+    {
+      if (strcmpic(value, "NEVER") == 0) flags |= rf_notify_never; else
+      {
+        char *p = value;
+        while (*p != 0)
+        {
+          char *pp = p;
+          while (*pp != 0 && *pp != ',') pp++;
+          if (*pp == ',') *pp++ = 0;
+          if (strcmpic(p, "SUCCESS") == 0) flags |= rf_notify_success;
+          else if (strcmpic(p, "FAILURE") == 0) flags |= rf_notify_failure;
+          else if (strcmpic(p, "DELAY") == 0) flags |= rf_notify_delay;
+          p = pp;
+        }
+      }
+    }
+#endif /* HAVE_DSN */
+#endif
 	if (setjmp(timerest)) {
 		netreply( "451 Mail system problem\r\n" );
 		return;
@@ -1505,29 +1566,37 @@ vrfy_kill()
 #ifdef HAVE_ESMTP
 void tell_esmtp_options()
 {
+  char replybuf[LINESIZE];
+  
   netreply("250-EXPN\r\n");
   
-#  ifdef HAVE_ESMT_VERB
+#  ifdef HAVE_ESMTP_VERB
   netreply("250-VERB\r\n");
-#  endif
-#  ifdef HAVE_ESMT_8BITMIME
-  netreply("250-8BITMIME\r\n");
-#  endif
-#  ifdef HAVE_ESMT_SIZE
-  netreply("250-SIZE\r\n");
-#  endif
-#  ifdef HAVE_ESMT_DSN
-  netreply("250-DSN\r\n");
-#  endif
-#  ifdef HAVE_ESMT_ONEX
+#  endif /* HAVE_ESMTP_VERB */
+#  ifdef HAVE_ESMTP_8BITMIME
+  if(accept_8bitmime) netreply("250-8BITMIME\r\n");
+#  endif /* HAVE_ESMTP_8BITMIME */
+#  ifdef HAVE_ESMTP_SIZE
+  if(message_size_limit>0)
+    snprintf(replybuf, LINESIZE, "250-SIZE %d\r\n", message_size_limit);
+  else snprintf(replybuf, LINESIZE, "250-SIZE\r\n");
+  netreply(replybuf);
+#  endif /* HAVE_ESMTP_SIZE */
+#  ifdef HAVE_ESMTP_DSN
+  if(dsn) netreply("250-DSN\r\n");
+#  endif /* HAVE_ESMTP_DSN */
+#  ifdef HAVE_ESMTP_ONEX
   netreply("250-ONEX\r\n");
-#  endif
-#  ifdef HAVE_ESMT_ETRN
-  netreply("250-ETRN\r\n");
-#  endif
-#  ifdef HAVE_ESMT_XUSR
+#  endif /* HAVE_ESMTP_ONEX */
+#  ifdef HAVE_ESMTP_ETRN
+  if(smtp_etrn_hosts) netreply("250-ETRN\r\n");
+#  endif /* HAVE_ESMTP_ETRN */
+#  ifdef HAVE_ESMTP_PIPE
+  if(smtp_etrn_hosts) netreply("250-PIPELINING\r\n");
+#  endif /* HAVE_ESMTP_PIPE */
+#  ifdef HAVE_ESMTP_XUSR
   netreply("250-XUSR\r\n");
-#  endif
+#  endif /* HAVE_ESMTP_XUSR */
   netreply("250 HELP\r\n");
 }
 

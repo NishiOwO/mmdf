@@ -62,6 +62,12 @@ FILE    *sm_rfp, *sm_wfp;
 LOCVAR char     sm_rnotext[] = "No reply text given";
 LOCVAR  char    netobuf[BUFSIZ];
 LOCVAR  char    netibuf[BUFSIZ];
+LOCVAR smtp_protocol smtp_mode = PRK_SMTP;
+#ifdef HAVE_ESMTP
+#  define STRCAP(STRCAP_STRINGX)        STRCAP_STRINGX[sizeof(STRCAP_STRINGX)-1]='\0'
+#  define INFOBOO       if(infoboo<0) STRCAP(linebuf); else infolen+=infoboo
+int	infolen=0, infoboo=0;
+#endif /* HAVE_ESMTP */
 
 /**/
 
@@ -70,8 +76,40 @@ char    *sender;
 {
 	char    linebuf[LINESIZE];
 
-	sprintf (linebuf, "MAIL FROM:<%s>", sender);
-	if (rp_isbad (sm_cmd (linebuf, SM_STIME)))
+    infolen=0;
+    infoboo=0;
+    
+    infoboo=snprintf(linebuf, sizeof(linebuf), "MAIL FROM:<%s>", sender);
+    INFOBOO;
+#if notdef
+    if (smtp_use_size)
+    {
+      infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen,
+                 " SIZE=%d", message_size + message_linecount + ob->size_addition);       
+      INFOBOO;
+    }
+
+#ifdef SUPPORT_DSN
+    if (smtp_use_dsn)
+    {
+      if (dsn_ret == dsn_ret_hdrs)
+      {
+        infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen, " RET=HDRS");
+        INFOBOO;
+      }
+      else if (dsn_ret == dsn_ret_full)
+      {
+        infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen, " RET=FULL");
+        INFOBOO;
+      }
+      if (dsn_envid != NULL)
+        infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen," ENVID=%s", dsn_envid);
+        INFOBOO;
+    }
+#endif
+#endif
+
+    if (rp_isbad (sm_cmd (linebuf, SM_STIME)))
 	    return (RP_DHST);
 
 	switch( (int)(sm_rp.sm_rval/100) ) {
@@ -118,15 +156,48 @@ char    host[];                   /* "next" location part of address    */
 char    adr[];                    /* rest of address                    */
 {
     char linebuf[LINESIZE];
-
+    infolen=0;
+    infoboo=0;
+    
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "sm_wto(%s, %s)", host, adr);
 #endif
 
-    sprintf (linebuf, "RCPT TO:<%s>", adr);
+    infoboo=snprintf(linebuf, sizeof(linebuf), "RCPT TO:<%s>", adr);
+    INFOBOO;
+#if notdef
+#ifdef SUPPORT_DSN
+    if (smtp_use_dsn)
+    {
+      if ((addr->dsn_flags & rf_dsnflags) != 0)
+      {
+        int i;
+        BOOL first = TRUE;
+        infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen, " NOTIFY=");
+        INFOBOO;
+        for (i = 0; i < 4; i++)
+        {
+          if ((addr->dsn_flags & rf_list[i]) != 0)
+          {
+            if (!first) *p++ = ',';
+            first = FALSE;
+            infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen, rf_names[i]);
+            INFOBOO;
+          }
+        }
+      }
+
+      if (addr->dsn_orcpt != NULL) {
+        infoboo=snprintf( linebuf+infolen, sizeof(linebuf)-infolen, " ORCPT=%s",
+                      addr->dsn_orcpt);
+        INFOBOO;
+      }
+    }
+#endif
+#endif
+
     if (rp_isbad (sm_cmd (linebuf, SM_TTIME)))
 	return (RP_DHST);
-
     switch ((int)(sm_rp.sm_rval/100))
     {
         case 2:
@@ -651,14 +722,31 @@ retry:
 	goto retry;
     }
 
-    if (sm_chptr -> ch_confstr)
-	sprintf (linebuf, "HELO %s", sm_chptr -> ch_confstr);
+#ifdef HAVE_ESMTP
+    if((chanptr->ch_access&CH_ESMTP)==CH_ESMTP)
+      smtp_mode = PRK_ESMTP;
     else
-	sprintf (linebuf, "HELO %s.%s", sm_chptr -> ch_lname,
-				    sm_chptr -> ch_ldomain);
+#endif /* HAVE_ESMTP */
+      smtp_mode = PRK_SMTP;
+    
+   noesmtp:
+    if (sm_chptr -> ch_confstr)
+      sprintf (linebuf, "%s %s",
+             (smtp_mode == PRK_ESMTP) ? "EHLO" : "HELO",
+             sm_chptr -> ch_confstr);
+    else
+	sprintf (linebuf, "%s %s.%s",
+             (smtp_mode == PRK_ESMTP) ? "EHLO" : "HELO",
+             sm_chptr -> ch_lname, sm_chptr -> ch_ldomain);
     if (rp_isbad (sm_cmd( linebuf, SM_HTIME )) || sm_rp.sm_rval != 250 ) {
-	sm_nclose (NOTOK);
-	goto retry;		/* try more intelligent host? */
+#ifdef HAVE_ESMTP
+      if((chanptr->ch_access&CH_ESMTP)==CH_ESMTP && sm_rp.sm_rval == 500) {
+        smtp_mode = PRK_SMTP;
+        goto noesmtp;
+      }
+#endif /* HAVE_ESMTP */
+      sm_nclose (NOTOK);
+      goto retry;		/* try more intelligent host? */
     }
     return (RP_OK);
 }
