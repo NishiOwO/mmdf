@@ -23,10 +23,10 @@
 #ifndef NOFCNTL
 #include <fcntl.h>
 #endif
-#ifdef HAVE_TCP_WRAPPER
+#ifdef HAVE_LIBWRAP
 #  include <tcpd.h>
 #  include <syslog.h>
-#endif /* HAVE_TCP_WRAPPER */
+#endif /* HAVE_LIBWRAP */
 
 #include "ns.h"
 
@@ -80,13 +80,13 @@ FILE    *vrfy_in;               /* fd for vrfy's parent to read from child */
 #define LF      '\n'    /* line feed */
 #define CNULL   '\0'    /* null */
 
-#ifdef HAVE_TCP_WRAPPER
+#ifdef HAVE_LIBWRAP
 int     allow_severity = LOG_INFO;      /* run-time adjustable */
 int     deny_severity = LOG_WARNING;    /* ditto */
 #ifndef STDIN_FILENO
 #define STDIN_FILENO    0
 #endif
-#endif /* HAVE_TCP_WRAPPER */
+#endif /* HAVE_LIBWRAP */
 
 /****************************************************************
  *                                                              *
@@ -151,15 +151,15 @@ char **argv;
 	char    tmpstr[LINESIZE];
 	char    *Ags[20];
 	int     n, Agc;
-#ifdef HAVE_TCP_WRAPPER
+#ifdef HAVE_LIBWRAP
         struct request_info  request;   
-#endif /* HAVE_TCP_WRAPPER */
+#endif /* HAVE_LIBWRAP */
 
 	progname = argv[0];
-#ifdef HAVE_TCP_WRAPPER
+#ifdef HAVE_LIBWRAP
         request_init(&request, RQ_DAEMON, argv[0], RQ_FILE, STDIN_FILENO, 0);
         fromhost(&request);
-#endif /* HAVE_TCP_WRAPPER */
+#endif /* HAVE_LIBWRAP */
 	mmdf_init( progname );
 
 	if (argc != 4){
@@ -195,7 +195,7 @@ char **argv;
 		themknown = FALSE;
 #endif /* NODOMLIT */
 	    }
-#ifdef HAVE_TCP_WRAPPER
+#ifdef HAVE_LIBWRAP
 	eval_user(&request);
 	if (STR_EQ(eval_hostname(request.client), paranoid))
 	  smtp_refuse(&request, "Paranoid");
@@ -203,10 +203,10 @@ char **argv;
 	sprintf(from_host, "%s [%s]", eval_client(&request),
 		eval_hostaddr(request.client));
 	ll_log( logptr, LLOGGEN, "connection from: %s",eval_client(&request));
-#else /* HAVE_TCP_WRAPPER */
+#else /* HAVE_LIBWRAP */
 	/* sprintf(from_host, "%s [IP]", strdup(them));*/
 	sprintf(from_host, "%s", strdup(them));
-#endif /* HAVE_TCP_WRAPPER */
+#endif /* HAVE_LIBWRAP */
 	    
 	/*
 	 * found out who you are I might even believe you.
@@ -286,7 +286,7 @@ nextcomm:
 	byebye(0);
 }
 
-#ifdef HAVE_TCP_WRAPPER
+#ifdef HAVE_LIBWRAP
 smtp_refuse(request, what)
 struct request_info *request;
 char *what;
@@ -303,7 +303,7 @@ char *what;
   netreply(replybuf);
   byebye(1);
 }
-#endif /* HAVE_TCP_WRAPPER */
+#endif /* HAVE_LIBWRAP */
 
 /*name:
 	getline
