@@ -103,7 +103,21 @@ AC_AIX
 AC_ISC_POSIX
 AC_MINIX	
 dnl AC_PROG_CXX
+AC_C_CONST
+AC_C_CHAR_UNSIGNED
 
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl **** .exe/.obj file extensions
+dnl AC_EXEEXT
+dnl AC_OBJEXT
+
+OBJEXT=".$OBJEXT"
+if test "x$EXEEXT" != "x"
+then
+  EXEEXT=".$EXEEXT"
+fi
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl check if conf/$target exists
 if test "$target" = "NONE"; then
   target=$host
@@ -504,8 +518,8 @@ AC_PROG_RANLIB
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl Checking for files.
 dnl
-AC_CHECK_FILE(SECURETTY, /etc/securetty)
-AC_CHECK_FILE(TSECURETTY, /etc/securetty-test)
+AC_MY_CHECK_FILE(SECURETTY, /etc/securetty)
+AC_MY_CHECK_FILE(TSECURETTY, /etc/securetty-test)
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl Checking for libraries.

@@ -37,7 +37,7 @@ OPT=$OPT" --with-ldap"
 # OPT=$OPT" --disable-8bit"
 # OPT=$OPT" --enable-lock_files"
 # OPT=$OPT" --enable-dial"
-OPT=$OPT" --disable-gcc"
+#OPT=$OPT" --disable-gcc"
 OPT=$OPT" --disable-fhs"
 # OPT=$OPT" --disable-elf"
 
@@ -69,5 +69,7 @@ OPT=$OPT" --enable-rbl"
 # OPT=$OPT" --disable-snd"
 # OPT=$OPT" --disable-ucbmail"
 # OPT=$OPT" --enable-unsupported"
+OPT=$OPT" --enable-virtual-domains"
 
+echo ./configure $OPT --target=$TARGET $*
 ./configure $OPT --target=$TARGET $*

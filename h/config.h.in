@@ -1,6 +1,6 @@
 /* h/config.h.in.  Generated automatically from configure.in by autoheader.  */
 /*
- * $Id: config.h.in,v 1.49 2001/05/02 21:07:12 krueger Exp $
+ * $Id: config.h.in,v 1.50 2001/10/03 15:21:30 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -14,6 +14,11 @@
    We just want to avoid a redefinition error message.  */
 #ifndef _ALL_SOURCE
 #undef _ALL_SOURCE
+#endif
+
+/* Define if type char is unsigned and you are not using gcc.  */
+#ifndef __CHAR_UNSIGNED__
+#undef __CHAR_UNSIGNED__
 #endif
 
 /* Define to empty if the keyword does not work.  */
