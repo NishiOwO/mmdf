@@ -43,7 +43,9 @@ int     started_by_inetd;
 
 int     effecid,                  /* system number of pgm/file's owner  */
 	callerid;                 /* who invoked me?                    */
+
 LOCFUN mn_mmdf();
+RETSIGTYPE sig17();
 
 main (argc, argv)
 int argc;
@@ -83,7 +85,6 @@ char **argv;
 	  char *rmthost;
 	  struct sockaddr_in rmtaddr;
 	  int     len_rmtaddr = sizeof rmtaddr;
-	  int     status;
 	  int     on = 1;
 	
 	  mn_mmdf();           /* set up effective and group id's properly */
@@ -145,12 +146,14 @@ char **argv;
 
 	logx("running with uid=%d, euid=%d", getuid(), geteuid());
 	logx("running with gid=%d, egid=%d", getgid(), getegid());
+	signal( SIGCHLD, sig17);
+
 	while (1) {
 		extern	char			*inet_ntoa();
 			struct	sockaddr_in	rmtaddr;
 			int			len_rmtaddr = sizeof rmtaddr;
-			int			tmpskt;
 			int			status;
+			int			tmpskt;
 
 		/*
 		 * Accept a connection.
@@ -180,7 +183,7 @@ char **argv;
 			else
 				rmt = hp->h_name;
 
-			logx("%s started", rmt);
+			logx("(%d) %s started", numconnections, rmt);
 			dup2(tmpskt, 0);
 			dup2(tmpskt, 1);
 			if (tmpskt > 1)
@@ -202,14 +205,14 @@ char **argv;
 		 * limiting by staying in the do loop while the
 		 * Maxconnections active.
 		 */
-#if 0
-		while (waitpid (-1, &status, numconnections < Maxconnections
-		    ? WNOHANG : 0) > 0)
-#else
+#if HAVE_WAIT3
 		while (wait3 (&status, numconnections < Maxconnections
-		    ? WNOHANG : 0, 0) > 0)
-#endif
-		  numconnections--;
+			      ? WNOHANG : 0, 0) > 0)
+#else /* HAVE_WAIT3 */
+		  while (waitpid (-1, &status, numconnections < Maxconnections
+				  ? WNOHANG : 0) > 0)
+#endif /* HAVE_WAIT3 */
+		    numconnections--;
 	}
 }
 
@@ -275,6 +278,19 @@ char **argv;
 		logx("Channel not specified!");
 		exit(99);
 	}
+}
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+RETSIGTYPE sig17()
+{
+  int	status, pid;
+  signal( SIGCHLD, sig17);
+#if HAVE_WAIT3
+  pid = wait3 (&status, WNOHANG, 0);
+#else /* HAVE_WAIT3 */
+  pid = waitpid (-1, &status,  WNOHANG);
+#endif /* HAVE_WAIT3 */
+  if(pid>0) numconnections--;
 }
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/

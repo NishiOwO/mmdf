@@ -2,8 +2,8 @@
 #   smtp:    ArpaNet-based channel transmission
 #
 SYSTEM  = ${SERVER_SYSTEM}
-MODULES = 	ch_smtp qu2sm_send sm_wtmail tcp.${SYSTEM} \
-		smtpsrvr smtpd.${SYSTEM}
+MODULES = 	ch_smtp qu2sm_send sm_wtmail tcp \
+		smtpsrvr smtpd
 
 real-default:	smtp smtpd smtpsrvr
 
@@ -27,14 +27,14 @@ $(CHANDIR)/smtp:	xsmtp
 
 smtp: xsmtp
 	-@echo
-xsmtp:	ch_smtp.o qu2sm_send.o sm_wtmail.o tcp.${SYSTEM}.o $(MMDFLIBS)
+xsmtp:	ch_smtp.o qu2sm_send.o sm_wtmail.o tcp.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ \
-		ch_smtp.o qu2sm_send.o sm_wtmail.o tcp.${SYSTEM}.o \
+		ch_smtp.o qu2sm_send.o sm_wtmail.o tcp.o \
 		$(MMDFLIBS) $(SYSLIBS)
 
 l-smtp:
 	$(LINT) $(LFLAGS) $(TCPINCL) \
-		ch_smtp.c qu2sm_send.c sm_wtmail.c tcp.${SYSTEM}.c $(LLIBS)
+		ch_smtp.c qu2sm_send.c sm_wtmail.c tcp.c $(LLIBS)
 
 inst-smtpsrvr: $(CHANDIR)/smtpsrvr
 
@@ -73,11 +73,11 @@ xsmtpd: smtpd.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ \
 		smtpd.o $(MMDFLIBS) $(SYSLIBS)
 
-smtpd.o:	smtpd.${SYSTEM}.o
-	cp smtpd.${SYSTEM}.o smtpd.o
+smtpd.o:	smtpd.o
+	cp smtpd.o smtpd.o
 
 l-smtpd:
-	$(LINT) $(LFLAGS) smtpd.${SYSTEM}.c $(LLIBS)
+	$(LINT) $(LFLAGS) smtpd.c $(LLIBS)
 
 clean:
 	-rm -f x* *.o x.c makedep eddep make.out errs
