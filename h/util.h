@@ -36,8 +36,9 @@ extern struct passwd *getpwnam(), *getpwuid();
 #else
 #define sigtype int
 #endif
-#ifdef LINUX
-#define SIGSYS SIGUSR2
+
+#if !defined(HAVE_DEF_SIGSYS) || defined(LINUX)
+#  define SIGSYS SIGUNUSED
 #endif
 
 /* */
