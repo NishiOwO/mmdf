@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.25 1998/05/26 12:20:57 krueger Exp $
+ * $Id: config.h.in,v 1.26 1998/06/01 09:46:36 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -118,6 +118,9 @@
 
 /* Define if you have the setpgrp function.  */
 #undef HAVE_SETPGRP
+
+/* Define if you have the setreuid function.  */
+#undef HAVE_SETREUID
 
 /* Define if you have the strdup function.  */
 #undef HAVE_STRDUP
@@ -389,7 +392,7 @@
 /**********************************************************************/
 /*             Enable site depend code
  */
-/* #undef LINUX */
+#undef LINUX
 
 /*             Enable a small fix to slowdown submitm such that the parent
  *             could finish readring the pipe when submit exits. This is
@@ -399,7 +402,6 @@
 
 /*             Enable 8bit-clean mode when getting messages over smtp.
  */
-#undef EIGHT_BIT_CLEAN
 #undef HAVE_8BIT
 
 /* Define if you have the wrap library (-lwrap).  */
