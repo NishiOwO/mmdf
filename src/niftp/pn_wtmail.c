@@ -335,7 +335,7 @@ int len;
 	}
 	if (!inheader)  /* reached end of header                */
 	   return (pn_wtxt (back, strlen (back)));
-	strcnpy (partialbuf, back, sizeof(partialbuf));
+	strncpy (partialbuf, back, sizeof(partialbuf));
 	return (RP_OK);
     }
     else
