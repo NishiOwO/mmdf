@@ -1,3 +1,4 @@
+/* Modified to compile on Linux Slackware 4.0: Sept 00, Christine Jamison */
 /* getbbent.c - subroutines for accessing the BBoards file */
 
 /* LINTLIBRARY */

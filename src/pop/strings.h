@@ -1,3 +1,4 @@
+/* Modified to compile on Linux Slackware 4.0: Sept 00, Christine Jamison */
 /* strings.h - define standard string functions */
 
 #ifndef	_STRINGS		/* once-only... */
@@ -6,11 +7,6 @@
 char	*index();
 char	*mktemp();
 char	*rindex();
-#ifdef	BSD_SPRINTF
-char	*sprintf();
-#else /* BSD_SPRINTF */
-int	sprintf();
-#endif /* BSD_SPRINTF */
 char	*strcat();
 int	strcmp();
 char	*strcpy();

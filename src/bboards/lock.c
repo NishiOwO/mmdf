@@ -1,7 +1,8 @@
+/* Modified to compile on Linux Slackware 4.0: Sept 00, Christine Jamison */
 /* lock.c - universal locking routines */
 
 #ifndef	MMDFONLY
-#include "../h/strings.h"
+#include "../../h/strings.h"
 #else /* MMDFONLY */
 #include "strings.h"
 #include "mmdfonly.h"

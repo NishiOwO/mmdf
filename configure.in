@@ -592,6 +592,7 @@ dnl	   AC_MSG_WARN(*** your libndbm is linked to 2 libgdbm!)
 fi
 
 dnl checking for libwrap
+if test "$enable_wrap" != "no"; then 
 if test "$ac_cv_enable_code_wrap" != "no"; then
    AC_CHECK_LIB(wrap, eval_client)
    if test "$ac_cv_lib_wrap_eval_client" = "yes"; then
@@ -601,6 +602,7 @@ if test "$ac_cv_enable_code_wrap" != "no"; then
         AC_CHECK_HEADER(tcpd.h,CFLAGS=$CFLAGS" -I/usr/local/include",
           ac_cv_enable_code_wrap="no")
       ])
+      fi
    fi
 fi
 

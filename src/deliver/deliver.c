@@ -172,6 +172,8 @@ char    pgm_bakgrnd;              /* True if running as system daemon   */
 extern char *mquedir;            /* directory under quedfldir for texts */
 extern char *supportaddr;        /* orphaned mail goes here             */
 
+int daemon();
+
 /*  mn_  */
 
 short   inhome;                   /* need to do full-path chdir?        */
@@ -271,9 +273,7 @@ char   *argv[];
     else
     {                             /* go through the whole queue         */
 	if (pgm_bakgrnd) {        /* background daemon                  */
-#ifdef HAVE_SETPGRP
-	    setpgrp();		  /* detach from terminal */
-#endif /* HAVE_SETPGRP */
+      daemon();
 	    FOREVER
 	    {
 		ovr_cstep (ovr_dolin, 0);
@@ -1816,4 +1816,32 @@ char    *fmt, *b, *c, *d;
     }
     ll_close (logptr);           /* in case of cycling, close neatly   */
     exit (RP_NO);
+}
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * daemon(): daemonize
+ * 
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+int daemon()
+{
+  int pid;
+  
+  if ((pid=fork()) != 0)       /* give up foreground */
+  {
+    if (pid<0)
+      perror("fork");
+    exit(0);  /* parent terminates immediately */
+  }
+
+  /* now running in background, disconnect from tty */
+      
+#ifdef HAVE_SETPGRP
+  setpgrp();		  /* detach from terminal */
+#endif /* HAVE_SETPGRP */
+  pid=setsid();
+
+  /* close all open files */
+  close(STDIN_FILENO);  
+  close(STDOUT_FILENO);  
+  close(STDERR_FILENO);  
 }

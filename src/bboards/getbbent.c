@@ -1,3 +1,4 @@
+/* Modified to compile on Linux Slackware 4.0: Sept 00, Christine Jamison */
 /* getbbent.c - subroutines for accessing the BBoards file */
 
 /* LINTLIBRARY */
@@ -75,7 +76,9 @@ static char BBErrors[BUFSIZ];
 extern LLog *logptr;
 #endif /* MMDFONLY */
 
-char   *bbskip (), *getcpy ();
+/* char   *bbskip (), *getcpy (); */
+static char   *bbskip ();
+static char  *getcpy ();
 
 char   *crypt (), *getpass ();
 struct group  *getgrnam ();
@@ -394,7 +397,7 @@ static int  BBread () {
     if (*bb -> bb_file == NULL)
 	return;
     if (*bb -> bb_file != '/') {
-	(void) snprintf (BBFile, sizeof(), "%s/%s", BBDir, bb -> bb_file);
+	(void) snprintf (BBFile, sizeof(BBFile), "%s/%s", BBDir, bb -> bb_file);
 	bb -> bb_file = BBFile;
     }
 
