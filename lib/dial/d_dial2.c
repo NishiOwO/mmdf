@@ -14,6 +14,10 @@
  *                   per line
  */
 
+#ifndef __STDC__
+extern char *strdup ();
+#endif
+
 d_chkaccess(username, accessfile)
 char  *username, *accessfile;
 {
@@ -120,7 +124,6 @@ d_typelist(numptr)
   char  **numptr;
     {
 
-    extern char *strdup ();
     char tempbuf[25];
     char *tpt, *newnum, *number;
     static char *typelist[] = {

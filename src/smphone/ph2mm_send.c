@@ -346,7 +346,7 @@ rcpt()
 		if( rp_isbad( mm_rrply( &thereply, &len )))
 			netreply( "451 Mail system problem" );
 		else {
-			snprintf (replybuf, sizeof(replybuf)), "451 %s", thereply.rp_line);
+			snprintf (replybuf, sizeof(replybuf), "451 %s", thereply.rp_line);
 			netreply (replybuf);
 		}
 	} else {

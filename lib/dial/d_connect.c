@@ -45,7 +45,9 @@ extern int  d_baudrate;
 extern  FILE * d_prtfp;
 extern struct speedtab d_spdtab[];
 extern char **d_typelist();
+#ifndef __STDC__
 extern char *strdup();
+#endif
 extern char *multcat();
 extern int  d_lckfd;
 
