@@ -74,8 +74,10 @@ hd_minit ()                         /* ready to process one copy        */
     ll_log (logptr, LLOGBTR, "hd_minit ()");
 #endif
 
-    if (hd_fmtfp != (FILE *) NULL)
-	rewind (hd_fmtfp);                /* rewind xlated file */
+    if (hd_fmtfp != (FILE *) NULL) {
+      fseek (hd_fmtfp, 2L, 0);
+      rewind (hd_fmtfp);                /* rewind xlated file */
+    }
 }
 
 hd_read (buf, max)
