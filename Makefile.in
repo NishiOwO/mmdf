@@ -53,6 +53,7 @@ CHOWN		= @CHOWN@
 MMDFLOGIN	= @MMDFLOGIN@
 ROOTLOGIN	= @ROOTLOGIN@
 PGMPROT		= @PGMPROT@
+DIALPROG	= @DIAL@
 
 ##
 ## compiler and linker options
@@ -129,6 +130,7 @@ ${PATHNAMES}: Makefile
 	-@echo "#define MM_DIALLOG   \"${mmdfdiallog}\"" >> ${PATHNAMES}
 	-@echo "#define RESENDPROG   \"|${bindir}/resend \"" >> ${PATHNAMES}
 	-@echo "#define SENDPROG     \"${bindir}/send\"" >> ${PATHNAMES}
+	-@echo "#define DIALPROG     \"${DIALPROG}\"" >> ${PATHNAMES}
 
 ########################
 #

@@ -2,10 +2,10 @@
   added configure and h/config.h with all the new defines for each
   specific OS-depend function/component. 
 - Automatic generation of: Makefile, Makefile.com, [lib/src/uip]/Makefile
+  configure
 - Added define for 8-bit-clean
 - long header lines
-- Added define for 'tables mailids,users are configurable in
-  mmdftailor'
+- Added define for 'tables mailids,users are configurable in mmdftailor'
 - Added define and code for NIS-support of tables
 - Added support for tcpwrapper.(if library exists)
 - Added real-host/ip to received lines
@@ -19,6 +19,32 @@
 - Added support for libgdbm
 - Prepared for queue-dependent cleanque (mwarntime, mfailtime)
 
+Thanks to Mike Muuss for:
+- rewrite fix for the fseek/leek synchronization lib/mmdf/mq_rdmail.c:
+  (a) use stdio routines only, so that there is nothing to
+      get out of synchronization, and 
+  (b) always read the flag character it's about to modify before
+      modifying it.  I've long been upset at DELIVER sticking "+"
+      signs in the middle of the address lists when either (a) this
+      bug was present, or (b) when an admin's shell script 
+      edited the address list at the exact same moment....
+
+- msg: "BRL" modifications
+    *)  percentage of message displayed so far, in pager mode,
+    *)  ability to move back one page in the message, by typing "b"
+        while paging,
+    *)  more error checking on disk writes, protecting against disks full
+        corrupting the binary box,
+    *)  ability to hit carriage return when specifying "to" "from" or
+        "subject" searches, to specify the value of that field from the current
+        message.  For example, typing "hs" and return will display all Headers
+        with the Subject the same as the current message.
+    *)  I eliminated the one remaining use of gets(),
+    *)  Verification of intact message separators while overwriting.
+
+- snd: pgp extensions
+
+
 still TODO:
 - support for Mime-encapsulated error messages and ESMTP negotiation.
 - finish queue-dependent cleanque. (work in progress)
@@ -27,3 +53,5 @@ still TODO:
 - finish cleanup of the remaining defines (SYS5, SYSr3, V4_?BSD, ...)
 - Script for generating conf/<site>/*.[ch]
   (site dependent configuration.)
+- make install for uip/ucbmail not cleanedup
+- wildcards

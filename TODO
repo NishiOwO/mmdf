@@ -12,12 +12,6 @@ Wed Dec 31 13:14:34 MET 1997	Kai Krueger <krueger@mathematik.uni-kl.de>
 
 	* Find a way to distinguish make depend in Makefile.com
 
-	* Find a way to distinguish in src/smtp/
-	  tcp.v7.c, tcp.5.2.c, tcp.4.2.c, tcp.4.1.c
-	  	and
-	  smtpd.2.9.c, smtpd.4.1.c, smtpd.4.2.c, smtpd.4.3.c, smtpd.5.2.c,
-	  smtpd.sun.c, smtpd.v7.c
-
 	* workaround for lib/util/multcat.c and lib/util/multcpy.c if
 	  <varargs.h> don't exists (like lib/util/arg2str.c e.g)
 

@@ -22,9 +22,23 @@ VERSION=`sed -e 's/MMDF //' -e 's/\./ /' ${srcdir}/Version`
 MMDF_MAJOR_VERSION=`echo $VERSION | awk '{print $1}'`
 MMDF_MINOR_VERSION=`echo $VERSION | awk '{print $2}'`
 MMDF_PATCH_LEVEL=`echo $VERSION | awk '{print $3}'`
-VERSION_DATE=`echo $VERSION | awk '{print $4,$5}'`
-echo "configuring for MMDF-$MMDF_MAJOR_VERSION.$MMDF_MINOR_VERSION \
-Patchlevel $MMDF_PATCH_LEVEL ($VERSION_DATE)"
+ARG4=`echo $VERSION | awk '{print $4}'`
+ARG5=`echo $VERSION | awk '{print $5}'`
+if test "$ARG5" = ""; then
+  VERSION_DATE="$MMDF_PATCH_LEVEL $ARG4"
+  MMDF_PATCH_LEVEL=""
+  echo "configuring for MMDF-$MMDF_MAJOR_VERSION.$MMDF_MINOR_VERSION \
+ ($VERSION_DATE)"
+else
+  VERSION_DATE="$ARG4 $ARG5"
+  echo "configuring for MMDF-$MMDF_MAJOR_VERSION.$MMDF_MINOR_VERSION \
+  Patchlevel $MMDF_PATCH_LEVEL ($VERSION_DATE)"
+fi
+VERSION="MMDF-$MMDF_MAJOR_VERSION.$MMDF_MINOR_VERSION"
+AC_SUBST(MMDF_MAJOR_VERSION)dnl
+AC_SUBST(MMDF_MINOR_VERSION)dnl
+AC_SUBST(MMDF_PATCH_LEVEL)dnl
+AC_SUBST(VERSION_DATE)dnl
 AC_SUBST(VERSION)dnl
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -304,9 +318,10 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PATH_PROG(AR, ar)
-AC_CHECK_PROG(ASSIGN, assign, assign)
 AC_PATH_PROG(XSTR, xstr)
 AC_PATH_PROG(CTAGS, ctags)
+AC_PATH_PROG(DIAL, dial)
+AC_CHECK_PROG(ASSIGN, assign, assign)
 if test "$ac_cv_prog_ASSIGN" != ""; then
     AC_DEFINE(HAVE_ASSIGN)
 fi
@@ -331,12 +346,12 @@ dnl
 dnl and add to -I to CPPFLAGS and and -Lto LDFLAGS, just to be sure
 if test "$libdir" = '${exec_prefix}/lib'; then
   if test "x$prefix" = xNONE; then
-    if test "x$exec_prefix" = xNONE; then
+    if test "x$exec_prefix" != xNONE; then
       LDFLAGS="-L${exec_prefix}/lib ${LDFLAGS}"
       ac_configure_args="$ac_configure_args --libdir=${exec_prefix}/lib"
     else
-      LDFLAGS="-L${ac_default_prefix}/lib ${LDFLAGS}"
-      ac_configure_args="$ac_configure_args --libdir=${ac_default_prefix}/lib"
+      LDFLAGS="-L${ac_default_prefix}/local/lib ${LDFLAGS}"
+      ac_configure_args="$ac_configure_args --libdir=${ac_default_prefix}/local/lib"
     fi
   else
     LDFLAGS="-L${prefix}/lib ${LDFLAGS}"
@@ -1004,10 +1019,6 @@ AC_SUBST(UIPSUBDIRS)
 
 AC_SUBST(WHAT_DEPEND)
 AC_SUBST(DEPEND_FLAG)
-AC_SUBST(MMDF_MAJOR_VERSION)
-AC_SUBST(MMDF_MINOR_VERSION)
-AC_SUBST(MMDF_PATCH_LEVEL)
-AC_SUBST(VERSION_DATE)
 AC_SUBST(MMDFLOGIN)
 AC_SUBST(ROOTLOGIN)
 AC_SUBST(PGMPROT)

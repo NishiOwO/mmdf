@@ -2,7 +2,7 @@
 README -- MMDFII, Patch Level 44 (alpha), June 1998
 
 	This is the current source tree of the MMDF II 2.45 devellopment version.
-It is based on MMDF II 2.44 patchlevel a8.
+It is based on MMDF II 2.44 patchlevel a9.
 
 CHANGES:
     This release mainly consists of cleanups. But there are also some
@@ -27,6 +27,7 @@ CHANGES:
     - additional information, like e.g. real hostname, real ip-address,
       in the Received: line (run time option in mmdftailor)
     = no cleanups done on uip/ucbmail and uip/unsupported
+    (see README.Changes for details)
 
 TESTED PLATFORMS:
     The new release has already been tested on the following architectures:

@@ -13,11 +13,12 @@ You may adjust most of your pathnames with the following switches:
 
 MMDF programs an tables will be installed in
 	${prefix}	= /usr
-	${mmdf_prefix}	= ${prefix}/mmdf
-	${mmdflibdir}	= ${mmdf_prefix}/lib
-	${chandir}	= ${mmdf_prefix}/chans
-	${tbldir}	= ${mmdf_prefix}/table
+	${mmdfprefix}	= ${prefix}/mmdf
+	${mmdflibdir}	= ${mmdfprefix}/lib
+	${chandir}	= ${mmdfprefix}/chans
+	${tbldir}	= ${mmdfsprefix}/table
 may be changed by: --prefix=
+		   --mmdf-prefix=
 
 	$exec_prefix	= ${prefix}/local
 may be changed by: --exec_prefix=
@@ -36,35 +37,38 @@ may be changed by: --libexecdir=
 may be changed by: --varprefix=
 
 	${mmdfspooldir}  = ${varprefix}/mmdf/home
-	(old) ${sharedstatedir}= ${prefix}/spool/mmdf/home
 may be changed by: --mmdf-spooldir=
-		   --sharedstatedir=
+		   (old) --sharedstatedir=
 
 	${mmdflogdir}    = ${varprefix}/mmdf/log
-	(old) ${localstatedir} = ${prefix}/spool/mmdf/log
 may be changed by: --mmdf-logdir=
-		   --localstatedir=
+		   (old) --localstatedir=
 
 	${mmdfphasedir} = ${varprefix}/mmdf/log/phase
 may be changed by: --mmdf-phasedir=
+		   (old) --localstatedir=
 
 	${mmdfdiallog}  = ${logdir}/dial_log
 may be changed by: --mmdf-diallog=
+		   (old) --localstatedir=
 
-	${sysconfdir}	= ${mmdf_prefix}
+	${sysconfdir}	= ${mmdfprefix}
 may be changed by: --sysconfdir=
 
+Those of the configuration options marked as (old) will be ignored as
+soon as the corresponding new one is given.
 
 Tested on:
 ==========
 
-Linux (redhat 4.2 with libc 5.4.30 or higher)
-Sun		 Solaris 2.5>
+Linux (redhat 4.2, redhat 5.1)
+Sun		 Solaris 2.4>  (cc , gcc 2.7.2, 2.8.1)
 Sun		 Sun OS 4
-HP9000s735       HP-UX 9.xx
-HP9000 Series C  HP-UX 10.xx
-BSDI					: thanks to Ran Atkinson
+HP9000s735       HP-UX 9.xx    (cc , gcc 2.7.2, 2.8.1)
+HP9000 Series C  HP-UX 10.xx   (cc , gcc 2.7.2, 2.8.1)
+BSDI	3.1, 4.0			: thanks to Ran Atkinson
 FreeBSD 3.0				: thanks to Mike Muuss
+Debian Linux     (glibc2.0)		: thanks to Ulf Rudolf
 
 
 
@@ -75,16 +79,23 @@ Comments and Bug list:
    of the database will lock this one for reading too. So MMDF is
    unable to access to its database an will stop running until the
    database is unlocked (closed for writing)!
-
-on linux:
-1) use at least libc version 5.4.30
+3) ucbmail can be built with '--enable-ucbmail', but "make install" is
+   currently not configurable via configure. Pathnames in the makefile 
+   are hardcoded!
 
 
 List of installation pathnames:
 ===============================
 
+Hardcode paths:
+/usr/lib/sendmail	( link to ${sbindir}/sendmail )
 /usr/bin/rmail
 
+/usr/ucb/Mail		( can be placed anywhere by hand )
+/usr/ucb/fmt		( can be placed anywhere by hand )
+/usr/lib/Mail.help
+
+Configurable paths:
 ${chandir}/badusers
 ${chandir}/bboards
 ${chandir}/blockaddr
