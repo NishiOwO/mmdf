@@ -15,7 +15,7 @@
 
 
 /*
- * $Id: acconfig.h,v 1.3 1999/07/19 20:31:34 krueger Exp $
+ * $Id: acconfig.h,v 1.4 1999/08/10 09:29:44 krueger Exp $
  *
  */
 
@@ -466,6 +466,7 @@
 
 #undef HAVE_UNION_WAIT
 #undef LINUX
+#undef HPUX
 #undef MKDIR_HAVE_SECOND_ARG
 
 
