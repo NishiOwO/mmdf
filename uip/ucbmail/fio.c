@@ -8,11 +8,11 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  *
  *  $Log: fio.c,v $
- *  Revision 1.2  1985/11/16 14:33:45  galvin
- *  Added comment header for revision history.
+ *  Revision 1.3  1985/11/16 16:10:36  galvin
+ *  Added define for sigmask for backward compatibility from 4.3bsd to 4.2bsd.
  *
  * Revision 1.6  86/01/13  13:03:48  galvin
  * Change format of debug output and delete one.
