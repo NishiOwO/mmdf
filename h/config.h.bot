@@ -64,4 +64,8 @@ extern char * malloc(), *calloc();
 #include <config.old.h>
 #include <funcs.h>
 
+#ifndef HAVE_STRDUP
+extern char *strdup();
+#endif /* HAVE_STRDUP */
+
 #endif /* CONFIG_H */
