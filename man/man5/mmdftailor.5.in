@@ -1071,6 +1071,19 @@ is set to a directory used for NIFTP temporary files
 hence is only used on NIFTP channels.
 .RE
 
+.SH runtime SMTP setting
+.br
+.B MVALIDCHN 
+.I <channel list>
+.RS
+The channel list is a comma-separated list of channels known by the
+inbound SMTP channel (see smtpd(8) ). When a connection is established,
+the source host is looked up in the host tables for these channels. If
+the source host is found, the corresponding channel name is given to
+submit as the channel it should consider the mail to have come from
+for authorization purposes.
+.RE
+
 .SH runtime UUCP setting
 .br
 .B UUNAME
