@@ -1,4 +1,4 @@
-static char Id[] = "$Id: smtpsrvr.c,v 1.26 1999/09/06 14:38:48 krueger Exp $";
+static char Id[] = "$Id: smtpsrvr.c,v 1.27 1999/09/06 20:14:46 krueger Exp $";
 /*
  *                      S M T P S R V R . C
  *
@@ -630,7 +630,7 @@ extern int ap_outtype;
 #ifdef __STDC__
 mail(int cmdnr)
 #else
-mail(cmdnd)
+mail(cmdnr)
 int cmdnr;
 #endif
 {
@@ -1089,7 +1089,12 @@ char *addrp;
 /*
  *  Process the DATA command.  Send text to MMDF.
  */
+#ifdef __STDC__
 data(int cmdnr)
+#else
+data(cmdnr)
+int cmdnr;
+#endif
 {
 	static char prevbyte = '\n';
 	register char *p, *bufptr;
@@ -1267,7 +1272,7 @@ int retval;
 confirm(int cmdnr)
 #else
 confirm(cmdnr)
-int cmdnr:
+int cmdnr;
 #endif
 {
 	netreply("250 OK\r\n");
@@ -1280,7 +1285,7 @@ int cmdnr:
 help(int cmdnr)
 #else
 help(cmdnr)
-int cmdnr:
+int cmdnr;
 #endif
 {
 	register int i;
@@ -1335,7 +1340,7 @@ char *string;
 expn(int cmdnr)
 #else
 expn(cmdnr)
-int cmdnr:
+int cmdnr;
 #endif
 {
 
@@ -1538,7 +1543,7 @@ expn_dump()
 vrfy(int cmdnr)
 #else
 vrfy(cmdnr)
-int cmdnr:
+int cmdnr;
 #endif
 {
 	register int fd;
