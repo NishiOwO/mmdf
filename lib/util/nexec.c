@@ -154,7 +154,11 @@ char	*pgm,
 	}
 
 	/* printf("Execing %s\n", pgm); */
+#ifdef HAVE_TZSET
+	execv(pgm, pgmparm);
+#else /* HAVE_TZSET */
 	execve(pgm, pgmparm, zap_env);
+#endif /* HAVE_TZSET */
 	/* printf("Exec not successful\n"); */
 	switch(proctyp) {
 	case PUREXEC:
