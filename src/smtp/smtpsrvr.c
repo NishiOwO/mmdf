@@ -53,6 +53,9 @@ extern Chan *ch_h2chan();
 
 extern int mgt_addipaddr,
            mgt_addipname;
+int input_source = 0;
+#define IN_SRC_NET   0
+#define IN_SRC_LOCAL 1
 
 char *progname, *us, *them, *channel;   /* Arguments to program */
 char *sender = 0;                       /* address of mail sender */
@@ -217,6 +220,10 @@ char **argv;
 	  sprintf(from_host, "%s ", eval_client(&request));
 	else if(mgt_addipaddr)
 	  sprintf(from_host, "[%s]", eval_hostaddr(request.client));
+    if(strncmp(from_host, "unknown", 7)==0) {
+      input_source = IN_SRC_LOCAL;
+	  sprintf(from_host, "%s", strdup(them));
+    }
 	ll_log( logptr, LLOGGEN, "connection from: %s",eval_client(&request));
 #else /* HAVE_LIBWRAP */
 	/* sprintf(from_host, "%s [IP]", strdup(them));*/
@@ -230,8 +237,10 @@ char **argv;
 	  } else
 	    sprintf(from_host, "%s [%s]", hp->h_name,
 		    (char *)inet_ntoa(rmtaddr.sin_addr));
-	} else
+	} else {
+      input_source = IN_SRC_LOCAL;
 	  sprintf(from_host, "%s", strdup(them));
+    }
 #endif /* HAVE_LIBWRAP */
 
 	/*
@@ -254,7 +263,7 @@ char **argv;
 		/*
 		 * Is this a valid host for this channel ?
 		 */
-		switch(tb_wk2val (curchan -> ch_table, TRUE, them, tmpstr)){
+		switch(tb_k2val (curchan -> ch_table, TRUE, them, tmpstr)){
 		default:        /* Either NOTOK or MAYBE */
 			if ((n != (Agc-1)) || stricked)
 				continue;
