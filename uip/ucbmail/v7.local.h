@@ -8,11 +8,11 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.5 $
+ *  $Revision: 1.6 $
  *
  *  $Log: v7.local.h,v $
- *  Revision 1.5  1986/01/05 18:01:36  galvin
- *  Add discovered option CANTELL.
+ *  Revision 1.6  1986/01/14 16:33:59  galvin
+ *  Add DAYLIGHT define for use by smtpdate().
  *
  * Revision 1.6  86/01/14  16:33:59  galvin
  * Add DAYLIGHT define for use by smtpdate().
