@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.1 1997/12/29 18:32:10 krueger Exp $
+ * $Id: config.h,v 1.2 1997/12/29 19:27:15 krueger Exp $
  *
  * please set every configuration-switch here
  *
@@ -184,5 +184,10 @@
  *             requirements and system type. 
  */
 /* #undef STATSORT */
+
+/**********************************************************************/
+/*             Enable site depend code
+ */
+/* #undef LINUX */
 
 #endif /* CONFIG_H */
