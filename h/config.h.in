@@ -1,6 +1,6 @@
 /* h/config.h.in.  Generated automatically from configure.in by autoheader.  */
 /*
- * $Id: config.h.in,v 1.37 1999/08/27 18:26:21 krueger Exp $
+ * $Id: config.h.in,v 1.38 1999/08/27 18:29:42 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here

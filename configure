@@ -3995,11 +3995,11 @@ EOF
 fi
 
 
-for ac_hdr in arpa/nameser.h lastlog.h libio.h malloc.h memory.h netdb.h
- netinet/in.h resolv.h termio.h string.h strings.h syslog.h
- sys/file.h sys/ioctl.h sys/mount.h sys/quota.h
- sys/fs/ufs_quota.h sys/socket.h sys/statfs.h
- sys/statvfs.h sys/time.h sys/termio.h sys/vfs.h
+for ac_hdr in arpa/nameser.h lastlog.h libio.h malloc.h memory.h netdb.h \
+ netinet/in.h resolv.h termio.h string.h strings.h syslog.h \
+ sys/file.h sys/ioctl.h sys/mount.h sys/quota.h \
+ sys/fs/ufs_quota.h sys/socket.h sys/statfs.h \
+ sys/statvfs.h sys/time.h sys/termio.h sys/vfs.h \
  sys/termios.h sys/unistd.h unistd.h utmp.h utmpx.h varargs.h
 do
 ac_safe=`echo "$ac_hdr" | tr './\055' '___'`
@@ -4073,10 +4073,10 @@ if test "$ac_cv_header_varargs_h" != "yes"; then
     echo "configure: warning: lib/util/multcpy.c will not compile" 1>&2
 fi
 
-for ac_func in bcopy dbmcachedump dup2 fcntl ftime getcwd getdtablesize
- gethostname gettimeofday getwd index initgroups
- killpg memcpy mkdir mkstemp quotactl res_mkquery
- setpgrp setpgid setreuid sigchild sigset sigsetmask
+for ac_func in bcopy dbmcachedump dup2 fcntl ftime getcwd getdtablesize \
+ gethostname gettimeofday getwd index initgroups \
+ killpg memcpy mkdir mkstemp quotactl res_mkquery \
+ setpgrp setpgid setreuid sigchild sigset sigsetmask \
  socket strchr strdup truncate tzset
 do
 echo $ac_n "checking for $ac_func""... $ac_c" 1>&6

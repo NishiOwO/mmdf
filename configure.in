@@ -604,11 +604,11 @@ AC_HEADER_TIME
 AC_STRUCT_TM
 AC_STRUCT_TIMEZONE
 
-AC_CHECK_HEADERS(arpa/nameser.h lastlog.h libio.h malloc.h memory.h netdb.h
- netinet/in.h resolv.h termio.h string.h strings.h syslog.h
- sys/file.h sys/ioctl.h sys/mount.h sys/quota.h
- sys/fs/ufs_quota.h sys/socket.h sys/statfs.h
- sys/statvfs.h sys/time.h sys/termio.h sys/vfs.h
+AC_CHECK_HEADERS(arpa/nameser.h lastlog.h libio.h malloc.h memory.h netdb.h \
+ netinet/in.h resolv.h termio.h string.h strings.h syslog.h \
+ sys/file.h sys/ioctl.h sys/mount.h sys/quota.h \
+ sys/fs/ufs_quota.h sys/socket.h sys/statfs.h \
+ sys/statvfs.h sys/time.h sys/termio.h sys/vfs.h \
  sys/termios.h sys/unistd.h unistd.h utmp.h utmpx.h varargs.h)
 AC_CHECK_HEADER(sgtty.h,ac_cv_header_sgtty_h="yes")
 if test "$ac_cv_header_varargs_h" != "yes"; then
@@ -617,10 +617,10 @@ if test "$ac_cv_header_varargs_h" != "yes"; then
     AC_MSG_WARN(          lib/util/multcpy.c will not compile)
 fi
 
-AC_CHECK_FUNCS(bcopy dbmcachedump dup2 fcntl ftime getcwd getdtablesize
- gethostname gettimeofday getwd index initgroups
- killpg memcpy mkdir mkstemp quotactl res_mkquery
- setpgrp setpgid setreuid sigchild sigset sigsetmask
+AC_CHECK_FUNCS(bcopy dbmcachedump dup2 fcntl ftime getcwd getdtablesize \
+ gethostname gettimeofday getwd index initgroups \
+ killpg memcpy mkdir mkstemp quotactl res_mkquery \
+ setpgrp setpgid setreuid sigchild sigset sigsetmask \
  socket strchr strdup truncate tzset)
 AC_CHECK_FUNCS($FUNCTIONS)
 AC_CHECK_FUNC(strncat,AC_DEFINE_UNQUOTED(HAVE_STRNCAT,1),[
