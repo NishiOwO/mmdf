@@ -140,6 +140,7 @@ smtp_protocol mgt_protocol = PRK_UNKNOWN;
 LOCFUN mgt_fromline();
 LOCFUN mgt_srcinfo();
 LOCFUN mgt_nohelo();
+LOCFUN char *print_via_protocol();
 
 mgt_init ()
 {
@@ -451,8 +452,9 @@ mgt_aend ()
     snprintf (sizstr, sizeof(sizstr), "%ld", tx_msize);
 				  /* ll_log can't handle longs          */
     if (mgt_vchan.mgt_achan == 0) /* local submission                   */
-	ll_log (logptr, LLOGBST, "lin %s (%d, %s) %s %s",
-		mq_munique, lnk_nadrs, sizstr, mgt_chdfl->ch_queue, mailid);
+	ll_log (logptr, LLOGBST, "lin %s (%d, %s) %s %s %s",
+		mq_munique, lnk_nadrs, sizstr, mgt_chdfl->ch_queue, mailid,
+            print_via_protocol());
     else
     {                             /* claiming to be a relay             */
 	if (!mgt_s2return &&       /* hack past possible bad parsing     */
@@ -466,10 +468,10 @@ mgt_aend ()
 	    mgt_return = cp;
 	}
 
-	ll_log (logptr, LLOGBST, "rin %s (%d, %s) %s %s %s",
+	ll_log (logptr, LLOGBST, "rin %s (%d, %s) %s %s %s %s",
 		mq_munique, lnk_nadrs, sizstr,
 		mgt_vchan.mgt_achan -> ch_queue, mgt_vchan.mgt_ahost,
-		mgt_return);
+		mgt_return, print_via_protocol());
 
     }
     auth_end ();
@@ -1096,4 +1098,15 @@ mgt_dstgen()
 	return(multcat(mgt_vchan.mgt_achan == NULL ?
 			mgt_dlname : mgt_vchan.mgt_achan->ch_name,
 			"&", mgt_vchan.mgt_ahost, (char *)0));
+}
+
+LOCFUN char *print_via_protocol()
+{
+#ifdef HAVE_ESMTP
+  switch(mgt_protocol) {
+    case PRK_SMTP:  return "SMTP";
+    case PRK_ESMTP: return "ESMTP";
+  }
+#endif
+  return "";
 }
