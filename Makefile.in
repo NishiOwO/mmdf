@@ -12,6 +12,7 @@ SUBDIR		= @SUBDIRS@
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
 libdir		= @libdir@
+libexecdir	= @libdir@
 chandir		= @chandir@
 tbldir		= @tbldir@
 bindir		= @bindir@
