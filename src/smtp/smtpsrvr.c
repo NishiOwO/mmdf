@@ -1,4 +1,4 @@
-static char Id[] = "$Id: smtpsrvr.c,v 1.23 1999/09/02 12:58:47 krueger Exp $";
+static char Id[] = "$Id: smtpsrvr.c,v 1.24 1999/09/03 08:06:07 krueger Exp $";
 /*
  *                      S M T P S R V R . C
  *
@@ -545,9 +545,7 @@ char *field;
   char nn[1024];
 
   argc = sstr2arg(field, 5, argv, "=");
-  sprintf(nn, "c=%d, v='%s'\r\n", argc, argv[1]);
-  netreply(nn);
-  
+  if(argc<2) return (NULL);
   return(argv[1]);
 }
 
@@ -668,8 +666,6 @@ mail(int cmdnr)
     /* Scan FROM: parts of arg */
     Agc = sstr2arg(value+1, 25, argv, " ");
 
-    sprintf(replybuf, ">>%s<<%d\r\n", arg, Agc);
-    netreply(replybuf);
     if(Agc==NOTOK) {
       netreply("451 internal error\r\n");
       return;
