@@ -1,0 +1,265 @@
+v6:	h/util.h
+ULTRIX:	h/util.h
+
+V4_3BSD: lib/util/tty_io.c
+
+BSD42:	src/bboards/dropsbr.c
+	src/bboards/lock.c
+	src/pop/dropsbr.c
+	src/pop/lock.c
+	src/[bboards/pop]/mmdfonly.h 	-> defined if V4_2BSD is defined
+
+V4_2BSD: lib/dial/d_connect.c
+	lib/dial/d_io.c
+	lib/dial/d_lock.c
+	lib/dial/d_port.c
+	lib/mmdf/mmdf_fdinit.c
+	lib/util/creatdir.c
+	lib/util/ll_log.c
+	lib/util/tty_io.c
+	src/badusers/lo_wtmail.c
+	src/badusers/qu2lo_send.c
+	src/bboards/mmdfonly.h
+	src/local/lo_wtmail.c
+	src/local/qu2lo_send.c
+	src/pop/mmdfonly.h
+	src/prog/pr2mm_send.c
+	src/prog/pr_errmsg.c
+	src/tools/checkup.c
+	src/tools/setup.c
+	uip/msg/msg0.c
+	uip/msg/msg1.c
+	uip/msg/msg3.c
+	uip/msg/msg5.c
+	uip/snd/s_input.c
+	uip/ucbmail/collect.c
+	uip/ucbmail/def.h
+	uip/ucbmail/fio.c
+	uip/ucbmail/local.h
+	uip/ucbmail/popen.c
+	uip/ucbmail/v7.local.h
+
+SYS5:	h/d_proto.h
+	h/util.h
+	lib/dial/d_connect.c
+	lib/dial/d_dglobals.c
+	lib/dial/d_port.c
+	lib/dial/d_pstty.c	with not HAVE_SGTTY_H
+	lib/dial/d_script.c
+	lib/mmdf/mq_rdmail.c
+	libz/asctime.c
+	libz/zdump.c
+	libz/zic.c
+	src/badusers/lo_wtmail.c
+	src/bboards/bb_wtmail.c
+	src/bboards/lock.c
+	src/bboards/strings.h
+	src/deliver/deliver.c
+	src/pop/lock.c
+	src/pop/po_wtmail.c
+	src/pop/strings.h
+	src/prog/pr2mm_send.c
+	src/tools/checkque.c
+	uip/msg/msg4.c		with not HAVE_SGTTY_H
+	uip/other/emactovi.c
+	uip/ucbmail/dateparse.c
+	uip/unsupported/autores.c
+
+SYS5r3:	lib/util/gwdir.c
+	src/prog/pr_errmsg.c	with HAVE_FCNTL_H
+
+RUNALON: 	lib/mmdf/mm_io.c
+		lib/mmdf/qu_io.c
+		src/bboards/ch_bboards.c
+		src/blockaddr/ch_blockaddr.c
+		src/delay/ch_delay.c
+		src/deliver/ch_io.c
+		src/deliver/ch_wtmail.c:/*#define RUNALON */
+		src/deliver/deliver.c
+		src/list/ch_list.c
+		src/phone/ph_io.c
+		src/phone/ph_ioslave.c
+		src/phone/ph_iouser.c
+		src/phone/qu2ph_send.c:/*#define RUNALON   */
+		src/pobox/po_io.c
+		src/pop/ch_pop.c
+		src/smphone/ch_phone.c:/*#define RUNALON   */
+		src/smphone/ph_io.c
+		src/smphone/ph_ioslave.c
+		src/smphone/ph_iouser.c
+		src/smphone/qu2ph_send.c:/*#define RUNALON   */
+		src/smtp/ch_smtp.c
+		src/tools/cleanque.c
+		src/uucp/rmail.c
+
+NODOMLIT:	src/smtp/smtpsrvr.c
+
+LEFTDOTS:	src/submit/adr_submit.c
+
+CITATION:	src/niftp/rtn_proc.c
+		src/submit/submit.c
+		src/uucp/rmail.c
+
+DBMCACHE:	src/tools/dbmbuild.c
+		src/tools/dbmedit.c
+
+STATSORT:	src/deliver/deliver.c
+
+LINUX:	h/util.h		
+	lib/mmdf/mq_rdmail.c	libc-bug
+	lib/table/tb_ns.c	with HAVE_RES_STATE
+	lib/util/creatdir.c	with MKDIR_HAVE_SECOND_ARG
+	src/prog/pr2mm_send.c	with SYS_SIGLIST_DECLARED
+	src/submit/submit.c	setreuid()
+	uip/other/sendmail.c	setreuid()
+
+SUBMIT_TOO_FAST:	src/submit/submit.c
+
+EIGHT_BIT_CLEAN:	src/smtp/smtpsrvr.c
+
+HAVE_NIS:	h/ch.h
+		lib/mmdf/mm_tai.c
+		lib/table/ch_tbdbm.c
+		lib/table/ch_tbseq.c
+		src/tools/checkup.c
+		src/tools/dbmbuild.c
+		src/tools/tablelist.c
+
+UCL_TSNAME:	src/niftp/rtn_proc.c
+UCL:		src/submit/auth_submit.c
+		src/submit/mgt_submit.c
+		src/submit/submit.c
+sparc:		lib/util/arg2str.c	with HAVE_VARARGS_H
+M_XENIX:	lib/dial/d_script.c
+
+LARGESIZE:	h/msg.h
+		src/deliver/deliver.c
+NVRCOMPIL:	lib/dial/d_tai.c
+		lib/mmdf/rtn_proc.c
+		lib/util/tai_packages.c
+SAFEFORK:	src/prog/pr2mm_send.c
+PLEXUS:		uip/unsupported/autores.c
+		uip/unsupported/cvmbox.c
+SPACED_CONTINUE:	src/smphone/ph_io.c
+INSECURE:	src/submit/mgt_submit.c
+PWNAME:		uip/send/s_get.c
+		uip/snd/s_get.c
+ATTSVKILL:	conf/*/d_lock.h
+		lib/dial/d_lock.c
+UUCPLOCK:	lib/dial/d_lock.c
+ASCIILOCKS:	conf/*/d_lock.h
+		lib/dial/d_lock.c
+NEED_D_VERIFY:	lib/dial/d_lock.c
+DONE_IN_SUBMIT:	lib/addr/ap_normali.c
+NOEXTERNS:	conf/*/msgtailor.c
+		uip/msg/msg.h
+TIOCNOTTY:	src/badusers/lo_wtmail.c
+		src/deliver/deliver.c	+ SYS5 for setpgrp()
+		src/local/lo_wtmail.c
+		src/smtp/smtpd.2.9.c	add #ifdef TIOCNOTTY
+		src/smtp/smtpd.4.2.c	add #ifdef TIOCNOTTY
+		src/smtp/smtpd.5.2.c	inside #ifdef newer
+
+lib/table/tb_ns.c:	NSCACHE
+			T_UNSPEC
+			RES_DNSRCH
+			OLDSERVER
+			ROBUST
+			BSD4_3
+/****************  JNTMAIL Tailoring *******************/
+JNTMAIL
+BOTHEND
+VIATRACE
+JNTMAIL:	conf/*/conf.h
+		lib/addr/ap_lxtable.c
+		lib/addr/ap_normali.c
+		lib/mmdf/mmdf_init.c
+		src/tools/checkup.c
+		src/tools/setup.c
+		uip/snd/s_arginit.c
+		uip/snd/s_get.c
+BOTHEND:	conf/*/conf.h
+		lib/table/dm_table.c
+		src/submit/adr_submit.c
+VIATRACE:	conf/*/conf.h
+		src/niftp/pn_wtmail.c
+		src/submit/mgt_submit.c
+
+/*******************************************************/
+/*************  only used in uip/ucbmail/  *************/
+V4_1BSD:	uip/ucbmail/collect.c
+		uip/ucbmail/fio.c
+		uip/ucbmail/local.h
+		uip/ucbmail/popen.c
+		uip/ucbmail/v7.local.h
+V7:		uip/ucbmail/local.h
+V40:		uip/ucbmail/local.h	no include file
+CORY:		uip/ucbmail/local.h	no include file
+INGRES:		uip/ucbmail/local.h	no include file
+V6:		uip/ucbmail/local.h	no include file
+CC:		uip/ucbmail/local.h	no include file
+CANTELL:	uip/ucbmail/aux.c
+pdp11:		conf/*/msgtailor.c
+		uip/ucbmail/rcv.h
+BADSIG:		uip/ucbmail/sigretro.c
+		uip/ucbmail/sigretro.h
+SIG_HOLD:	uip/ucbmail/sigretro.c
+		uip/ucbmail/sigretro.h
+SIGRETRO:	uip/ucbmail/def.h
+		uip/ucbmail/popen.c
+CONFIGFILE:	uip/ucbmail/config.c
+		uip/ucbmail/configdefs.h
+NO_LIB:		uip/ucbmail/head.c
+CRAZYWOW:	uip/ucbmail/names.c
+TIOCSTI:	uip/ucbmail/tty.c
+APPEND:		uip/ucbmail/quit.c
+SENDMAIL:	uip/ucbmail/names.c
+
+V4_2BSD:uip/ucbmail/collect.c
+	uip/ucbmail/def.h
+	uip/ucbmail/fio.c
+	uip/ucbmail/local.h
+	uip/ucbmail/popen.c
+	uip/ucbmail/v7.local.h
+SYS5:	uip/ucbmail/dateparse.c
+TIOCGWINSZ:	uip/ucbmail/cmd1.c
+/*******************************************************/
+NODUP2:	lib/util/nexec.c
+	src/prog/pr2mm_send.c
+	src/smtp/smtpsrvr.c
+	---> replaced by HAVE_DUP2
+
+NOFCNTL: (means test for F_DUPFD)
+	lib/util/nexec.c
+	src/smtp/smtpsrvr.c
+	---> replaced by HAVE_FCNTL_F_DUPFD
+
+/*******************************************************/
+
+
+libz/*.[ch]:	USG, 
+
+
+line
+EWOULDBLOCK
+RP_HOK
+MMDFONLY
+POP
+notdef
+MHMTS
+MMDFMTS
+SENDMTS
+BPOP
+WIFSTOPPED
+never
+NOT_USED
+signal
+GETHOST
+W_OK
+FILE
+
+
+SIGTSTP:	uip/msg/msg[134].c
+TIOCGWINSZ:	uip/msg/msg1.c
+STDALONE:	uip/other/rcvalert.c
+TIOCEXCL:	lib/dial/d_connect.c

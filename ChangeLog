@@ -1,4 +1,67 @@
-Tue Dec 30 22:15:59 1997  Kai Krueger  <krueger@galadriel>
+Thu Jan  1 13:48:19 1998  Kai Krueger  <krueger@galadriel>
+
+	* src/bboards/lock.c,src/pop/lock.c,src/prog/pr2mm_send.c, 
+	* src/prog/pr_errmsg.c,src/smtp/smtpsrvr.c,conf/uclvax2/config.h, 
+	* conf/vgr/config.h,conf/vu44/config.h,h/config.h.in, 
+	* lib/dial/d_connect.c,lib/util/lk_lock.4.2.c,lib/util/lk_lock.5.2.c, 
+	* lib/util/nexec.c,conf/4.3vax/config.h,conf/bbn/config.h, 
+	* conf/csnet-relay/config.h,conf/hppa1.0/config.h,conf/i386/config.h, 
+	* conf/okstate/config.h,conf/test/config.h,configure.in:
+	Detection and changes for dup2(), fcntl.h and fcntl(fd1, F_DUPFD, fd2)
+ 	done.
+
+Wed Dec 31 19:40:31 1997  Kai Krueger  <krueger@galadriel>
+
+	* conf/uclvax2/config.h,conf/vgr/config.h,conf/vu44/config.h,
+	* conf/4.3vax/config.h,conf/bbn/config.h,conf/csnet-relay/config.h,
+	* conf/hppa1.0/config.h,conf/i386/config.h,conf/okstate/config.h, 
+	* conf/sitesetup,conf/test/config.h,h/config.h.in:
+	Including 'old' config.h in config.h.in for compatability and defines
+ 	have yet not moved
+
+	* h/util.h:
+	Added define HAVE_DEF_SIGSYS to check if signalnumber SIGSYS is defined
+
+	* lib/table/tb_ns.c:
+	Added define HAVE_RES_STATE for use of struct __res_state
+
+	* lib/util/creatdir.c: Added define MKDIR_HAVE_SECOND_ARG
+
+	* src/prog/pr2mm_send.c: Added define SYS_SIGLIST_DECLARED
+
+	* uip/send/s_get.c,uip/snd/s_get.c: Initialisation of variables
+
+	* lib/util/arg2str.c,lib/util/multcat.c,lib/util/multcpy.c,
+	* lib/util/nexec.c,h/config.h.in,configure.in:
+	Added check for <varargs.h> as define HAVE_VARARGS_H.
+	Added check for variable number of arguments if <varargs.h> don't
+	exists. If Compiler don't supports variable number of arguments
+	NO_VARARGS is defined. (NO_VARARGS should be renamed, it's too confusing
+	with varargs.h :-))
+
+Wed Dec 31 13:33:13 1997  Kai Krueger  <krueger@galadriel>
+        
+	* configure.in: some minor cleanups
+        
+	* src/prog/pr_errmsg.c:
+        Added location/existens of <fcntl.h>, <sys/file.h> via defines
+        
+	* h/util.h: Added type of returnvalue of sprintf. (define BSD_SPRINTF)
+        
+	* conf/vgr/conf.h,conf/vu44/conf.h,h/config.h.in,conf/4.3vax/conf.h,
+	* conf/bbn/conf.h,conf/csnet-relay/conf.h,conf/hppa1.0/conf.h,
+	* conf/i386/conf.h,conf/okstate/conf.h,conf/test/conf.h,
+	* conf/uclvax2/conf.h:
+        Added location of <time.h>. moved include to config.h
+
+Tue Dec 30 22:58:48 1997  Kai Krueger  <krueger@galadriel>
+        
+	* lib/dial/d_port.c,h/config.h.in,configure.in:
+        Added check for ioctl(1, TIOCSBRK, 0). If yes define HAVE_IOCTL_TIOCSBRK.
+        
+	* ChangeLog: *** empty log message ***
+
+Tue Dec 30 22:16:59 1997  Kai Krueger  <krueger@galadriel>
 
 	* Attic/Makefile, configure.in, h/config.h.in, uip/Attic/Makefile:
 	some minor fixes
