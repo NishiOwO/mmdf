@@ -563,6 +563,28 @@ LOCFUN
 	    dlv_flgs |= ADR_NOWARN;
 	    break;
 
+	case 'H':                 /* HELO string give by sender         */
+	    switch (*(parmptr = mgt_parm (&parmptr[-1])))
+	    {                     /* let management module process it   */
+		case ',':         /* skip to the last char processed    */
+		    err_msg (RP_PARM, "Invalid parameter character ','");
+
+		case '*':
+		    parmptr++;
+	    }
+	    break;
+
+	case 'F':                 /* realhost connection comes from     */
+	    switch (*(parmptr = mgt_parm (&parmptr[-1])))
+	    {                     /* let management module process it   */
+		case ',':         /* skip to the last char processed    */
+		    err_msg (RP_PARM, "Invalid parameter character ','");
+
+		case '*':
+		    parmptr++;
+	    }
+	    break;
+
 	default:
 	    err_msg (RP_PARM, "Invalid parameter character '%c' in '%s'",
 			parmptr[-1], parmstrt);

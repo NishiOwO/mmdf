@@ -45,6 +45,8 @@ extern Chan *ch_h2chan();
 
 char *progname, *us, *them, *channel;   /* Arguments to program */
 char *sender = 0;                       /* address of mail sender */
+char *helostr = 0;
+char from_host[256];
 Chan *chanptr;                          /* pointer to incoming channel */
 
 #define BUFL 600                /* length of buf */
@@ -175,6 +177,8 @@ char **argv;
 		themknown = FALSE;
 #endif /* NODOMLIT */
 	    }
+	/* sprintf(from_host, "%s [IP]", strdup(them));*/
+	sprintf(from_host, "%s", strdup(them));
 	    
 	/*
 	 * found out who you are I might even believe you.
@@ -401,6 +405,7 @@ helo()
 		sprintf(replybuf, "250 %s - you are a charlatan\r\n", us);
 	else 
 		sprintf (replybuf, "250 %s\r\n", us);
+	if(arg!=0) helostr = strdup(arg);
 	netreply (replybuf);
 }
 
@@ -412,7 +417,7 @@ helo()
 mail()
 {
 	char    replybuf[256];
-	char    info[128];
+	char    info[512];
 	char    *lastdmn;
 	struct rp_bufstruct thereply;
 	int	len;
@@ -502,6 +507,10 @@ mail()
 /*  until mailing list fix is done 
 		sprintf( info, "mvdh%s*k%d*", them, NS_NETTIME ); */
 		sprintf( info, "mvh%s*k%d*", them, NS_NETTIME );
+	if(helostr != 0 ) 
+	        sprintf( info, "%sH%s*", info, helostr );
+	if(from_host[0] != 0 ) 
+	        sprintf( info, "%sF%s*", info, from_host );
 
 	if( rp_isbad( mm_winit(channel, info, sender))) {
 		netreply("451 Temporary problem initializing\r\n");
@@ -567,6 +576,12 @@ rcpt()
 	} else if (arg == (char *)0 || !equal(arg, "to:", 3)) {
 		netreply("501 No recipient named.\r\n");
 		return;
+	}
+	compress(arg, arg);
+	if ( (strlen(arg)==3 && equal(arg, "to:", 3)) ||
+	     (strlen(arg)==4 && equal(arg, "to: ", 4)) ) {
+	  netreply("501 No recipient named.\r\n");
+	  return;
 	}
 	p = index( arg, ':' ) + 1;
 	p = addrfix( p );

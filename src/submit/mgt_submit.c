@@ -130,7 +130,12 @@ LOCVAR short   mgt_trust,        /* pass on author authentication?     */
 	mgt_donet,                /* send "network" channels, if any    */
 	mgt_loops,                /* number of times through this site  */
 	mgt_hops;                 /* number of hops message has gone    */
+char *mgt_helo;
+char *mgt_fromhost;
 /**/
+
+LOCFUN mgt_srcinfo();
+LOCFUN mgt_nohelo();
 
 mgt_init ()
 {
@@ -256,6 +261,14 @@ register char *theparm;
 #endif
 	    free(ptr);
 	    break;
+
+	case 'H':                 /* HELO string give by sender         */
+	    theparm = prm_dupval (++theparm, &mgt_helo);
+	    break;                /* just save the info, for now        */
+
+	case 'F':                 /* realhost connection comes from     */
+	    theparm = prm_dupval (++theparm, &mgt_fromhost);
+	    break;                /* just save the info, for now        */
 
 	default:
 	    return ((char *) NOTOK);    /* not a management parameter   */
@@ -697,6 +710,8 @@ mgt_hend ()
     if (mgt_trust == FLGFROM || mgt_txsrc != 0)
 	mgt_srcinfo ();           /* this must follow the above "if"    */
 
+    if (mgt_helo == NULL && !mgt_doloc && mgt_vchan.mgt_achan != NULL )
+        mgt_nohelo();
     if (mgt_trust != NRMFROM)
 	return (RP_OK);           /* not checking for these errors      */
 
@@ -839,6 +854,23 @@ LOCFUN
     }
 }
 
+LOCFUN
+	mgt_nohelo ()            /* add X-Authentication-Warning        */
+{
+#ifdef DEBUG
+    ll_log (logptr, LLOGBTR, "mgt_nohelo ()");
+#endif
+
+    fputs ("X-Authentication-Warning: ", mq_mffp);
+    if (isstr(locfullmachine)) fprintf(mq_mffp, "%s: ", locfullmachine);
+    else fprintf(mq_mffp, "%s: ", locfullname);
+    if(mgt_fromhost != NULL )
+      fprintf(mq_mffp, "%s didn't use HELO protocol.\n", mgt_fromhost);
+    else
+      fprintf(mq_mffp, "%s didn't use HELO protocol.\n", 
+	      mgt_vchan.mgt_achan -> ch_host);
+}
+
 /**/
 
 LOCFUN
@@ -890,10 +922,22 @@ LOCFUN
     len = mgt_rcv (0, "Received:");
 
     if(mgt_amdelay != TRUE){    /* special string for Delay channel */
+      if(mgt_helo != NULL)
+	len = mgt_rcv (len, "from %s", mgt_helo);
+      else {
 	if (mgt_vchan.mgt_achan -> ch_host == NORELAY)
 	    len = mgt_rcv (len, "from %s", mgt_vchan.mgt_ahost);
 	else
 	    len = mgt_rcv (len, "from %s", mgt_vchan.mgt_achan -> ch_host);
+      }
+      if (mgt_vchan.mgt_achan -> ch_host == NORELAY)
+	len = mgt_rcv (len, " ( %s )", mgt_vchan.mgt_ahost);
+      else {
+	if (mgt_fromhost != NULL)
+	  len = mgt_rcv (len, " ( %s )", mgt_fromhost);
+	else
+	  len = mgt_rcv (len, " ( %s )", mgt_vchan.mgt_achan -> ch_host);
+      }
     }
 
 #ifndef UCL
