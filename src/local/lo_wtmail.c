@@ -1237,13 +1237,14 @@ char *mboxname;
           tblptr, mbox_quota_soft, mbox_quota_hard);
 
   /* no Mailbox-Quota table defined and mbox_quota_soft<0,  so return OK */
-  if(tblptr==NOTOK && mbox_quota_soft<0 && mbox_quota_hard<0) return RP_BOK;
+  if(tblptr==(Table*)NOTOK && mbox_quota_soft<0 && mbox_quota_hard<0)
+    return RP_BOK;
 
   /* some quota limits are set, now check it */
   if(stat(mboxname, &mbxstat)<0) return RP_BOK;
 
   /* if quota-table is defined, check if we find user there */
-  if(tblptr!=NOTOK) {
+  if(tblptr!=(Table*)NOTOK) {
     if(tb_k2val(tblptr, TRUE, lo_adr, buf)!=NOTOK) {
       sscanf(buf, "%s %s", soft_limit, hard_limit);
       cnvtbytestr(soft_limit, &sizelimit);
