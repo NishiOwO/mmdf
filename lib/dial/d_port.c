@@ -383,7 +383,8 @@ register int    length;
 
 d_brkport()
 {
-#ifdef V4_2BSD
+  extern  FILE * d_prtfp;
+#if defined(HAVE_IOCTL_TIOCSBRK) /* V4_2BSD */
 #include <sys/ioctl.h>
 	ioctl (fileno (d_prtfp), TIOCSBRK, 0);
 	sleep ((unsigned) 1);

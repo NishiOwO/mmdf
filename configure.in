@@ -396,6 +396,27 @@ if test "$ac_cv_func_mkdir" = "yes"; then
   rmdir dummy
 fi
 
+dnl check arguments of ioctl(1, TIOCSBRK, 0)
+if test "$ac_cv_header_sys_ioctl_h" = "yes"; then
+  AC_MSG_CHECKING(if ioctl(1, TIOCSBRK, 0) works)
+  AC_CACHE_VAL(ac_cv_have_TIOCSBRK, AC_TRY_RUN( 
+   [ #include <sys/ioctl.h>
+     main() { 
+	ioctl(1, TIOCSBRK, 0)
+	exit(0);
+   }],
+     ac_cv_have_TIOCSBRK=yes,
+     ac_cv_have_TIOCSBRK=no,
+     ac_cv_have_TIOCSBRK=no))
+  if test "$ac_cv_have_TIOCSBRK" = yes; then
+    AC_MSG_RESULT(yes)
+    AC_DEFINE(HAVE_IOCTL_TIOCSBRK)
+  else
+    AC_MSG_RESULT(no)
+  fi
+  ac_cv_header_sys_ioctl_h=$ac_cv_have_TIOCSBRK
+fi
+
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 if test -d lib; then
   SUBDIRS="$SUBDIRS lib"
