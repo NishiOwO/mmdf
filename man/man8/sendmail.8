@@ -32,7 +32,12 @@ and ``Sender:'' fields are examined for the name of the sender.
 
 .TP
 .B \-bs
-Read SMTP commands from stdin.
+Read SMTP commands from stdin. If MMDF has been with tcpwrapper
+support, don't forget to add following line to the file 
+.I /etc/hosts.allow
+\fI
+sendmail-smtp:  unknown
+\fR
 
 .TP
 .B \-bm
