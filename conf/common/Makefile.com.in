@@ -90,6 +90,9 @@ default:	real-default
 #  and one for those that don't have it.  Comment out the one
 #  you do not want.
 
+depend:
+	make @WHAT_DEPEND@
+
 #  This one is for sites without cc support.
 #
 #  Note that this one blindly greps out all the include lines regardless
@@ -98,16 +101,16 @@ default:	real-default
 #  it cannot make certain files in /usr/include.  Usually you can just
 #  delete the reference to the file and go on. [DSH]
 #
-#depend:
-#	cat </dev/null >x.c
-#	for i in $(MODULES); do \
-#		(echo $$i.o: $$i.c >>makedep; \
-#		grep '^#[ 	]*include' x.c $$i.c | grep -v varargs | sed \
-#			-e 's,c:[^"]*"\./\([^"]*\)".*,o: \1,' \
-#			-e 's,c:[^"]*"/\([^"]*\)".*,o: /\1,' \
-#			-e 's,c:[^"]*"\([^"]*\)".*,o: ../../h/\1,' \
-#			-e 's,c:[^<]*<\(.*\)>.*,o: /usr/include/\1,' \
-#			>>makedep); done
+depend-cat:
+	cat </dev/null >x.c
+	for i in $(MODULES); do \
+		(echo $$i.o: $$i.c >>makedep; \
+		grep '^#[ 	]*include' x.c $$i.c | grep -v varargs | sed \
+			-e 's,c:[^"]*"\./\([^"]*\)".*,o: \1,' \
+			-e 's,c:[^"]*"/\([^"]*\)".*,o: /\1,' \
+			-e 's,c:[^"]*"\([^"]*\)".*,o: ../../h/\1,' \
+			-e 's,c:[^<]*<\(.*\)>.*,o: /usr/include/\1,' \
+			>>makedep); done
 #
 #  This one is for sites with cc support
 #
@@ -121,7 +124,7 @@ default:	real-default
 #
 # (?) -- not exactly sure of versions.
 #
-THE_M_FLAG= -M
+THE_M_FLAG= @DEPEND_FLAG@
 #
 #
 # This section is for cc's which generate dependencies already in the
@@ -129,7 +132,7 @@ THE_M_FLAG= -M
 # dependencies per line as are reasonable, and is the same as the awk
 # incantation in the other half of this section. [DSH]
 #
-depend:
+depend-M:
 	( for i in ${MODULES} ; do \
 		${CC} ${THE_M_FLAG} ${CFLAGS} $$i.c ; done ) | \
 	awk ' { if ($$1 != prev) { print rec; rec = $$0; prev = $$1; } \

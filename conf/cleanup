@@ -11,13 +11,41 @@ rm -f ../uip/send/s_tailor.h ../uip/send/s_tailor.c
 rm -f ../uip/snd/s_tailor.h ../uip/snd/s_tailor.c
 rm -f ../uip/send/s_tailor.o ../uip/snd/s_tailor.o
 cd ..
-rm -f lib/*/Makefile.real
-rm -f src/*/Makefile.real
-rm -f uip/msg/Makefile.real uip/msg/version.c
-rm -f uip/send/Makefile.real uip/send/version.c
-rm -f uip/snd/Makefile.real uip/snd/version.c
-rm -f uip/ucbmail/Makefile.real uip/ucbmail/version.c
-rm -f uip/unsupported/Makefile.real
-rm -f uip/other/Makefile.real
+cd lib
+for i in addr dial mmdf table util
+do
+  cd $i
+  if test -r "Makefile.bak"; then
+    mv Makefile.bak Makefile.real
+  fi
+  cd ..
+done
+cd ../src
+SUBDIRS="badusers bboards blockaddr delay deliver ean list local niftp"
+SUBDIRS=$SUBDIRS" phone pobox pop prog shellfiles smphone smtp"
+SUBDIRS=$SUBDIRS" submit tools uucp"
+for i in $SUBDIRS
+do
+  cd $i
+  if test -r "Makefile.bak"; then
+    mv Makefile.bak Makefile.real
+  fi
+  cd ..
+done
+cd ../uip
+SUBDIRS="msg other send snd ucbmail unsupported"
+for i in $SUBDIRS
+do
+  cd $i
+  if test -r "Makefile.bak"; then
+    mv Makefile.bak Makefile.real
+  fi
+  cd ..
+done
+cd ..
+rm -f uip/msg/version.c
+rm -f uip/send/version.c
+rm -f uip/snd/version.c
+rm -f uip/ucbmail/version.c
 find . -name \*.orig -print -exec rm -f {} \;
 exit 0

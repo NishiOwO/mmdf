@@ -297,6 +297,87 @@ else
     AC_MSG_WARN(cannot finish configuration with 'sitesetup $target')
 fi
 
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl AC_TRY_MY_COMPILE(INCLUDES, FUNCTION-BODY,
+dnl             [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
+AC_DEFUN(AC_TRY_MY_COMPILE,
+[cat > conftest.$ac_ext <<EOF
+dnl This sometimes fails to find confdefs.h, for some reason.
+dnl [#]line __oline__ "[$]0"
+[#]line __oline__ "configure"
+#include "confdefs.h"
+[$1]
+int main() { return 0; }
+int t() {
+[$2]
+; return 0; }
+EOF
+result=`eval $ac_compile 2>&1 `
+if test "$result" = ""; then
+  $3
+else
+  output=`echo $result |grep stdio.h`
+  if test "$output" = ""; then
+    $4
+  else
+    $3
+  fi
+fi
+rm -f conftest*]
+)
+AC_PROVIDE(AC_TRY_MY_COMPILE)
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+AC_DEFUN(AC_FIND_DEPEND,
+[
+  OLDCFLAGS=$CFLAGS
+  WHAT_DEPEND="depend-M"
+  AC_MSG_CHECKING(for $CC support -M)
+  CFLAGS=$OLDCFLAGS" -M"
+  AC_TRY_MY_COMPILE([#include <stdio.h>], ,
+	 ac_cv_depend_flag=yes,ac_cv_depend_flag=no)
+  if test "$ac_cv_depend_flag" = yes; then
+     AC_MSG_RESULT(yes)
+     DEPEND_FLAG="-M"
+  else
+     AC_MSG_RESULT(no)
+     AC_MSG_CHECKING(for $CC support -Em)
+     CFLAGS=$OLDCFLAGS" -Em"
+     dnl AC_CACHE_VAL(ac_cv_returns_n_of_chars, 
+     AC_TRY_MY_COMPILE([#include <stdio.h>],[int depend_flag],
+	    ac_cv_depend_flag=yes,ac_cv_depend_flag=no)
+     if test "$ac_cv_depend_flag" = yes; then
+        AC_MSG_RESULT(yes)
+        DEPEND_FLAG="-Em"
+     else
+        AC_MSG_RESULT(no)
+        AC_MSG_CHECKING(for $CC support -E -H)
+        CFLAGS=$OLDCFLAGS" -E -H"
+        AC_TRY_MY_COMPILE([#include <stdio.h>], ,
+	       ac_cv_depend_flag=yes,ac_cv_depend_flag=no)
+        if test "$ac_cv_depend_flag" = yes; then
+           AC_MSG_RESULT(yes)
+           DEPEND_FLAG="-E -H"
+        else
+           AC_MSG_RESULT(no)
+           AC_MSG_CHECKING(for $CC support -E)
+           CFLAGS=$OLDCFLAGS" -E"
+           AC_TRY_MY_COMPILE([#include <stdio.h>], ,
+   	       ac_cv_depend_flag=yes,ac_cv_depend_flag=no)
+           if test "$ac_cv_depend_flag" = yes; then
+              AC_MSG_RESULT(yes)
+              DEPEND_FLAG="-E"
+           else
+              AC_MSG_RESULT(no)
+              DEPEND_FLAG=""
+	      WHAT_DEPEND="depend-cat"
+           fi
+        fi
+     fi
+  fi
+  CFLAGS=$OLDCFLAGS
+])
+AC_PROVIDE(AC_FIND_DEPEND)
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -375,7 +456,6 @@ if test "$enable_gcc" = "no"; then
   echo "using ${CC-cc}"
   echo $CFLAGS
 fi
-
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl checking for architectures
@@ -400,6 +480,7 @@ AC_MINIX
 dnl AC_SCO_INTL	AC_FUNC_STRFTIME
 dnl AC_XENIX_DIR	AC_HEADER_DIRENT
 
+AC_FIND_DEPEND
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl those are needed to check for libs and headers, later on
@@ -947,6 +1028,8 @@ AC_SUBST(LIBSUBDIRS)
 AC_SUBST(SRCSUBDIRS)
 AC_SUBST(UIPSUBDIRS)
 
+AC_SUBST(WHAT_DEPEND)
+AC_SUBST(DEPEND_FLAG)
 AC_SUBST(MMDF_MAJOR_VERSION)
 AC_SUBST(MMDF_MINOR_VERSION)
 AC_SUBST(MMDF_PATCH_LEVEL)
