@@ -60,9 +60,10 @@ default_numdomains=${default_numdomains=20}
 
 OTHER_VARS=$OTHER_VARS" locname locdomain signature"
 OTHER_VARS=$OTHER_VARS" login addr"
-OTHER_VARS=$OTHER_VARS" mmdf_prefix mmdf_spool mmdftailor cmddfldir logdfldir"
-OTHER_VARS=$OTHER_VARS" phsdfldir tbldfldir tbldbm quedfldir chndfldir"
-OTHER_VARS=$OTHER_VARS" lckdfldir zap_env warntime failtime maxhops"
+OTHER_VARS=$OTHER_VARS" mmdf_prefix"
+OTHER_VARS=$OTHER_VARS" cmddfldir mmdftailor tbldfldir tbldbm chndfldir"
+OTHER_VARS=$OTHER_VARS" mmdf_spool logdfldir quedfldir phsdfldir lckdfldir"
+OTHER_VARS=$OTHER_VARS" zap_env warntime failtime maxhops"
 OTHER_VARS=$OTHER_VARS" lnk_listsize"
 OTHER_VARS=$OTHER_VARS" maxqueue mailsleep locmachine authrequest authfile"
 default_locname=${default_locname=''}
@@ -94,6 +95,16 @@ default_authfile=${default_authfile='$ac_cv_value_mmdf_prefix/warning'}
 #default_
 
 param=""
+cache_file="xConfcache"
+if test -r "$cache_file"; then
+  echo "loading cache $cache_file"
+  . $cache_file
+fi
+for i in `set | grep ac_cv_value_`
+do
+   var=`echo $i | sed s/ac_cv_value_//`
+   eval default_$var
+ done
 
 #######################################################################
 cat << EOF
@@ -165,7 +176,7 @@ do
 	unsupported) t="user program part unsupported ..... ";;
 	nodomlit)   echo ""
                     t=""
-                    prefix="       "
+                    prefix="       nodomlit"
 		;;
 	leftdots)   echo "Enable intpretation of dots as delimiters on the"
                     echo "LHS  of an @ in addresses. Say 'y' only if you have"
@@ -218,6 +229,7 @@ do
 	    ;;
     esac
     t=$name
+    sp=""
     case $name in
 	debug)      t="debuging level ............................... ";;
         d_log)      t="debuging level (only dial-code) .............. ";;
@@ -226,7 +238,6 @@ do
 	numchans)   t="maximum number of possible channels entries .. ";;
 	numtables)  t="maximum number of possible tables ............ ";;
 	numdomains) t="maximum number of possible domain entries .... ";;
-	mmdftailor) t="path to 'mmdftailor'-file .................... ";;
 	locname)    t="local name of the machine .................... "
 	    default=`(uname -n) 2>/dev/null` || default=unknown
 	    ;;
@@ -234,18 +245,19 @@ do
 	signature)  t="signature field for return-mail .............. ";;
 	login)      t="login under everything will be installed ..... ";;
 	addr)       t="address for bug-reports ...................... "
-	    default="Postmaster@"$ac_cv_value_locdomain
+	    default="$ac_cv_value_login@"$ac_cv_value_locdomain
 	    ;;
 	mmdf_prefix) t="default home-directory ....................... ";;
 	mmdf_spool)  t="spool directory .............................. ";;
-	cmddfldir)   t=$name;;
-	logdfldir)   t=$name;;
-	phsdfldir)   t=$name;;
-	tbldfldir)   t=$name;;
-	tbldbm)      t=$name;;
-	quedfldir)   t=$name;;
-	chndfldir)   t=$name;;
-	lckdfldir)   t=$name;;
+	cmddfldir)   t="base for command-directory ................... ";;
+	mmdftailor) sp="   ";t="path to 'mmdftailor'-file ................. ";;
+	logdfldir)   sp="   ";t="log-directory ............................. ";;
+	phsdfldir)   t="directory where to trace the working-states .. ";;
+	tbldfldir)   sp="   ";t="table directory ........................... ";;
+	tbldbm)      sp="      ";t="mmdf database file ..................... ";;
+	quedfldir)   sp="   ";t="queing dierectory.......................... ";;
+	chndfldir)   sp="   ";t="channel programs .......................... ";;
+	lckdfldir)   t="directory for filelocking .................... ";;
 	zap_env)     t=$name;;
 	warntime)    t=$name;;
 	failtime)    t=$name;;
@@ -264,7 +276,7 @@ do
 	default=""
     fi
 
-    /bin/echo "$prefix$t [$default] : \c"
+    /bin/echo "$sp$prefix$t [$default] : \c"
     read ans
     if test "$ans" = ""; then
 	ans=$default
@@ -397,6 +409,8 @@ read ans
 if test "$ans" = ""; then
     ans=$default
 fi
+param=$param" --includedir=/opt/mmdf/SRC/include"
+param=$param" --libdir=/opt/mmdf/SRC/lib"
 if test "$ans" = "y" || test "$ans" = "yes"; then
     echo ./configure $param
     ./configure $param
