@@ -21,6 +21,9 @@ $(BINDIR)/msg: xmsg
 	cp xmsg $(BINDIR)/msg
 	-chmod $(PGMPROT) $(BINDIR)/msg
 
+version.c:
+	./mkversion
+
 version.o: $(SOURCES) $(MMDFLIBS) ../../VERSION
 	./mkversion
 	$(CC) $(CFLAGS) -c version.c
