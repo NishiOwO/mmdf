@@ -12,7 +12,6 @@ va_dcl
 	register va_list ap;
 	register char  *oldstr, *ptr;
 	char    *newstr;
-	extern char *malloc();
 	unsigned  newlen;
 
 	va_start(ap);

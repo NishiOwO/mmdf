@@ -207,7 +207,7 @@ extern char	*keywds[];
 
 extern char *compress ();
 extern char *strdup ();
-extern char *malloc();
+/* extern char *malloc(); */
 extern char *index(), *strend(), *rindex();
 
 extern prmsg(), delmsg(), undelmsg(), prhdr(), movmsg();

@@ -43,7 +43,6 @@
 #include "./s_externs.h"
 
 extern char *getmailid();
-extern char *malloc();
 extern char *strdup();
 extern struct passwd *getpwuid();
 extern char *mktemp();

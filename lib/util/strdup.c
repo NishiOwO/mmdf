@@ -9,7 +9,6 @@ char *
 	strdup (str)
 register char   *str;
 {
-    extern char *malloc ();
     register char  *newptr,
 		   *newstr;
 

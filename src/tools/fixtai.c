@@ -31,7 +31,6 @@
 #define MAXARG 50
 
 extern int errno;
-extern char * malloc();
 extern int tb_numtables;
 extern int ch_numchans;
 extern Table **tb_list;

@@ -87,7 +87,6 @@ extern char *dupfpath();
 extern char *strdup();
 extern char *multcat();
 extern char *getmailid();
-extern char *malloc();
 extern char *strdup();
 extern struct passwd *getpwuid();
 extern ap_flget();

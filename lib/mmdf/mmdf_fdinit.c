@@ -1,8 +1,6 @@
 #include "util.h"
 #include "mmdf.h"
 
-extern	char	*malloc();
-
 int	*regfdary;
 int	numfds = 16;	/* init to 16 as a failsafe value, -DPK- */
 

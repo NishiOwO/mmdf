@@ -1029,7 +1029,6 @@ LOCFUN
 	ovr_malloc (count)          /* allocate array for msg names       */
 unsigned  count;                    /* number of entries in queue list    */
 {
-    extern char *calloc();
 
 #ifdef DEBUG
     ll_log (logptr, LLOGFTR, "ovr_malloc (%d)", count);

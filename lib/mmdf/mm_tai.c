@@ -4,8 +4,6 @@
 #include "ch.h"
 #include "ap.h"
 
-extern char *malloc ();
-
 extern LLog *logptr, chanlog;
 
 extern char

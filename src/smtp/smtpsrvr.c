@@ -45,7 +45,6 @@ extern int numfds;
 extern char *getline();
 extern char *index();
 extern char *rindex();
-extern char *malloc();
 extern char *strdup();
 extern struct passwd *getpwmid();
 extern char *multcat();

@@ -29,7 +29,6 @@
  *
  */
 
-extern	char	*malloc();
 extern	char	*rindex();
 extern  char    *strdup();
 extern  char    *ap_p2s();

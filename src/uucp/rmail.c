@@ -122,7 +122,6 @@ extern char *index();
 extern char *rindex();
 extern char *getenv();	/* get the Accounting system from the environment */
 extern char *strdup();
-extern char *malloc();
 extern char *compress();
 
 extern	int	optind;

@@ -1,5 +1,5 @@
 /*
- * $Id: funcs.h,v 1.1 1998/05/25 08:26:38 krueger Exp $
+ * $Id: funcs.h,v 1.2 1998/05/25 11:43:46 mmdf Exp $
  */
 
 #ifdef HAVE_MALLOC_H
@@ -66,7 +66,6 @@ extern int aliasfetch();
 
 /* mmdf/amp_hdr.c */
 extern long amp_hdr();
-extern int getach();
 extern int getaitm ();
 extern void pretty ();
 extern void out_init();
@@ -120,7 +119,7 @@ extern int ll_init();
 extern int ll_log();
 
 /* err_abrt.c */
-extern void err_abrt ();
+/* extern void err_abrt (); */
 /* cmdbsrch.c */
 extern int cmdbsrch ();
 /* util/tai_packages.c */

@@ -91,7 +91,6 @@ rtn_adr (adr, good)
 char    *adr;
 {
     struct rtn_str *rptr;
-    extern char *malloc();
 
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "rtn_adr (%s, %d)", adr, good);

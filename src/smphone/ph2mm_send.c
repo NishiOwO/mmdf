@@ -41,7 +41,6 @@
 extern char *getline();
 extern char *index();
 extern char *rindex();
-extern char *malloc();
 
 char *sender = 0;			/* address of mail sender */
 

@@ -13,7 +13,6 @@ struct ALIAS {
 
 int aflag;
 extern char *adrptr;
-char *malloc();
 
 void aliasinit( aliasfile )
 char *aliasfile;

@@ -5,7 +5,6 @@
 #include "ll_log.h"
 
 extern char *strdup();
-extern char *malloc();
 extern struct ll_struct *logptr;
 
 char *

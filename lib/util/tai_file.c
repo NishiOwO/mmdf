@@ -13,7 +13,6 @@ LOCVAR char *tai_ptr;   /* pointer to "next" tai record */
 tai_init (filename)	/* prepare to get tailoring information */
 	char filename[]; /* location of the info */
 {
-	extern char *malloc ();
 	struct stat statbuf;
 	unsigned taisize; /* number of bytes in the tai file */
 	int fd;

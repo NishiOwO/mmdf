@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.21 1998/05/25 11:21:22 krueger Exp $
+ * $Id: config.h.in,v 1.22 1998/05/25 11:43:46 mmdf Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -474,6 +474,9 @@ char *strchr (), *strrchr ();
 */
 #endif HAVE_SGTTY_H
 
+#ifndef HAVE_MALLOC_H
+extern char * malloc(), *calloc();
+#endif HAVE_MALLOC_H
 /*****************************************************************************/
 /* for compatability, until erverything is working with configure on         *
  *      ALL plaforms, include the old defines here                           *

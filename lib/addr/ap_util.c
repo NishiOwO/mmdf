@@ -27,7 +27,7 @@ extern int      ap_peek;                  /* basic parse state info       */
 extern int	ap_perlev;
 extern int	ap_grplev;
 
-extern char	*malloc();
+/* extern char	*malloc(); */
 
 /* ********************  LIST NODE PRIMITIVES  *********************** */
 
@@ -346,7 +346,6 @@ int     (*gfunc) ();
 int ap_ppush (gfunc)                  /* save parse context, ap_iinit    */
 int     (*gfunc) ();
 {
-    extern char *malloc ();
     register struct ap_prevstruct  *tfil;
 
     /*NOSTRICT*/

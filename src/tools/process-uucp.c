@@ -87,8 +87,6 @@ int numhosts = 0;
 char *lowerify();
 char *RelayHost = (char *)0;
 
-extern char *malloc();
-
 main(argc, argv)
 int argc;
 char **argv;

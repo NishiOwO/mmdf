@@ -4,7 +4,7 @@
     (!defined(HAVE_FLOCK) && !defined(HAVE_F_SETLK)) || \
     (defined(HAVE_FLOCK) && defined(HAVE_F_SETLK))
 #  ifndef HAVE_LOCK_FILES
-#    define LOCK_FILES
+#    define HAVE_LOCK_FILES
 #  endif
 #undef HAVE_FLOCK
 #undef HAVE_F_SETLK

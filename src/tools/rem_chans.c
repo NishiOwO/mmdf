@@ -21,7 +21,6 @@
 #define     COMMENT     ";:;"   /* Our special comment character */
 
 extern int errno;
-extern char *malloc();
 
 FILE * tai_handle;      /* for reading the tailoring file */
 #define MAXLINE     500 /* Max length of a line in the tailoring file */

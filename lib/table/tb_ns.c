@@ -831,7 +831,6 @@ struct in_addr *list;
     register struct ns_cache *cp;
     register struct in_addr *ip1, *ip2;
     int i;
-    extern char *malloc(), *calloc();
 
     /* NOSTRICT */
     if ((cp = (struct ns_cache *)malloc(sizeof(*cp)))==0)
@@ -872,7 +871,7 @@ int rval;
 {
     register struct ns_cache *cp;
     int i;
-    extern char *malloc(), *strdup();
+    extern char *strdup();
 
     /* NOSTRICT */
     if ((cp = (struct ns_cache *)malloc(sizeof(*cp)))==0)

@@ -19,6 +19,9 @@
  *  Probably would be better to totally rewrite this, but that seems
  *  a little dangerous and is probably not good engineering practice
  */
+#ifdef	HAVE_SYS_FCNTL_H
+#include <sys/fcntl.h>
+#endif /* HAVE_SYS_FCNTL_H */
 #ifdef	HAVE_SYS_FILE_H
 #include <sys/file.h>
 #endif /* HAVE_SYS_FILE_H */
@@ -56,7 +59,7 @@ register struct ll_struct *loginfo;
 	return (loginfo -> ll_fd = NOTOK);
 				  /* no pathname => no place to log       */
 
-#ifdef HAVE_SYS_FILE_H
+#ifdef HAVE_SYS_FCNTL_H
     opnflg = (loginfo -> ll_stat & LLOGCYC) ? O_WRONLY : (O_WRONLY|O_APPEND);
 #else
     opnflg = 1;

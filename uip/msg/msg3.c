@@ -34,7 +34,7 @@
 #  include <sgtty.h>
 #endif /* HAVE_SGTTY_H */
 #ifdef HAVE_SYS_WAIT_H
-#include <sys/wait.h>
+#  include <sys/wait.h>
 #endif HAVE_SYS_WAIT_H
 #include "./msg.h"
 
@@ -52,11 +52,11 @@ xeq( exflag)
 char exflag;
 {
 	int process;
-#ifdef HAVE_SYS_WAIT_H
+#ifdef HAVE_UNION_WAIT
 	union wait pstatus;
-#else HAVE_SYS_WAIT_H
+#else HAVE_UNION_WAIT
 	int	pstatus;
-#endif HAVE_SYS_WAIT_H
+#endif HAVE_UNION_WAIT
 	char *routine;
 
 	tt_norm();
