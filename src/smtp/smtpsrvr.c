@@ -23,6 +23,10 @@
 #ifndef NOFCNTL
 #include <fcntl.h>
 #endif
+#ifdef HAVE_TCP_WRAPPER
+#  include <tcpd.h>
+#  include <syslog.h>
+#endif /* HAVE_TCP_WRAPPER */
 
 #include "ns.h"
 
@@ -76,6 +80,13 @@ FILE    *vrfy_in;               /* fd for vrfy's parent to read from child */
 #define LF      '\n'    /* line feed */
 #define CNULL   '\0'    /* null */
 
+#ifdef HAVE_TCP_WRAPPER
+int     allow_severity = LOG_INFO;      /* run-time adjustable */
+int     deny_severity = LOG_WARNING;    /* ditto */
+#ifndef STDIN_FILENO
+#define STDIN_FILENO    0
+#endif
+#endif /* HAVE_TCP_WRAPPER */
 
 /****************************************************************
  *                                                              *
@@ -140,8 +151,15 @@ char **argv;
 	char    tmpstr[LINESIZE];
 	char    *Ags[20];
 	int     n, Agc;
+#ifdef HAVE_TCP_WRAPPER
+        struct request_info  request;   
+#endif /* HAVE_TCP_WRAPPER */
 
 	progname = argv[0];
+#ifdef HAVE_TCP_WRAPPER
+        request_init(&request, RQ_DAEMON, argv[0], RQ_FILE, STDIN_FILENO, 0);
+        fromhost(&request);
+#endif /* HAVE_TCP_WRAPPER */
 	mmdf_init( progname );
 
 	if (argc != 4){
@@ -177,8 +195,18 @@ char **argv;
 		themknown = FALSE;
 #endif /* NODOMLIT */
 	    }
+#ifdef HAVE_TCP_WRAPPER
+	eval_user(&request);
+	if (STR_EQ(eval_hostname(request.client), paranoid))
+	  smtp_refuse(&request, "Paranoid");
+	if (!hosts_access(&request)) smtp_refuse(&request, "denied");
+	sprintf(from_host, "%s [%s]", eval_client(&request),
+		eval_hostaddr(request.client));
+	ll_log( logptr, LLOGGEN, "connection from: %s",eval_client(&request));
+#else /* HAVE_TCP_WRAPPER */
 	/* sprintf(from_host, "%s [IP]", strdup(them));*/
 	sprintf(from_host, "%s", strdup(them));
+#endif /* HAVE_TCP_WRAPPER */
 	    
 	/*
 	 * found out who you are I might even believe you.
@@ -257,6 +285,25 @@ nextcomm:
 	}
 	byebye(0);
 }
+
+#ifdef HAVE_TCP_WRAPPER
+smtp_refuse(request, what)
+struct request_info *request;
+char *what;
+{ 
+  char replybuf[256];
+  
+  /*  sprintf (replybuf, "220 %s Server SMTP (Complaints/bugs to:  %s)\r\n",
+	   us, supportaddr);
+  netreply (replybuf);*/
+  ll_log( logptr, LLOGGEN, "Connection Refused (%s) from: %s",
+	  what, eval_client(request));
+  sprintf(replybuf, "451 Connection Refused (%s) from: %s\r\n", what, 
+	  eval_client(request));
+  netreply(replybuf);
+  byebye(1);
+}
+#endif /* HAVE_TCP_WRAPPER */
 
 /*name:
 	getline

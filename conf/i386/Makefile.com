@@ -31,7 +31,7 @@ CONFIGDEFS	+= -Drindex=strrchr -Dindex=strchr
 CFLAGS		= -I../../h $(CONFIGDEFS)
 LDFLAGS 	= # -static
 MMDFLIBS 	= ../../lib/libmmdf.a
-SYSLIBS		= -lgdbm
+SYSLIBS		= -lgdbm -lwrap
 LINT		= 
 LFLAGS		= -bxah -I../../h $(CONFIGDEFS)
 LLIBS		= ../../lib/llib-lmmdf.ln

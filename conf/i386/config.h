@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.3 1997/12/29 19:51:08 krueger Exp $
+ * $Id: config.h,v 1.4 1997/12/29 20:01:20 krueger Exp $
  *
  * please set every configuration-switch here
  *
@@ -199,5 +199,12 @@
 /*             Enable 8bit-clean mode when getting messages over smtp.
  */
 #define EIGHT_BIT_CLEAN
+
+/*             Enable tcp_wrapper implementation in smtpsrvr. With the 
+ *             tcp_wrapper package you can monitor and filter incoming request
+ *             to the smtp server. Over the ident-protocol (RFC931) you can 
+ *             get the calling username.
+ */
+#define HAVE_TCP_WRAPPER
 
 #endif /* CONFIG_H */
