@@ -12,6 +12,14 @@ Changes between 2.44b4 and 2.44+a6
    - Added program check.pl
    - Submit: added checking of sender
 
+Changes from 2.44b6 to 2.44
+   - README.Changes, README, Version
+
+Changes from 2.44b4 to 2.44b6
+   - Added switch --with-mmdfprefix to configure
+   - Added check for timezone variable
+   - fixed multiple free of address-chain (struct ap_node)
+
 Changes from 2.44b3 to 2.44b4
 Mon Aug 16 20:07:18 CEST 1999 Kai Krueger <krueger@mathematik.uni-kl.de>
    - incorporated changes made by Brad Allen <Ulmo@Q.Net>
@@ -38,7 +46,7 @@ Mon Aug 16 20:07:18 CEST 1999 Kai Krueger <krueger@mathematik.uni-kl.de>
      conf/*/Makefile.uip to attic
    - work on configure:
      + changed default protection from 711 to 511
-     + Added option enable/disable the patnames according to fhs 2.0
+     + Added option enable/disable the pathnames according to fhs 2.0
        Please refer to README.pathnames for details.
      + rewrite of configure and Makefile conf/*/conf.c so that pathname
        option, variables and defines are the same as the definition in 

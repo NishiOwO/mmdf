@@ -2,7 +2,7 @@
 README -- MMDFII, Patch Level 44+ (alpha), August 1999
 
 	This is the current source tree of the MMDF II 2.45 devellopment version.
-It is based on MMDF II 2.44 patchlevel b4.
+It is based on MMDF II 2.44.
 
 CHANGES:
     This release mainly consists of cleanups. But there are also some
@@ -69,12 +69,12 @@ doc/authorization respectively.
 MAILING LIST:
 	You should probably join the MMDFII mailing list, which is
 low-volume and polite.  Postings to the list should be sent to
-<mmdf2@a.cs.okstate.edu> while administrivia should be sent to
-<mmdf2-request@a.cs.okstate.edu>.  
+<mmdf2@skymaster.c2-tech.com> while administrivia should be sent to
+<mmdf2-request@skymaster.c2-tech.com>.  
 
 
 BUG REPORTS & FEEDBACK:
-	Please send bug reports to the list <mmdf2@a.cs.okstate.edu>
+	Please send bug reports to the list <mmdf2@skymaster.c2-tech.com>
 or directly to the PL44 maintainer Kai Krueger <krueger@mathematik.uni-kl.de>.
 
 
