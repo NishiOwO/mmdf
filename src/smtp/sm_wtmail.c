@@ -64,10 +64,10 @@ LOCVAR char     sm_rnotext[] = "No reply text given";
 LOCVAR  char    netobuf[BUFSIZ];
 LOCVAR  char    netibuf[BUFSIZ];
 LOCVAR smtp_protocol smtp_mode = PRK_SMTP;
-#ifdef HAVE_ESMTP
 #  define STRCAP(STRCAP_STRINGX)        STRCAP_STRINGX[sizeof(STRCAP_STRINGX)-1]='\0'
 #  define INFOBOO       if(infoboo<0) STRCAP(linebuf); else infolen+=infoboo
 int	infolen=0, infoboo=0;
+#ifdef HAVE_ESMTP
 char smtp_use_size = FALSE;
 char smtp_use_dsn = FALSE;
 char smtp_use_8bitmime = FALSE;
