@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.28 1998/06/17 09:45:23 krueger Exp $
+ * $Id: config.h.in,v 1.29 1998/07/14 12:55:49 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -71,6 +71,9 @@
 
 /* Define if `sys_siglist' is declared by <signal.h>.  */
 #undef SYS_SIGLIST_DECLARED
+
+/* Define if your system has sys_errlist[] declared */
+#undef HAVE_SYS_ERRLIST_DECL
 
 /* Define if your system has the define SIGSYS */
 #undef HAVE_DEF_SIGSYS
