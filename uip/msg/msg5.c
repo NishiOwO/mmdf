@@ -59,6 +59,23 @@ RETSIGTYPE	(*oldquit)();
 extern FILE *lk_fopen();
 
 /*
+ *  the user's mailbox don't exists. We create one.
+ */
+void do_create(mboxname)
+char *mboxname;
+{
+  int mbx_fd;
+
+  if ((mbx_fd = creat (mboxname, sentprotect)) < 0)
+  {
+    printf("can't create mailbox '%s'", mboxname);
+    exit(0);
+  }
+  (void) close (mbx_fd);  /* unix create() forces wrong modes     */
+  error("");
+}
+
+/*
  *			S E T U P
  *
  *	This function is called to scan the contents of the mailbox.
@@ -102,12 +119,22 @@ int     setflg;
 			fclose( filefp);
 		}
 		if( (filefp = fopen( filename, "r")) == NULL)  {
-			printf( "can't open '%s'\r\n", filename);
+          if(errno != ENOENT) {
+            printf( "can't open '%s'\r\n", filename);
 			if( oldflag)  {
-				strncpy( filename, oldfile, FILENAMESIZE);
-				filefp = fopen( filename, "r");
+              strncpy( filename, oldfile, FILENAMESIZE);
+              filefp = fopen( filename, "r");
 			}
 			error( "");
+          } else {
+			if( quickexit == ON ) {
+              printf("%s is empty!\n",filename);
+              tt_norm();
+              exit(0);
+			} else {
+              do_create(filename);
+            }
+          }
 		}
 		if( binfp != (FILE *)NULL ) {
 		        lk_fclose( binfp, binarybox, (char *)0, (char *)0);
