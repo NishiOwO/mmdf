@@ -8,11 +8,12 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  *
  *  $Log: edit.c,v $
- *  Revision 1.2  1985/12/18 03:17:35  galvin
- *  Added comment header for revision history.
+ *  Revision 1.3  1985/12/18 13:20:26  galvin
+ *  Add another argument to send to indicate whether or not this
+ *  message should be delimited by MMDF message delimiters.
  *
  * Revision 1.3  85/12/18  13:20:26  galvin
  * Add another argument to send to indicate whether or not this

@@ -7,11 +7,12 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.3 $
+ *  $Revision: 1.4 $
  *
  *  $Log: collect.c,v $
- *  Revision 1.3  1985/11/16 15:18:24  galvin
- *  Added define for sigmask for backward compatibility from 4.3bsd to 4.2bsd.
+ *  Revision 1.4  1985/12/18 13:20:12  galvin
+ *  Add another argument to send to indicate whether or not this
+ *  message should be delimited by MMDF message delimiters.
  *
  * Revision 1.5  86/01/14  14:22:45  galvin
  * Add extract() and detract() calls to parse the lines entered by the
