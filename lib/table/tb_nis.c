@@ -12,6 +12,7 @@
 
 #include "util.h"
 #include "mmdf.h"
+#include "tb_check.h"
 #include "ch.h"
 #include "cmd.h"
 
@@ -80,6 +81,9 @@ int tb_nis_tai(tbptr, gind, argc, argv)
   return 0;
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 int tb_nis_fetch (table, name, buf, first) /* use key and return value  */
 register Table  *table;           /* I: pointer to the current table    */
 register char  name[];            /* I: name of ch "member" / key       */
@@ -124,20 +128,13 @@ int     first;                    /* I: start at beginning of list?     */
   return (NOTOK);
 }
 
-#define         PERROR             01   /*  perror() should be called */
-#define         ANYLEVEL          070   /*  any bit in this field */
-#define         LEVEL1            010   /*  fatal */
-#define         LEVEL1P      LEVEL1|PERROR
-#define         LEVEL3            020   /*  major section */
-#define         LEVEL4            030   /*  sub-section */
-#define         LEVEL5            040
-#define         LEVEL6            050
-#define         LEVEL6_5          060   /*  warning [..] messages */
-#define         LEVEL7            070   /* nitty gritty junk */
-#define         LEVEL0       LEVEL1|PERROR
-
-int tb_nis_check(que, tb, subhdrfmt, title)
-int (*que)();
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+//int tb_nis_check(que, tb, subhdrfmt, title)
+int tb_nis_check(mmdfuid, mmdfgid, MMDFlogin, tb, subhdrfmt, title)
+int mmdfuid, mmdfgid;
+char *MMDFlogin;
 Table *tb;
 char *subhdrfmt;
 char *title;

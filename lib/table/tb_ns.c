@@ -14,6 +14,7 @@
 
 #ifdef HAVE_NAMESERVER
 #include "mmdf.h"
+#include "tb_check.h"
 #include "ch.h"
 #include "cmd.h"
 #include "ns.h"
@@ -996,6 +997,9 @@ int rval;
 extern int tb_ns_tai();
 extern int tb_ns_check();
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 int tb_ns_init(tblptr)
 Table *tblptr;
 {
@@ -1019,6 +1023,9 @@ Table *tblptr;
   return;
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #define CMDTNOOP    0
 #define CMDTSERVER  1
 #define CMDTNOMX    2
@@ -1069,9 +1076,12 @@ int tb_ns_tai(tbptr, gind, argc, argv)
   return 0;
 }
 
-#define         LEVEL6            050
-int tb_ns_check(que, tb, hdrfmt, title)
-int (*que)();
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+int tb_ns_check(mmdfuid, mmdfgid, MMDFlogin, tb, hdrfmt, title)
+int mmdfuid, mmdfgid;
+char *MMDFlogin;
 Table *tb;
 char *hdrfmt;
 char *title;

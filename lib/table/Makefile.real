@@ -4,15 +4,15 @@
 #
 
 MODULES	= dm_struct dm_table ch_tbdbm ch_tbseq \
-	  tb_io tb_ns tb_struct tb_nis tb_test tb_regexp
+	  tb_io tb_ns tb_struct tb_nis tb_test tb_regexp tb_check
 
 OBJECTS  =  dm_struct.o dm_table.o $(CH_TB).o \
 	    tb_io.o tb_ns.o tb_struct.o tb_nis.o tb_test.o \
-	    tb_regexp.o
+	    tb_regexp.o tb_check.o
 
 COBJECTS =  dm_struct.c dm_table.c $(CH_TB).c \
 	    tb_io.c tb_ns.c tb_struct.c tb_nis.c tb_test.c \
-	    tb_regexp.c
+	    tb_regexp.c tb_check.c
 
 TBTEST = table_test
 

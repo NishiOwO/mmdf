@@ -30,12 +30,15 @@ Table *tblptr;
   tblptr -> tb_tai   = &tb_test_tai;
   /*tblptr -> tb_k2val = NULL;*/
   /*tblptr -> tb_print = &tb_test_print;*/
-  /*tblptr -> tb_check = &tb_test_check;*/
+  tblptr -> tb_check = &tb_test_check;
   /*tblptr -> tb_fetch = &tb_test_fetch;*/
   
   return;
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 #define CMDTNOOP    0
 #define CMDTOPT1    1
 #define CMDTOPT2    2
@@ -85,6 +88,9 @@ int tb_test_tai(tbptr, gind, argc, argv)
   return 0;
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 int tb_test_fetch (table, name, buf, first) /* use key and return value */
 register Table  *table;           /* I: */
 register char  name[];            /* I: name of ch "member" / key          */
@@ -96,4 +102,18 @@ int     first;                    /* I: start at beginning of list?        */
 /*  return (OK);*/
   
   return (retval);
+}
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+int tb_test_check(mmdfuid, mmdfgid, MMDFlogin, tb, hdrfmt, title)
+int mmdfuid, mmdfgid;
+char *MMDFlogin;
+Table *tb;
+char *hdrfmt;
+char *title;
+{
+  que(LEVEL6, hdrfmt, title, "(test table / example)");
+  return 0;
 }

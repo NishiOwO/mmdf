@@ -1,11 +1,12 @@
 /*
- * $Id: rbl_match.c,v 1.4 2000/01/18 14:25:10 krueger Exp $
+ * $Id: rbl_match.c,v 1.5 2000/08/08 16:36:39 krueger Exp $
  *
  *
  */
 
 #include "util.h"
 #include "mmdf.h"
+#include "tb_check.h"
 #include "cmd.h"
 #include "ch.h"
 
@@ -18,6 +19,7 @@
 
 extern int tb_rbl_tai();
 extern int tb_rbl_fetch();
+extern int tb_rbl_check();
 
 static unsigned long my_dot_quad_addr();
 
@@ -42,7 +44,7 @@ Table *tblptr;
   tblptr -> tb_tai   = &tb_rbl_tai;
   /*tblptr -> tb_k2val = NULL;*/
   /*tblptr -> tb_print = &tb_rbl_print;*/
-  /*tblptr -> tb_check = &tb_rbl_check;*/
+  tblptr -> tb_check = &tb_rbl_check;
   tblptr -> tb_fetch = &tb_rbl_fetch;
 
   return;
@@ -133,6 +135,31 @@ int     first;                    /* I: start at beginning of list?        */
   return (NOTOK);
 }
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+int tb_rbl_check(mmdfuid, mmdfgid, MMDFlogin, tb, hdrfmt, title)
+int mmdfuid, mmdfgid;
+char *MMDFlogin;
+Table *tb;
+char *hdrfmt;
+char *title;
+{
+  struct tb_rbl_param *param = (struct tb_rbl_param *)tb->tb_parameters;
+  char probfmt[] = "%-24s: (via ns with domain %s)\n";
+
+  if(param->domain != NULL) 
+    que(LEVEL6, probfmt, "", param->domain);
+  else
+    que(LEVEL1, hdrfmt, "no rbl-domain","Cannot match entries without domain");
+  if(param->link == NULL)
+    que(LEVEL1, hdrfmt, "no rbl-link","not set");
+ return 0;
+}
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 int rbl_match(rbl_domain, rbl_hostaddr)
 char   *rbl_domain;                           /* RBL domain */
 char   *rbl_hostaddr;                         /* hostaddr */
