@@ -117,7 +117,9 @@ char *signame (sig)
      * libc.a doesn't have a "sys_siglist".  Possibly this only works
      * on 4.[23]BSD? -- David Herron <david@ms.uky.edu>
      */
+#ifndef LINUX
     extern char *sys_siglist[];
+#endif /* LINUX */
 
     if (sig >= 0 && sig < NSIG) {
 	return (sys_siglist [sig]);
@@ -167,7 +169,12 @@ main (argc, argv)
 	int rc, stopped;
 	int do_msg = 0;
 #ifdef V4_2BSD	/* WIFSTOPPED instead? -- DSH */
+#ifndef SYS5
 	union wait status;
+#else
+      int status;
+#undef WIFSTOPPED
+#endif /* SYS5 */
 #else
     	int status;
 #endif /* V4_2BSD */
