@@ -1,5 +1,15 @@
 
 /*****************************************************************************/
+/* Old defines */
+
+#undef RUNALON
+#undef SUBMIT_TOO_FAST
+#undef SYS5
+#undef SYS5r3
+#undef V4_2BSD
+/* #undef -Dvoid=int */
+
+/*****************************************************************************/
 #if STDC_HEADERS
 #  include <string.h>
 #else
