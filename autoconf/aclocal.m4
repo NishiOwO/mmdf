@@ -1,7 +1,14 @@
 dnl
-dnl $Id: aclocal.m4,v 1.9 2001/05/02 21:07:12 krueger Exp $
+dnl $Id: aclocal.m4,v 1.10 2001/10/03 15:20:02 krueger Exp $
 dnl
 dnl
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl AC_INIT_VAR(<Variable>, <value>)
+AC_DEFUN(AC_INIT_VAR,
+[AC_DIVERT_PUSH(1)dnl
+  dummy="$1=$2"
+  eval $dummy
+AC_DIVERT_POP()])
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl  AC_GET_BOOL(<Variable>, <Text>, <default> [,<d=allways define>])
 AC_DEFUN(AC_GET_BOOL,
@@ -40,7 +47,7 @@ AC_DEFUN(AC_GET_STRING,
 AC_PROVIDE(AC_GET_STRING)
 
 dnl  AC_CHECK_FILE(<Variable>, <file>)
-AC_DEFUN(AC_CHECK_FILE,
+AC_DEFUN(AC_MY_CHECK_FILE,
 [
   AC_MSG_CHECKING(for file $2)
 
@@ -52,7 +59,7 @@ AC_DEFUN(AC_CHECK_FILE,
     dnl AC_DEFINE_UNQUOTED(HAVE_$1, 0)
   fi
 ])
-AC_PROVIDE(AC_CHECK_FILE)
+AC_PROVIDE(AC_MY_CHECK_FILE)
 
 dnl  AC_ENABLE_DEFAULT(<Variable>, <default: yes/no>, <subdirs>)
 dnl
@@ -451,4 +458,80 @@ if test "$ac_cv_declare_$3" = yes; then
 fi
 ])
 AC_PROVIDE(AC_MYCHECK_FUNCTION)
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+AC_DEFUN(AC_INIT_MMDFVARS,
+[
+libexecdir='${exec_prefix}/lib/mh'
+
+mmdfprefix='${prefix}/lib/mmdf'
+mcmddir='${mmdfprefix}/lib'
+mchndir='${mmdfprefix}/chans'
+mtbldir='${mmdfprefix}/table'
+# mquedir='${varprefix}/mmdf/home'
+# mphsdir='${varprefix}/mmdf/log/phase'
+# mlogdir='${varprefix}/mmdf/log'
+mquedir='${varprefix}/spool/mmdf/home'
+mphsdir='${varprefix}/state/mmdf'
+mlogdir='${varprefix}/log/mmdf'
+d_calllog='${mlogdir}/dial_log'
+if test "$mmdfdebug"  = ""; then mmdfdebug=0;  fi
+if test "$mmdfdlog"   = ""; then mmdfdlog=0;   fi
+if test "$mmdfdbglog" = ""; then mmdfdbglog=0; fi
+if test "$mmdfnodomlit" = ""; then mmdfnodomlit=0; fi
+if test "$mmdfleftdots" = ""; then mmdfleftdots=0; fi
+if test "$mmdfstatsort" = ""; then mmdfstatsort=0; fi
+if test "$mmdfcitation" = ""; then mmdfcitation=0; fi
+used_mcmddir=0
+used_mchndir=0
+used_mtbldir=0
+used_mphsdir=0
+used_mlogdir=0
+used_d_calllog=0
+used_mquedir=0
+])
+AC_PROVIDE(AC_INIT_MMDFVARS)
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+AC_DEFUN(AC_MMDFARGS_HELP,
+[
+    cat << EOF
+  --mmdf-debug=[0,1,2]    enable more logging information      [default: $mmdfdebug]
+  --mmdf-dlog             enable debug-option of dial packages [default: $mmdfdlog]
+  --mmdf-dbglog           enable more debug-option of dial packages [default: $mmdfdbglog]
+  --mmdf-nodomlit         toggle define NODOMLIT [default: $mmdfnodomlit]
+  --mmdf-leftdots         toggle define LEFTDOTS [default: $mmdfleftdots]
+  --mmdf-statsort         toggle define STATSORT [default: $mmdfstatsort]
+  --mmdf-citation         toggle define CITATION [default: $mmdfcitation]
+
+  --mmdf-prefix=DIR       default home of mmdf in DIR [PREFIX/mmdf]
+
+  --mmdf-mlogdir=DIR      x in DIR [VARPREFIX/mmdf/log]
+  --mmdf-mphsdir=DIR      x in DIR [VARPREFIX/mmdf/log/phase]
+  --mmdf-mcmddir=DIR      x in DIR [MMDFPREFIX/lib]
+  --mmdf-mchndir=DIR      x in DIR [MMDFPREFIX/chans]
+  --mmdf-mtbldir=DIR      x in DIR [MMDFPREFIX/table]
+  --mmdf-d_calllog=FILE   x in FILE [MLOGDIR/dial_log]
+
+  --mmdf-spooldir=DIR     obselete --mmdf-mquedir
+  --mmdf-logdir=DIR       obselete --mmdf-mlogdir
+  --mmdf-phasedir=DIR     obselete --mmdf-mphsdir
+  --mmdf-diallog=FILE     obselete --mmdf-d_calllog
+EOF
+])
+AC_PROVIDE(AC_MMDFARGS_HELP)
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl do place these in in a macro, it would not work.
+dnl AC_SUBST is a define, so it will be substituted while m4 is running
+AC_SUBST(phasedir)dnl
+AC_SUBST(logdir)dnl
+AC_SUBST(spooldir)dnl
+AC_SUBST(diallog)dnl
+AC_SUBST(mmdfprefix)dnl
+AC_SUBST(mcmddir)dnl
+AC_SUBST(mchndir)dnl
+AC_SUBST(mtbldir)dnl
+AC_SUBST(mphsdir)dnl
+AC_SUBST(mlogdir)dnl
+AC_SUBST(d_calllog)dnl
+AC_SUBST(mquedir)dnl
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll

@@ -13,8 +13,8 @@ all: autoconf.m4f configure
 autoconf.m4f: autoconf.m4 ${SRC1}
 	m4 -F $@ $<
 
-#autoheader.m4f: autoheader.m4 ${SRC2}
-#	m4 -F $@ $<
+autoheader.m4f: autoheader.m4 ${SRC2}
+	m4 -F $@ $<
 
 configure: ${srcdir}/configure autoconf.m4f
 ${srcdir}/configure:    ${srcdir}/configure.in autoconf.m4f
