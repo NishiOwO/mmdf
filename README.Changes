@@ -1,0 +1,29 @@
+- Major cleanup of the defines SYS5, SYS5r3, V4_?BSD, a.s.o.
+  added configure and h/config.h with all the new defines for each
+  specific OS-depend function/component. 
+- Automatic generation of: Makefile, Makefile.com, [lib/src/uip]/Makefile
+- Added define for 8-bit-clean
+- long header lines
+- Added define for 'tables mailids,users are configurable in
+  mmdftailor'
+- Added define and code for NIS-support of tables
+- Added support for tcpwrapper.(if library exists)
+- Added real-host/ip to received lines
+- merged lib/table/tb_ns.*.c into one file (define HAVE_NAMESERVER)
+- merged lib/utli/lk_lock.*.c into one file (defines:
+        HAVE_FLOCK, HAVE_LOCK_FILES, HAVE_F_SETLK
+- merged src/smtp/smtpd.*.c into one file
+  merged src/smtp/tcp.*.c into one file
+  (old files are still available until this release is official)
+- remove-source-routing information (define + switch in mmdftailor)
+- Added support for libgdbm
+- Prepared for queue-dependent cleanque (mwarntime, mfailtime)
+
+still TODO:
+- support for Mime-encapsulated error messages and ESMTP negotiation.
+- finish queue-dependent cleanque. (work in progress)
+- documentation mmdftailor (available switches ...)
+- documentation authorization (work in progress)
+- finish cleanup of the remaining defines (SYS5, SYSr3, V4_?BSD, ...)
+- Script for generating conf/<site>/*.[ch]
+  (site dependent configuration.)

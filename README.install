@@ -1,12 +1,13 @@
-If you want to change the default switches, you need to run Configure first.
-It is an interactive shell-script which will ask you a lot of questions.
-At the end you may start configure to find out your site dependent defines.
+Choose the site dependent settings in conf/<your-site>, or create your
+own directory, copy the files from conf/sample and adjust your pathnames.
 
 For a default installation
-	./configure
+	./configure --target <your-site>
 	make depend (only with gcc)
 	make
 	make install
+
+For more information on configure, run configure --help
 
 Tested on:
 
