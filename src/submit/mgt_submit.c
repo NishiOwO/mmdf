@@ -930,12 +930,12 @@ LOCFUN
 	else
 	    len = mgt_rcv (len, "from %s", mgt_vchan.mgt_achan -> ch_host);
       }
-      if (mgt_vchan.mgt_achan -> ch_host == NORELAY)
-	len = mgt_rcv (len, " ( %s )", mgt_vchan.mgt_ahost);
+      if (mgt_fromhost != NULL)
+	len = mgt_rcv (len, " ( %s )", mgt_fromhost);
       else {
-	if (mgt_fromhost != NULL)
-	  len = mgt_rcv (len, " ( %s )", mgt_fromhost);
-	else
+	if (mgt_vchan.mgt_achan -> ch_host == NORELAY)
+	  len = mgt_rcv (len, " ( %s )", mgt_vchan.mgt_ahost);
+	else 
 	  len = mgt_rcv (len, " ( %s )", mgt_vchan.mgt_achan -> ch_host);
       }
     }
