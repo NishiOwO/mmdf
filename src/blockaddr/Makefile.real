@@ -1,0 +1,51 @@
+#
+# Block Address Channel
+#
+
+MODULES =	ch_blockaddr qu2ba_send
+
+OBJECTS =	ch_blockaddr.o qu2ba_send.o
+
+SOURCES =	ch_blockaddr.c qu2ba_send.c
+
+real-default:	blockaddr
+
+install:	$(CHANDIR)/blockaddr
+
+$(CHANDIR)/blockaddr  :   xblockaddr
+	$(INSTALL) -c -m 0$(PGMPROT)  -o  $(MMDFLOGIN) xblockaddr $(CHANDIR)/blockaddr
+#	cp xblockaddr $(CHANDIR)/blockaddr
+#	-$(CHOWN) $(MMDFLOGIN) $(CHANDIR)/blockaddr
+#	-chmod 0$(PGMPROT) $(CHANDIR)/blockaddr
+	-@ls -ls $(CHANDIR)/blockaddr
+	-@echo "blockaddr channel installed normally"; echo ""
+
+blockaddr:   xblockaddr
+xblockaddr:  $(OBJECTS) $(MMDFLIBS)
+	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(MMDFLIBS) $(SYSLIBS)
+
+lint:   ;  $(LINT) $(LFLAGS) $(SOURCES) $(LLIBS)
+
+clean:
+	-rm -f xblockaddr *.o x.c makedep eddep make.out errs
+
+
+# DO NOT DELETE THIS LINE -- make depend uses it
+
+ch_blockaddr.o: ch_blockaddr.c
+ch_blockaddr.o: ../../h/util.h
+ch_blockaddr.o: ../../h/mmdf.h
+ch_blockaddr.o: ../../h/ap.h
+ch_blockaddr.o: /usr/include/signal.h
+ch_blockaddr.o: ../../h/phs.h
+ch_blockaddr.o: ../../h/ch.h
+qu2ba_send.o: qu2ba_send.c
+qu2ba_send.o: ../../h/util.h
+qu2ba_send.o: ../../h/mmdf.h
+qu2ba_send.o: ../../h/phs.h
+qu2ba_send.o: ../../h/ch.h
+qu2ba_send.o: ../../h/ap.h
+qu2ba_send.o: /usr/include/pwd.h
+# DEPENDENCIES MUST END AT END OF FILE
+# IF YOU PUT STUFF HERE IT WILL GO AWAY
+# see make depend above
