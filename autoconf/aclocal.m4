@@ -1,5 +1,5 @@
 dnl
-dnl $Id: aclocal.m4,v 1.4 1999/08/06 07:19:56 krueger Exp $
+dnl $Id: aclocal.m4,v 1.5 1999/08/16 09:20:57 krueger Exp $
 dnl
 dnl
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -280,7 +280,7 @@ fi
 if test "$varprefix" = "/var"; then
    varprefix="/var/spool"
 fi
-if test "$mquedir" = "\${varprefix}/spool/mmdf"; then
+if test "$mquedir" = "\${varprefix}/spool/mmdf/home"; then
    mquedir="\${varprefix}/mmdf/home"
 fi
 if test "$mphsdir" = "\${varprefix}/state/mmdf"; then

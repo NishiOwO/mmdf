@@ -1323,7 +1323,7 @@ AC_DIVERT_POP()dnl
 T12,103
 AC_ARG_ARRAYerrprint(__file__:__line__: [$0] has been removed; don't do unportable things with arguments
 )m4exit(4)
-T18,21343
+T18,21348
 AC_INIT_PARSE_ARGSAC_PRO([AC_INIT_PARSE_ARGS])
 # Initialize some variables set by options.
 # The variables have the same names as the options, with
@@ -1369,7 +1369,7 @@ mtbldir='${mmdfprefix}/table'
 # mquedir='${varprefix}/mmdf/home'
 # mphsdir='${varprefix}/mmdf/log/phase'
 # mlogdir='${varprefix}/mmdf/log'
-mquedir='${varprefix}/spool/mmdf'
+mquedir='${varprefix}/spool/mmdf/home'
 mphsdir='${varprefix}/state/mmdf'
 mlogdir='${varprefix}/log/mmdf'
 d_calllog='${mlogdir}/dial_log'
