@@ -379,9 +379,10 @@ fi
 if test "$ac_cv_enable_code_wrap" != "no"; then
    AC_CHECK_LIB(wrap, eval_client)
 fi
-dnl AC_CHECK_LIB(socket, atof)
+AC_CHECK_LIB(socket, socket)
+AC_CHECK_LIB(nsl, inet_ntoa)
+
 dnl AC_CHECK_LIB(inet, atof)
-dnl AC_CHECK_LIB(nsl, atof)
 dnl AC_CHECK_LIB(X11, atof)
 dnl AC_CHECK_LIB(seq, atof)
 dnl AC_CHECK_LIB(ndir, atof)
@@ -425,11 +426,10 @@ AC_C_CONST
 
 AC_MSG_CHECKING(whether using nameservercode)
 if test "$enable_nameserver" != no; then
-  if test $ac_cv_func_res_mkquery = yes; then
+  if test "$ac_cv_func_res_mkquery" = "yes"; then
     AC_MSG_RESULT(yes)
   else
-    AC_CHECK_LIB(resolv, res_mkquery)
-    AC_MSG_RESULT(no)
+    AC_CHECK_LIB(resolv, dn_expand)
   fi
 else
     AC_MSG_WARN(no)
