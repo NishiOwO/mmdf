@@ -80,7 +80,11 @@ char    *sender;
 
 	    case 500:
 	    case 501:
+	    case 550:
+	    case 551:
 	    case 552:
+	    case 553:
+	    case 571:
 		return( sm_rp.sm_rval = RP_PARM );
 
 	    case 421:
@@ -124,6 +128,7 @@ char    adr[];                    /* rest of address                    */
 	    break;
 
 	case 550:
+	case 511:
 	case 551:
 	case 552:
 	case 553:
@@ -133,6 +138,8 @@ char    adr[];                    /* rest of address                    */
 
 	case 500:
 	case 501:
+	case 544:
+	case 571:
 	    sm_rp.sm_rval = RP_PARM;
 	    break;
 

@@ -127,7 +127,7 @@ qu2sm_send ()             /* overall mngmt for batch of msgs    */
 	AP_ptr  loctree, domtree, routree, sendtree;
 	AP_ptr  ap_s2tree(), ap_normalize();
 
-	result = qu_rinit (info, sendbuf, chanptr -> ch_apout);
+	result = qu_rinit (info, sendbuf, (chanptr -> ch_apout & AP_MASK));
 	if(rp_gval(result) == RP_NS){
 	    qu_rend();
 	    continue;
@@ -158,12 +158,12 @@ qu2sm_send ()             /* overall mngmt for batch of msgs    */
 		    goto bugout;
 		}
 		ap_t2parts (sendtree, (AP_ptr *)0, (AP_ptr *)0, &loctree, &domtree, &routree);
+		ap_outtype = chanptr -> ch_apout;
 		sender = ap_p2s ((AP_ptr)0, (AP_ptr)0, loctree, domtree, routree);
 		if(sender == (char *)MAYBE){
 		    result = RP_NS;
 		    goto bugout;
 		}
-		ap_outtype = chanptr -> ch_apout;
 		ap_sqdelete( sendtree, (AP_ptr) 0 );
 		ap_free( sendtree );
 	}

@@ -251,7 +251,11 @@ int ap_char ()
     if ((i = ((*ap_gfunc) ())) == -1)
 	return (0);               /*  EOD                                 */
 
+#ifdef HAVE_8BIT
+    return(i);
+#else /* HAVE_8BIT */
     return ((isascii (i)) ? i : '\177');
 				  /* force error, if eighth bit is on     */
+#endif /* HAVE_8BIT */
 }
 

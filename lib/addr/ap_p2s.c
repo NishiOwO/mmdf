@@ -63,6 +63,8 @@ ap_p2s (group, name, local, domain, route)
 #ifdef HAVE_NOSRCROUTE
     if ((ap_outtype & AP_NOSRCRT) == AP_NOSRCRT) /* AP_DOTS is implicit def. */
 	ll_log (logptr, LLOGFTR, "AP_NOSRCRT on (removing source-routes)");
+else
+	ll_log (logptr, LLOGFTR, "AP_NOSRCRT off (removing source-routes)");
     if ((ap_outtype & AP_REJSRCRT) == AP_REJSRCRT)/* AP_DOTS is implicit def.*/
 	ll_log (logptr, LLOGFTR, "AP_REJSRCRT on (reject source-routes)");
 #endif

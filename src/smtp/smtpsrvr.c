@@ -200,7 +200,7 @@ char **argv;
 	    else {   /* make into [x.x.x.x] format */
 		them = strdup(them);
 	        strcpy(tmpstr, them);  
-		sprintf(them, "[%s]", tmpstr);
+		sprintf(them, "%s", tmpstr);
 #ifdef NODOMLIT
 		themknown = FALSE;
 #endif /* NODOMLIT */

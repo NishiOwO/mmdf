@@ -227,12 +227,7 @@ int     dohdr;                    /* perform address massaging          */
     ll_log (logptr, LLOGBTR, "basic msglen = %d", qu_msglen);
 #endif
 
-#if HAVE_NOSRCROUTE
-    if ( ((dohdr&AP_MASK) != AP_SAME) ||         /* fix up the addresses               */
-         ((dohdr&AP_NOSRCRT)==AP_NOSRCRT) )
-#else
     if ((dohdr&AP_MASK) != AP_SAME)          /* fix up the addresses               */
-#endif
     {
 	ap_outtype = dohdr;
 	qu_seek = hd_init (qu_chptr, qu_fileno ());
