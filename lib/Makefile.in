@@ -13,14 +13,18 @@ MAKE	= make
 RANLIB	= @LIBFIX@
 
 SUBDIRS = @LIBSUBDIRS@
-ALLSUBDIRS = addr mmdf table util dial
+ALLSUBDIRS = addr mmdf table util dial popt
 
 default: remake reorder
 
 remake:
 	for dir in $(SUBDIRS); \
 	  do (cd $${dir}; echo "Running make in $${dir}"; \
-	      ./gen ${MFLAGS}); \
+	    if test -x ./gen; then \
+	      ./gen ${MFLAGS}; \
+	    else \
+	      make ${MFLAGS}; \
+	    fi ); \
 	  done
 
 install: default
