@@ -91,7 +91,7 @@ extern Table **tb_list;        /* full list of known tables */
 extern Domain **dm_list;
 extern char *mmdflogin;        /* login name for mmdf processes */
 extern char *mmtailor;        /* external tailoring information */
-
+char MMDFlogin[32];
 
 extern char     *lckdfldir,
 	       *pn_quedir;
@@ -169,6 +169,7 @@ main (argc, argv)
     int ind;
     char postmaster[13];
     strcpy(postmaster, "Postmaster");
+    strcpy(MMDFlogin, mmdflogin);
 
     /*  check for the verbosity flag  */
     flaginit (argc, argv);
@@ -216,17 +217,17 @@ main (argc, argv)
     qflush (LEVEL7);
 
     /*  get uid & gid for mmdf login, for setting directory ownerships */
-    if ((pwdptr = getpwnam (mmdflogin)) == (struct passwd *) NULL)
+    if ((pwdptr = getpwnam (MMDFlogin)) == (struct passwd *) NULL)
     {
-	que (LEVEL1, hdrfmt, "** No /etc/passwd login", mmdflogin);
+	que (LEVEL1, hdrfmt, "** No /etc/passwd login", MMDFlogin);
 	endit (NOTOK);
     }
     mmdfuid = pwdptr -> pw_uid;
     mmdfgid = pwdptr -> pw_gid;
 
     que (LEVEL3, "\nMMDF login %-11s  : uid (%d), gid (%d)\n",
-		mmdflogin, mmdfuid, mmdfgid);
-    chkalias (mmdflogin);
+		MMDFlogin, mmdfuid, mmdfgid);
+    chkalias (MMDFlogin);
     que (LEVEL7, subhdrfmt, "", "alias this to root or systems staff");
     qflush (LEVEL7);
     qflush (LEVEL3);
@@ -241,12 +242,12 @@ main (argc, argv)
 	getfpath (tbldbm, tbldfldir, tmpfile);
 	strcat (tmpfile, ".dir");
 	que (LEVEL7, subhdrfmt, "data directory", tmpfile);
-	chkfile (tmpfile, 0644, 0664, mmdfuid, mmdfgid, mmdflogin);
+	chkfile (tmpfile, 0644, 0664, mmdfuid, mmdfgid, MMDFlogin);
 
 	getfpath (tbldbm, tbldfldir, tmpfile);
 	strcat (tmpfile, ".pag");
 	que (LEVEL7, subhdrfmt, "data pages", tmpfile);
-	chkfile (tmpfile, 0644, 0664, mmdfuid, mmdfgid, mmdflogin);
+	chkfile (tmpfile, 0644, 0664, mmdfuid, mmdfgid, MMDFlogin);
 	qflush (LEVEL7);
     }
 
@@ -263,19 +264,19 @@ main (argc, argv)
 
     /*  standard directories */
     que (LEVEL4, subhdrfmt, "Logging directory", logdfldir);
-    if (chkfile (logdfldir, 0711, 0755, mmdfuid, mmdfgid, mmdflogin) >= OK)
+    if (chkfile (logdfldir, 0711, 0755, mmdfuid, mmdfgid, MMDFlogin) >= OK)
 	chklog ();
     qflush (LEVEL4);
 
     que (LEVEL4, "\n");
     que (LEVEL4, subhdrfmt, "Phase (timestamps)", phsdfldir);
-    chkfile (phsdfldir, 0711, 0755, mmdfuid, mmdfgid, mmdflogin);
+    chkfile (phsdfldir, 0711, 0755, mmdfuid, mmdfgid, MMDFlogin);
     qflush (LEVEL4);
 
 #ifdef HAVE_LOCKDIR
     que (LEVEL4, "\n");
     que (LEVEL4, subhdrfmt, "Locking directory", lckdfldir);
-    chkfile (lckdfldir, 0777, 0777, mmdfuid, mmdfgid, mmdflogin);
+    chkfile (lckdfldir, 0777, 0777, mmdfuid, mmdfgid, MMDFlogin);
     qflush (LEVEL4);
 #endif /* HAVE_LOCKDIR */
 
@@ -288,31 +289,31 @@ main (argc, argv)
 
     que (LEVEL4, "\n");
     que (LEVEL4, subhdrfmt, "Tables & scripts", tbldfldir);
-    if (chkfile (tbldfldir, 0711, 0755, mmdfuid, mmdfgid, mmdflogin) >= OK)
+    if (chkfile (tbldfldir, 0711, 0755, mmdfuid, mmdfgid, MMDFlogin) >= OK)
 	chktab ();
     qflush (LEVEL4);
 
     que (LEVEL4, hdrfmt, "MMDF Commands", cmddfldir);
-    if (chkfile (cmddfldir, 0711, 0755, mmdfuid, mmdfgid, mmdflogin) >= OK)
+    if (chkfile (cmddfldir, 0711, 0755, mmdfuid, mmdfgid, MMDFlogin) >= OK)
 	chkcmd ();
     qflush (LEVEL4);
 
     que (LEVEL4, hdrfmt, "Channel programs", chndfldir);
-    if (chkfile (chndfldir, 0500, 0770, mmdfuid, mmdfgid, mmdflogin) >= OK)
+    if (chkfile (chndfldir, 0500, 0770, mmdfuid, mmdfgid, MMDFlogin) >= OK)
 	chkchan ();
     qflush (LEVEL4);
 
     if (isstr(mldfldir))
     {                           /* all mail delivered in common dir     */
 	que (LEVEL4, hdrfmt, "Shared receipt directory", mldfldir);
-	chkfile (mldfldir, 0777, 0777, mmdfuid, mmdfgid, mmdflogin);
+	chkfile (mldfldir, 0777, 0777, mmdfuid, mmdfgid, MMDFlogin);
 	qflush (LEVEL4);
     }
     qflush (LEVEL0);
 
     /*  queue directory substructure */
     que (LEVEL4, hdrfmt, "Mail queue home", quedfldir);
-    if (chkpath (FINAL, quedfldir, 0777, 0777, mmdfuid, mmdfgid, mmdflogin) < OK)
+    if (chkpath (FINAL, quedfldir, 0777, 0777, mmdfuid, mmdfgid, MMDFlogin) < OK)
 	que (LEVEL1, "cannot check queue further\n");
     else
     {
@@ -338,15 +339,15 @@ main (argc, argv)
 	    qflush (LEVEL5);
 
 	    que (LEVEL5, subhdrfmt, "Address-building", tquedir);
-	    chkpath (FINAL, tquedir, 0777, 0777, mmdfuid, mmdfgid, mmdflogin);
+	    chkpath (FINAL, tquedir, 0777, 0777, mmdfuid, mmdfgid, MMDFlogin);
 	    qflush (LEVEL5);
 
 	    que (LEVEL5, subhdrfmt, "Queued addresses", aquedir);
-	    chkpath (FINAL, aquedir, 0777, 0777, mmdfuid, mmdfgid, mmdflogin);
+	    chkpath (FINAL, aquedir, 0777, 0777, mmdfuid, mmdfgid, MMDFlogin);
 	    qflush (LEVEL5);
 
 	    que (LEVEL5, subhdrfmt, "Message text", mquedir);
-	    chkpath (FINAL, mquedir, 0777, 0777, mmdfuid, mmdfgid, mmdflogin);
+	    chkpath (FINAL, mquedir, 0777, 0777, mmdfuid, mmdfgid, MMDFlogin);
 	    qflush (LEVEL5);
 
 	    que (LEVEL5, "Queueing directories:\n");
@@ -357,7 +358,7 @@ main (argc, argv)
 	    	(void) sprintf (path, "%s%s",
 		    squepref, ch_tbsrch[ind] -> ch_queue);
 		que (LEVEL5, subhdrfmt, ch_tbsrch[ind] -> ch_show, path);
-		chkpath (FINAL, path, 0777, 0777, mmdfuid, mmdfgid, mmdflogin);
+		chkpath (FINAL, path, 0777, 0777, mmdfuid, mmdfgid, MMDFlogin);
 		qflush (LEVEL5);
 	    }
 	}
@@ -513,16 +514,16 @@ chklog ()
     }
 
     que (LEVEL6, subhdrfmt, "message-level log", msglog.ll_file);
-    chkfile (msglog.ll_file, 0622, 0666, mmdfuid, mmdfgid, mmdflogin);
+    chkfile (msglog.ll_file, 0622, 0666, mmdfuid, mmdfgid, MMDFlogin);
     qflush (LEVEL6);
 
     que (LEVEL6, subhdrfmt, "channel log", chanlog.ll_file);
-    chkfile (chanlog.ll_file, 0622, 0666, mmdfuid, mmdfgid, mmdflogin);
+    chkfile (chanlog.ll_file, 0622, 0666, mmdfuid, mmdfgid, MMDFlogin);
     qflush (LEVEL6);
 
 #ifdef HAVE_DIAL
     que (LEVEL6, subhdrfmt, "phone (link) log", ph_log.ll_file);
-    chkfile (ph_log.ll_file, 0622, 0666, mmdfuid, mmdfgid, mmdflogin);
+    chkfile (ph_log.ll_file, 0622, 0666, mmdfuid, mmdfgid, MMDFlogin);
     qflush (LEVEL6);
 #endif /* HAVE_DIAL */
 }
@@ -807,7 +808,7 @@ chkcmd ()
     }
 
     que (LEVEL6, subhdrfmt, "Posting/submission", pathsubmit);
-    chkfile (pathsubmit, 04711, 04755, mmdfuid, mmdfgid, mmdflogin);
+    chkfile (pathsubmit, 04711, 04755, mmdfuid, mmdfgid, MMDFlogin);
     qflush (LEVEL6);
 
     que (LEVEL6, subhdrfmt, "Delivery management", pathdeliver);
@@ -823,7 +824,7 @@ chkcmd ()
 
     que (LEVEL6, subhdrfmt, "V6Mail (for notices)",
 		pathmail);
-    chkfile (pathmail, 0711, 0755, mmdfuid, mmdfgid, mmdflogin);
+    chkfile (pathmail, 0711, 0755, mmdfuid, mmdfgid, MMDFlogin);
     qflush (LEVEL6);
 
     que (LEVEL6, subhdrfmt, "cleanque", "Queue garbage cleaner");
@@ -831,11 +832,11 @@ chkcmd ()
     qflush (LEVEL6);
 
     que (LEVEL6, subhdrfmt, "checkque", "Queue status checker");
-    chkfile ("checkque", 04711, 04755, mmdfuid, mmdfgid, mmdflogin);
+    chkfile ("checkque", 04711, 04755, mmdfuid, mmdfgid, MMDFlogin);
     qflush (LEVEL6);
 
     que (LEVEL6, subhdrfmt, "setlogs", "Log cleanup shellfile");
-    chkfile ("setlogs", 0700, 0755, mmdfuid, mmdfgid, mmdflogin);
+    chkfile ("setlogs", 0700, 0755, mmdfuid, mmdfgid, MMDFlogin);
     qflush (LEVEL6);
 }
 /**/
@@ -871,7 +872,7 @@ chkchan ()
 	    if (chan -> ch_logfile) {
 	    	chan -> ch_logfile = dupfpath(chan -> ch_logfile, logdfldir);
 		que (LEVEL6, subhdrfmt, "logfile", chan -> ch_logfile);
-		chkfile (chan -> ch_logfile, 0622, 0666, mmdfuid, mmdfgid, mmdflogin);
+		chkfile (chan -> ch_logfile, 0622, 0666, mmdfuid, mmdfgid, MMDFlogin);
 		qflush (LEVEL6);
 	    }
 	    qflush (LEVEL5);
