@@ -272,12 +272,12 @@ main (argc, argv)
     chkfile (phsdfldir, 0711, 0755, mmdfuid, mmdfgid, mmdflogin);
     qflush (LEVEL4);
 
-#ifndef V4_2BSD
+#ifdef HAVE_LOCKDIR
     que (LEVEL4, "\n");
     que (LEVEL4, subhdrfmt, "Locking directory", lckdfldir);
     chkfile (lckdfldir, 0777, 0777, mmdfuid, mmdfgid, mmdflogin);
     qflush (LEVEL4);
-#endif /* V4_2BSD */
+#endif /* HAVE_LOCKDIR */
 
 #ifdef JNTMAIL
     que (LEVEL4, "\n");

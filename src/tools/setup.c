@@ -167,10 +167,10 @@ main (argc, argv)
     printf ("\nPhase (timestamping) directory '%s'\n\t[protected at 0711]\n", phsdfldir);
     my_drcreat (phsdfldir, 0711, mmdfuid, mmdfgid);
 
-#ifndef V4_2BSD
+#ifdef HAVE_LOCKDIR
     printf ("\nLocking directory '%s'\n\t[protected at 0777]\n", lckdfldir);
     my_drcreat (lckdfldir, 0777, mmdfuid, mmdfgid);
-#endif /* V4_2BSD */
+#endif /* HAVE_LOCKDIR */
 
 #ifdef JNTMAIL
     printf ("\nNIFTP (JNT Mail) Spool directory '%s'\n\t[protected at 0700]\n",
