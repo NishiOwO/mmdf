@@ -1,6 +1,6 @@
 /* h/config.h.in.  Generated automatically from configure.in by autoheader.  */
 /*
- * $Id: config.h.in,v 1.46 2000/08/15 21:58:22 krueger Exp $
+ * $Id: config.h.in,v 1.47 2001/01/09 20:21:58 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -349,6 +349,8 @@ yourdomain".  Since % or
 #undef HPUX
 #undef MKDIR_HAVE_SECOND_ARG
 
+#undef HAVE_LDAP
+
 /*****************************************************************************/
 /* login and group names */
 #undef MMDFLOGIN
@@ -565,6 +567,12 @@ yourdomain".  Since % or
 
 /* Define if you have the gdbm library (-lgdbm).  */
 #undef HAVE_LIBGDBM
+
+/* Define if you have the lber library (-llber).  */
+#undef HAVE_LIBLBER
+
+/* Define if you have the ldap library (-lldap).  */
+#undef HAVE_LIBLDAP
 
 /* Define if you have the ndbm library (-lndbm).  */
 #undef HAVE_LIBNDBM

@@ -73,6 +73,10 @@ else
   ROOTLOGIN=${with_rootlogin}
 fi
 AC_SUBST(ROOTLOGIN)
+
+if test "${with_ldap+set}" = set; then
+  ldapdir=${with_ldap}
+fi
 dnl PGMPROT=755
 PGMPROT=511
 MMDFLIBS="\${top_srcdir}/lib/libmmdf.a"
@@ -246,11 +250,15 @@ AC_ARG_WITH(
   rootlogin,
   [  --with-rootlogin=ROOTLOGIN   (default is root)])
 
+AC_ARG_WITH(
+  ldap,
+  [  --with-ldap[=PATH]      enable ldap-support          (developpment)])
+
 AC_ARG_ENABLE(nameserver, \
-  [  --enable-PACKAGE        configure and build PACKAGE
-     --disable-PACKAGE       do not configure and build PACKAGE
- where PACKAGE can be:
-     nameserver           nameserver-code]                          \
+  [--enable-FEATURE        configure and build FEATURE
+  --disable-FEATURE       do not configure and build FEATURE
+ where FEATURE can be:
+       nameserver         nameserver-code]                          \
  (enabled))
 AC_ARG_ENABLE(dbm, \
   [     dbm                tables via dbm, sequential otherwise]     \
@@ -277,8 +285,42 @@ AC_ARG_ENABLE(lock_files, \
 AC_ARG_ENABLE(dial, \
   [     dial               dial code]                                \
 (disabled))
+AC_ARG_ENABLE(gcc, \
+  [     gcc                use gcc as compiler]                      \
+ (enabled))
+AC_ARG_ENABLE(fhs, \
+  [     fhs                set pathnames according to fhs-2.0 
+                           (disable it for old pathnames)]          \
+ (enabled))
+AC_ARG_ENABLE(elf, \
+  [     elf                produce elf code, (only on sco)]          \
+ (enabled))
+AC_ARG_ENABLE(esmtp, \
+  [     esmtp              enable esmtp-'support' poorly implementation
+                           better disable it]                      \
+ (disabled))
+AC_ARG_ENABLE(esmtp_dsn, \
+  [     esmtp_dsn          enable esmtp-dsn'support' (experimental)]\
+ (disabled))
+AC_ARG_ENABLE(esmtp_8bitmime, \
+  [     esmtp_8bitmime     enable esmtp-8bitmime'support' (experimental)]\
+ (disabled))
+AC_ARG_ENABLE(wildcard, \
+  [     wildcard           enable wildcard-'support' (experimental)] \
+ (disabled))
+AC_ARG_ENABLE(rbl, \
+  [     rbl                enable rbl-support (Blacklist) (developpment)] \
+ (disabled))
+AC_ARG_ENABLE(filelist, \
+  [     filelist           enable creation of a filelist]           \
+ (disabled))
+
+dnl enable channel programs
 AC_ARG_ENABLE(badusers, \
-  [     badusers           badusers channel-program]                 \
+  [--enable-CHANNEL-PROGRAM   configure and build CHANNEL-PROGRAM
+  --disable-CHANNEL-PROGRAM  do not configure and build CHANNEL-PROGRAM
+ where CHANNEL-PROGRAM can be:
+       badusers           badusers channel-program]                 \
  (enabled))
 AC_ARG_ENABLE(bboards, \
   [     bboards            bboards channel-program]                  \
@@ -319,8 +361,13 @@ AC_ARG_ENABLE(smtp, \
 AC_ARG_ENABLE(uucp, \
   [     uucp               uucp channel-program]                     \
  (enabled))
+
+dnl enable mail-client programs
 AC_ARG_ENABLE(msg, \
-  [     msg                msg user agent]                           \
+  [--enable-USER-CLIENT   configure and build USER-CLIENT
+  --disable-USER-CLIENT  do not configure and build USER-CLIENT
+ where USER-CLIENT can be:
+       msg                msg user agent]                           \
  (enabled))
 AC_ARG_ENABLE(other, \
   [     other              malias,mlist,rcv*,resend,sendmail,v6mail] \
@@ -337,35 +384,6 @@ AC_ARG_ENABLE(ucbmail, \
 AC_ARG_ENABLE(unsupported, \
   [     unsupported        autores, cvmbox]                          \
 (disabled))
-AC_ARG_ENABLE(gcc, \
-  [     gcc                use gcc as compiler]                      \
- (enabled))
-AC_ARG_ENABLE(fhs, \
-  [     fhs                set pathnames according to fhs-2.0 
-                           (disable it for old pathnames)]          \
- (enabled))
-AC_ARG_ENABLE(elf, \
-  [     elf                produce elf code, (only on sco)]          \
- (enabled))
-AC_ARG_ENABLE(esmtp, \
-  [     esmtp              enable esmtp-'support' poorly implementation
-                           better disable it]                      \
- (disabled))
-AC_ARG_ENABLE(esmtp_dsn, \
-  [     esmtp_dsn          enable esmtp-dsn'support' (experimental)]\
- (disabled))
-AC_ARG_ENABLE(esmtp_8bitmime, \
-  [     esmtp_8bitmime     enable esmtp-8bitmime'support' (experimental)]\
- (disabled))
-AC_ARG_ENABLE(wildcard, \
-  [     wildcard           enable wildcard-'support' (experimental)] \
- (disabled))
-AC_ARG_ENABLE(rbl, \
-  [     rbl                enable rbl-support (Blacklist) (developpment)] \
- (disabled))
-AC_ARG_ENABLE(filelist, \
-  [     filelist           enable creation of a filelist]           \
- (disabled))
 
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -723,6 +741,30 @@ else
     AC_MSG_WARN(no)
 fi
 
+dnl checking for libldap
+if test "${with_ldap+set}" = set; then
+   if test "$ac_cv_func_res_mkquery" = "yes" -o "$ac_cv_lib_resolv_dn_expand" = "yes"; then
+      AC_CHECK_LIB(lber, ber_init)
+      AC_CHECK_LIB(ldap, ldap_open)
+      if test "$ac_cv_lib_ldap_ldap_open" = "yes"; then
+         AC_CHECK_HEADER(ldap.h)
+         if test "$ac_cv_header_ldap_h" = "yes"; then
+	    enable_ldap="yes"
+            AC_DEFINE_UNQUOTED(HAVE_LDAP)
+	 else
+            enable_ldap="no"
+         fi
+      else
+         enable_ldap="no"
+      fi
+   else
+      enable_ldap="no"
+      AC_MSG_WARN(No nameserver support. Disabling LDAP)
+   fi
+else
+   enable_ldap="no"
+fi
+
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl sprintf returns number of printed chars
 AC_MSG_CHECKING(whether sprintf returns number of printed chars)
@@ -1060,6 +1102,7 @@ AC_ENABLE_DEFAULT_CODE(esmtp_dsn,   no,  code, "ESMTP-DSN-support")
 AC_ENABLE_DEFAULT_CODE(esmtp_8bitmime, no,  code, "ESMTP-8BITMIME-support")
 AC_ENABLE_DEFAULT_CODE(wildcard,    no,  code, "Wildcard-support")
 AC_ENABLE_DEFAULT_CODE(rbl,         no,  code, "rbl-support")
+AC_ENABLE_DEFAULT_CODE(ldap,        no,  code, "ldap-support")
 
 if test "$ac_cv_enable_lib_dbm" = "yes"; then
    CH_TB="ch_tbdbm"

@@ -15,7 +15,7 @@
 
 
 /*
- * $Id: acconfig.h,v 1.10 2000/04/04 14:30:50 krueger Exp $
+ * $Id: acconfig.h,v 1.11 2001/01/09 20:21:58 krueger Exp $
  *
  */
 
@@ -492,6 +492,8 @@
 #undef LINUX
 #undef HPUX
 #undef MKDIR_HAVE_SECOND_ARG
+
+#undef HAVE_LDAP
 
 /*****************************************************************************/
 /* login and group names */

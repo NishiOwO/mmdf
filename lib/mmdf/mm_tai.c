@@ -29,11 +29,11 @@ extern int tb_rbl_init();
 #  define tb_rbl_init tb_noop
 #endif /* HAVE_RBL */
 
-#ifdef HAVE_LDAPSUPPORT
+#ifdef HAVE_LDAP
 extern int tb_ldap_init();
-#else /* HAVE_LDAPSUPPORT */
+#else /* HAVE_LDAP */
 #  define tb_ldap_init tb_noop
-#endif /* HAVE_LDAPSUPPORT */
+#endif /* HAVE_LDAP */
 
 #ifdef HAVE_SQLSUPPORT
 extern int tb_sql_init();
@@ -598,9 +598,9 @@ LOCVAR Cmd
 {
   { "dbm",   CMDTFTDBM,     0 },
   { "file",  CMDTFTFILE,    0 },
-#ifdef HAVE_LDAPSUPPORT
+#ifdef HAVE_LDAP
   { "ldap",  CMDTFTLDAP,    0 },
-#endif /* HAVE_LDAPSUPPORT */
+#endif /* HAVE_LDAP */
 #ifdef HAVE_NIS
   { "nis",   CMDTFTNIS,     0 },
 #endif /* HAVE_NIS */
