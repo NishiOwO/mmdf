@@ -36,66 +36,145 @@ clean:
 
 # DO NOT DELETE THIS LINE -- make depend uses it
 
-msg0.o: msg0.c
-msg0.o: ../../h/util.h
-msg0.o: ../../h/mmdf.h
-msg0.o: /usr/include/pwd.h
-msg0.o: /usr/include/signal.h
-msg0.o: /usr/include/sys/stat.h
-msg0.o: /usr/include/sgtty.h
-msg0.o: /usr/include/sys/ioctl.h
-msg0.o: msg.h
-msg1.o: msg1.c
-msg1.o: ../../h/util.h
-msg1.o: ../../h/mmdf.h
-msg1.o: /usr/include/pwd.h
-msg1.o: /usr/include/signal.h
-msg1.o: /usr/include/sys/stat.h
-msg1.o: /usr/include/sgtty.h
-msg1.o: /usr/include/sys/ioctl.h
-msg1.o: msg.h
-msg2.o: msg2.c
-msg2.o: ../../h/util.h
-msg2.o: ../../h/mmdf.h
-msg2.o: /usr/include/pwd.h
-msg2.o: /usr/include/signal.h
-msg2.o: /usr/include/sys/stat.h
-msg2.o: /usr/include/sgtty.h
-msg2.o: msg.h
-msg3.o: msg3.c
-msg3.o: ../../h/util.h
-msg3.o: ../../h/mmdf.h
-msg3.o: /usr/include/pwd.h
-msg3.o: /usr/include/signal.h
-msg3.o: /usr/include/sys/stat.h
-msg3.o: /usr/include/sgtty.h
-msg3.o: /usr/include/sys/wait.h
-msg3.o: msg.h
-msg4.o: msg4.c
-msg4.o: ../../h/util.h
-msg4.o: ../../h/mmdf.h
-msg4.o: /usr/include/pwd.h
-msg4.o: /usr/include/signal.h
-msg4.o: /usr/include/sys/stat.h
-msg4.o: /usr/include/termio.h
-msg4.o: /usr/include/string.h
-msg4.o: /usr/include/sgtty.h
-msg4.o: msg.h
-msg5.o: msg5.c
-msg5.o: ../../h/util.h
-msg5.o: ../../h/mmdf.h
-msg5.o: /usr/include/pwd.h
-msg5.o: /usr/include/signal.h
-msg5.o: /usr/include/sys/stat.h
-msg5.o: msg.h
-msg5.o: /usr/include/sys/file.h
-msg5.o: /usr/include/string.h
-msg6.o: msg6.c
-msg6.o: ../../h/util.h
-msg6.o: ../../h/mmdf.h
-msgtailor.o: msgtailor.c
-msgtailor.o: msg.h
-version.o: version.c
+
+msg0.o: msg0.c ../../h/util.h ../../h/config.h /usr/include/dirent.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/gnu/types.h \
+ /usr/lib/gcc-lib/i386-linux/2.7.2.1/include/stddef.h \
+ /usr/include/sys/types.h /usr/include/linux/types.h \
+ /usr/include/linux/posix_types.h /usr/include/asm/posix_types.h \
+ /usr/include/asm/types.h /usr/include/sys/bitypes.h \
+ /usr/include/linux/limits.h /usr/include/linux/dirent.h \
+ /usr/include/posix1_lim.h /usr/include/string.h \
+ /usr/include/sys/time.h /usr/include/linux/time.h /usr/include/time.h \
+ ../../h/config.old.h /usr/include/stdio.h /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/ctype.h /usr/include/endian.h \
+ /usr/include/bytesex.h /usr/include/setjmp.h /usr/include/jmp_buf.h \
+ /usr/include/i386/jmp_buf.h /usr/include/signal.h \
+ /usr/include/linux/signal.h /usr/include/asm/signal.h \
+ /usr/include/errno.h /usr/include/linux/errno.h \
+ /usr/include/asm/errno.h ../../h/mmdf.h ../../h/ll_log.h \
+ ../../h/conf.h /usr/include/pwd.h /usr/include/sys/stat.h \
+ /usr/include/linux/stat.h ./msg.h
+msg1.o: msg1.c ../../h/util.h ../../h/config.h /usr/include/dirent.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/gnu/types.h \
+ /usr/lib/gcc-lib/i386-linux/2.7.2.1/include/stddef.h \
+ /usr/include/sys/types.h /usr/include/linux/types.h \
+ /usr/include/linux/posix_types.h /usr/include/asm/posix_types.h \
+ /usr/include/asm/types.h /usr/include/sys/bitypes.h \
+ /usr/include/linux/limits.h /usr/include/linux/dirent.h \
+ /usr/include/posix1_lim.h /usr/include/string.h \
+ /usr/include/sys/time.h /usr/include/linux/time.h /usr/include/time.h \
+ ../../h/config.old.h /usr/include/stdio.h /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/ctype.h /usr/include/endian.h \
+ /usr/include/bytesex.h /usr/include/setjmp.h /usr/include/jmp_buf.h \
+ /usr/include/i386/jmp_buf.h /usr/include/signal.h \
+ /usr/include/linux/signal.h /usr/include/asm/signal.h \
+ /usr/include/errno.h /usr/include/linux/errno.h \
+ /usr/include/asm/errno.h ../../h/mmdf.h ../../h/ll_log.h \
+ ../../h/conf.h /usr/include/pwd.h /usr/include/sys/stat.h \
+ /usr/include/linux/stat.h ./msg.h
+msg2.o: msg2.c ../../h/util.h ../../h/config.h /usr/include/dirent.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/gnu/types.h \
+ /usr/lib/gcc-lib/i386-linux/2.7.2.1/include/stddef.h \
+ /usr/include/sys/types.h /usr/include/linux/types.h \
+ /usr/include/linux/posix_types.h /usr/include/asm/posix_types.h \
+ /usr/include/asm/types.h /usr/include/sys/bitypes.h \
+ /usr/include/linux/limits.h /usr/include/linux/dirent.h \
+ /usr/include/posix1_lim.h /usr/include/string.h \
+ /usr/include/sys/time.h /usr/include/linux/time.h /usr/include/time.h \
+ ../../h/config.old.h /usr/include/stdio.h /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/ctype.h /usr/include/endian.h \
+ /usr/include/bytesex.h /usr/include/setjmp.h /usr/include/jmp_buf.h \
+ /usr/include/i386/jmp_buf.h /usr/include/signal.h \
+ /usr/include/linux/signal.h /usr/include/asm/signal.h \
+ /usr/include/errno.h /usr/include/linux/errno.h \
+ /usr/include/asm/errno.h ../../h/mmdf.h ../../h/ll_log.h \
+ ../../h/conf.h /usr/include/pwd.h /usr/include/sys/stat.h \
+ /usr/include/linux/stat.h ./msg.h
+msg3.o: msg3.c ../../h/util.h ../../h/config.h /usr/include/dirent.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/gnu/types.h \
+ /usr/lib/gcc-lib/i386-linux/2.7.2.1/include/stddef.h \
+ /usr/include/sys/types.h /usr/include/linux/types.h \
+ /usr/include/linux/posix_types.h /usr/include/asm/posix_types.h \
+ /usr/include/asm/types.h /usr/include/sys/bitypes.h \
+ /usr/include/linux/limits.h /usr/include/linux/dirent.h \
+ /usr/include/posix1_lim.h /usr/include/string.h \
+ /usr/include/sys/time.h /usr/include/linux/time.h /usr/include/time.h \
+ ../../h/config.old.h /usr/include/stdio.h /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/ctype.h /usr/include/endian.h \
+ /usr/include/bytesex.h /usr/include/setjmp.h /usr/include/jmp_buf.h \
+ /usr/include/i386/jmp_buf.h /usr/include/signal.h \
+ /usr/include/linux/signal.h /usr/include/asm/signal.h \
+ /usr/include/errno.h /usr/include/linux/errno.h \
+ /usr/include/asm/errno.h ../../h/mmdf.h ../../h/ll_log.h \
+ ../../h/conf.h /usr/include/pwd.h /usr/include/sys/stat.h \
+ /usr/include/linux/stat.h /usr/include/sys/wait.h \
+ /usr/include/waitflags.h /usr/include/linux/wait.h \
+ /usr/include/waitstatus.h ./msg.h
+msg4.o: msg4.c ../../h/util.h ../../h/config.h /usr/include/dirent.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/gnu/types.h \
+ /usr/lib/gcc-lib/i386-linux/2.7.2.1/include/stddef.h \
+ /usr/include/sys/types.h /usr/include/linux/types.h \
+ /usr/include/linux/posix_types.h /usr/include/asm/posix_types.h \
+ /usr/include/asm/types.h /usr/include/sys/bitypes.h \
+ /usr/include/linux/limits.h /usr/include/linux/dirent.h \
+ /usr/include/posix1_lim.h /usr/include/string.h \
+ /usr/include/sys/time.h /usr/include/linux/time.h /usr/include/time.h \
+ ../../h/config.old.h /usr/include/stdio.h /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/ctype.h /usr/include/endian.h \
+ /usr/include/bytesex.h /usr/include/setjmp.h /usr/include/jmp_buf.h \
+ /usr/include/i386/jmp_buf.h /usr/include/signal.h \
+ /usr/include/linux/signal.h /usr/include/asm/signal.h \
+ /usr/include/errno.h /usr/include/linux/errno.h \
+ /usr/include/asm/errno.h ../../h/mmdf.h ../../h/ll_log.h \
+ ../../h/conf.h /usr/include/pwd.h /usr/include/sys/stat.h \
+ /usr/include/linux/stat.h /usr/include/termio.h \
+ /usr/include/termios.h /usr/include/linux/termios.h \
+ /usr/include/asm/termios.h /usr/include/asm/termbits.h \
+ /usr/include/asm/ioctls.h /usr/include/asm/ioctl.h ./msg.h
+msg5.o: msg5.c ../../h/util.h ../../h/config.h /usr/include/dirent.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/gnu/types.h \
+ /usr/lib/gcc-lib/i386-linux/2.7.2.1/include/stddef.h \
+ /usr/include/sys/types.h /usr/include/linux/types.h \
+ /usr/include/linux/posix_types.h /usr/include/asm/posix_types.h \
+ /usr/include/asm/types.h /usr/include/sys/bitypes.h \
+ /usr/include/linux/limits.h /usr/include/linux/dirent.h \
+ /usr/include/posix1_lim.h /usr/include/string.h \
+ /usr/include/sys/time.h /usr/include/linux/time.h /usr/include/time.h \
+ ../../h/config.old.h /usr/include/stdio.h /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/ctype.h /usr/include/endian.h \
+ /usr/include/bytesex.h /usr/include/setjmp.h /usr/include/jmp_buf.h \
+ /usr/include/i386/jmp_buf.h /usr/include/signal.h \
+ /usr/include/linux/signal.h /usr/include/asm/signal.h \
+ /usr/include/errno.h /usr/include/linux/errno.h \
+ /usr/include/asm/errno.h ../../h/mmdf.h ../../h/ll_log.h \
+ ../../h/conf.h /usr/include/pwd.h /usr/include/sys/stat.h \
+ /usr/include/linux/stat.h ./msg.h
+msg6.o: msg6.c ../../h/util.h ../../h/config.h /usr/include/dirent.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/gnu/types.h \
+ /usr/lib/gcc-lib/i386-linux/2.7.2.1/include/stddef.h \
+ /usr/include/sys/types.h /usr/include/linux/types.h \
+ /usr/include/linux/posix_types.h /usr/include/asm/posix_types.h \
+ /usr/include/asm/types.h /usr/include/sys/bitypes.h \
+ /usr/include/linux/limits.h /usr/include/linux/dirent.h \
+ /usr/include/posix1_lim.h /usr/include/string.h \
+ /usr/include/sys/time.h /usr/include/linux/time.h /usr/include/time.h \
+ ../../h/config.old.h /usr/include/stdio.h /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/ctype.h /usr/include/endian.h \
+ /usr/include/bytesex.h /usr/include/setjmp.h /usr/include/jmp_buf.h \
+ /usr/include/i386/jmp_buf.h /usr/include/signal.h \
+ /usr/include/linux/signal.h /usr/include/asm/signal.h \
+ /usr/include/errno.h /usr/include/linux/errno.h \
+ /usr/include/asm/errno.h ../../h/mmdf.h ../../h/ll_log.h \
+ ../../h/conf.h
+msgtailor.o: msgtailor.c ./msg.h
 # DEPENDENCIES MUST END AT END OF FILE
 # IF YOU PUT STUFF HERE IT WILL GO AWAY
 # see make depend above
