@@ -4,6 +4,10 @@
 Configuring MMDF Authorisation
 .SH DESCRIPTION
 
+Authorization is done in 2 passes. First pass is
+host/channel-authozation. The second one is user authorization.
+
+
 .SH STEPS
 .NH S1
   1) search key 'host_out' in table 'chan_out->outdest'
@@ -16,14 +20,36 @@ Configuring MMDF Authorisation
                       b) 'chan_out->chan_name' with value
                       c) 'host_out'            with value
 .NH S1
-  3) search key 'chan_in->chan_name' in table 'chan_out->outsource'
+  3a) search key 'chan_in->chan_name' in table 'chan_out->outsource'
      if found compare a) check if value is empty
                       b) 'host_out'            with value
 .NH S1
-  4) search key 'chan_out->chan_name' in table 'chan_in->indest'
+  3b) search key 'host_in' in table 'chan_out->outsource'
+     if found compare a) check if value is empty
+                      b) 'host_out'            with value
+.NH S1
+  4a) search key 'chan_out->chan_name' in table 'chan_in->indest'
+     if found compare a) check if value is empty
+                      b) 'host_in'             with value
+.NH S1
+  4b) search key 'host_out' in table 'chan_in->indest'
      if found compare a) check if value is empty
                       b) 'host_in'             with value
 .NH G
+
+.B auth= 
+<
+.I dho
+>
+.RS
+Use routing information instead of hostname
+
+.B auth= 
+<
+.I hau
+>
+.RS
+if host-authorization passed, do user-authorization.
 
 .PP
 .SH FILES

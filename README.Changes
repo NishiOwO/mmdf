@@ -7,8 +7,8 @@ Changes between 2.44b4 and 2.44+a6
      + RCPT-cmd: DSN currently disabled
      + smtp-client: added extension SIZE and DSN of MAIL FROM, RCPT TO
        currently disabled 
-   - first attempt of wildcard-support
-   - Added first attempt of rbl-support
+   - first attempt of wildcard-support (disabled)
+   - Added first attempt of rbl-support (disabled)
    - Added program check.pl
    - Submit: added checking of sender
 
