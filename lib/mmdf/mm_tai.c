@@ -716,20 +716,20 @@ int tb_tai (argc, argv)
         {
             case CMDTFDBM:
               tbptr -> tb_type = TBT_DBM;
-              snprintf(tb_bw_text, sizeof(tb_bw_text),
-                       "%s flags=dbm, use type=dbm", tb_bw_text);
+              strncat(tb_bw_text, "flags=dbm, use type=dbm",
+                      sizeof(tb_bw_text)-strlen(tb_bw_text));
               break;
 
             case CMDTFNS:
               tbptr -> tb_type = TBT_NS;
-              snprintf(tb_bw_text, sizeof(tb_bw_text),
-                       "%s flags=ns, use type=ns", tb_bw_text);
+              strncat(tb_bw_text, "flags=ns, use type=ns",
+                      sizeof(tb_bw_text)-strlen(tb_bw_text));
               break;
 #ifdef HAVE_NIS
             case CMDTFNIS:
               tbptr -> tb_type = TBT_NIS;
-              snprintf(tb_bw_text, sizeof(tb_bw_text),
-                       "%s flags=, use type=nis", tb_bw_text);
+              strncat(tb_bw_text, "flags=, use type=nis",
+                      sizeof(tb_bw_text)-strlen(tb_bw_text));
               break;
 #endif /* HAVE_NIS */
         }
