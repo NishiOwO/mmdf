@@ -262,18 +262,18 @@ char	*mboxname;
         goto closeit;
       }
     }
-    if (lo_size && *lo_size) {
-      char buffer[BUFSIZ];
-      int len;
+/*     if (lo_size && *lo_size) { */
+/*       char buffer[BUFSIZ]; */
+/*       int len; */
 
-      (void) sprintf (buffer, "X-Envelope-Size: %s\n", lo_size);
-      len = strlen(buffer);
-      if (write (mbx_fd, buffer, len) != len) {
-        ll_err (logptr, LLOGTMP, "error writing out X-Envelope-Size");
-        retval = RP_LIO;
-        goto closeit;
-      }
-    }
+/*       (void) sprintf (buffer, "X-Envelope-Size: %s\n", lo_size); */
+/*       len = strlen(buffer); */
+/*       if (write (mbx_fd, buffer, len) != len) { */
+/*         ll_err (logptr, LLOGTMP, "error writing out X-Envelope-Size"); */
+/*         retval = RP_LIO; */
+/*         goto closeit; */
+/*       } */
+/*     } */
 	retval = qu2lo_txtcpy (mbx_fd, TRUE);
   closeit:
 	mbx_close (mboxname);
