@@ -25,12 +25,13 @@ char *datbuf;
 {
 	register	struct	tm	*i;
 			time_t		tsec;
-    int tz_num = timezone/3600;
+    int tz_num;
 
     time(&tsec);
 	i = localtime(&tsec);
+    tz_num = timezone/3600;
 
-    tz_num += i->tm_isdst;
+    tz_num -= i->tm_isdst;
     if (tz_num < 0) tz_num = -tz_num;
 
 	switch (flag) {
