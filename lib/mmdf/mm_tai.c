@@ -452,6 +452,9 @@ LOCVAR Cmd
 #define CMDTFPARTIAL    7
 #define CMDTFABORT      8
 #define CMDTFROUTE      9
+#ifdef HAVE_NIS
+#  define CMDTFNIS       10
+#endif /* HAVE_NIS */
 
 LOCVAR Cmd
 	tbflags [] =
@@ -461,6 +464,9 @@ LOCVAR Cmd
     "dbm",	CMDTFDBM,	0,
     "domain",   CMDTFDOMAIN,    0,
     "file",	CMDTFFILE,	0,
+#ifdef HAVE_NIS
+    "nis",      CMDTFNIS,       0,
+#endif /* HAVE_NIS */
     "ns",	CMDTFNS,	0,
     "partial",  CMDTFPARTIAL,   0,
     "route",    CMDTFROUTE,     0,
@@ -475,6 +481,10 @@ tb_tai (argc, argv)
 {
     int ind;
     register Table *tbptr;
+#ifdef HAVE_NIS
+    extern Table tb_mailids;
+    extern Table tb_users;
+#endif /* HAVE_NIS */
 
 #ifdef DEBUG
     ll_log (logptr, LLOGFTR, "tb_tai (%s: %d)", argv[0], argc);
@@ -589,6 +599,12 @@ tb_tai (argc, argv)
 			    tbptr -> tb_flags |= TB_ROUTE;
 			    break;
 
+#ifdef HAVE_NIS
+		        case CMDTFNIS:
+		            tbptr -> tb_flags |= TB_NIS;
+		            break;
+ 
+#endif /* HAVE_NIS */
 			default:
 			    tai_error ("unknown table flag", argv[ind-1],
 					argc, argv);
@@ -613,6 +629,20 @@ tb_tai (argc, argv)
 		tbptr -> tb_flags);
 #endif
 
+#ifdef HAVE_NIS
+    if( strcmp(tbptr -> tb_name, "users") == 0) {
+      tb_users.tb_flags = tbptr -> tb_flags;
+      tb_users.tb_file = tbptr -> tb_file;
+      free(tb_list[tb_numtables]);
+      tb_numtables--;
+    }
+    if( strcmp(tbptr -> tb_name, "mailids") == 0) {
+      tb_mailids.tb_flags = tbptr -> tb_flags;
+      tb_mailids.tb_file = tbptr -> tb_file;
+      free(tb_list[tb_numtables]);
+      tb_numtables--;
+    }
+#endif /* HAVE_NIS */
     return (YES);
 }
 /**/
