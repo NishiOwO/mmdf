@@ -159,13 +159,13 @@ extern char
 Cmd cmdtab[] =
 {
     {"",            MMNOOP,     0},
-#ifdef HAVE_ESMTP
+#ifdef HAVE_ESMTP_8BITMIME
     {"accept8bitmime",M8BITMIME, 1},
 #endif
     {"alias",	    ALIAS,      1},
     {"authlog",     AUTHLOG,    1},
     {"authrequest", AUTHREQUEST, 1},
-#ifdef HAVE_ESMTP
+#ifdef HAVE_ESMTP_DSN
     {"dsn",         MDSN,       1},
 #endif
     {"maddid",	    MADDID,     1},
@@ -450,12 +450,16 @@ int mm_tai (argc, argv)     /* process mmdf tailor info     */
         case MMSGSIZELIMIT:
           message_size_limit = atol(argv[1]);
           break;
+#   ifdef HAVE_ESMTP_8BITMIME
         case M8BITMIME:
           accept_8bitmime = atoi(argv[1]);
           break;
+#   endif /* HAVE_ESMTP_8BITMIME */
+#   ifdef HAVE_ESMTP_DSN
         case MDSN:
           dsn = atoi(argv[1]);
           break;
+#   endif /* HAVE_ESMTP_DSN */
 #endif /* HAVE_ESMTP */
     }
 
