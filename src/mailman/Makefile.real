@@ -1,0 +1,52 @@
+#
+# Block Address Channel
+#
+
+MODULES =	ch_mailman qu2mm_send mm_wtmail
+
+OBJECTS =	ch_mailman.o qu2mm_send.o mm_wtmail.o
+
+SOURCES =	ch_mailman.c qu2mm_send.c mm_wtmail.c
+
+real-default:	mailman
+
+install:	$(MCHNDIR)/mailman
+
+$(MCHNDIR)/mailman  :   xmailman
+	$(INSTALL) -c -m 0$(PGMPROT)  -o  $(MMDFLOGIN) \
+		xmailman $(MCHNDIR)/mailman
+#	cp xmailman $(MCHNDIR)/mailman
+#	-$(CHOWN) $(MMDFLOGIN) $(MCHNDIR)/mailman
+#	-chmod 0$(PGMPROT) $(MCHNDIR)/mailman
+	-@ls -ls $(MCHNDIR)/mailman
+	-@echo "mailman channel installed normally"; echo ""
+	@echo "$(MCHNDIR)/$(MMPREF)mailman" >> ${filelist}
+
+mailman:   xmailman
+	-@echo
+xmailman:  $(OBJECTS) $(MMDFLIBS)
+	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(MMDFLIBS) $(SYSLIBS)
+
+lint:   ;  $(LINT) $(LFLAGS) $(SOURCES) $(LLIBS)
+
+clean:
+	-rm -f xmailman *.o x.c makedep eddep make.out errs
+
+
+# DO NOT DELETE THIS LINE -- make depend uses it
+
+ch_mailman.o: ch_mailman.c
+ch_mailman.o: ../../h/util.h
+ch_mailman.o: ../../h/mmdf.h
+ch_mailman.o: ../../h/ap.h
+ch_mailman.o: ../../h/phs.h
+ch_mailman.o: ../../h/ch.h
+qu2mm_send.o: qu2mm_send.c
+qu2mm_send.o: ../../h/util.h
+qu2mm_send.o: ../../h/mmdf.h
+qu2mm_send.o: ../../h/phs.h
+qu2mm_send.o: ../../h/ch.h
+qu2mm_send.o: ../../h/ap.h
+# DEPENDENCIES MUST END AT END OF FILE
+# IF YOU PUT STUFF HERE IT WILL GO AWAY
+# see make depend above
