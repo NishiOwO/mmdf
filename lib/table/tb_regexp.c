@@ -48,8 +48,8 @@ Table *tblptr;
     (parmdef *)malloc(sizeof(parmdef));
 
   memset(tblptr -> tb_parameters, 0, sizeof(parmdef));
-//  param->cflags = REG_ICASE|REG_NEWLINE;
-//  param->eflags = 0;
+/*  param->cflags = REG_ICASE|REG_NEWLINE;*/
+/*  param->eflags = 0; */
          
   tblptr -> tb_tai   = &tb_regexp_tai;
   /*tblptr -> tb_k2val = NULL;*/
