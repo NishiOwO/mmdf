@@ -491,13 +491,15 @@ more than one flag.
 Currently this is used to specify various table options - source type,
 nameserver lookup parameters, and control of partial lookups.
 .sp
-There are three source types defined: ``file'', ``dbm'', and ``ns''.
+There are three source types defined: ``file'', ``dbm'', ``ns'' and ``nis''.
 The type ``file'' means that the table comes from a sequentially
 read file (the default).
 The type ``dbm'' indicates that the table is in the MMDF hashed
 database built with \fIdbmbuild\fR.
 The type ``ns'' indicates that the table data is obtained by making
 queries on a nameserver.  
+The type ``nis'' indicates that the table data is obtained by making
+queries on a nis-server.  
 .sp
 In the case of an ns-type table,
 the ``flags'' field will also specify the type of nameserver lookup.
@@ -573,6 +575,13 @@ A mapping of usernames to Mail-IDs
 .IP mailids 10
 A mapping of Mail-IDs to usernames
 .RE
+.LP
+But the definition of these two tables may be changed by
+.DS
+MTBL  users,   file="users.nis.map",   flags=nis
+MTBL  mailids, file="mailids.nis.map", flags=nis
+.DE
+This will ask the NIS server to get the data from the map named by file.
 .PP
 The aliases tables are sometimes compiled in from the configuration
 file chan.c, so they can be left out of a runtime configuration.
