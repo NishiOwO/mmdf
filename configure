@@ -2049,7 +2049,7 @@ echo $PATH_GCC
 echo "==>${CFLAGS}"
 echo "==>${CPPFLAGS}"
 if test "$includedir" = '${prefix}/include'; then
-  if test "x$prefix" != xNONE; then
+  if test "x$prefix" != xNONE && test "x$prefix" != "x/usr"; then
     CPPFLAGS="-I${prefix}/include ${CPPFLAGS}"
     CFLAGS="-I${prefix}/include ${CFLAGS}"
     ac_configure_args="$ac_configure_args --includedir=${prefix}/include"
