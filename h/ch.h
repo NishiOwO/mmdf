@@ -12,21 +12,26 @@ struct tb_struct
     long     tb_pos;            /* position in file                     */
     int	     tb_flags;		/* various bits	(type of table, etc)	*/
 };
-#define	TB_SRC	000007			/* Source of table data */
+#define	TB_SRC	000077			/* Source of table data */
 #define	TB_FILE		000000		/* Read from file */
 #define	TB_DBM		000000		/* Read from DBM database */
 #define	TB_NS		000001		/* Read from Nameserver */
 #ifdef HAVE_NIS
 #  define TB_NIS        000002          /* Read from NIS-server */
 #endif /* HAVE_NIS */
-
-#define TB_TYPE		000030		/* what type of question to ask NS */
-#define TB_DOMAIN	000010		/* ask the nameserver for a domain */
-#define TB_CHANNEL	000020		/* ask the nameserver for a channel */
-/* fine PLACE_HOLDER	000040		/ * Used to be TB_ROOT */
-#define TB_PARTIAL	000100	/* enable trying partial domain matches */
-#define TB_ABORT        000200 /* don't look at other domains upon NS timeout */
-#define TB_ROUTE        000400 /* enable routing via subdomain matches */
+/* fine TB_         000003      / * */
+/* fine TB_LDAP     000004      / * */
+/* fine TB_SQL      000005      / * */
+/* fine TB_         000006      / * */
+/* fine TB_         000007      / * */
+/* fine TB_         000010      / * */
+#define TB_TYPE		000300		/* what type of question to ask NS */
+#define TB_DOMAIN	000100		/* ask the nameserver for a domain */
+#define TB_CHANNEL	000200		/* ask the nameserver for a channel */
+/* fine PLACE_HOLDER	000400		/ * Used to be TB_ROOT */
+#define TB_PARTIAL	001000	/* enable trying partial domain matches */
+#define TB_ABORT        002000 /* don't look at other domains upon NS timeout */
+#define TB_ROUTE        004000 /* enable routing via subdomain matches */
 
 typedef struct tb_struct    Table;
 

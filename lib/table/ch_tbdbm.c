@@ -96,8 +96,9 @@ int     pos;                    /* which position to get  (0 = first) */
 	ll_log( logptr, LLOGFTR, "h2chan table '%s'",
 		chanptr->ch_table->tb_name);
 #endif
+      switch(chanptr -> ch_table -> tb_flags & TB_SRC) {
 #ifdef HAVE_NAMESERVER
-	if ((chanptr -> ch_table -> tb_flags & TB_SRC) == TB_NS) {
+          case TB_NS:
 	    if (!ns_done) {
 		/*
 		 * assumes the fact we are looking for a 'channel'
@@ -128,10 +129,10 @@ int     pos;                    /* which position to get  (0 = first) */
 	    if (lexequ (chanptr -> ch_name, ch_dflnam))
 		return( (Chan *)OK );   /* local ref             */
 	    return( chanptr );
-	}
-	else
+            break;
 #endif /* HAVE_NAMESERVER */
-	{
+
+          default:
 	    if (!dbm_done) {
 		dbm_done++;
 		if (tb_fetch (hostr, dbm))
@@ -151,7 +152,8 @@ int     pos;                    /* which position to get  (0 = first) */
 		    return(chanptr);
 		}
 	    }
-	}
+        break;
+      }
     }
 
     return ((Chan *) NOTOK);
@@ -187,9 +189,10 @@ char    *dmbuf;                 /* Domain route buffer */
 	if (((dmnptr -> dm_table -> tb_flags & TB_PARTIAL) != TB_PARTIAL) ||
 	    (!isstr(dmnptr->dm_domain)))
 	    continue;
+      switch(dmnptr -> dm_table -> tb_flags & TB_SRC) {
 #ifdef HAVE_NAMESERVER
-	if ((dmnptr -> dm_table -> tb_flags & TB_SRC) == TB_NS) {
-	    sprintf(sdbuf, "%s.%s", subdomain, dmnptr->dm_domain);
+          case TB_NS:
+            snprintf(sdbuf, sizeof(sdbuf), "%s.%s", subdomain, dmnptr->dm_domain);
 	    switch (ns_fetch(dmnptr->dm_table,sdbuf,official,1)) {
 	    case OK:
 	        /* route is simply official name */
@@ -198,10 +201,9 @@ char    *dmbuf;                 /* Domain route buffer */
 	    case MAYBE:
 	        return( (Domain *)MAYBE);
 	    }
-	}
-	else
+            break;
 #endif /* HAVE_NAMESERVER */
-	{
+          default:
 	    if (!dbm_done) {
 		dbm_done++;
 		if (tb_fetch (subdomain, dbm))
@@ -369,8 +371,9 @@ LOCVAR struct DBvalues *dp = (struct DBvalues *) 0;
 			table -> tb_name, first, name);
 #endif
 
+    switch(table->tb_flags&TB_SRC) {
 #ifdef HAVE_NAMESERVER
-    if ((table->tb_flags&TB_SRC) == TB_NS) {
+        case TB_NS:
 	if ((retval = ns_fetch (table, name, buf, first)) != NOTOK)
 	    return (retval);
 #ifdef DEBUG
@@ -378,11 +381,11 @@ LOCVAR struct DBvalues *dp = (struct DBvalues *) 0;
 #endif
 	(void) strcpy (buf, "(ERROR)");
 	return (NOTOK);
-    }
+          break;
 #endif /* HAVE_NAMESERVER */
 
 #ifdef HAVE_NIS
-    if ((table->tb_flags&TB_SRC) == TB_NIS) {
+        case TB_NIS:
       domain = NULL;
 
       if (domain == NULL) /* get NIS-domain first */
@@ -414,9 +417,12 @@ LOCVAR struct DBvalues *dp = (struct DBvalues *) 0;
 #endif
        (void) strcpy (buf, "(ERROR)");
        return (NOTOK);
-    }
+          break;
 #endif /* HAVE_NIS */
 
+        default:
+          break;
+    }
     if (!first)
 	dp++;
     else
