@@ -1,11 +1,13 @@
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
  *
- * $Id: cnvtbytestr.c,v 1.1 2001/02/28 21:27:31 krueger Exp $
+ * $Id: cnvtbytestr.c,v 1.2 2001/02/28 21:37:16 krueger Exp $
  *
  *
  * Written by Kai Krueger
  * Email: krueger@mathematik.uni-kl.de                                            *
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+
+#include <stdio.h>
 
 void cnvtbytestr(str, val)
 char *str;
