@@ -145,8 +145,10 @@ char **argv;
 
 	logx("running with uid=%d, euid=%d", getuid(), geteuid());
 	logx("running with gid=%d, egid=%d", getgid(), getegid());
+#ifdef LINUX
 	signal( SIGCHLD, sig17);
-
+#endif
+    
 	while (1) {
 		extern	char			*inet_ntoa();
 			struct	sockaddr_in	rmtaddr;

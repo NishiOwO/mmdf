@@ -321,11 +321,11 @@ smtp()
 {
 	char	*smtpd = dupfpath(SMTPSRVR, chndfldir);
 
-#if defined(LINUX)
+#ifdef HAVE_SETREUID
 	setreuid(geteuid(),geteuid());
-#else
+#else /* HAVE_SETREUID */
 	setuid(geteuid());	/* Must become "mmdf" for real */
-#endif
+#endif /* HAVE_SETREUID */
 	execl (smtpd, "sendmail-smtp", from, locname, "local", (char *)0);
 	perror(smtpd);
 	exit(9);

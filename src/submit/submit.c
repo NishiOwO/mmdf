@@ -336,13 +336,13 @@ mn_dirinit ()                     /* current loc? chdir to home; setuid */
     if (chdir (quedfldir) == NOTOK) /* change wdir into mail queues       */
 	err_abrt (RP_LIO, "Unable to change directory.");
 
-#ifdef LINUX
+#ifdef HAVE_SETREUID
     setreuid (userid);              /* so we have the user's privileges   */
                                 /*   to access address files          */
-#else /* LINUX */
+#else /* HAVE_SETREUID */
     setuid (userid);              /* so we have the user's privileges   */
 				  /*   to access address files          */
-#endif /* LINUX */
+#endif /* HAVE_SETREUID */
 }
 /*******************  (prm_) USER PARAMETER HANDLING  *************** */
 

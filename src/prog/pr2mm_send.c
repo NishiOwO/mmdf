@@ -24,7 +24,7 @@
  *	University of Cambridge Computer Laboratory
  *	October 1985
  *	
- *	July 86 - Added #ifdef V4_2BSD around return(status.w_status);	
+ *	July 86 - Added #ifdef V 4_2BSD around return(status.w_status);	
  *		Added #ifdef NODUP2 - ECB
  */
 
@@ -116,13 +116,11 @@ char *signame (sig)
 {
     static char buff[24];
 #ifdef SYS_SIGLIST_DECLARED
+    extern char *sys_siglist[];
     /* I know that the following code does not work on SysVr3 since
      * libc.a doesn't have a "sys_siglist".  Possibly this only works
      * on 4.[23]BSD? -- David Herron <david@ms.uky.edu>
      */
-#if !defined(SYS_SIGLIST_DECLARED) && !defined(LINUX)
-    extern char *sys_siglist[];
-#endif /* SYS_SIGLIST_DECLARED */
 
     if (sig >= 0 && sig < NSIG) {
 	return (sys_siglist [sig]);
@@ -169,18 +167,18 @@ main (argc, argv)
 	close (pp[0]);
 	child (argc, argv);
     } else {
-	int rc, stopped;
-	int do_msg = 0;
-#ifdef V4_2BSD	/* WIFSTOPPED instead? -- DSH */
-#  ifndef SYS5
-	union wait status;
+      int rc, stopped;
+      int do_msg = 0;
+#ifdef HAVE_UNION_WAIT
+#ifdef SYS5
+      union wait status;
 #  else /* SYS5 */
       int status;
 #    undef WIFSTOPPED
 #  endif /* SYS5 */
-#else /* V4_2BSD */
+#else /* HAVE_UNION_WAIT */
     	int status;
-#endif /* V4_2BSD */
+#endif /* HAVE_UNION_WAIT */
 
 	close (pp[1]);
 

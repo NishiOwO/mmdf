@@ -18,7 +18,7 @@
  *	University of Cambridge Computer Laboratory
  *	October 1985
  *	
- *	July 86 - Added #ifdef V4_2BSD around <sys/file.h>	
+ *	July 86 - Added #ifdef V 4_2BSD around <sys/file.h>	
  *		ECB	
  */
 
