@@ -1102,11 +1102,14 @@ mgt_dstgen()
 
 LOCFUN char *print_via_protocol()
 {
+  char p[6];
+  memset(p, 0, sizeof(p));
+  
 #ifdef HAVE_ESMTP
   switch(mgt_protocol) {
-    case PRK_SMTP:  return "SMTP";
-    case PRK_ESMTP: return "ESMTP";
+    case PRK_SMTP:  strncpy(p, "SMTP", sizeof(p)); break;
+    case PRK_ESMTP: strncpy(p, "ESMTP", sizeof(p)); break;
   }
 #endif
-  return "";
+  return p;
 }
