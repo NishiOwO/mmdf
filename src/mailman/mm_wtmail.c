@@ -132,6 +132,7 @@ lo_dopipe()
 
         case OK:
           /* Child */
+          sleep(1);
 #ifdef DEBUG
           ll_log (logptr, LLOGBTR, "lo_dopipe() child (%s %s %s)",
                   chanptr->ch_confstr, lo_parmv[0], lo_parmv[1]);
