@@ -1323,7 +1323,7 @@ AC_DIVERT_POP()dnl
 T12,103
 AC_ARG_ARRAYerrprint(__file__:__line__: [$0] has been removed; don't do unportable things with arguments
 )m4exit(4)
-T18,19548
+T18,21343
 AC_INIT_PARSE_ARGSAC_PRO([AC_INIT_PARSE_ARGS])
 # Initialize some variables set by options.
 # The variables have the same names as the options, with
@@ -1361,12 +1361,18 @@ includedir='${prefix}/include'
 oldincludedir='/usr/include'
 infodir='${prefix}/info'
 mandir='${prefix}/man'
-varprefix='/var/spool'
-mmdfprefix='${prefix}/mmdf'
-mmdfphasedir='${varprefix}/mmdf/log/phase'
-mmdflogdir='${varprefix}/mmdf/log'
-mmdfdiallog='${mmdflogdir}/dial_log'
-mmdfspooldir='${varprefix}/mmdf/home'
+varprefix='/var'
+mmdfprefix='${prefix}/lib/mmdf'
+mcmddir='${mmdfprefix}/lib'
+mchndir='${mmdfprefix}/chans'
+mtbldir='${mmdfprefix}/table'
+# mquedir='${varprefix}/mmdf/home'
+# mphsdir='${varprefix}/mmdf/log/phase'
+# mlogdir='${varprefix}/mmdf/log'
+mquedir='${varprefix}/spool/mmdf'
+mphsdir='${varprefix}/state/mmdf'
+mlogdir='${varprefix}/log/mmdf'
+d_calllog='${mlogdir}/dial_log'
 if test "$mmdfdebug"  = ""; then mmdfdebug=0;  fi
 if test "$mmdfdlog"   = ""; then mmdfdlog=0;   fi
 if test "$mmdfdbglog" = ""; then mmdfdbglog=0; fi
@@ -1374,10 +1380,13 @@ if test "$mmdfnodomlit" = ""; then mmdfnodomlit=0; fi
 if test "$mmdfleftdots" = ""; then mmdfleftdots=0; fi
 if test "$mmdfstatsort" = ""; then mmdfstatsort=0; fi
 if test "$mmdfcitation" = ""; then mmdfcitation=0; fi
-used_mmdfphasedir=0
-used_mmdflogdir=0
-used_mmdfdiallog=0
-used_mmdfspooldir=0
+used_mcmddir=0
+used_mchndir=0
+used_mtbldir=0
+used_mphsdir=0
+used_mlogdir=0
+used_d_calllog=0
+used_mquedir=0
 
 # Initialize some other variables.
 subdirs=
@@ -1517,10 +1526,17 @@ Directory and file names:
   --srcdir=DIR            find the sources in DIR [configure dir or ..]
   --varprefix=DIR         x in DIR [PREFIX/var]
 
-  --mmdf-logdir=DIR       x in DIR [VARPREFIX/mmdf/log]
-  --mmdf-phasedir=DIR     x in DIR [VARPREFIX/mmdf/log/phase]
-  --mmdf-spooldir=DIR     x in DIR [VARPREFIX/mmdf/home]
-  --mmdf-diallog=FILE     x in FILE [MMDFLOGDIR/dial_log]
+  --mlogdir=DIR           x in DIR [VARPREFIX/mmdf/log]
+  --mphsdir=DIR           x in DIR [VARPREFIX/mmdf/log/phase]
+  --mcmddir=DIR           x in DIR [MMDFPREFIX/lib]
+  --mchndir=DIR           x in DIR [MMDFPREFIX/chans]
+  --mtbldir=DIR           x in DIR [MMDFPREFIX/table]
+  --d_calllog=FILE        x in FILE [MLOGDIR/dial_log]
+
+  --mmdf-spooldir=DIR     obselete --mquedir
+  --mmdf-logdir=DIR       obselete --mlogdir
+  --mmdf-phasedir=DIR     obselete --mphsdir
+  --mmdf-diallog=FILE     obselete --d_calllog
 
   --program-prefix=PREFIX prepend PREFIX to installed program names
   --program-suffix=SUFFIX append SUFFIX to installed program names
@@ -1589,6 +1605,11 @@ EOF
   -mandir=* | --mandir=* | --mandi=* | --mand=* | --man=* | --ma=* | --m=*)
     mandir="$ac_optarg" ;;
 
+  -mlogdir | --mlogdir | --mlogdi | --mlogd | --mlog)
+    ac_prev=mlogdir ;;
+  -mlogdir=* | --mlogdir=* | --mlogdi=* | --mlogd=* | --mlog=*)
+    mlogdir="$ac_optarg"; used_mlogdir=1 ;;
+
   -mmdf-citation | --mmdf-citation | --mmdf-citatio | --mmdf-citati \
   | --mmdf-citat | --mmdf-cita | --mmdf-cit | --mmdf-ci | --mmdf-c )
     ac_prev=mmdfcitation ;;
@@ -1610,10 +1631,10 @@ EOF
   -mmdf-debug=* | --mmdf-debug=* | --mmdf-debu=* | --mmdf-deb=* | --mmdf-de=* )
     mmdfdebug="$ac_optarg" ;;
 
-  -mmdf-diallog | --mmdf-diallog | --mmdf-diallo | --mmdf-diall | --mmdf-dial | --mmdf-dia)
-    ac_prev=mmdfdiallog ;;
-  -mmdf-diallog=* | --mmdf-diallog=* | --mmdf-diallo=* | --mmdf-diall=* | --mmdf-dial=* | --mmdf-dia=*)
-    mmdfdiallog="$ac_optarg"; used_mmdfdiallog=1 ;;
+  -d_calllog | --d_calllog | --d_calllo | --d_calll | --d_call)
+    ac_prev=d_calllog ;;
+  -d_calllog=* | --d_calllog=* | --d_calllo=* | --d_calll=* | --d_call=*)
+    d_calllog="$ac_optarg"; used_d_calllog=1 ;;
 
   -mmdf-dlog | --mmdf-dlog | --mmdf-dlo | --mmdf-dl )
     if test "$mmdfdlog" = 0; then
@@ -1630,13 +1651,6 @@ EOF
 	mmdfleftdots=0
     fi ;;
 
-  -mmdf-logdir | --mmdf-logdir | --mmdf-logdi | --mmdf-logd | --mmdf-log \
-  | --mmdf-lo )
-    ac_prev=mmdflogdir ;;
-  -mmdf-logdir=* | --mmdf-logdir=* | --mmdf-logdi=* | --mmdf-logd=* | --mmdf-log=* \
-  | --mmdf-lo=* )
-    mmdflogdir="$ac_optarg"; used_mmdflogdir=1 ;;
-
   -mmdf-nodomlit | --mmdf-nodomlit | --mmdf-nodomli | --mmdf-nodoml \
   | --mmdf-nodom | --mmdf-nodo | --mmdf-nod | --mmdf-no | --mmdf-n )
     if test "$mmdfnodomlit" = 0; then
@@ -1645,26 +1659,12 @@ EOF
 	mmdfnodomlit=0
     fi ;;
 
-  -mmdf-phasedir | --mmdf-phasedir | --mmdf-phasedi | --mmdf-phased | --mmdf-phase | --mmdf-phas \
-  | --mmdf-pha | --mmdf-ph)
-    ac_prev=mmdfphasedir ;;
-  -mmdf-phasedir=* | --mmdf-phasedir=* | --mmdf-phasedi=* | --mmdf-phased=* | --mmdf-phase=* \
-  | --mmdf-phas=* | --mmdf-pha=* | --mmdf-ph=*)
-    mmdfphasedir="$ac_optarg"; used_mmdfphasedir=1 ;;
-
   -mmdf-prefix | --mmdf-prefix | --mmdf-prefi | --mmdf-pref | --mmdf-pre \
   | --mmdf-pr )
     ac_prev=mmdfprefix ;;
   -mmdf-prefix=* | --mmdf-prefix=* | --mmdf-prefi=* | --mmdf-pref=* \
   | --mmdf-pre=* | --mmdf-pr=* )
     mmdfprefix="$ac_optarg"; used_mmdfprefix=1 ;;
-
-  -mmdf-spooldir | --mmdf-spooldir | --mmdf-spooldi | --mmdf-spoold | --mmdf-spool | --mmdf-spoo \
-  | --mmdf-spo | --mmdf-sp)
-    ac_prev=mmdfspooldir ;;
-  -mmdf-spooldir=* | --mmdf-spooldir=* | --mmdf-spooldi=* | --mmdf-spoold=* | --mmdf-spool=* \
-  | --mmdf-spoo=* | --mmdf-spo=* | --mmdf-sp=*)
-    mmdfspooldir="$ac_optarg"; used_mmdfspooldir=1 ;;
 
   -mmdf-statsort | --mmdf-statsort | --mmdf-statsor | --mmdf-statso \
   | --mmdf-stats | --mmdf-stat | --mmdf-sta | --mmdf-st )
@@ -1673,6 +1673,31 @@ EOF
     else
 	mmdfstatsort=0
     fi ;;
+
+  -mcmddir | --mcmddir | --mcmddi | --mcmdd | --mcmd)
+    ac_prev=mcmddir ;;
+  -mcmddir=* | --mcmddir=* | --mcmddi=* | --mcmdd=* | --mcmd=*)
+    mcmddir="$ac_optarg"; used_mcmddir=1 ;;
+
+  -mchndir | --mchndir | --mchndi | --mchnd | --mchn)
+    ac_prev=mchndir ;;
+  -mchndir=* | --mchndir=* | --mchndi=* | --mchnd=* | --mchn=*)
+    mchndir="$ac_optarg"; used_mchndir=1 ;;
+
+  -mtbldir | --mtbldir | --mtbldi | --mtbld | --mtbl)
+    ac_prev=mtbldir ;;
+  -mtbldir=* | --mtbldir=* | --mtbldi=* | --mtbld=* | --mtbl=*)
+    mtbldir="$ac_optarg"; used_mtbldir=1 ;;
+
+  -mphsdir | --mphsdir | --mphsdi | --mphsd | --mphs)
+    ac_prev=mphsdir ;;
+  -mphsdir=* | --mphsdir=* | --mphsdi=* | --mphsd=* | --mphs=*)
+    mphsdir="$ac_optarg"; used_mphsdir=1 ;;
+
+  -mquedir | --mquedir | --mquedi | --mqued | --mque)
+    ac_prev=mquedir ;;
+  -mquedir=* | --mquedir=* | --mquedi=* | --mqued=* | --mque=*)
+    mquedir="$ac_optarg"; used_mquedir=1 ;;
 
   -nfp | --nfp | --nf)
     # Obsolete; use --without-fp.
@@ -1831,6 +1856,33 @@ changequote([, ])dnl
   -x-libraries=* | --x-libraries=* | --x-librarie=* | --x-librari=* \
   | --x-librar=* | --x-libra=* | --x-libr=* | --x-lib=* | --x-li=* | --x-l=*)
     x_libraries="$ac_optarg" ;;
+
+dnl old options
+  -mmdf-logdir | --mmdf-logdir | --mmdf-logdi | --mmdf-logd | --mmdf-log \
+  | --mmdf-lo )
+    ac_prev=mlogdir ;;
+  -mmdf-logdir=* | --mmdf-logdir=* | --mmdf-logdi=* | --mmdf-logd=* | --mmdf-log=* \
+  | --mmdf-lo=* )
+    mlogdir="$ac_optarg"; used_mlogdir=1 ;;
+
+  -mmdf-phasedir | --mmdf-phasedir | --mmdf-phasedi | --mmdf-phased | --mmdf-phase | --mmdf-phas \
+  | --mmdf-pha | --mmdf-ph)
+    ac_prev=mphsdir ;;
+  -mmdf-phasedir=* | --mmdf-phasedir=* | --mmdf-phasedi=* | --mmdf-phased=* | --mmdf-phase=* \
+  | --mmdf-phas=* | --mmdf-pha=* | --mmdf-ph=*)
+    mphsdir="$ac_optarg"; used_mphsdir=1 ;;
+
+  -mmdf-spooldir | --mmdf-spooldir | --mmdf-spooldi | --mmdf-spoold | --mmdf-spool | --mmdf-spoo \
+  | --mmdf-spo | --mmdf-sp)
+    ac_prev=mquedir ;;
+  -mmdf-spooldir=* | --mmdf-spooldir=* | --mmdf-spooldi=* | --mmdf-spoold=* | --mmdf-spool=* \
+  | --mmdf-spoo=* | --mmdf-spo=* | --mmdf-sp=*)
+    mquedir="$ac_optarg"; used_mquedir=1 ;;
+  -mmdf-diallog | --mmdf-diallog | --mmdf-diallo | --mmdf-diall | --mmdf-dial | --mmdf-dia)
+    ac_prev=mmdfdiallog ;;
+  -mmdf-diallog=* | --mmdf-diallog=* | --mmdf-diallo=* | --mmdf-diall=* | --mmdf-dial=* | --mmdf-dia=*)
+    mmdfdiallog="$ac_optarg"; used_mmdfdiallog=1 ;;
+dnl
 
   -*) AC_MSG_ERROR([$ac_option: invalid option; use --help to show usage])
     ;;
@@ -2647,7 +2699,7 @@ if test $ac_cv_func_getpgrp_void = yes; then
   AC_DEFINE(GETPGRP_VOID)
 fi
 []AC_EPI()
-T15,3899
+T15,3947
 AC_INIT_PREPAREAC_PRO([AC_INIT_PREPARE])trap 'rm -fr conftest* confdefs* core core.* *.core $ac_clean_files; exit 1' 1 2 15
 
 # File descriptor usage:
@@ -2772,10 +2824,13 @@ AC_SUBST(spooldir)dnl
 AC_SUBST(diallog)dnl
 AC_SUBST(varprefix)dnl
 AC_SUBST(mmdfprefix)dnl
-AC_SUBST(mmdfphasedir)dnl
-AC_SUBST(mmdflogdir)dnl
-AC_SUBST(mmdfdiallog)dnl
-AC_SUBST(mmdfspooldir)dnl
+AC_SUBST(mcmddir)dnl
+AC_SUBST(mchndir)dnl
+AC_SUBST(mtbldir)dnl
+AC_SUBST(mphsdir)dnl
+AC_SUBST(mlogdir)dnl
+AC_SUBST(d_calllog)dnl
+AC_SUBST(mquedir)dnl
 []AC_EPI()
 T22,456
 AC_CHECK_HEADER_DIRENTAC_PRO([AC_CHECK_HEADER_DIRENT])ac_safe=`echo "$1" | tr './\055' '___'`

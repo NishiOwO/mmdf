@@ -1,5 +1,5 @@
 dnl
-dnl $Id: aclocal.m4,v 1.2 1998/10/10 13:47:51 krueger Exp $
+dnl $Id: aclocal.m4,v 1.3 1999/08/04 13:09:15 krueger Exp $
 dnl
 dnl
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
@@ -29,7 +29,7 @@ dnl
 dnl AC_GET_STRING(<Variable>, <Text>, <default>)
 AC_DEFUN(AC_GET_STRING,
 [
-  /bin/echo $2 ("$3") : \c"
+  /bin/echo $2 "("$3") : \c"
   read ans
   if test "$ans" = ""; then
     ans=$3
@@ -217,3 +217,118 @@ AC_DEFUN(AC_CHECK_DEFINE,
   fi
 ])
 AC_PROVIDE(AC_CHECK_DEFINE)
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl AC_SET_FHS_PATHNAME
+AC_DEFUN(AC_SET_FHS_PATHNAME,
+[
+if test "x$prefix" = "xNONE"; then
+   prefix=$ac_default_prefix
+fi
+if test "x$exec_prefix" = "xNONE"; then
+   exec_prefix="\${prefix}"
+fi
+if test "$libexecdir" = "\${exec_prefix}/libexec"; then
+   libexecdir="\${exec_prefix}/lib/mh"
+fi
+if test "$mtbldir" = "\${mmdfprefix}/table"; then
+   mtbldir="\${sysconfdir}/table"
+fi
+if test "$datadir" = "\${prefix}/share"; then
+   datadir="\${sysconfdir}"
+fi
+if test "$sysconfdir" = "\${prefix}/etc"; then
+   sysconfdir="/etc/mmdf"
+fi
+])
+AC_PROVIDE(AC_SET_FHS_PATHNAME)
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl AC_SET_OLD_PATHNAME
+AC_DEFUN(AC_SET_OLD_PATHNAME,
+[
+if test "x$prefix" = "xNONE"; then
+   prefix=$ac_default_prefix
+fi
+if test "$mmdfprefix" = "\${prefix}/lib/mmdf"; then
+   mmdfprefix="\${prefix}/mmdf"
+fi
+if test "x$exec_prefix" = "xNONE"; then
+   exec_prefix="\${prefix}/local"
+fi
+if test "$bindir" = "\${exec_prefix}/bin"; then
+   bindir="\${exec_prefix}/bin"
+fi
+if test "$sbindir" = "\${exec_prefix}/sbin"; then
+   sbindir="\${exec_prefix}/sbin"
+fi
+if test "$libexecdir" = "\${exec_prefix}/libexec"; then
+   libexecdir="\${exec_prefix}/lib/mh"
+fi
+if test "$datadir" = "\${prefix}/share"; then
+   datadir="\${mmdfprefix}/table"
+fi
+if test "$varprefix" = "/var"; then
+   varprefix="/var/spool"
+fi
+if test "$mquedir" = "\${varprefix}/spool/mmdf"; then
+   mquedir="\${varprefix}/mmdf/home"
+fi
+if test "$mphsdir" = "\${varprefix}/state/mmdf"; then
+   mphsdir="\${varprefix}/mmdf/log/phase"
+fi
+if test "$mlogdir" = "\${varprefix}/log/mmdf"; then
+   mlogdir="\${varprefix}/mmdf/log"
+fi
+if test "$sharedstatedir" != "\${prefix}/com"; then
+   dnl sharedstatedir="\${prefix}/spool/mmdf/home"
+   echo "used old syntax --sharedstatedir="
+   if test "$used_mquedir" = 0; then
+      mquedir=$sharedstatedir
+   else
+      AC_MSG_WARN("Ignoring option 'sharedstatedir='")
+   fi
+fi
+if test "$localstatedir" != "\${prefix}/var"; then
+   dnl localstatedir="\${prefix}/spool/mmdf/log"
+   echo "used old syntax --localstatedir="
+   if test "$used_mlogdir" = 0 && test "$used_mphsdir" = 0 && \
+	test "$used_d_calllog" = 0 ; then
+      mlogdir=$localstatedir
+      mphsdir=$localstatedir/phase
+      d_calllog=$localstatedir/dial_log
+   else
+      AC_MSG_WARN("Ignoring option 'localstatedir'")
+   fi
+fi
+if test "$sysconfdir" = "\${prefix}/etc"; then
+   sysconfdir="\${mmdfprefix}"
+fi
+])
+AC_PROVIDE(AC_SET_OLD_PATHNAME)
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl
+AC_DEFUN(AC_C_SUBST,[
+  eval "dummy1=\$"$1
+  while true
+  do
+    if `echo "$dummy1" | grep >/dev/null 2>&1 "{"`; then
+      eval "dummy2=$dummy1"
+      dummy1=$dummy2
+    else
+      break
+    fi
+    if test "$dummy1" = ""; then
+      break;
+    fi
+  done
+dnl  eval $2=$dummy1
+dnl  AC_SUBST($2)
+  c_$1=$dummy1
+  AC_SUBST(c_$1)
+])
+AC_PROVIDE(AC_C_SUBST)
