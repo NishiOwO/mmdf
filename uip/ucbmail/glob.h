@@ -8,11 +8,11 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  *
  *  $Log: glob.h,v $
- *  Revision 1.2  1986/01/14 14:45:28  galvin
- *  Added comment header for revision history.
+ *  Revision 1.3  1986/01/14 15:10:25  galvin
+ *  Seemed like good place to put the definition of routeq().
  *
  * Revision 1.3  86/01/14  15:10:25  galvin
  * Seemed like good place to put the definition of routeq().
