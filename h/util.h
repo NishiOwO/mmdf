@@ -20,7 +20,7 @@
 
 extern char *strcat ();
 extern char *strcpy ();
-#if defined(SYS5) || defined(ULTRIX) || defined(__STDC__)
+#if defined(SYS5) || defined(ULTRIX) || defined(__STDC__) || defined(HPUX)
 extern int sprintf ();
 #else
 extern char *sprintf ();
