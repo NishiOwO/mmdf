@@ -131,7 +131,6 @@ getfpath.o: ../../h/util.h
 getwho.o: getwho.c
 arg2str.o: arg2str.c
 arg2str.o: ../../h/util.h
-arg2str.o: /usr/include/varargs.h
 str2arg.o: str2arg.c
 str2arg.o: ../../h/util.h
 cstr2arg.o: cstr2arg.c
@@ -164,10 +163,8 @@ getgroup.o: getgroup.c
 compress.o: compress.c
 compress.o: ../../h/util.h
 multcpy.o: multcpy.c
-multcpy.o: /usr/include/varargs.h
 multcat.o: multcat.c
 multcat.o: ../../h/util.h
-multcat.o: /usr/include/varargs.h
 strdup.o: strdup.c
 strdup.o: ../../h/util.h
 gcread.o: gcread.c
@@ -186,7 +183,6 @@ nexec.o: ../../h/util.h
 nexec.o: ../../h/nexec.h
 nexec.o: /usr/include/signal.h
 nexec.o: /usr/include/fcntl.h
-nexec.o: /usr/include/varargs.h
 tai_file.o: tai_file.c
 tai_file.o: ../../h/util.h
 tai_file.o: /usr/include/sys/stat.h

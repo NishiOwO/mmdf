@@ -56,7 +56,11 @@ creatdir (dirptr, mode, owner, group)
 		    system (shcmd);
 				/* don't check if it succeeded          */
 #else /* V4_2BSD */
+#ifdef LINUX
+		    mkdir (partpath, 777);
+#else /* LINUX */
 		    mkdir (partpath);
+#endif /* LINUX */
 #endif /* V4_2BSD */
 		    if (owner != 0)
 			chown (partpath, owner, group);
