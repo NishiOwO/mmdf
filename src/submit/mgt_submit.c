@@ -64,7 +64,7 @@ extern Domain *dm_v2route();
 
 extern char *lnk_getaddr();
 LOCFUN mgt_forward(), mgt_author(), mgt_messageid(), mst_srcinfo(),
-	mgt_via(), mgt_rcv();
+	mgt_via(), mgt_locvia(), mgt_rcv();
 
 extern long tx_msize;             /* char count of message text         */
 
@@ -512,7 +512,10 @@ mgt_source ()                     /* ready to process headers */
 mgt_hinit ()                     /* ready to process headers */
 {
     if (mgt_vchan.mgt_achan != 0)
-	mgt_via();
+      mgt_via();
+    else {
+      if(mgt_doloc) mgt_locvia();
+    }
 }
 
 /*
@@ -902,6 +905,39 @@ LOCFUN
     else
       fprintf(mq_mffp, "%s didn't use HELO protocol.\n", 
 	      mgt_vchan.mgt_achan -> ch_host);
+}
+
+/**/
+
+LOCFUN
+	mgt_locvia ()                /* note fact of relaying              */
+{
+    extern char *cnvtdate ();
+    char    thedate[LINESIZE];
+    int len;
+#ifdef VIATRACE
+    char    *p;
+#endif
+
+#ifdef DEBUG
+    ll_log (logptr, LLOGBTR, "mgt_locvia ()");
+#endif
+    cnvtdate (TIMSHRT, thedate);  /* net name & short date/time         */
+    len = mgt_rcv (0, "Received:");
+
+    if(mgt_fromhost != NULL)
+      len = mgt_rcv (len, "(from %s@localhost)", mgt_fromhost);
+    else 
+      len = mgt_rcv (len, "(from unknown@localhost)");
+    if (isstr (locfullmachine))
+      len = mgt_rcv (len, "by %s", locfullmachine);
+    if (adr_orgspec != (char *) 0)
+      len = mgt_rcv (len, "for %s", adr_orgspec);
+    len = mgt_rcv (len, "id %s", &mq_munique[4]);
+    if(lnk_nadrs==1)
+      len = mgt_rcv (len, "for <%s>;", lnk_getaddr());
+    else len = mgt_rcv (len, ";");
+    (void) mgt_rcv (len, "%s\n", thedate);
 }
 
 /**/

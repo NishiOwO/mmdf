@@ -31,22 +31,22 @@ char *datbuf;
 
 	switch (flag) {
 	case TIMCOM:
-		sprintf(datbuf, "%02d%02d%02d%02d%02d",
-			i->tm_year, i->tm_mon + 1, i->tm_mday,
+		sprintf(datbuf, "%04d%02d%02d%02d%02d",
+			i->tm_year+1900, i->tm_mon + 1, i->tm_mday,
 			i->tm_hour, i->tm_min);
 		break;
 
-	case TIMSECS:		/* w/seconds dd mon yy hh:mm:ss		*/
-		sprintf(datbuf, "%d %s %02d %02d:%02d:%02d",
-			i->tm_mday, month[i->tm_mon], i->tm_year,
+	case TIMSECS:		/* w/seconds dd mon yyyy hh:mm:ss		*/
+		sprintf(datbuf, "%d %s %04d %02d:%02d:%02d",
+			i->tm_mday, month[i->tm_mon], i->tm_year+1900,
 			i->tm_hour, i->tm_min, i->tm_sec);
 		break;
 
 	case TIMREG:		/* RFC 822 standard time string		*/
-	default:		/* "Wed, 21 Jan 76 14:30 PDT"		*/
-		sprintf(datbuf, "%s, %d %s %02d %02d:%02d:%02d %s",
+	default:		/* "Wed, 21 Jan 1976 14:30 PDT"		*/
+		sprintf(datbuf, "%s, %d %s %04d %02d:%02d:%02d %s",
 			day[i->tm_wday], i->tm_mday, month[i->tm_mon],
-			i->tm_year, i->tm_hour, i->tm_min, i->tm_sec,
+			i->tm_year+1900, i->tm_hour, i->tm_min, i->tm_sec,
 #ifdef HAVE_TZNAME
 			tzname[i->tm_isdst]
 #else /* HAVE_TZNAME */
@@ -56,8 +56,8 @@ char *datbuf;
 		break;
 
 	case TIMSHRT:		/* w/out day of week			*/
-		sprintf(datbuf, "%d %s %02d %02d:%02d %s",
-			i->tm_mday, month[i->tm_mon], i->tm_year,
+		sprintf(datbuf, "%d %s %04d %02d:%02d %s",
+			i->tm_mday, month[i->tm_mon], i->tm_year+1900,
 			i->tm_hour, i->tm_min,
 #ifdef HAVE_TZNAME
 			tzname[i->tm_isdst]

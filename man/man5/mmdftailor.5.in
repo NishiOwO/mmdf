@@ -8,25 +8,34 @@ MMDF tailoring file
 
 .bp
 .NH
-Local Names and Site-Specific Information
+.B mmdftailor
+is a database tailoring the properties of the \*M mail system.
+It is accessed at each start of any part of the mailsystem (
+\fBdeliver\fR, \fB...\fR).
+.br
+ Each entry in the file consists of a line (continuationlines are
+denoted by indentation with space or tab).
+.br
+Each line consists of a keyword (see the list below) and the value(s), 
+seperated by white space, tab or column.
+.br
+Comments should start with dash or semicolumn in the line.
 .PP
 
 .B MLNAME, MLOCHOST
-"
-.I <string>
-"
+"\fI<string>\fR"
 .RS
 The MLNAME is the name of your machine or site  as  you
 wish  it  to be known throughout the network.  This may be a
 generic host name used to hide a number of local hosts.   If
 a  generic  host name, internal hosts will be differentiated
 by MLOCMACHINE (described below).
+.br
+\fBMLOCHOST\fR is equivilent to \fBMLNAME\fR.
 .RE
 
 .B MLDOMAING
-"
-.I  <string>
-"
+"\fI<string>\fR"
 .RS
 The MLDOMAIN line gives your full local domain.   This,
 combined with the MLNAME (and possibly the MLOCMACHINE) will
@@ -41,9 +50,7 @@ The message is build upon
 .RE
 
 .B MLOCMACHINE
-"
-.I <string>
-"
+"\fI<string>\fR"
 .RS
 The MLOCMACHINE line is often set to the  null  string,
 unless  you are a large transparent site.  The normal use of
@@ -52,11 +59,9 @@ machines themselves to appear as one address.
 .RE
 
 .B MSIG
-"
-.I "<Signature>"
-"
+"\fI<Signature>\fR"
 .RS
-The string specified in MSIG line is the signature that MMDF will use
+The string specified in the MSIG line is the fullname that MMDF will use
 when notifying senders of mail delivery problems. This should be
 something that indicates a message agent was responsible.
 .br
@@ -72,9 +77,7 @@ MLOGIN is the user that owns the MMDF transport system.
 .RE
 
 .B MSUPPORT
-"
-.I <email-address>
-"
+"\fI<email-address>\fR"
 .RS
 MSUPPORT is the address to which to send mail that MMDF
 can't cope with (i.e. that MMDF can't deliver or return to
@@ -83,9 +86,7 @@ sender). Be sure MSUPPORT is a legal address!
 .PP
 
 .B AUTHREQUEST
-"
-.I <email-address>
-"
+"\fI<email-address>\fR"
 .RS
 AUTHREQUEST is the address to which users should mail if they have
 questions about why a message was not authorized for delivery. It is
@@ -160,7 +161,7 @@ default:
 .I /tmp/mmdf
 .RS
 MLCKDIR  is  the  directory where the locking of files takes
-place. This depends on what style of  locking  you  are
+place. It's use depends on what style of  locking  you  are
 doing.
 .RE
 
@@ -239,26 +240,16 @@ its size.
 The Log Files
 .PP
 
+.B MCHANLOG
+.br
+.B PHLOG
+.br
+.B AUTHLOG
+.br
 .B MMSGLOG
-.I <filename>
-.B level=
-<
-.I FAT
-|
-.I TMP
-|
-.I GEN
-|
-.I BST
-|
-.I FST
-|
-.I PTR
-|
-.I BTR
-|
-.I FTR
->
+\fI<filename>\fR \fBlevel\fR=
+<\fIFAT\fR |\fITMP\fR |\fIGEN\fR |\fIBST\fR |\fIFST\fR |
+\fIPTR\fR |\fIBTR\fR |\fIFTR\fR>
 .RS
 .DS
 FAT - Logging of fatal errors only.
@@ -282,28 +273,20 @@ The last two conditions (BTR and FTR) are enabled only if you have
 compiled the MMDF system with DEBUG #define'd. This amount of tracing
 can quickly fill up log files. During normal operation, the logging
 level should be set somewhere between GEN and FST.
-.I GEN enable when compiling with at least DEBUG
-enabled (./configure --mmdf-debug=0) 
+For logging levels higher than \fIGEN\fR \fBDEBUG\fR should be defined 
+at compile time (see ./configure --mmdf-debug=0).
 .br
 To be able to get really all trace information DEBUG must be set to 2
 (./configure --mmdf-debug=2)
 .RE
 .br
 .br
-.B MCHANLOG
-.br
-.B PHLOG
-.br
-.B AUTHLOG
-.br
 
 .B MTBL
 .I name [, <options>=<value>[,...]]
 .RS
-.B name=
-.RS
+.IP \fBname\fR 7
 A name by which the table is known.
-.RE
 .PP
 .B file=
 .RS
@@ -319,25 +302,8 @@ which is used for pretty printing purposes to explain what
 the table is all about.
 .RE
 .B flags=
-<
-.I file
-|
-.I dbm
-|
-.I ns
-|
-.I nis
-|
-.I abort
-|
-.I channel
-|
-.I domain
-|
-.I partial
-|
-.I route
->
+<\fIfile\fR |\fIdbm\fR |\fIns\fR |\fInis\fR |\fIabort\fR |
+\fIchannel\fR |\fIdomain\fR |\fIpartial\fR |\fIroute\fR>
 .RS
 The flags parameter is used to indicate additional
 properties about the table being defined.
@@ -347,6 +313,7 @@ Currently this is used to specify various table options - source type,
 nameserver lookup parameters, and control of partial lookups.
 .sp
 There are four source types defined: ``file'', ``dbm'', ``ns'' and ``nis''.
+.br
 \fIfile\fR means that the table comes from a sequentially
 read file (the default).
 .br
@@ -414,15 +381,16 @@ and the tailoring package when Mail-IDs are enabled (see section 3.2 above):
 A mapping of usernames to Mail-IDs
 .IP mailids 10
 A mapping of Mail-IDs to usernames
+.RE
+
 .br
 But the definition of these two tables may be changed by
 .br
-.RE
-.DE
+.RS
 MTBL  users,   file="users.nis.map",   flags=nis
 .br
 MTBL  mailids, file="mailids.nis.map", flags=nis
-.DS
+.RE
 .RE
 .RE
 .br
@@ -434,7 +402,7 @@ Alias definitions are used to tell the system about the
 various sources of alias information. \*M can have more than
 one alias file. In addition, each alias source has the
 option of being trusted and the option of preventing
-bypassing (via the ~\ on the front of an address).
+bypassing (via the ~\ in front of an address).
 .PP
 Making an alias file trusted is a serious decision. A
 trusted alias file can direct mail to be delivered to any
@@ -466,27 +434,22 @@ smtpsrvr EXPN command and to non privileged users of malias(1).
 .B MDMN
 .I name [, <option>=<value>[,...]]
 .RS
-.B name 
-.RS
+.IP \fBname\fR 7
 A name by which to refer to this domain definition.
-.RE
+.PP
 .B dmn=
-"
-.I "domainname"
-"
+"\fIdomainname\fR"
 .RS
 The full domain name (x.y.z...) that specifies this domain.
 .RE
 .B show=
-"
-.I "description text"
-"
+"\fIdescription text\fR"
 .RS
 A display line, which is used for pretty printing purposes to explain
 what the domain is all about.
 .RE
 .B table=
-.I <Table>
+\fI<Table>\fR
 .RS
 The associated table entry of hosts that are accessible on this
 channel. If the specified table has not been previously defined,
@@ -502,30 +465,24 @@ structure problems).
 .B MCHN
 .I name [, <option>=<value>[,...]]
 .RS
-.B name= 
+.IP \fBname\fR 7
 The name of the channel.
 .PP
 .B show= 
-"
-.I "description text"
-"
+"\fIdescription text\fR"
 .RS
 A display line, which is used for pretty printing purposes to
 explain what the channel is used for.
 .RE
 .B que=
-<
-.I directory
->
+<\fIdirectory\fR>
 .RS
 The queue directory into which messages for this channel should be
 queued.
 .RE
 .br
 .B tbl= 
-<
-.I table
->
+<\fItable\fR>
 .RS
 The associated table entry of hosts that are accessible on this
 channel. If the specified table has not been previously defined,
@@ -535,9 +492,7 @@ same queue that use different tbl= tables. (Doing so results in queue
 structure problems).
 .RE
 .B pgm= 
-<
-.I channel-program
->
+<\fIchannel-program\fR>
 .RS
 The channel program to be invoked for this channel.
 .RE
@@ -602,7 +557,7 @@ number of reconnections to each destination.
 .RS
 Enable ESMTP transfer.
 .br
-(\fBNote:\fR ESMTP support is not yet included in version up to 2.44)
+(\fBNote:\fR ESMTP support is not yet included in versions up to 2.44)
 .RE
 .RE
 .br
@@ -679,9 +634,7 @@ Will reject the address, if it contains any routing information.
 .RE
 
 .B lname= 
-"
-.I <string>
-"
+"\fI<string>\fR"
 .RS
 This specifies a name overriding the default MLNAME value when used in
 this channel. This is the name by which the local host is known to
@@ -697,16 +650,12 @@ must all resolve to locname.locdomain. For example, the line
 tables.
 .RE
 .B ldomain= 
-"
-.I <string>
-"
+"\fI<string>\fR"
 .RS
 As above, but overriding the value of MLDOMAIN. See the example above.
 .RE
 .B host= 
-"
-.I <string>
-"
+"\fI<string>\fR"
 .RS
 The name of the host that is being contacted by this channel,
 usually used in the phone and pobox channels. (Also the name of
@@ -716,27 +665,25 @@ pseudo-channels. It is also required to be set to the local host
 for the list channel.
 .RE
 .B user= 
-"
-.I <string>
-"
+"\fI<string>\fR"
 .RS
 The login name of the account which uses the slave program to pick up
 mail (used for the pobox channel only).
 .RE
 .B scr= 
-"
-.I <string>
-"
+"\fI<string>\fR"
 .RS
 The name of the dialing script file to be used by the phone channel.
 .RE
 .B trn= 
+\fI<filename>\fR
 .RS
 The name of the transcript file to be used for this channel; this
 currently applies only to PhoneNet, and defaults to DEFTRAN (usually
 ph.trn).
 .RE
 .B poll= 
+\fI<int>\fR
 .RS
 The frequency of polling the remote machine. A poll on a two-way
 channel (such as the phone channel) is used to see if any mail is
@@ -853,9 +800,7 @@ user local to that host (i.e. no source routes).
 .RE
 
 .B confstr= 
-"
-.I <string>
-"
+"\fI<string>\fR"
 .RS
 This is a string that is used by some channels for
 specifying the invocation of another program.
@@ -877,7 +822,7 @@ string currently.
 Overrides the globally set \fBFAILTIME\fR and \fBWARNTIME\fR (see
 below)
 .br
-\fBNote:\fR not yet included in version up to 2.44)
+\fBNote:\fR not yet included in versions up to 2.44.
 .RE
 
 .B level= 
@@ -899,6 +844,10 @@ below)
 .I FTR
 >
 .br
+.RS
+overrides \fBMCHANLOG\fR (seee above).
+.RE
+.br
 .B log= 
 .I logfile
 .br
@@ -915,9 +864,7 @@ missing in messages.
 .RE
 
 .B MLISTSIZE
-<
-.I int
->
+<\fIint\fR>
 .RS
 specifies the maximum number of addresses in a message
 before it is considered to have a ``big'' list.
@@ -929,9 +876,7 @@ body.
 .RE
 
 .B MMAXHOPS
-<
-.I int
->
+<\fIint\fR>
 default:
 .I 20
 .RS
@@ -940,9 +885,7 @@ lines in a message before it is considered to be looping, and is rejected.
 .RE
 
 .B MWARNTIME
-<
-.I int
->
+<\fIint\FR>
 default:
 .I 48
 .RS
@@ -952,9 +895,7 @@ delivery is sent to the sender.
 .RE
 
 .B MFAILTIME
-<
-.I int
->
+<\fIint\fR>
 default:
 .I 96
 .RS
@@ -964,9 +905,7 @@ purged from the queue.
 .RE
 
 .B MMAXSORT
-<
-.I int
->
+<\fIint\fR>
 default:
 .I 300
 .RS
@@ -979,21 +918,17 @@ directory search.
 .RE
 
 .B MSLEEP
-<
-.I int
->
+<\fIint\fR>
 default:
 .I 600
 .RS
 is the length of time in seconds that the background
-delivery daemon sleeps between queue scans.  The following
-causes the daemon to sleep 5 minutes between passes.
+delivery daemon sleeps between queue scans.  The default value
+causes the daemon to sleep 10 minutes between passes.
 .RE
 
 .B MDELIVER
-"
-.I "path to deliver"
-"
+"\fIpath to deliver\fR"
 default:
 .I @MMDFLIBDIR@/deliver
 .RS
@@ -1001,9 +936,7 @@ is where the \fIdeliver\fR program lives, and
 .RE
 
 .B MPKUP
-"
-.I "path to pickup"
-"
+"\fIpath to pickup\fR"
 default:
 .I @MMDFLIBDIR@/pickup
 .RS
@@ -1011,8 +944,7 @@ is the post box pickup program.
 .RE
 
 .B MSUBMIT
-"
-.I "path to submit"
+"\fIpath to submit\fR
 "
 default:
 .I @MMDFLIBDIR@/submit
@@ -1021,9 +953,7 @@ tells MMDF where the \fIsubmit\fR program lives.
 .RE
 
 .B MV6MAIL
-"
-.I "path to v6mail"
-"
+"\fIpath to v6mail\fR"
 default:
 .I @MMDFLIBDIR@/v6mail
 .RS
@@ -1034,7 +964,7 @@ It should behave rather like the original Bell \fImail\fR program.
 
 .B MDLVRDIR
 "
-.I ""
+.I
 "
 default:
 .I <empty>
@@ -1054,12 +984,15 @@ is the name of the mailbox.
 If this is null, then the user's login name is used.
 The following would set \*M to deliver mail to /usr/spool/mail
 with each mailbox named after the user's login name:
+.br
 .DS
 MDLVRDIR   "/usr/spool/mail"
 MMBXNAME   ""
 .DE
+.br
 The following causes mailbox files to be created
 in the user's home directory:
+.br
 .DS
 MDLVRDIR   ""
 MMBXNAME   "mailbox"
@@ -1086,9 +1019,7 @@ These are usually set to a sequence of control-A's.
 .RE
 
 .B MDLV
-<
-.I string
->
+<\fIstring\fR>
 default:
 .I .maildelivery
 .RS
@@ -1110,11 +1041,9 @@ hence is only used on NIFTP channels.
 .RE
 
 .SH runtime UUCP setting
-
+.br
 .B UUNAME
-"
-.I "hostname"
-"
+"\fIhostname\fR"
 .RS
 determines the name that appears in the blank:
 .nf
@@ -1123,11 +1052,8 @@ From blah <date stuff> remote from ________
 .RE
 
 .B UUXSTR
-"
-.I "string"
-"
+"\fIstring\fR"
 default:
-.I
 .RS
 is the command used to invoke the UUCP software.
 In general you may want to tailor the grade level if supported

@@ -1,4 +1,4 @@
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.14 1998/09/18 11:16:48 krueger Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.15 1998/12/10 13:19:50 krueger Exp $ */
 /*
  *     MULTI-CHANNEL MEMO DISTRIBUTION FACILITY  (MMDF)
  *     
@@ -473,16 +473,23 @@ dowarn (themsg, retadr)
 }
 #endif NEW_CLEAN
 
+#ifdef NEW_CLEAN
 doreturn (themsg, theadr, retadr)
     Msg *themsg;
     struct adr_struct *theadr;
     char retadr[];
+#else
+    doreturn (themsg, retadr)
+    Msg *themsg;
+    char retadr[];
+#endif
 {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "doreturn (%s, %s)", themsg -> mg_mname, retadr);
 #endif
 
-    printx ("%s:  not delivered in time; waiting %d hrs;", themsg -> mg_mname, elaphour);
+    printx ("%s:  not delivered in time; waiting %d hrs;",
+            themsg -> mg_mname, elaphour);
     (void) fflush (stdout);
     if (msg_noret (themsg -> mg_stat)) {
 	printx (" error return not wanted\n");
@@ -515,6 +522,7 @@ doreturn (themsg, theadr, retadr)
 	}
     }
 }
+
 
 
 /**/

@@ -23,7 +23,7 @@ char	*SMTPSRVR = "smtpsrvr";
 
 char	*FullName;	/* sender's full name */
 char	*from;		/* sender's mail address */
-char	subflags[128];	/* flags for submit */
+char	subflags[256];	/* flags for submit */
 int	watch;
 int	verify;
 int	extract;
@@ -43,6 +43,7 @@ char **argv;
 	struct rp_bufstruct thereply;
 	int	retval;
 	int     len;
+    char real_user[128];
 
 	mmdf_init(argv[0]);
 
@@ -132,7 +133,55 @@ char **argv;
 			watch++;
 			continue;
 
-		case 'T':	/* set timeout interval */
+        case 'B': /* body type: 7BIT or 8BITMIME */
+			p += 2;
+			if (*p == '\0' && ((p = *++av) == NULL || *p == '-'))
+			{
+				syserr("Bad -B flag");
+				av--;
+				continue;
+			}
+#ifdef HAVE_ESMTP
+#endif  /* HAVE_ESMTP */
+			continue;
+
+        case 'N': /* delivery status notifications */
+			p += 2;
+			if (*p == '\0' && ((p = *++av) == NULL || *p == '-'))
+			{
+				syserr("Bad -N flag");
+				av--;
+				continue;
+			}
+#ifdef HAVE_ESMTP
+#endif  /* HAVE_ESMTP */
+              continue;
+              
+        case 'R': /* DSN RET: what to return */
+			p += 2;
+			if (*p == '\0' && ((p = *++av) == NULL || *p == '-'))
+			{
+				syserr("Bad -R flag");
+				av--;
+				continue;
+			}
+#ifdef HAVE_ESMTP
+#endif  /* HAVE_ESMTP */
+              continue;
+              
+        case 'V': /* DSN ENVID: set "original" envelope id */
+			p += 2;
+			if (*p == '\0' && ((p = *++av) == NULL || *p == '-'))
+			{
+				syserr("Bad -V flag");
+				av--;
+				continue;
+			}
+#ifdef HAVE_ESMTP
+#endif  /* HAVE_ESMTP */
+              continue;
+              
+        case 'T':	/* set timeout interval */
 		case 'C':	/* select configuration file (already done) */
 		case 'c':	/* connect to non-local mailers */
 		case 'd':	/* debug */
@@ -160,6 +209,7 @@ char **argv;
 		strcat(subflags, "v");
 	else
 		strcat(subflags, "xto,cc,bcc*");
+    sprintf( subflags, "%sF%s*", subflags, pwdptr->pw_name );
 
 	if (rp_isbad (mm_init ()) || rp_isbad (mm_sbinit ()))
 		syserr("Unable to submit mail at this time");
