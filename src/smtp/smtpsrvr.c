@@ -1,4 +1,4 @@
-static char Id[] = "$Id: smtpsrvr.c,v 1.21 1999/08/16 10:21:33 krueger Exp $";
+static char Id[] = "$Id: smtpsrvr.c,v 1.22 1999/09/02 11:01:57 krueger Exp $";
 /*
  *                      S M T P S R V R . C
  *
@@ -52,6 +52,16 @@ extern Chan *ch_h2chan();
 
 extern int mgt_addipaddr,
            mgt_addipname;
+#ifdef HAVE_ESMTP
+extern long message_size_limit;
+#   ifdef HAVE_ESMTP_8BITMIME
+extern int  accept_8bitmime;
+#   endif /* HAVE_ESMTP_8BITMIME */
+#   ifdef HAVE_ESMTP_DSN
+extern int  dsn;
+#   endif /* HAVE_ESMTP_DSN */
+#endif /* HAVE_ESMTP */
+
 smtp_protocol smtp_proto = PRK_UNKNOWN;
 int input_source = 0;
 #define IN_SRC_NET   0
@@ -79,6 +89,7 @@ int     stricked;               /* force rejection of non validated hosts */
 #ifdef NODOMLIT
 int	themknown=TRUE;		/* do we have symbolic name for them? */
 #endif /* NODOMLIT */
+int size_checked = FALSE;       /* checked for enough spoolspace let? */
 char    *addrfix();
 int     vrfy_child;             /* pid of child that handles vrfy requests */
 int     vrfy_p2c[2];            /* fd's for vrfy's parent-to-child pipe */
@@ -361,7 +372,7 @@ nextcomm:
 	{
 		if (i == (char *)NOTOK)         /* handle error ??? */
 			byebye( 1 );
-
+        
 		/* find and call command procedure */
 		comp = commands;
 		while( comp->cmdname != NULL)   /* while there are names */
@@ -525,6 +536,20 @@ getline()
 	return (outp);
 }
 
+char *get_value(field)
+char *field;
+{
+  int  argc;
+  char *argv[5];
+  char nn[1024];
+
+  argc = sstr2arg(field, 5, argv, "=");
+  sprintf(nn, "c=%d, v='%s'\r\n", argc, argv[1]);
+  netreply(nn);
+  
+  return(argv[1]);
+}
+
 /*
  *  Process the HELO command
  */
@@ -570,7 +595,7 @@ helo(int cmdnr)
           if(!lexequ(arg, them))
             snprintf(replybuf, sizeof(replybuf), "250-%s - you are a charlatan\r\n", us);
           else 
-            snprintf (replybuf, "250-%s\r\n", us);
+            snprintf (replybuf, sizeof(replybuf), "250-%s\r\n", us);
           netreply (replybuf);
           tell_esmtp_options();
         } else {
@@ -594,6 +619,7 @@ helo(int cmdnr)
  *
  *      handle the MAIL command  ("MAIL from:<user@host>")
  */
+#define TEST
 #ifdef HAVE_NOSRCROUTE
 extern int ap_outtype;
 #endif
@@ -601,79 +627,184 @@ mail(int cmdnr)
 {
 	static char    replybuf[256];
 	static char    info[1024];
-	char    *lastdmn;
+    static char    *value;
+	char           *lastdmn;
 	struct rp_bufstruct thereply;
 #ifdef HAVE_NOSRCROUTE
-        int     ap_outtype_save;
+    int            ap_outtype_save;
 #endif
 	int	len, infolen=0, infoboo=0;
 	AP_ptr  domain, route, mbox, themap, ap_sender;
-
+    char           *argv[25];
+    int            Agc,i;
+#ifdef HAVE_ESMTP
+    long           size=-1;
+#  if defined(HAVE_ESMTP_DSN) || defined(TEST)
+    char           dsn_envid[32];
+#  endif /* HAVE_ESMTP_DSN */
+#endif /* HAVE_ESMTP */
+ 
 	if (arg == 0 || *arg == 0) {
 		netreply("501 No argument supplied\r\n");
 		return;
 	} else if( sender ) {
 		netreply("503 MAIL command already accepted\r\n");
 		return;
-	} else if (!equal(arg, "from:", 5)) {
+	} else if ( !equal(arg, "from:", 5) && !equal(arg, "from ", 5)) {
 		netreply("501 No sender named\r\n");
 		return;
 	}
 
-	ll_log( logptr, LLOGFTR, "mail from: '%s'", arg );
+    ll_log( logptr, LLOGFTR, "mail from: '%s'", arg );
 
-	/* Scan FROM: parts of arg */
-	sender = strchr (arg, ':') + 1;
-	sender = addrfix( sender );
-	/*
-	 * If the From part is not the same as where it came from
-	 * then add on the extra part of the route.
-	 */
+    if( (value = strchr(arg, ':'))==NULL) {
+      snprintf(replybuf, sizeof(replybuf),
+               "555 malformed MAIL FROM clause %s\r\n", arg);
+      netreply(replybuf);
+      return;
+    }
 
-#if notdef
-#ifdef HAVE_ESMTP_SIZE
-      if( (strcmp(name, "SIZE")==0) && () ){
-      if (message_size_limit > 0 && size > message_size_limit) {
-        snprintf(replybuf, sizeof(replybuf), "552 Message size exceeds maximum permitted\r\n");
-        netreply(replybuf);
+    /* Scan FROM: parts of arg */
+    Agc = sstr2arg(value+1, 25, argv, " ");
+
+    sprintf(replybuf, ">>%s<<%d\r\n", arg, Agc);
+    netreply(replybuf);
+    if(Agc==NOTOK) {
+      netreply("451 internal error\r\n");
+      return;
+    }
+    for(i=0; i<Agc; i++) {
+#ifdef HAVE_ESMTP
+      if(equal(argv[i], "size", 4)){
+        value = get_value(argv[i]);
+        if(value==NULL) {
+          netreply("555 missing SIZE parameter\r\n");
+          sender = NULL;
+          return;
+        }
+        sscanf(value, "%d", &size);
+        if(size<=0) {
+          snprintf(replybuf, sizeof(replybuf),
+                   "555 malformed SIZE clause %s\r\n", value);
+          netreply(replybuf);
+          sender = NULL;
+          return;
+        }
+        ll_log( logptr, LLOGFTR, "mail from: size=%d", size);
+        if (message_size_limit > 0 && size > message_size_limit) {
+          snprintf(replybuf, sizeof(replybuf),
+                   "552 Message size exceeds maximum permitted\r\n");
+          netreply(replybuf);
+          sender = NULL;
+          return;
+        }
+      } else
+#endif /* HAVE_ESMTP */
+#ifdef HAVE_ESMTP_8BITMIME
+        if (accept_8bitmime && equal(argv[i], "BODY", 4)) {
+          value = get_value(argv[i]);
+          if(value==NULL) {
+            netreply("555 missing BODY parameter\r\n");
+            sender = NULL;
+            return;
+          }
+          if( lexequ(value, "8BITMIME")) {
+          } else {
+            if( lexequ(value, "7BIT")) {
+            } else {
+              snprintf(replybuf, sizeof(replybuf),
+                       "555 unknown BODY type %s\r\n", value);
+              netreply(replybuf);
+              sender = NULL;
+              return;
+            }
+          }
+          ll_log( logptr, LLOGFTR, "mail from: body=%s", value);
+      } else
+#endif /* HAVE_ESMTP_8BITMIME */
+#ifdef HAVE_ESMTP_DSN
+        if (dsn && equal(argv[i], "RET", 3)) {
+          value = get_value(argv[i]);
+          if(value==NULL) {
+            netreply("555 missing RET parameter\r\n");
+            sender = NULL;
+            return;
+          }
+          if( lexequ(value, "HDRS")) {
+            /*dsn_ret_hdrs = 1;*/
+          } else {
+            if( lexequ(value, "FULL")) {
+              /*dsn_ret_full = 1;*/
+            } else {
+              snprintf(replybuf, sizeof(replybuf),
+                       "555 unknown RET type %s\r\n", value);
+              netreply(replybuf);
+              sender = NULL;
+              return;
+            }
+          }
+          ll_log( logptr, LLOGFTR, "mail from: ret=%s", value);
+        } else
+          if (dsn && equal(argv[i], "ENVID", 5)) {
+            value = get_value(argv[i]);
+            if(value==NULL) {
+              netreply("555 missing ENVID parameter\r\n");
+              sender = NULL;
+              return;
+            }
+            strncpy(dsn_envid, value, sizeof(dsn_envid));
+            ll_log( logptr, LLOGFTR, "mail from: envid=%s", dsn_envid);
+          } else
+#endif /* HAVE_ESMTP_DSN */
+          { 
+            if(i==0) {
+              sender = argv[0];
+              sender = addrfix( sender );
+            } else {
+              if(Agc>0) {
+                if(sender==NULL) netreply("501 No sender named\r\n");
+                else {
+                  sender = NULL;
+                  snprintf(replybuf, sizeof(replybuf),
+                           "555 Unknown MAIL TO: option %s\r\n", argv[i]);
+                  netreply(replybuf);
+                           /* "501 bad parameter\r\n"*/
+                }
+                
+                return;
+              }
+            }
+          }
+      if( (i==0) && (sender==NULL) ) {
+        netreply("501 No sender named\r\n");
         return;
       }
     }
-#endif /* HAVE_ESMTP_SIZE */
-    
-    if (smtp_check_spool_space)
-    {
-      if (!accept_check_fs(size + 5000))
-      {
-        snprintf(replybuf, sizeof(replybuf), "452 space shortage, please try later\r\n");
+
+    if (!size_checked && rp_gval(check_disc_space(0)) == RP_FSPC) {
+      snprintf(replybuf, sizeof(replybuf),
+               "452 space shortage, please try later\r\n");
+      netreply(replybuf);
+      sender = NULL;
+      return;
+    }
+
+#ifdef HAVE_ESMTP
+    if (1 /*smtp_check_spool_space*/) {
+      if (rp_gval(check_disc_space(size + 5000, quedfldir )) == RP_FSPC) {
+        snprintf(replybuf, sizeof(replybuf),
+                 "452 space shortage, please try later\r\n");
         netreply(replybuf);
         return;
       }
       size_checked = TRUE;    /* No need to check again below */
     }
-    
-#ifdef HAVE_ESMTP_8BITMIME
-    if (accept_8bitmime && strcmpic(name, "BODY") == 0 &&
-        (strcmpic(value, "8BITMIME") == 0 ||
-         strcmpic(value, "7BIT") == 0)) {}
-#endif /* HAVE_ESMTP_8BITMIME */
-    
-#ifdef HAVE_ESMTP_DSN
-    if (dsn && strcmpic(name, "RET") == 0)
-      dsn_ret = (strcmpic(value, "HDRS") == 0)? dsn_ret_hdrs :
-      (strcmpic(value, "FULL") == 0)? dsn_ret_full : 0;
+#endif /* HAVE_ESMTP */
+	/*
+	 * If the From part is not the same as where it came from
+	 * then add on the extra part of the route.
+	 */
 
-    else if (dsn && strcmpic(name, "ENVID") == 0)
-      dsn_envid = string_copy(value);
-#endif /* HAVE_ESMTP_DSN */
-
-    if (!size_checked && !accept_check_fs(0))
-    {
-      snprintf(replybuf, sizeof(replybuf), "452 space shortage, please try later\r\n");
-      netreply(replybuf);
-      return;
-    }
-#endif /* notdef */
 #ifdef NODOMLIT
 	if(themknown && ((ap_sender = ap_s2tree(sender)) != (AP_ptr)NOTOK)){
 #else
@@ -1580,12 +1711,10 @@ void tell_esmtp_options()
 #  ifdef HAVE_ESMTP_8BITMIME
   if(accept_8bitmime) netreply("250-8BITMIME\r\n");
 #  endif /* HAVE_ESMTP_8BITMIME */
-#  ifdef HAVE_ESMTP_SIZE
   if(message_size_limit>0)
     snprintf(replybuf, LINESIZE, "250-SIZE %d\r\n", message_size_limit);
   else snprintf(replybuf, LINESIZE, "250-SIZE\r\n");
   netreply(replybuf);
-#  endif /* HAVE_ESMTP_SIZE */
 #  ifdef HAVE_ESMTP_DSN
   if(dsn) netreply("250-DSN\r\n");
 #  endif /* HAVE_ESMTP_DSN */
@@ -1596,7 +1725,7 @@ void tell_esmtp_options()
   if(smtp_etrn_hosts) netreply("250-ETRN\r\n");
 #  endif /* HAVE_ESMTP_ETRN */
 #  ifdef HAVE_ESMTP_PIPE
-  if(smtp_etrn_hosts) netreply("250-PIPELINING\r\n");
+  netreply("250-PIPELINING\r\n");
 #  endif /* HAVE_ESMTP_PIPE */
 #  ifdef HAVE_ESMTP_XUSR
   netreply("250-XUSR\r\n");
