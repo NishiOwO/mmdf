@@ -8,11 +8,11 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  *
  * $Log: utils.c,v $
- * Revision 1.2  1985/12/18 13:28:48  galvin
- * Added comment header for revision history.
+ * Revision 1.3  1985/12/18 13:31:12  galvin
+ * Change alter to use the MMDF locking routines.
  *
  * Revision 1.3  85/12/18  13:31:12  galvin
  * Change alter to use the MMDF locking routines.
