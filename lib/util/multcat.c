@@ -1,4 +1,5 @@
 #include "util.h"
+#ifdef HAVE_VARARGS_H
 #include <varargs.h>
 
 /*                                                                      */
@@ -29,3 +30,4 @@ va_dcl
 
 	return (newstr);
 }
+#endif/* HAVE_VARARGS_H */

@@ -6,9 +6,9 @@
  */
 
 /*VARARGS*/
-#if sparc
-#include <varargs.h>
-#define MAXARGS 20
+#if defined(HAVE_VARARGS_H) || defined(sparc)
+#  include <varargs.h>
+#  define MAXARGS 20
 arg2lstr (va_alist)
 va_dcl
 {
@@ -30,12 +30,12 @@ va_dcl
   va_end(ap);
   arg2vstr (linelen, maxlen, buf, argv);
 }
-#else /* sparc */
-#ifdef NO_VARARGS
+#else /* HAVE_VARARGS_H */
+#  ifdef NO_VARARGS
 arg2lstr (linelen, maxlen, buf, arg1, a,b,c,d,e,f,g,h,i,j,k,l,m)
-#else
+#  else
 arg2lstr (linelen, maxlen, buf, arg1) /* convert list to argument array */
-#endif /* NO_VARARGS */
+#  endif /* NO_VARARGS */
     int linelen;        /* when to insert newlines; 0=> don't       */
     int maxlen;
     char *buf;
@@ -43,7 +43,7 @@ arg2lstr (linelen, maxlen, buf, arg1) /* convert list to argument array */
 {
     arg2vstr (linelen, maxlen, buf, &arg1);
 }
-#endif /* sparc */
+#endif /* HAVE_VARARGS_H */
 
 arg2vstr (linelen, maxlen, buf, argv) /* convert the list to a string            */
     int linelen;

@@ -1,3 +1,4 @@
+#ifdef HAVE_VARARGS_H
 #include <varargs.h>
 
 /*                                                                      */
@@ -22,3 +23,4 @@ va_dcl
 	return (to);            /* return pointer to end of str         */
 }
 
+#endif/* HAVE_VARARGS_H */

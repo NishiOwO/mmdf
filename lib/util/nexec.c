@@ -21,7 +21,7 @@ extern	char	*zap_env[];
 LOCFUN tryfork();
 
 /* VARARGS4 */
-#if sparc
+#if defined(HAVE_VARARGS_H) || defined(sparc)
 #include <varargs.h>
 #define MAXARGS 20
 nexecl(va_alist)
@@ -46,12 +46,12 @@ va_dcl
 	va_end(ap);
 	return(nexecv(proctyp, pgmflags, fdarray, pgm, pgmparm));
 }
-#else /* sparc */
-#ifdef NO_VARARGS
+#else /* HAVE_VARARGS_H */
+#  ifdef NO_VARARGS
 nexecl(proctyp, pgmflags, fdarray, pgm, pgmparm, a,b,c,d,e,f,g,h,i,j,k,l,m)
-#else
+#  else
 nexecl(proctyp, pgmflags, fdarray, pgm, pgmparm)
-#endif /* NO_VARARGS */
+#  endif /* NO_VARARGS */
 int proctyp,			/* exec / fork / fork-exec		*/
 pgmflags,			/* parent wait? disable interrupts?	*/
 *fdarray;			/* what current fd's go where?		*/
@@ -60,7 +60,7 @@ char *pgm,			/* what program to exec?		*/
 {
 	return(nexecv(proctyp, pgmflags, fdarray, pgm, &pgmparm));
 }
-#endif /* sparc */
+#endif /* HAVE_VARARGS_H */
 
 nexecv(proctyp, pgmflags, fdarray, pgm, pgmparm)
 int proctyp,

@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.9 1997/12/31 13:31:45 krueger Exp $
+ * $Id: config.h.in,v 1.10 1997/12/31 14:57:24 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -310,10 +310,11 @@
 /*             Define  this variable if your machine doesn't
  *             allow variable numbers  of  arguments  to  be
  *             passed  to  routines  the way Vaxes (and some
- *             others) do.
+ *             others) do. If you have varargs.h don't  care
+ *             about NO_VARARGS
  */
-#define HAVE_VARARGS_H
-#define NO_VARARGS
+#undef HAVE_VARARGS_H
+#undef NO_VARARGS
 
 /*             Define CITATION=n to limit (to n) the  number
  *             of lines of text included in error returns by

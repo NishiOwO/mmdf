@@ -278,8 +278,13 @@ AC_STRUCT_TM
 AC_STRUCT_TIMEZONE
 
 AC_CHECK_HEADERS(fcntl.h libio.h memory.h termio.h sgtty.h syslog.h)
-AC_CHECK_HEADERS(varargs.h)
 AC_CHECK_HEADERS(sys/file.h sys/ioctl.h sys/time.h)
+AC_CHECK_HEADERS(varargs.h)
+if test "$ac_cv_header_varargs_h" != "yes"; then
+    AC_MSG_WARN(you don't have varargs.h)
+    AC_MSG_WARN(          lib/util/multcat.c will not compile)
+    AC_MSG_WARN(          lib/util/multcpy.c will not compile)
+fi
 
 AC_CHECK_FUNCS(dup2 fcntl flock ftime getcwd getdtablesize gethostname)
 AC_CHECK_FUNCS(gettimeofday getwd index memcpy mkdir res_mkquery)
@@ -424,6 +429,39 @@ if test "$ac_cv_header_sys_ioctl_h" = "yes"; then
     AC_MSG_RESULT(no)
   fi
   ac_cv_header_sys_ioctl_h=$ac_cv_have_TIOCSBRK
+fi
+
+dnl check if compiler supports variable number of arguments 
+if test "$ac_cv_header_varargs_h" != "yes"; then
+  AC_MSG_CHECKING(if compiler supports variable number of arguments)
+dnl  AC_TRY_RUN( 
+  AC_CACHE_VAL(ac_cv_VAR_NBR_ARGS, AC_TRY_RUN( 
+   [ int var_t1(a)
+	char *a;
+	{
+	  return(var_t2(&a));
+	}
+
+	int var_t2(argv)
+	char **argv;
+	{
+	  if((strcmp(argv[0],argv[1])!=0)&&(strcmp(argv[0],argv[2])==0))
+		return(0);
+	  else return(1);
+	}
+	main()
+	{
+ 	 exit(var_t1("abs", "qwe", "abs"));
+   }],
+     ac_cv_VAR_NBR_ARGS=yes,
+     ac_cv_VAR_NBR_ARGS=no,
+     ac_cv_VAR_NBR_ARGS=no))
+  if test "$ac_cv_VAR_NBR_ARGS" = "yes"; then
+    AC_MSG_RESULT(yes)
+  else
+    AC_MSG_RESULT(no)
+    AC_DEFINE(NO_VARARGS)
+  fi
 fi
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
