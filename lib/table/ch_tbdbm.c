@@ -345,7 +345,7 @@ char   *buf;                      /* put value int this buffer          */
   }
   return(retval);
 }
-endif /* HAVE_WILDCARD */
+#endif /* HAVE_WILDCARD */
 
 /* *******  FIND VALUE (address), GIVEN ITS KEY (hostname)  ********* */
 
