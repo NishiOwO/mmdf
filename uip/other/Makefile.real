@@ -14,8 +14,8 @@ MODULES = checkmail emactovi malias mlist newmail newssend rcvalert \
 
 INSTALLS = inst-xcheckmail inst-xemactovi inst-xmalias inst-xmlist \
 	   inst-xnewmail inst-xnewssend inst-xrcvalert inst-xrcvfile \
-	   inst-xrcvprint inst-xrcvtrip inst-xresend inst-xsendmail \
-	   inst-xv6mail
+	   inst-xrcvprint inst-xrcvtrip inst-xresend inst-xv6mail \
+	   inst-xsendmail 
 
 real-default:	${PROGS}
 
@@ -37,7 +37,7 @@ inst-xcheckmail:  $(BINDIR)/checkmail
 
 $(BINDIR)/checkmail:  xcheckmail
 	cp xcheckmail $@
-	-$(CHOWN) mmdf $@
+	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod 04$(PGMPROT) $@
 	echo "$(BINDIR)/checkmail" >> ${filelist}
 
@@ -55,7 +55,7 @@ inst-xemactovi:  $(BINDIR)/emactovi
 
 $(BINDIR)/emactovi:  xemactovi
 	cp xemactovi $@
-	-$(CHOWN) mmdf $@
+	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod 0$(PGMPROT) $@
 	echo "$(BINDIR)/emactovi" >> ${filelist}
 
@@ -90,7 +90,7 @@ inst-xmlist: $(BINDIR)/$(PREF)mlist
 
 $(BINDIR)/$(PREF)mlist: xmlist
 	cp xmlist $@
-	-$(CHOWN) mmdf $@
+	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod 04$(PGMPROT) $@
 	echo "$(BINDIR)/$(PREF)mlist" >> ${filelist}
 
@@ -108,7 +108,7 @@ inst-xnewmail: $(BINDIR)/$(PREF)newmail
 
 $(BINDIR)/$(PREF)newmail: xnewmail
 	cp xnewmail $@
-	-$(CHOWN) mmdf $@
+	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod 0$(PGMPROT) $@
 	echo "$(BINDIR)/$(PREF)newmail" >> ${filelist}
 
@@ -127,7 +127,7 @@ inst-xv6mail:  $(BINDIR)/$(PREF)v6mail
 
 $(BINDIR)/$(PREF)v6mail:  xv6mail
 	cp xv6mail $@
-	-$(CHOWN) mmdf $@
+	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod $(PGMPROT) $@
 	echo "$(BINDIR)/$(PREF)v6mail" >> ${filelist}
 
@@ -146,7 +146,7 @@ inst-xrcvalert:  $(RCVDIR)/$(PREF)rcvalert
 
 $(RCVDIR)/$(PREF)rcvalert:  xrcvalert
 	cp xrcvalert $@
-	-$(CHOWN) mmdf $@
+	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod $(PGMPROT) $@
 	echo "$(RCVDIR)/$(PREF)rcvalert" >> ${filelist}
 
@@ -165,7 +165,7 @@ inst-xrcvfile:  $(RCVDIR)/$(PREF)rcvfile
 
 $(RCVDIR)/$(PREF)rcvfile: xrcvfile
 	cp xrcvfile $@
-	-$(CHOWN) mmdf $@
+	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod $(PGMPROT) $@
 	echo "$(RCVDIR)/$(PREF)rcvfile" >> ${filelist}
 
@@ -184,7 +184,7 @@ inst-xresend:  $(BINDIR)/resend
 
 $(BINDIR)/$(PREF)resend: xresend
 	cp xresend $@
-	-$(CHOWN) mmdf $@
+	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod $(PGMPROT) $@
 	echo "$(BINDIR)/$(PREF)resend" >> ${filelist}
 
@@ -204,7 +204,7 @@ inst-xnewssend:  $(MCMDDIR)/$(PREF)newssend
 
 $(MCMDDIR)/$(PREF)newssend: xnewssend
 	cp xnewssend $@
-	-$(CHOWN) mmdf $@
+	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod 04$(PGMPROT) $@
 	echo "$(MCMDDIR)/$(PREF)newssend" >> ${filelist}
 
@@ -223,7 +223,7 @@ inst-xrcvprint:  $(RCVDIR)/$(PREF)rcvprint
 
 $(RCVDIR)/$(PREF)rcvprint: xrcvprint
 	cp xrcvprint $@
-	-$(CHOWN) mmdf $@
+	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod $(PGMPROT) $@
 	echo "$(RCVDIR)/$(PREF)rcvprint" >> ${filelist}
 
@@ -242,7 +242,7 @@ inst-xrcvtrip:  $(RCVDIR)/rcvtrip
 
 $(RCVDIR)/$(PREF)rcvtrip: xrcvtrip
 	cp xrcvtrip $@
-	-$(CHOWN) mmdf $@
+	-$(CHOWN) $(MMDFLOGIN) $@
 	-chmod $(PGMPROT) $@
 	echo "$(RCVDIR)/$(PREF)rcvtrip" >> ${filelist}
 
@@ -262,7 +262,7 @@ ${SBINDIR}/sendmail:  xsendmail
 	if test ! -f $@.orig; then \
 		if test -f $@; then cp $@ $@.orig; fi; fi
 	cp xsendmail $@
-	$(CHOWN) mmdf $@
+	$(CHOWN) $(MMDFLOGIN) $@
 	chmod 04$(PGMPROT) $@
 	if test -f ${install_prefix}/usr/lib/sendmail; then \
 		cp ${install_prefix}/usr/lib/sendmail \
