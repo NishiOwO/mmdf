@@ -1,3 +1,8 @@
+Sun Jan 21 21:44:21 CET 2001	Kai Krueger <krueger@mathematik.uni-kl.de>
+	* esmtp: PIPELINING will need major rewrite of smtp and
+	  smtpsrvr
+
+
 Mon Aug 16 21:39:40 CEST 1999 Kai Krueger <krueger@mathematik.uni-kl.de>
       * needs an good check for argument types of res_mkquery()
 

@@ -1,3 +1,17 @@
+Sun Jan 21 21:44:21 CET 2001	Kai Krueger <krueger@mathematik.uni-kl.de>
+Changes versus 2.44
+	* if smtp receives an 550 after the return-dot-return of Tthe
+	  DATA command, the message ist returned to the sender, other
+	  wise to the support-address (as usual)
+	* rewrite of tables-access-functions
+	* new table type 'rbl'   see man 5 mmdf_rbl
+	* new table type 'regex' see man 5 mmdf_regexp
+	* new table type 'ldap'  see man 5 mmdf_ldap
+
+	* Compilechanges for Slackware 4.0
+	* filelist for use with rpm
+	* msg: fixed never ending loop when mailbox don't exists
+
 Changes beta 3
 	* Small bug in ap_lex.c hip@a.cs.okstate.edu
 	* jromine@ics.uci.edu some changes for Solaris 2.5, Sun Pro

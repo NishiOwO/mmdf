@@ -1,3 +1,53 @@
+Internal Changes:
+   - new internal error codes:
+     * RP_DATA: dot-ret-dot of DATA command got an 550
+     * RP_QUOT: mailbox quota-size excceded
+     * RP_BADR: 
+     * RP_BCHN: 
+   - cleanups due to gcc --pedantic (still in progress)
+
+In Progress:
+   - ESMTP DSN 
+   - channel dependent cleanque
+   - table-type 'ns': do not only resolve to MX-record but A-record
+     too.
+   - quota-check (highly OS dependent, currently only under linux)
+   - Internal quotas for mailboxes see man 5 mmdftailor
+     * MMAXMBSZ for default size
+     * MTBL mboxquota for user-mailbox quotas
+   - still working on 'only write-permission to mailgroup' for the
+     mailbox-directory
+   - smtpsrvr: verify sender address using 'checkaddr -w <sender>'
+
+
+Changes between 2.44 final and 2.44+(20010204)
+   - if smtp receives an 550 after the return-dot-return of the
+	DATA command, the message is returned to the sender, other-
+	wise to the support-address (as usual)
+   - rewrite of table-access functions
+     * new table type 'rbl'   see man 5 mmdf_rbl
+     * new table type 'regex' see man 5 mmdf_regexp
+     * new table type 'ldap'  see man 5 mmdf_ldap
+     * table dbm and file are no longer exclusive
+     see README.devel of man 3 tables
+   - MTBL flags=<table-type> is now type=<table-type>
+   - small test program to check table-access function (lib/table/table_test.c)
+   - added mail-group.
+   - code for having a sort of wildcard (define HAVE_WILDCARD) will be 
+     removed. Better use regexp-tables
+   - changes to checkup due the changes of table-access functions
+   - 'deliver -b' now selfdetaching
+   - new channel-program for mailman-support
+   - small program 'getvar' returning the value of
+     mmdftailor-variables (for use in shell-scripts)
+   - SMTP returns 452 on disc full
+   - SMTP returns 552 on size limit exceeded
+   - reject on rbl: set MTBL flags=reject (see man 5 mmdftailor)
+   - esmtp: SIZE implemented
+   - Compilechanges for Slackware 4.0
+   - filelist for use with rpm
+   - msg: fixed infinite loop when mailbox doesn't exist
+
 Changes between 2.44b4 and 2.44+a6
    - make install creates files.list of installed files
    - first attempt of esmtp-support
