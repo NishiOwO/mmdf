@@ -10,7 +10,8 @@ MODULES =	tty_io ll_err ll_log tai_packages cmdsrch \
 		zero blt expand sstr2arg nexec \
 		tai_file tai_noop \
 		gwdir gwdir.4.2 lk_lock mydbm getllog \
-		getllog.v7 getllog.bsd getllog.fak snprintf fs rbl_match
+		getllog.v7 getllog.bsd getllog.fak snprintf fs rbl_match \
+		quota
 
 STANDARD =	tty_io.o ll_err.o ll_log.o tai_packages.o cmdsrch.o \
 		cmdbsrch.o cnvtdate.o creatdir.o getfpath.o getwho.o \
@@ -19,7 +20,8 @@ STANDARD =	tty_io.o ll_err.o ll_log.o tai_packages.o cmdsrch.o \
 		prefix.o strequ.o lexequ.o chrcnv.o getutmp.o getgroup.o \
 		compress.o multcpy.o multcat.o strdup.o gcread.o gettys.o \
 		zero.o blt.o expand.o sstr2arg.o nexec.o lk_lock.o \
-		mydbm.o getllog.o snprintf.o fs.o rbl_match.o
+		mydbm.o getllog.o snprintf.o fs.o rbl_match.o \
+		quota.o
 
 STDSRCS =	tty_io.c ll_err.c ll_log.c tai_packages.c cmdsrch.c \
 		cmdbsrch.o cnvtdate.c creatdir.c getfpath.c getwho.c \
@@ -28,7 +30,8 @@ STDSRCS =	tty_io.c ll_err.c ll_log.c tai_packages.c cmdsrch.c \
 		prefix.c strequ.c lexequ.c chrcnv.c getutmp.c getgroup.c \
 		compress.c multcpy.c multcat.c strdup.c gcread.c gettys.c \
 		zero.c blt.c expand.c sstr2arg.c nexec.c lk_lock.c \
-		mydbm.c getllog.c snprintf.c fs.c rbl_match.c
+		mydbm.c getllog.c snprintf.c fs.c rbl_match.c \
+		quota.c
 
 v7objs =	gwdir.o
 v7srcs =	gwdir.c
