@@ -42,13 +42,13 @@ AC_PROVIDE(AC_GET_STRING)
 dnl  AC_CHECK_FILE(<Variable>, <file>)
 AC_DEFUN(AC_CHECK_FILE,
 [
-  /bin/echo -n Checking for $2...
+  AC_MSG_CHECKING(for file $2)
 
   if test -e "$2"; then
-    echo " yes"
+    AC_MSG_RESULT(yes)
     AC_DEFINE_UNQUOTED(HAVE_$1, 1)
   else
-    echo " no"
+    AC_MSG_RESULT(no)
     AC_DEFINE_UNQUOTED(HAVE_$1, 0)
   fi
 ])
@@ -151,7 +151,21 @@ AC_ARG_ENABLE(unsupported, \
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl checking for architectures
 AC_AIX
+AC_MSG_CHECKING(whether _AIX is defined)
+AC_CACHE_VAL(ac_cv_is_aix,
+AC_EGREP_CPP(yes,
+[#ifdef _AIX
+    yes
+#endif
+], ac_cv_is_aix=yes, ac_cv_is_aix=no, 1))
+if test "$ac_cv_is_aix" = yes; then
+  AC_MSG_RESULT(yes)
+else
+  AC_MSG_RESULT(no)
+fi
+
 dnl AC_DYNIX_SEQ	AC_FUNC_GETMNTENT
 dnl AC_IRIX_SUN	AC_FUNC_GETMNTENT, AC_CHECK_LIB(sun, getpwnam)
 AC_ISC_POSIX
@@ -161,27 +175,34 @@ dnl AC_XENIX_DIR	AC_HEADER_DIRENT
 
 dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl those are needed to check for libs and headers, later on
-dnl Checks for programs.
+dnl Checking for programs.
 dnl
 AC_PROG_AWK
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
-AC_PROG_RANLIB
+AC_PATH_PROG(AR, ar)
 AC_CHECK_PROG(ASSIGN, assign, assign)
 if test "$ac_cv_prog_ASSIGN" != ""; then
     AC_DEFINE(HAVE_ASSIGN)
 fi
+AC_PATH_PROG(CHOWN, chown)
 AC_CHECK_PROG(LORDER, lorder, lorder)
 if test "$ac_cv_prog_LORDER" != ""; then
     LIBFIX="libfix"
 else
     LIBFIX="libfix.linux"
 fi
-AC_CHECK_FILE(SECURETTY, /etc/securetty)
-AC_PATH_PROG(CHOWN, chown)
-AC_PATH_PROG(AR, ar)
+AC_PROG_RANLIB
 
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl Checking for files.
+dnl
+AC_CHECK_FILE(SECURETTY, /etc/securetty)
+
+dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
+dnl Checking for libraries.
+dnl
 dnl and add to -I to CPPFLAGS and and -Lto LDFLAGS, just to be sure
 if test "$libdir" = '${exec_prefix}/lib'; then
   if test "x$exec_prefix" = xNONE; then
@@ -215,19 +236,6 @@ fi
 dnl pass default prefix on to subdirs, if not explicitely given as an option
 if test "x$prefix" = xNONE; then
   ac_configure_args="$ac_configure_args --prefix=$ac_default_prefix"
-fi
-
-AC_MSG_CHECKING(whether _AIX is defined)
-AC_CACHE_VAL(ac_cv_is_aix,
-AC_EGREP_CPP(yes,
-[#ifdef _AIX
-    yes
-#endif
-], ac_cv_is_aix=yes, ac_cv_is_aix=no, 1))
-if test "$ac_cv_is_aix" = yes; then
-  AC_MSG_RESULT(yes)
-else
-  AC_MSG_RESULT(no)
 fi
 
 dnl we prefer using gcc for compiling C++ files, provided the user did
@@ -269,12 +277,13 @@ AC_HEADER_TIME
 AC_STRUCT_TM
 AC_STRUCT_TIMEZONE
 
-AC_CHECK_HEADERS(fcntl.h sgtty.h sys/file.h sys/ioctl.h sys/time.h syslog.h)
-AC_CHECK_HEADERS(memory.h termio.h libio.h)
+AC_CHECK_HEADERS(fcntl.h libio.h memory.h termio.h sgtty.h syslog.h)
+AC_CHECK_HEADERS(varargs.h)
+AC_CHECK_HEADERS(sys/file.h sys/ioctl.h sys/time.h)
 
-AC_CHECK_FUNCS(strchr memcpy dup2 fcntl index res_mkquery getdtablesize)
-AC_CHECK_FUNCS(ftime getcwd gethostname gettimeofday getwd mkdir socket strdup)
-AC_CHECK_FUNCS(flock)
+AC_CHECK_FUNCS(dup2 fcntl flock ftime getcwd getdtablesize gethostname)
+AC_CHECK_FUNCS(gettimeofday getwd index memcpy mkdir res_mkquery)
+AC_CHECK_FUNCS(socket strchr strdup)
 
 AC_FUNC_UTIME_NULL
 AC_FUNC_VFORK
