@@ -1,5 +1,5 @@
 /*
- * $Id: mydbm.c,v 1.1 1998/05/25 07:40:53 krueger Exp $
+ * $Id: mydbm.c,v 1.2 1998/09/18 11:39:45 krueger Exp $
  *
  * When using the gdbm-library, gdbm provides an dbminit() functions that
  * always open the database in RW-mode and locks it. So no other program
@@ -95,9 +95,10 @@ datum myfirstkey()
   return(firstkey());
 }
 
-datum mynextkey()
+datum mynextkey(key)
+datum key;
 {
-  return(nextkey());
+  return(nextkey(key));
 }
 
 mydbmclose()

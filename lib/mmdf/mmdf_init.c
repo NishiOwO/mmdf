@@ -165,7 +165,7 @@ char *pgmname;
 
     if (logdfldir != (char *) 0)
     {                           /* we know of malloc in code, above */
-	free (logptr -> ll_file);
+      /* free (logptr -> ll_file); */
 	logptr -> ll_file = dupfpath (savelog, logdfldir);
 	free (savelog);
     }
