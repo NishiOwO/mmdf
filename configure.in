@@ -284,8 +284,6 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_OFF_T
 AC_TYPE_SIGNAL
 AC_DECL_SYS_SIGLIST
-AC_STRUCT_TM
-AC_STRUCT_TIMEZONE
 
 dnl Checks for library functions.
 AC_PROG_GCC_TRADITIONAL

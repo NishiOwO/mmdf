@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.6 1997/12/30 20:25:54 krueger Exp $
+ * $Id: config.h.in,v 1.7 1997/12/30 22:15:59 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -24,6 +24,18 @@
 /* Define if you don't have tm_zone but do have the external array
    tzname.  */
 #undef HAVE_TZNAME
+
+/* Define if you can safely include both <sys/time.h> and <time.h>.  */
+#undef TIME_WITH_SYS_TIME
+
+/* Define if your <sys/time.h> declares struct tm.  */
+#undef TM_IN_SYS_TIME
+
+/* Define if you have the ftime function.  */
+#undef HAVE_FTIME
+
+/* Define if you have the gettimeofday function.  */
+#undef HAVE_GETTIMEOFDAY
 
 /* Define if utime(file, NULL) sets file's timestamp to the present.  */
 #undef HAVE_UTIME_NULL
@@ -62,26 +74,14 @@
 /* Define if you have the ANSI C header files.  */
 #undef STDC_HEADERS
 
-/* Define if you can safely include both <sys/time.h> and <time.h>.  */
-#undef TIME_WITH_SYS_TIME
-
-/* Define if your <sys/time.h> declares struct tm.  */
-#undef TM_IN_SYS_TIME
-
 /* Define vfork as fork if vfork does not work.  */
 #undef vfork
-
-/* Define if you have the ftime function.  */
-#undef HAVE_FTIME
 
 /* Define if you have the getcwd function.  */
 #undef HAVE_GETCWD
 
 /* Define if you have the gethostname function.  */
 #undef HAVE_GETHOSTNAME
-
-/* Define if you have the gettimeofday function.  */
-#undef HAVE_GETTIMEOFDAY
 
 /* Define if you have the getwd function.  */
 #undef HAVE_GETWD
@@ -140,9 +140,6 @@
 
 /* Define if you have the <sys/ioctl.h> header file.  */
 #undef HAVE_SYS_IOCTL_H
-
-/* Define if you have the <sys/time.h> header file.  */
-#undef HAVE_SYS_TIME_H
 
 /* Define if you have the <syslog.h> header file.  */
 #undef HAVE_SYSLOG_H
