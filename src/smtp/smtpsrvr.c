@@ -1,4 +1,4 @@
-static char Id[] = "$Id: smtpsrvr.c,v 1.27 1999/09/06 20:14:46 krueger Exp $";
+static char Id[] = "$Id: smtpsrvr.c,v 1.28 1999/09/08 08:00:56 krueger Exp $";
 /*
  *                      S M T P S R V R . C
  *
@@ -327,15 +327,20 @@ char **argv;
 		/*
 		 * Is this a valid host for this channel ?
 		 */
-		switch(tb_wk2val (curchan -> ch_table, TRUE, them, tmpstr)){
-		default:        /* Either NOTOK or MAYBE */
-			if ((n != (Agc-1)) || stricked)
+#ifdef HAVE_WILDCARD
+		switch(tb_wk2val (curchan -> ch_table, TRUE, them, tmpstr))
+#else /* HAVE_WILDCARD */
+		switch(tb_k2val (curchan -> ch_table, TRUE, them, tmpstr))
+#endif /* HAVE_WILDCARD */
+        {
+            default:        /* Either NOTOK or MAYBE */
+              if ((n != (Agc-1)) || stricked)
 				continue;
 			/* fall through so we get some channel name to use */
-		case OK:
-			chanptr = curchan;
-			channel = curchan -> ch_name;
-			break;
+            case OK:
+              chanptr = curchan;
+              channel = curchan -> ch_name;
+              break;
 		}
 		break;
 	}
@@ -591,7 +596,7 @@ int cmdnr;
                 commands[cmdnr].cmdname);
         netreply(replybuf);
       } else {
-        helostr = strdup(arg);
+        if(arg!=0) helostr = strdup(arg);
         /*ll_log( logptr, LLOGFTR, "helostr \"%s\" #1\n", helostr );*//*is ok -u*/
 #ifdef HAVE_ESMTP
         if(cmdnr==CMDEHLO) {
@@ -623,7 +628,6 @@ int cmdnr;
  *
  *      handle the MAIL command  ("MAIL from:<user@host>")
  */
-#define TEST
 #ifdef HAVE_NOSRCROUTE
 extern int ap_outtype;
 #endif
@@ -648,7 +652,7 @@ int cmdnr;
     int            Agc,i;
 #ifdef HAVE_ESMTP
     long           size=-1;
-#  if defined(HAVE_ESMTP_DSN) || defined(TEST)
+#  ifdef HAVE_ESMTP_DSN
     char           dsn_envid[32];
 #  endif /* HAVE_ESMTP_DSN */
 #endif /* HAVE_ESMTP */

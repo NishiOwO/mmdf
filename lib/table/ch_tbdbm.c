@@ -312,6 +312,7 @@ DBMValues dbm;                      /* put the entry here           */
     return (TRUE);
 }
 
+#ifdef HAVE_WILDCARD
 int tb_wk2val(table, first, name, buf)
 register Table  *table;
 int     first;                    /* start at beginning of list?        */
@@ -344,6 +345,7 @@ char   *buf;                      /* put value int this buffer          */
   }
   return(retval);
 }
+endif /* HAVE_WILDCARD */
 
 /* *******  FIND VALUE (address), GIVEN ITS KEY (hostname)  ********* */
 

@@ -261,7 +261,11 @@ AP_ptr
 				/* SEK this might need beefing up to cope    */
 				/* with unknown subdomains              */
 
+#ifdef HAVE_WILDCARD
 	irval = tb_wk2val(exorchan->ch_known, TRUE, route.dm_argv[0], official);
+#else /* HAVE_WILDCARD */
+	irval = tb_k2val(exorchan->ch_known, TRUE, route.dm_argv[0], official);
+#endif /* HAVE_WILDCARD */
 	if(irval == MAYBE)
 	    return( (AP_ptr)MAYBE);
 	else if(irval == NOTOK) {
