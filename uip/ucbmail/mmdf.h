@@ -8,11 +8,11 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.1 $
+ *  $Revision: 1.2 $
  *
  *  $Log: mmdf.h,v $
- *  Revision 1.1  1985/11/18 13:18:42  galvin
- *  Added comment header for revision history.
+ *  Revision 1.2  1985/11/20 14:37:19  galvin
+ *  First set of needed MMDF global variables.  We can read the maildrop now.
  *
  * Revision 1.4  86/01/02  16:23:51  galvin
  * Add some defines from "util.h" since we can not include
