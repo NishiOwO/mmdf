@@ -82,7 +82,7 @@ char	**argv;
 {
 	register	int	ch;
 
-	while ((ch = getopt(argc, argv, "cfm")) != EOF) {
+	while ((ch = getopt(argc, argv, "afm")) != EOF) {
 		switch (ch) {
 		case 'a':
 			alladdrs++;
