@@ -1,0 +1,2 @@
+echo Be sure to set the correct timezone in Makefile.real
+make -f ../Makefile.com -f Makefile.real $*

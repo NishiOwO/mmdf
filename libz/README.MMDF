@@ -1,0 +1,19 @@
+# README.MMDF
+
+# Instructions for people who don't have getopt(). ECB - 4/89
+
+If your system is one of those that doesn't have getopt(), you'll need to
+modify Makefile.real. Uncomment the MMDFLIBS reference in the load-lines
+for zic and zdump in Makefile.real. Search for the string "GETOPT" in
+Makefile.real to find the right place.
+
+#	List of changes to stock distribution to integrate into MMDF
+#	source tree.
+#		Edward C. Bennett (edward@engr.uky.edu) 10/88
+
+Copied Makefile to Makefile.real
+Moved original Makefile to Makefile.dist
+Drastic changes to cleanup Makefile.real so that it blends into MMDF smoothly.
+Added "gen" shell script to follow MMDF conventions.
+Added "SYS5" to "USG" #define's in *.c files
+Changed strchr() calls to index() calls in zic.c
