@@ -8,11 +8,11 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.2 $
+ *  $Revision: 1.3 $
  *
  *  $Log: local.h,v $
- *  Revision 1.2  1985/11/16 15:53:32  galvin
- *  Added comment header for revision history.
+ *  Revision 1.3  1985/11/16 15:54:31  galvin
+ *  Added include of v7.local.h if 4_2BSD is defined.
  *
  * Revision 1.3  85/11/16  15:54:31  galvin
  * Added include of v7.local.h if 4_2BSD is defined.
