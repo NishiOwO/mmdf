@@ -268,7 +268,7 @@ $(MCMDDIR)/$(MMPREF)fixtai  :   xfixtai
 fixtai:   xfixtai
 	-@echo
 xfixtai:  fixtai.o $(MMDFLIBS)
-	    $(CC) $(LDFLAGS) -o $@ fixtai.o $(MMDFLIBS) 
+	    $(CC) $(LDFLAGS) -o $@ fixtai.o $(MMDFLIBS)  $(SYSLIBS)
 
 l-fixtai:
 	$(LINT) $(LFLAGS) fixtai.c $(LLIBS)
