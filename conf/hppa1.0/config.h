@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.6 1998/04/03 18:04:15 krueger Exp $
+ * $Id: config.h,v 1.7 1998/05/25 07:45:17 krueger Exp $
  *
  * please set every configuration-switch here
  *
@@ -8,31 +8,6 @@
 
 #ifndef CONFIG_OLD_H
 #define CONFIG_OLD_H
-
-/*             Enables  the  d_assign code in the dial pack-
- *             age.  This code calls the program /bin/assign
- *             to  gain exclusive access to a file.  It does
- *             not appear that the  d_assign  code  is  ever
- *             used so don't bother defining DOASSIGN.
- *    renamed to HAVE_ASSIGN
- *    set by configure in config.h.in
- */
-/* #undef DOASSIGN */
-
-/*             Many  sites  are  running  their systems with
- *             TTYs  in  more  secure  mode  than  generally
- *             writable.  Usually these systems use the exe-
- *             cute bit to  indicate  write  permission  and
- *             have  a  privileged  program make the access.
- *             If you are such a  site,  you  will  want  to
- *             investigate  the effect of SECURETTY and mod-
- *             ify it if necessary.   Vanilla  sites  should
- *             not  define  SECURETTY.   BRL  VAX UNIX sites
- *             must define SECURETTY.
- *    renamed to HAVE_SECURETTY
- *    set by configure in config.h.in
- */
-/* #undef SECURETTY */
 
 /*             Most sites should enable DEBUG=1 unless there
  *             is  a  serious  crunch  for space.  This will
@@ -83,22 +58,6 @@
  */
 /* #undef V4_2BSD */
 
-/*             Enables code specific for 4.3BSD.  Right  now
- *             this is limited to the NAMESERVER support.
- */
-/* #undef V4_3BSD */
-
-/*             Prevents the dial package (PhoneNet protocol)
- *             from  being  compiled.   This  saves  a  fair
- *             amount  of  space  and  compile time.  Define
- *             NODIAL if you do not intend to use the  phone
- *             or  pobox  channels.   (You will also need to
- *             take `dial' out of Makefile.lib, see  below.)
- *    renamed to HAVE_DIAL
- *    set by configure in config.h.in
- */
-/* #undef NODIAL */
-
 /*             Enables  code  that does Bell System V tricks
  *             (probably also useful for System III  instal-
  *             lations).  Note: if you are running System V,
@@ -113,32 +72,6 @@
  *             NETLIBS.
  */
 /* #define SYS5r3 */
-
-/*             Define this variable  if  you  don't  have  a
- *             dup2() system call or subroutine.
- *    renamed to HAVE_DUP2
- *    set by configure in config.h.in
- */
-/* #define NODUP2 */
-
-/*             If  you  defined NODUP2, then you should also
- *             define NOFCNTL if you don't have the fcntl(x,
- *             F_DUPFD) system call either.
- *    renamed to HAVE_FCNTL_F_DUPFD
- *    set by configure in config.h.in
- */
-/* #undef NOFCNTL */
-
-/*             Enables   the   nameserver  lookup  code  for
- *             accessing  domain  servers.   The  NAMESERVER
- *             support  is  new.   You  will  be required to
- *             include either tb_ns.fake.c or tb_ns.<sys>.c.
- *             Currently  there  is  only support for 4.2BSD
- *             networking.  See TB_NS below.
- *    renamed to HAVE_NAMESERVER
- *    set by configure in config.h.in
- */
-/* #undef NAMESERVER */
 
 /*             Prevents    Domain    Literals    (such    as
  *             [10.0.0.59])  from  appearing  in  addresses.
