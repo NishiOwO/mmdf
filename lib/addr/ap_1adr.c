@@ -149,8 +149,8 @@ ap_1adr ()
     ap_sqinsert (&basenode, APP_ETC, ap_pstrt);
     for (state = STINIT, got822 = FALSE, r733prefptr = (AP_ptr) 0; ;){
 #if DEBUG > 1
-	if (debug)
-	    printf ("=>%d (%s)", state,
+      if (debug)
+	    printf ("\n=>%d (%s)", state,
 		(state >= 0 && state <= 13) ? statnam[state] : "BOGUS!");
 #endif
 	switch (state)

@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.8 1998/01/11 18:38:55 krueger Exp $
+ * $Id: config.h,v 1.9 1998/03/17 19:35:19 krueger Exp $
  *
  * please set every configuration-switch here
  *
@@ -47,7 +47,7 @@
  *             kind if you want the space and the very minor
  *             performance increase.
  */
-/* #define DEBUG 1 */
+#define DEBUG 1
 
 /*             The  same  caution  applies  for D_LOG as for
  *             DEBUG.  This variable controls logging in the
@@ -226,5 +226,12 @@
  *             NIS.
  */
 /* #undef HAVE_NIS */
+
+/*             Enable code to disable source-routing of addresses
+ *             Should not be done according to RFC 1123, but needed for 
+ *             sendmail-host that don't accept source-routes to avoid
+ *             spam-mails.
+ */
+#define HAVE_NOSRCROUTE
 
 #endif /* CONFIG_OLD_H */

@@ -460,7 +460,6 @@ int	first;			  /* first try on this name ?*/
 
 	    return(RP_BHST);
 	}
-
 	ll_log ( logptr, LLOGFTR, "Trying to break down %s", numstr) ;
 
 	/* watch out for quoted and bracketed strings */
@@ -532,6 +531,7 @@ retry:
 		break;
 
 	    default:
+		printx("sm_nopen(%s)-default\n", hostnam);
 		/* some non-fatal error */
 		rval = RP_BHST;
 		break;

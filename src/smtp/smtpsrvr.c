@@ -47,6 +47,9 @@ extern struct passwd *getpwmid();
 extern char *multcat();
 extern Chan *ch_h2chan();
 
+extern int mgt_addipaddr,
+           mgt_addipname;
+
 char *progname, *us, *them, *channel;   /* Arguments to program */
 char *sender = 0;                       /* address of mail sender */
 char *helostr = 0;
@@ -200,8 +203,13 @@ char **argv;
 	if (STR_EQ(eval_hostname(request.client), paranoid))
 	  smtp_refuse(&request, "Paranoid");
 	if (!hosts_access(&request)) smtp_refuse(&request, "denied");
-	sprintf(from_host, "%s [%s]", eval_client(&request),
-		eval_hostaddr(request.client));
+	if(mgt_addipaddr && mgt_addipname)
+	  sprintf(from_host, "%s [%s]", eval_client(&request),
+		  eval_hostaddr(request.client));
+	else if(mgt_addipname)
+	  sprintf(from_host, "%s ", eval_client(&request));
+	else if(mgt_addipaddr)
+	  sprintf(from_host, "[%s]", eval_hostaddr(request.client));
 	ll_log( logptr, LLOGGEN, "connection from: %s",eval_client(&request));
 #else /* HAVE_LIBWRAP */
 	/* sprintf(from_host, "%s [IP]", strdup(them));*/
@@ -461,12 +469,18 @@ helo()
  *
  *      handle the MAIL command  ("MAIL from:<user@host>")
  */
+#ifdef HAVE_NOSRCROUTE
+extern int ap_outtype;
+#endif
 mail()
 {
 	char    replybuf[256];
 	char    info[512];
 	char    *lastdmn;
 	struct rp_bufstruct thereply;
+#ifdef HAVE_NOSRCROUTE
+        int     ap_outtype_save;
+#endif
 	int	len;
 	AP_ptr  domain, route, mbox, themap, ap_sender;
 
@@ -531,7 +545,14 @@ mail()
 				themap->ap_chain = route;
 				route = themap;
 		}
+#ifdef HAVE_NOSRCROUTE
+		ap_outtype_save = ap_outtype;
+		ap_outtype |= AP_NOSRCRT;
+#endif
 		sender = ap_p2s((AP_ptr)0, (AP_ptr)0, mbox, domain, route);
+#ifdef HAVE_NOSRCROUTE
+		ap_outtype = ap_outtype_save;
+#endif
 		if(sender == (char *)MAYBE){    /* help !! */
 	tout:;
 			sender = (char *) 0;

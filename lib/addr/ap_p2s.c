@@ -49,7 +49,7 @@ ap_p2s (group, name, local, domain, route)
     char *drefptr;              /* pointer to string to be output     */
 
 #ifdef DEBUG
-    ll_log (logptr, LLOGFTR, "ap_p2s()");
+    ll_log (logptr, LLOGFTR, "ap_p2s(%x)", ap_outtype);
 
     if ((ap_outtype & AP_822) == AP_822)   /* AP_733 is implicit default */
 	ll_log (logptr, LLOGFTR, "AP_822 on");
@@ -57,6 +57,12 @@ ap_p2s (group, name, local, domain, route)
 	? "AP_BIG on" : "AP_LITTLE on");
     if ((ap_outtype & AP_NODOTS) == AP_NODOTS)  /* AP_DOTS is implicit def. */
 	ll_log (logptr, LLOGFTR, "AP_NODOTS on");
+#ifdef HAVE_NOSRCROUTE
+    if ((ap_outtype & AP_NOSRCRT) == AP_NOSRCRT) /* AP_DOTS is implicit def. */
+	ll_log (logptr, LLOGFTR, "AP_NOSRCRT on (removing source-routes)");
+    if ((ap_outtype & AP_REJSRCRT) == AP_REJSRCRT)/* AP_DOTS is implicit def.*/
+	ll_log (logptr, LLOGFTR, "AP_REJSRCRT on (reject source-routes)");
+#endif
 #endif
 
     inperson = ingroup = FALSE;
@@ -151,21 +157,28 @@ ap_p2s (group, name, local, domain, route)
 	strp = cp;
     }
 
-    if (route != (AP_ptr) 0)      /* we have routing info */
-    {
+#ifdef HAVE_NOSRCROUTE
+    if ((ap_outtype & AP_NOSRCRT) != AP_NOSRCRT)
+#endif
+      if (route != (AP_ptr) 0)      /* we have routing info */
+	{
 #ifdef DEBUG
-	ll_log (logptr, LLOGFTR, "ap_p2s:  route is '%s'", route -> ap_obvalue);
+	  ll_log (logptr, LLOGFTR, "ap_p2s:  route is '%s'",
+		  route -> ap_obvalue);
 #endif
 	for (lastptr = curptr = route; ; curptr = curptr -> ap_chain) {
 	    if (curptr == (AP_ptr)0)    /* Grot Grot !!!!!!! */
 		goto defcase1;
 	    switch (curptr -> ap_obtype) {
 		case APV_EPER:
+		  ll_log (logptr, LLOGFTR, "ap_p2s: APV_EPER");
 		continue;
 
 		defcase1:;	/* YEUCH !! */
 		default:
+		  ll_log (logptr, LLOGFTR, "ap_p2s: default");
 		case APV_NIL:
+		  ll_log (logptr, LLOGFTR, "ap_p2s: APV_NIL");
 		    if ((ap_outtype & AP_822) == AP_822) {
 					/* piece of cake */
 			cp = multcat(strp, ":", (char *)0);
@@ -177,6 +190,7 @@ ap_p2s (group, name, local, domain, route)
 		    break;
 
 		case APV_CMNT:        /* Output value as comment */
+		  ll_log (logptr, LLOGFTR, "ap_p2s: APV_CMNT");
 		    if (name != (AP_ptr) 0) {
 			val2str (tmpbuf, curptr -> ap_obvalue, APV_CMNT);
 			cp = multcat(strp, (strp[0]?" ":""), "(",tmpbuf,")", (char *)0);
@@ -188,7 +202,9 @@ ap_p2s (group, name, local, domain, route)
 		    continue;
 
 		case APV_DLIT:
+		  ll_log (logptr, LLOGFTR, "ap_p2s: APV_DLIT");
 		case APV_DOMN:
+		  ll_log (logptr, LLOGFTR, "ap_p2s: APV_DOMN");
 		    val2str (tmpbuf, curptr -> ap_obvalue, curptr -> ap_obtype);
 		    flipptr = stripptr = (char *) 0;
 		    drefptr = tmpbuf;
@@ -244,6 +260,13 @@ ap_p2s (group, name, local, domain, route)
 	    break;
 	}
     }
+#ifdef HAVE_NOSRCROUTE
+#ifdef DEBUG_
+      else {
+	printf("ap_p2s() no routes\n");
+      }
+#endif
+#endif
 
     if (local != (AP_ptr) 0) {
 #ifdef DEBUG

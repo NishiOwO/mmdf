@@ -36,6 +36,8 @@ extern int
 	    maxhops,
 	    maxqueue,
 	    mgt_addid,
+            mgt_addipaddr,
+            mgt_addipname,
 	    lnk_listsize,
 	    mid_enable,
 	    mailsleep,
@@ -129,6 +131,8 @@ extern char
 #define AUTHREQUEST	48
 #define MMCHAN          49
 #define UUname          50
+#define MADDIPADDR      51
+#define MADDIPNAME      52
 #define MMNOOP         100
 
 /**/
@@ -145,6 +149,8 @@ Cmd cmdtab[] =
     "authlog",     AUTHLOG,    1,
     "authrequest", AUTHREQUEST,1,
     "maddid",	   MADDID,     1,
+    "maddipaddr",  MADDIPADDR, 1,
+    "maddipname",  MADDIPNAME, 1,
     "maddrq",      MMADDRQ,    1,
     "mchanlog",    MMCHANLOG,  1,
     "mchn",        MMCHAN,     1,
@@ -369,6 +375,14 @@ mm_tai (argc, argv)     /* process mmdf tailor info     */
     	case MADDID:
     	    mgt_addid = atoi(argv[1]);
     	    break;
+
+        case MADDIPADDR:
+            mgt_addipaddr = atoi(argv[1]);
+            break;
+
+        case MADDIPNAME:
+            mgt_addipname = atoi(argv[1]);
+            break;
 
     	case MLISTSIZE:
 	    lnk_listsize = atoi(argv[1]);
@@ -996,6 +1010,10 @@ LOCVAR Cmd
 #define CMDANODOTS      5
 #define CMDAJNT         6
 #define CMDATRY         7
+#ifdef HAVE_NOSRCROUTE
+#  define CMDANOSRCRT   8
+#  define CMDAREJSRCRT  9
+#endif
 
 
 
@@ -1007,6 +1025,10 @@ LOCVAR Cmd
     "big",      CMDABIG,        0,
     "jnt",      CMDAJNT,        0,
     "nodots",   CMDANODOTS,     0,
+#ifdef HAVE_NOSRCROUTE
+    "nosrcrt",  CMDANOSRCRT,    0,
+    "rejsrcrt", CMDANOSRCRT,    0,
+#endif
     "same",     CMDASAME,       0,
     "try",	CMDATRY,	0,
     0,          0,              0
@@ -1099,6 +1121,8 @@ ch_tai (argc, argv)
     chptr -> ch_ttl = (time_t)7200;  /* dead cache TimeToLive, two hours */
     chptr -> ch_logfile = chanlog.ll_file;
     chptr -> ch_loglevel = chanlog.ll_level;
+    chptr -> warntime = warntime;
+    chptr -> failtime = failtime;
     tbind = -1;
     showind = -1;
 
@@ -1294,7 +1318,7 @@ ch_tai (argc, argv)
 
 		case CMDCAP:
 #ifdef DEBUG
-		    ll_log (logptr, LLOGFTR, "Ap style '%s'", argv[ind]);
+		    ll_log (logptr, LLOGFST, "Ap style '%s'", argv[ind]);
 #endif
 		    switch (cmdbsrch (argv[ind], 0, parmap, PARMAPENT))
 		    {
@@ -1319,10 +1343,22 @@ ch_tai (argc, argv)
 			case CMDAJNT:
 			     chptr -> ch_apout = (AP_733 | AP_BIG);
 			     break;
+#ifdef HAVE_NOSRCROUTE
+			case CMDANOSRCRT:
+			    chptr -> ch_apout |= AP_NOSRCRT;
+			    break;
+			case CMDAREJSRCRT:
+			    chptr -> ch_apout |= AP_REJSRCRT;
+			    break;
+#endif
 			default:
 			    tai_error ("unknown address style", argv[ind], argc, argv);
 			    continue;
 		    }
+#ifdef DEBUG
+		    ll_log (logptr, LLOGFST, "Ap style %s '%o'",
+			    chptr -> ch_name, chptr -> ch_apout);
+#endif
 		    break;
 
 		case CMDCAUTH:

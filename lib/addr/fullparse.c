@@ -1,3 +1,4 @@
+#include "config.h"
 #include "ap_lex.h"
 #include "util.h"
 #include "ap.h"

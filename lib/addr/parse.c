@@ -1,8 +1,11 @@
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/parse.c,v 1.3 1985/01/17 23:07:11 dpk Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/parse.c,v 1.4 1998/03/17 19:35:20 krueger Exp $ */
 /* $Log: parse.c,v $
-/* Revision 1.3  1985/01/17 23:07:11  dpk
-/* Reworked, it now works
+/* Revision 1.4  1998/03/17 19:35:20  krueger
+/* Added changes to disable source-route for sender in smtpsrvr
 /*
+ * Revision 1.3  1985/01/17 23:07:11  dpk
+ * Reworked, it now works
+ *
  * Revision 1.3  85/01/17  23:07:11  dpk
  * Reworked, it now works
  * 
@@ -12,6 +15,7 @@
  *  < 1978  B. Borden       Wrote initial version of parser code
  *  78-80   D. Crocker      Reworked parser into current form
  */
+#include "config.h"
 #if DEBUG < 2
 main() {
 	fprintf(stderr, "parse is useless when compiled with -DDEBUG=x (x < 2)\n");
@@ -47,7 +51,7 @@ main (argc, argv)
     {
 	printf ("Parse: ");
 
-	switch (ap_fp = ap_fullparse (getach)) {
+	switch ((int)(ap_fp = ap_fullparse (getach))) {
 	case NOTOK:
 	    printf ("\nNOTOK: on %s\n", namtab[ap_llex]);
 	    break;
