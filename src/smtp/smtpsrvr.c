@@ -37,6 +37,7 @@
 
 #define BYTESIZE        8
 
+extern void ap_7to8 ();
 /* mmdf configuration variables */
 extern LLog *logptr;
 extern char *supportaddr;
@@ -50,6 +51,7 @@ extern Chan *ch_h2chan();
 
 extern int mgt_addipaddr,
            mgt_addipname;
+smtp_protocol smtp_proto = PRK_UNKNOWN;
 int input_source = 0;
 #define IN_SRC_NET   0
 #define IN_SRC_LOCAL 1
@@ -95,6 +97,10 @@ int     deny_severity = LOG_WARNING;    /* ditto */
 #endif
 #endif /* HAVE_LIBWRAP */
 
+#ifdef HAVE_ESMTP
+void tell_esmtp_options();
+#endif /* HAVE_ESMTP */
+
 /****************************************************************
  *                                                              *
  *      C O M M A N D   D I S P A T C H   T A B L E             *
@@ -104,19 +110,65 @@ int     deny_severity = LOG_WARNING;    /* ditto */
 int helo(), mail(), quit(), help(), rcpt(), confirm();
 int data(), rset(), reject(), expn(), vrfy();
 
+#define CMDNOOP 0
+#define CMDHELO 1
+#define CMDMAIL 2
+#define CMDDATA 3
+#define CMDRCPT 4
+#define CMDHELP 5
+#define CMDQUIT 6
+#define CMDRSET 7
+#define CMDEXPN 8
+#define CMDVRFY 9
+#ifdef HAVE_ESMTP
+#  define CMDSEND 10
+#  define CMDSOML 11
+#  define CMDSAML 12
+#  define CMDEHLO 13
+#  define CMDETRN 14
+#  define CMDVERB 15
+#  define CMDONEX 16
+#  define CMDXUSR 17
+#endif /* HAVE_ESMTP */
+
 struct comarr           /* format of the command table */
 {
 	char *cmdname;          /* ascii name */
 	int (*cmdfunc)();       /* command procedure to call */
+    int cmdnr;
+    int cmdmode;
 } commands[] = {
-	"helo", helo,           "noop", confirm,
-	"mail", mail,           "data", data,
-	"rcpt", rcpt,           "help", help,
-	"quit", quit,           "rset", rset,
-        "expn", expn,           "vrfy", vrfy,
-	NULL, NULL
+    {"noop", confirm, CMDNOOP, 0}, /* 0 */
+	{"helo", helo   , CMDHELO, 0}, /* 1 */
+    {"mail", mail   , CMDMAIL, 0}, /* 2 */
+    {"data", data   , CMDDATA, 0}, /* 3 */
+	{"rcpt", rcpt   , CMDRCPT, 0}, /* 4 */
+    {"help", help   , CMDHELP, 0}, /* 5 */
+	{"quit", quit   , CMDQUIT, 0}, /* 6 */
+    {"rset", rset   , CMDRSET, 0}, /* 7 */
+    {"expn", expn   , CMDEXPN, 0}, /* 8 */
+    {"vrfy", vrfy   , CMDVRFY, 0}, /* 9 */
+#ifdef HAVE_ESMTP
+    {"send", mail   , CMDSEND, 1}, /* 10 */
+    {"soml", mail   , CMDSOML, 1}, /* 11 */
+    {"saml", mail   , CMDSAML, 1}, /* 12 */
+	{"ehlo", helo   , CMDEHLO, 1}, /* 13 */
+#  ifdef HAVE_ESMTP_ETRN
+	{"etrn", confirm, CMDETRN, 1}, /* 14 */
+#  endif /* HAVE_ESMTP_ETRN */
+#  ifdef HAVE_ESMTP_VERB
+	{"verb", confirm, CMDVERB, 1}, /* 15 */
+#  endif /* HAVE_ESMTP_VERB */
+#  ifdef HAVE_ESMTP_ONEX
+	{"onex", confirm, CMDONEX, 1}, /* 16 */
+#  endif /* HAVE_ESMTP_ONEX */
+#  ifdef HAVE_ESMTP_XUSR
+	{"xusr", confirm, CMDXUSR, 1}, /* 17 */
+#  endif /* HAVE_ESMTP_XUSR */
+#endif /* HAVE_ESMTP */
+	{NULL, NULL     }
+    
 };
-
 
 /*
  *              M A I N
@@ -201,6 +253,7 @@ char **argv;
 		them = strdup(them);
 	        strcpy(tmpstr, them);  
 		sprintf(them, "%s", tmpstr);
+		/* sprintf(them, "[%s]", tmpstr); */
 #ifdef NODOMLIT
 		themknown = FALSE;
 #endif /* NODOMLIT */
@@ -248,7 +301,7 @@ char **argv;
 	 * the channel arg is now a comma seperated list of channels
 	 * useful for multiple sources ( As on UCL's ether )
 	 */
-	strcpy (tmp_buf, argv[3]);
+    strcpy (tmp_buf, argv[3]);
 	Agc = str2arg (tmp_buf, NUMCHANS, Ags, (char *)0);
 	channel = Ags[Agc-1];
 	for(chanptr = (Chan *)0, n = 0 ; n < Agc ; n++){
@@ -260,7 +313,7 @@ char **argv;
 		/*
 		 * Is this a valid host for this channel ?
 		 */
-		switch(tb_k2val (curchan -> ch_table, TRUE, them, tmpstr)){
+		switch(tb_wk2val (curchan -> ch_table, TRUE, them, tmpstr)){
 		default:        /* Either NOTOK or MAYBE */
 			if ((n != (Agc-1)) || stricked)
 				continue;
@@ -291,8 +344,14 @@ char **argv;
 	mmdfstart();
 
 	/* say we're listening */
-	sprintf (replybuf, "220 %s Server SMTP (Complaints/bugs to:  %s)\r\n",
-			us, supportaddr);
+#ifdef HAVE_ESMTP
+    if((chanptr->ch_access&CH_ESMTP)==CH_ESMTP)
+      sprintf (replybuf, "220 %s Server ESMTP (Complaints/bugs to:  %s)\r\n",
+               us, supportaddr);
+    else
+#endif /* HAVE_ESMTP */
+      sprintf (replybuf, "220 %s Server SMTP (Complaints/bugs to:  %s)\r\n",
+               us, supportaddr);
 	netreply (replybuf);
 
 nextcomm:
@@ -307,10 +366,18 @@ nextcomm:
 		{
 		    if (strcmp(buf, comp->cmdname) == 0) /* a winner */
 		    {
-			(*comp->cmdfunc)();     /* call comm proc */
-			goto nextcomm;          /* back for more */
-		    }
-		    comp++;             /* bump to next candidate */
+#ifdef HAVE_ESMTP
+              if( (!comp->cmdmode) ||
+                  (comp->cmdmode &&
+                   ((chanptr->ch_access&CH_ESMTP)==CH_ESMTP))) {
+#endif
+                (*comp->cmdfunc)(comp->cmdnr);     /* call comm proc */
+                goto nextcomm;          /* back for more */
+#ifdef HAVE_ESMTP
+              }
+#endif
+            }
+        comp++;             /* bump to next candidate */
 		}
 		netreply("500 Unknown or unimplemented command\r\n" );
 		ll_log(logptr, LLOGBTR, "unknown command '%s'", buf);
@@ -459,7 +526,7 @@ getline()
 /*
  *  Process the HELO command
  */
-helo()
+helo(int cmdnr)
 {
 	char replybuf[128];
 
@@ -480,12 +547,43 @@ helo()
  * -- DSH (suggested by: Hans van Staveren <sater@cs.vu.nl>)
  */
 
-	if(arg == 0 || !lexequ(arg, them))
-		sprintf(replybuf, "250 %s - you are a charlatan\r\n", us);
-	else 
-		sprintf (replybuf, "250 %s\r\n", us);
-	if(arg!=0) helostr = strdup(arg);
-	netreply (replybuf);
+    if(smtp_proto != PRK_UNKNOWN) {
+#ifdef HAVE_ESMTP
+      sprintf(replybuf, "503 %s Duplicate HELO/EHLO\r\n", us);
+#else
+      sprintf(replybuf, "503 %s Duplicate HELO\r\n", us);
+#endif
+      netreply (replybuf);
+    } else {
+      if(arg == 0) {
+        sprintf(replybuf, "501 %s requires domain address\r\n",
+                commands[cmdnr].cmdname);
+        netreply(replybuf);
+      } else {
+        helostr = strdup(arg);
+#ifdef HAVE_ESMTP
+        if(cmdnr==CMDEHLO) {
+          smtp_proto = PRK_ESMTP;
+          if(!lexequ(arg, them))
+            sprintf(replybuf, "250-%s - you are a charlatan\r\n", us);
+          else 
+            sprintf (replybuf, "250-%s\r\n", us);
+          netreply (replybuf);
+          tell_esmtp_options();
+        } else {
+#endif /* HAVE_ESMTP */
+          smtp_proto = PRK_SMTP;
+          if(!lexequ(arg, them))
+            sprintf(replybuf, "250 %s - you are a charlatan\r\n", us);
+          else 
+            sprintf (replybuf, "250 %s\r\n", us);
+          netreply (replybuf);
+#ifdef HAVE_ESMTP
+        }
+#endif
+      }
+    }
+    
 }
 
 /*
@@ -496,7 +594,7 @@ helo()
 #ifdef HAVE_NOSRCROUTE
 extern int ap_outtype;
 #endif
-mail()
+mail(int cmdnr)
 {
 	char    replybuf[256];
 	char    info[512];
@@ -542,6 +640,7 @@ mail()
 		themap = ap_new(APV_DOMN, them);
 		if(ap_dmnormalize(themap, (Chan *)0) == MAYBE)
 			goto tout;
+
 		if(route != (AP_ptr)0){
 			/*
 			 * only normalize the bits that we need
@@ -567,8 +666,18 @@ mail()
 		else {
 			if (route != (AP_ptr)0)
 				themap->ap_chain = route;
-				route = themap;
+            route = themap;
 		}
+#if 0
+        if(domain==(AP_ptr)0)
+          sender = ap_p2s((AP_ptr)0, (AP_ptr)0, mbox, route, (AP_ptr)0);
+	if ((ap_sender = ap_s2tree(sender)) != (AP_ptr)NOTOK){
+      netreply("test1\r\n");
+      ap_t2parts(ap_sender, (AP_ptr *)0, (AP_ptr *)0,
+						&mbox, &domain, &route);
+      netreply("test1\r\n");
+    }
+#endif
 		sender = ap_p2s((AP_ptr)0, (AP_ptr)0, mbox, domain, route);
 		if(sender == (char *)MAYBE){    /* help !! */
 	tout:;
@@ -596,7 +705,10 @@ mail()
 	        sprintf( info, "%sH%s*", info, helostr );
 	if(from_host[0] != 0 ) 
 	        sprintf( info, "%sF%s*", info, from_host );
-
+#ifdef HAVE_ESMTP
+    sprintf( info, "%sp%d*", info, smtp_proto);
+#endif
+    
 	if( rp_isbad( mm_winit(channel, info, sender))) {
 		netreply("451 Temporary problem initializing\r\n");
 		sender = (char *) 0;
@@ -608,19 +720,31 @@ mail()
 		mm_end( NOTOK );
 		mmdfstart();
 	} else if( rp_gbval( thereply.rp_val ) == RP_BNO) {
-		sprintf (replybuf, "501 %s\r\n", thereply.rp_line);
-		netreply (replybuf);
-		sender = (char *) 0;
-		mm_end( NOTOK );
-		mmdfstart();
+      switch (rp_gval(thereply.rp_val))
+      {
+          case RP_BADR:
+            sprintf (replybuf, "550 %s\r\n", thereply.rp_line);
+            break;
+          case RP_BCHN:
+            sprintf (replybuf, "550 %s\r\n", thereply.rp_line);
+            break;
+          default:
+            sprintf (replybuf, "501 %s (%o)\r\n", thereply.rp_line, thereply.rp_val&0xff);
+      }
+      netreply (replybuf);
+      sender = (char *) 0;
+      mm_end( NOTOK );
+      mmdfstart();
 	} else if( rp_gbval( thereply.rp_val ) == RP_BTNO) {
 		sprintf (replybuf, "451 %s\r\n", thereply.rp_line);
 		netreply (replybuf);
 		sender = (char *) 0;
 		mm_end( NOTOK );
 		mmdfstart();
-	} else
-		netreply("250 OK\r\n");
+	} else {
+      sprintf(replybuf, "250 %s... Sender ok\r\n", sender);
+      netreply (replybuf);
+    }
 	numrecipients = 0;
 }
 
@@ -647,7 +771,7 @@ char *them, *from;
 /*
  *  Process the RCPT command  ("RCPT TO:<forward-path>")
  */
-rcpt()
+rcpt(int cmdnr)
 {
 	register char *p;
 	struct rp_bufstruct thereply;
@@ -695,7 +819,8 @@ rcpt()
 			netreply (replybuf);
 		}
 		else {
-			netreply("250 Recipient OK.\r\n");
+			sprintf (replybuf, "250 %s... Recipient ok\r\n", p);
+			netreply (replybuf);
 			numrecipients++;
 		}
 	}
@@ -730,7 +855,7 @@ char *addrp;
 /*
  *  Process the DATA command.  Send text to MMDF.
  */
-data()
+data(int cmdnr)
 {
 	register char *p, *bufptr;
 	time_t  tyme;
@@ -843,7 +968,7 @@ data()
 /*
  *  Process the RSET command
  */
-rset()
+rset(int cmdnr)
 {
 	mm_end( NOTOK );
 	sender = (char *)0;
@@ -864,7 +989,7 @@ mmdfstart()
 /*
  *  handle the QUIT command
  */
-quit()
+quit(int cmdnr)
 {
 	time_t  timenow;
 
@@ -889,7 +1014,7 @@ int retval;
 /*
  *  Reply that the current command has been logged and noted
  */
-confirm()
+confirm(int cmdnr)
 {
 	netreply("250 OK\r\n");
 }
@@ -897,7 +1022,7 @@ confirm()
 /*
  *  Process the HELP command by giving a list of valid commands
  */
-help()
+help(int cmdnr)
 {
 	register int i;
 	register struct comarr *p;
@@ -905,8 +1030,14 @@ help()
 
 	netreply("214-The following commands are accepted:\r\n214-" );
 	for(p = commands, i = 1; p->cmdname; p++, i++) {
-		sprintf (replybuf, "%s%s", p->cmdname, ((i%10)?" ":"\r\n214-") );
+#ifdef HAVE_ESMTP
+      if((!p->cmdmode) || (p->cmdmode &&
+                           (chanptr->ch_access&CH_ESMTP)==CH_ESMTP))
+#endif
+      {
+        sprintf (replybuf, "%s%s", p->cmdname, ((i%10)?" ":"\r\n214-") );
 		netreply (replybuf);
+      }
 	}
 	sprintf (replybuf, "\r\n214 Send complaints/bugs to:  %s\r\n", supportaddr);
 	netreply (replybuf);
@@ -941,7 +1072,7 @@ char *string;
  *
  *      handle the EXPN command  ("EXPN user@host")
  */
-expn()
+expn(int cmdnr)
 {
 
 	if (arg == 0 || *arg == 0) {
@@ -1139,7 +1270,7 @@ expn_dump()
  *
  *      handle the VRFY command  ("VRFY user@host")
  */
-vrfy()
+vrfy(int cmdnr)
 {
 	register int fd;
 	register char *cp;
@@ -1343,3 +1474,33 @@ vrfy_kill()
 
 	return;
 }
+#ifdef HAVE_ESMTP
+void tell_esmtp_options()
+{
+  netreply("250-EXPN\r\n");
+  
+#  ifdef HAVE_ESMT_VERB
+  netreply("250-VERB\r\n");
+#  endif
+#  ifdef HAVE_ESMT_8BITMIME
+  netreply("250-8BITMIME\r\n");
+#  endif
+#  ifdef HAVE_ESMT_SIZE
+  netreply("250-SIZE\r\n");
+#  endif
+#  ifdef HAVE_ESMT_DSN
+  netreply("250-DSN\r\n");
+#  endif
+#  ifdef HAVE_ESMT_ONEX
+  netreply("250-ONEX\r\n");
+#  endif
+#  ifdef HAVE_ESMT_ETRN
+  netreply("250-ETRN\r\n");
+#  endif
+#  ifdef HAVE_ESMT_XUSR
+  netreply("250-XUSR\r\n");
+#  endif
+  netreply("250 HELP\r\n");
+}
+
+#endif /* HAVE_ESMTP */
