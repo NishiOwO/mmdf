@@ -1,4 +1,4 @@
-static char Id[] = "$Id: smtpsrvr.c,v 1.28 1999/09/08 08:00:56 krueger Exp $";
+static char Id[] = "$Id: smtpsrvr.c,v 1.29 1999/09/08 14:42:44 krueger Exp $";
 /*
  *                      S M T P S R V R . C
  *
@@ -870,7 +870,14 @@ int cmdnr;
           netreply("test1\r\n");
         }
 #endif
+#ifdef HAVE_NOSRCROUTE1
+                ap_outtype_save = ap_outtype;
+                ap_outtype |= AP_NOSRCRT;
+#endif
 		sender = ap_p2s((AP_ptr)0, (AP_ptr)0, mbox, domain, route);
+#ifdef HAVE_NOSRCROUTE1
+                ap_outtype = ap_outtype_save;
+#endif
 		if(sender == (char *)MAYBE){    /* help !! */
 	tout:;
 			sender = (char *) 0;
