@@ -130,8 +130,8 @@ LOCVAR short   mgt_trust,        /* pass on author authentication?     */
 	mgt_donet,                /* send "network" channels, if any    */
 	mgt_loops,                /* number of times through this site  */
 	mgt_hops;                 /* number of hops message has gone    */
-char *mgt_helo;
-char *mgt_fromhost;
+char *mgt_helo = NULL;
+char *mgt_fromhost = NULL;
 /**/
 
 LOCFUN mgt_srcinfo();
