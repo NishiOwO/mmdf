@@ -81,7 +81,11 @@ int picko();
 struct passwd *pw;
 char *midp;
 char *d_subargs = "vm";
+#ifndef LINUX
 char *drft_tmplt = "drft.XXXXXX";
+#else
+char drft_tmplt[15];
+#endif
 char linebuf[128];
 char tmpline[128];
 
@@ -100,6 +104,9 @@ getuinfo() {
 
 	/* build a draft file name */
 
+#ifdef LINUX
+	strcpy(drft_tmplt,"drft.XXXXXX");
+#endif
 	mktemp(drft_tmplt);
 	/* Who are we this time */
 
