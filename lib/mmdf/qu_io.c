@@ -304,6 +304,64 @@ int     len;                      /* length of the structure            */
     }
     return (qu_wrec ((char    *) valstr, len));
 }
+/*^L  ************  TELL DELIVER OF RESULT ****************** */
+
+qu_wbrply (valstr, len, addr, ba_adr)  /* pass a reply to local process */
+     RP_Buf   *valstr;                 /* structure containing reply    */
+     int     len;                      /* length of the structure       */
+     char *addr, *ba_adr;
+{
+  int pid, status;
+  FILE *fp;
+#ifdef DEBUG
+    ll_log (logptr, LLOGBTR, "qu_wbrply()");
+    ll_log (logptr, LLOGFTR, "(%s)'%s'",
+          rp_valstr (valstr -> rp_val), valstr -> rp_line);
+#endif
+
+    switch (valstr -> rp_val)
+    {                             /* do msg stats for typical channels */
+      case RP_DOK:
+      case RP_AOK:
+          qu_nadrs++;
+          break;
+
+      case RP_MOK:
+          if (qu_nadrs == 0)    /* addresses weren't batched  */
+              qu_nadrs++;       /*  => one addr/msg           */
+          phs_msg (qu_chptr, qu_nadrs, qu_msglen);
+          qu_nadrs = 0;         /* reset */
+          break;
+    }
+
+    if((pid=fork())==0) {
+      setuid(getuid());
+      fp = fopen(qu_msgfile, "r");
+      ml_1adr( YES, YES, (char *) 0, "Failed mail: Bad address", addr);
+      ml_txt("\nThis is an automatic-reply from the mail-system.\n\n");
+      ml_txt("! ! Don't answer to that message! !\n\n");
+      ml_txt("Your message could not be delivered to `");
+      ml_txt(ba_adr);
+      ml_txt("` because there is no reciepient for that address.\n");
+      ml_txt(" Your message will be forwarded to the postmaster for ");
+      ml_txt("further tries to find out the reciepient.\n");
+      ml_txt("\n You wouln'd get any information about the outcome of your message.\n");
+      ml_txt("\n\tYour message follows:\n\n");
+      ml_file( fp);
+      ml_txt("\n\n\t----- End of forwarded message -----\n\n");
+      fclose(fp);
+      if( ml_end(OK) != OK)
+      { ll_log(logptr, LLOGFAT, "Error in sending BadAddress to %s", addr );
+      }
+      sleep(5);
+      ll_log(logptr, LLOGFAT, "Error-message send to %s", addr );
+      exit(0);
+    }
+    if(pid>0)while(pid!=wait(&status));
+    sleep(5);
+    return(RP_OK);
+}
+
 /*                    BASIC I/O WITH DELIVER                          */
 
 qu_rrec (linebuf, len)           /* read a record from Deliver         */
