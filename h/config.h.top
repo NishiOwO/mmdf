@@ -1,0 +1,9 @@
+/*
+ * $Id: config.h.top,v 1.1 1999/04/11 22:05:05 krueger Exp $
+ *
+ * config.h.in.  Generated automatically from configure.in by autoheader.
+ * please set every configuration-switch here
+ *
+ */
+#ifndef CONFIG_H
+#define CONFIG_H

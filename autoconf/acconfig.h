@@ -15,12 +15,9 @@
 
 
 /*
- * $Id: acconfig.h,v 1.1 1998/10/07 12:52:41 krueger Exp $
+ * $Id: acconfig.h,v 1.2 1999/04/11 22:05:05 krueger Exp $
  *
  */
-
-/* #ifndef CONFIG_H
-#define CONFIG_H */
 
 /* Define if on AIX 3.
    System headers sometimes define this.
@@ -274,7 +271,9 @@
 #undef HAVE_LIBGDBM  /* new */
 
 /*****************************************************************************/
-#undef EIGHT_BIT_CLEAN
+/*             Enable 8bit-clean mode when getting messages over smtp.
+ */
+#undef HAVE_8BIT
 
 /*             Enables  the  d_assign code in the dial pack-
  *             age.  This code calls the program /bin/assign
@@ -327,6 +326,7 @@
  *             arise later.
  */
 #undef D_DBGLOG
+
 /*            This makes the channel programs operate inde-
  *             pendently  from deliver.  It hasn't been used
  *             for years and requires reading  the  code  to
@@ -350,6 +350,16 @@
  */
 #undef HAVE_FCNTL_F_DUPFD
 
+/*             Enables   the   nameserver  lookup  code  for
+ *             accessing domain servers.The  HAVE_NAMESERVER
+ *             support   is   new.  If  turned  on  it  will
+ *             automatically compile the support for  4.2BSD
+ *             otherwise the 'fake' code  will  be  compiled
+ *             Currently  there  is  only support for 4.2BSD
+ *             networking.  See TB_NS below.
+ */
+#undef HAVE_NAMESERVER
+
 /*             Prevents    Domain    Literals    (such    as
  *             [10.0.0.59])  from  appearing  in  addresses.
  *             Since  doesn't currently handle Domain Liter-
@@ -359,10 +369,10 @@
 #undef NODOMLIT
 
 /*             Enables intpretation of dots as delimiters on
- *             the  LHS  of an @ in addresses.  For example,
- *             "user.host@yourdomain".  Since % or 822-rout-
- *             ing  is  preferred here, only enable LEFTDOTS
- *             if you have historical need to. 
+ *             the  LHS  of an @ in addresses.  For  example,
+ *             "user.host\@yourdomain".  Since % or
+ *             822-routing  is  preferred  here, only enable
+ *             LEFTDOTS if you have historical need to. 
  */
 #undef LEFTDOTS
 
@@ -384,11 +394,11 @@
  */
 #undef CITATION
 
-/*             Define  DBMCACHE  if  your  version of dbm(3)
- *             builds databases in core and then dumps  them
- *             to disk with dbmcachedump().
+/*             Define HAVE_DBMCACHEDUMP if your  version  of
+ *             dbm(3)  builds  databases  in  core  and then
+ *             dumps them to disk with dbmcachedump().
  */
-#undef DBMCACHE
+#undef HAVE_DBMCACHEDUMP
 
 /*             Define  STATSORT  if you want deliver to sort
  *             the mail queue based on a stat(2) of the mes-
@@ -404,22 +414,58 @@
  */
 #undef STATSORT
 
+/*             Enable the yp_match lookup code for accessing tables over
+ *             NIS.
+ */
+#undef HAVE_NIS
+
+/*
+ */
+#undef HAVE_NN
+
+/*             Enable code to disable source-routing of addresses
+ *             Should not be done according to RFC 1123, but needed for 
+ *             sendmail-host that don't accept source-routes to avoid
+ *             spam-mails.
+ */
+#undef HAVE_NOSRCROUTE
+
+/*             Enable a small fix to slowdown submitm such that the parent
+ *             could finish readring the pipe when submit exits. This is
+ *             needed on RISC-machines like HP9000s700 an newer.
+ */
+#undef SUBMIT_TOO_FAST
+
+/* Define if your system has the define SIGSYS */
 #undef HAVE_DEF_SIGSYS
+
+/* Define if you have the <fcntl.h> header file.  */
 #undef HAVE_FCNTL_H
-#undef HAVE_IOCTL_TIOCSBRK
-#undef HAVE_SGTTY_CBREAK
+
+/* Define if you have the <sgtty.h> header file.  */
 #undef HAVE_SGTTY_H
+
+/* Define if you have CBREAK in <sgtty.h> header file.  */
+#undef HAVE_SGTTY_CBREAK
+
+/* Define if you have TIOCSETN in <sgtty.h> header file.  */
 #undef HAVE_SGTTY_TIOCSETN
-#undef HAVE_SYS_ERRLIST_DECL
+
+/* Define if ioctl(1, TIOCSBRK, 0) works */
+#undef HAVE_IOCTL_TIOCSBRK
+
+/* Define if you have TIOCSETN in <termio.h> header file.  */
 #undef HAVE_TERMIO_TIOCSETN
+
 #undef HAVE_TSECURETTY
+
+/* Define if your system has sys_errlist[] declared */
+#undef HAVE_SYS_ERRLIST_DECL
+
 #undef HAVE_UNION_WAIT
 #undef LINUX
 #undef MKDIR_HAVE_SECOND_ARG
 
-#  include <config.old.h>
-#  include <funcs.h>
-#endif /* CONFIG_H */
 
 
 /* Leave that blank line there!!  Autoheader needs it.
