@@ -49,7 +49,7 @@ char *file;
 	strcat(curlock, maillock);
 	strcpy(locktmp, lockname);
 	mktemp(locktmp);
-	remove(locktmp);
+	myremove(locktmp);
 	for (;;) {
 		f = lock1(locktmp, curlock);
 		if (f == 0) {
@@ -63,7 +63,7 @@ char *file;
 			sleep(5);
 			continue;
 		}
-		remove(curlock);
+		myremove(curlock);
 	}
 }
 
@@ -75,7 +75,7 @@ char *file;
 unlock()
 {
 
-	remove(curlock);
+	myremove(curlock);
 	locked = 0;
 }
 
@@ -94,9 +94,9 @@ lock1(tempfile, name)
 		return(-1);
 	close(fd);
 	if (link(tempfile, name) < 0) {
-		remove(tempfile);
+		myremove(tempfile);
 		return(-1);
 	}
-	remove(tempfile);
+	myremove(tempfile);
 	return(0);
 }

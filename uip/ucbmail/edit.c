@@ -8,9 +8,12 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.3 $
+ *  $Revision: 1.4 $
  *
  *  $Log: edit.c,v $
+ *  Revision 1.4  1998/10/07 13:13:40  krueger
+ *  Added changes from v44a8 to v44a9
+ *
  *  Revision 1.3  1985/12/18 13:20:26  galvin
  *  Add another argument to send to indicate whether or not this
  *  message should be delimited by MMDF message delimiters.
@@ -143,12 +146,12 @@ edit1(msgvec, ed)
 		if (send(mp, obuf, 0, 0) < 0) {
 			perror(edname);
 			fclose(obuf);
-			remove(edname);
+			myremove(edname);
 			goto out;
 		}
 		fflush(obuf);
 		if (ferror(obuf)) {
-			remove(edname);
+			myremove(edname);
 			fclose(obuf);
 			goto out;
 		}
@@ -172,7 +175,7 @@ edit1(msgvec, ed)
 		pid = vfork();
 		if (pid == -1) {
 			perror("fork");
-			remove(edname);
+			myremove(edname);
 			goto out;
 		}
 		if (pid == 0) {
@@ -194,7 +197,7 @@ edit1(msgvec, ed)
 		 */
 
 		if (readonly) {
-			remove(edname);
+			myremove(edname);
 			continue;
 		}
 
@@ -208,19 +211,19 @@ edit1(msgvec, ed)
 			goto out;
 		}
 		if (modtime == statb.st_mtime) {
-			remove(edname);
+			myremove(edname);
 			goto out;
 		}
 		if ((ibuf = fopen(edname, "r")) == NULL) {
 			perror(edname);
-			remove(edname);
+			myremove(edname);
 			goto out;
 		}
-		remove(edname);
+		myremove(edname);
 		fseek(otf, (long) 0, 2);
 		size = fsize(otf);
 		mp->m_block = blockof(size);
-		mp->m_offset = offsetof(size);
+		mp->m_offset = myoffsetof(size);
 		ms = 0L;
 		lines = 0;
 		while ((c = getc(ibuf)) != EOF) {

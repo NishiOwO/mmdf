@@ -8,50 +8,12 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.7 $
+ *  $Revision: 1.8 $
  *
  *  $Log: fio.c,v $
- *  Revision 1.7  1998/06/17 09:46:27  krueger
- *  Modified Files:
- *  	README configure.in h/config.h.in h/util.h lib/addr/ghost.c
- *  	lib/dial/d_parse.c lib/dial/d_script2.c lib/mmdf/ml_send.c
- *  	lib/mmdf/mq_rdmail.c lib/mmdf/qu_io.c lib/mmdf/qu_rdmail.c
- *  	lib/table/ch_tbdbm.c lib/table/dm_table.c lib/table/tb_io.c
- *  	lib/table/tb_ns.c lib/util/arg2str.c lib/util/gwdir.2.9.c
- *  	lib/util/gwdir.c lib/util/lk_lock.c src/badusers/lo_wtmail.c
- *  	src/badusers/qu2lo_send.c src/bboards/bb_wtmail.c
- *  	src/bboards/dropsbr.c src/bboards/getbbent.c
- *  	src/blockaddr/qu2ba_send.c src/delay/qu2ds_send.c
- *  	src/deliver/deliver.c src/ean/ch_ean.c src/ean/qu2en_send.c
- *  	src/list/qu2ls_send.c src/local/lo_wtmail.c
- *  	src/local/qu2lo_send.c src/niftp/hdr_proc.c
- *  	src/niftp/pn_wtmail.c src/niftp/qn_rdmail.c src/pop/dropsbr.c
- *  	src/pop/po_wtmail.c src/prog/pr2mm_send.c
- *  	src/smphone/ph2mm_send.c src/smtp/qu2sm_send.c
- *  	src/smtp/sm_wtmail.c src/smtp/smtpsrvr.c
- *  	src/submit/adr_submit.c src/submit/auth_submit.c
- *  	src/submit/mgt_submit.c src/tools/checkaddr.c
- *  	src/tools/checkque.c src/tools/checkup.c src/tools/nictable.c
- *  	src/tools/process-uucp.c src/uucp/qu2uu_send.c
- *  	src/uucp/rmail.c src/uucp/uu_wtmail.c uip/msg/msg.h
- *  	uip/msg/msg4.c uip/msg/msg5.c uip/msg/msg6.c
- *  	uip/other/emactovi.c uip/other/malias.c uip/other/mlist.c
- *  	uip/other/rcvfile.c uip/other/rcvtrip.c uip/other/resend.c
- *  	uip/other/v6mail.c uip/send/s_arginit.c uip/send/s_drfile.c
- *  	uip/send/s_externs.h uip/send/s_get.c uip/send/s_input.c
- *  	uip/send/s_main.c uip/snd/s_arginit.c uip/snd/s_drfile.c
- *  	uip/snd/s_externs.h uip/snd/s_get.c uip/snd/s_input.c
- *  	uip/snd/s_main.c uip/ucbmail/aux.c uip/ucbmail/dateparse.c
- *  	uip/ucbmail/def.h uip/ucbmail/fio.c uip/ucbmail/names.c
- *  	uip/ucbmail/optim.c uip/unsupported/autores.c
- *  	uip/unsupported/cvmbox.c
+ *  Revision 1.8  1998/10/07 13:13:41  krueger
+ *  Added changes from v44a8 to v44a9
  *
- *  	 * 	Added changes from Ran Atkinson,
- *  	 * 	renamed index/rindex to strchr/strrchr
- *  	 * 	Added <unistd.h>
- *  	 * 	Added <string.h>
- *  	 *      first step of an ESMTP-base-code (still need to
- *  		implement the options, and feature)
  *
  *  Revision 1.6.2.1  1998/06/16 12:05:39  krueger
  *  Tue Jun 16 16:02:07 MET DST 1998 Kai Krueger <krueger@mathematik.uni-kl.de>
@@ -201,7 +163,7 @@ setptr(ibuf)
 #endif DEBUG
 			this.m_flag = flag;
 			flag = MUSED|MNEW;
-			this.m_offset = offsetof(offset);
+			this.m_offset = myoffsetof(offset);
 			this.m_block = blockof(offset);
 			this.m_size = s;
 			this.m_lines = l;
@@ -241,7 +203,7 @@ setptr(ibuf)
 			flag = MUSED|MNEW;
 			inhead = 1;
 			this.m_block = blockof(offset);
-			this.m_offset = offsetof(offset);
+			this.m_offset = myoffsetof(offset);
 			this.m_size = s;
 			this.m_lines = l;
 			s = 0L;
@@ -425,7 +387,7 @@ append(mp, f)
  * Delete a file, but only if the file is a plain file.
  */
 
-remove(name)
+myremove(name)
 	char name[];
 {
 	struct stat statb;
@@ -487,7 +449,7 @@ edstop()
 		if ((ibuf = lk_fopen(editfile, "r", (char *) 0, (char *) 0, 5)) == NULL) {
 			perror(editfile);
 			fclose(obuf);
-			remove(tempname);
+			myremove(tempname);
 			relsesigs();
 			reset(0);
 		}
@@ -498,11 +460,11 @@ edstop()
 		fclose(obuf);
 		if ((ibuf = fopen(tempname, "r")) == NULL) {
 			perror(tempname);
-			remove(tempname);
+			myremove(tempname);
 			relsesigs();
 			reset(0);
 		}
-		remove(tempname);
+		myremove(tempname);
 	}
 	printf("\"%s\" ", editfile);
 	fflush(stdout);
@@ -538,7 +500,7 @@ edstop()
 	}
 	lk_fclose(obuf, editfile, (char *) 0, (char *) 0);
 	if (gotcha) {
-		remove(editfile);
+		myremove(editfile);
 		printf("removed\n");
 	}
 	else
@@ -606,10 +568,10 @@ opentemp(file)
 	close(f);
 	if ((f = open(file, 2)) < 0) {
 		perror(file);
-		remove(file);
+		myremove(file);
 		return(-1);
 	}
-	remove(file);
+	myremove(file);
 	return(f);
 }
 

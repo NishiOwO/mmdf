@@ -8,9 +8,15 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.6 $
+ *  $Revision: 1.7 $
  *
  *  $Log: cmd1.c,v $
+ *  Revision 1.7  1998/10/07 13:13:38  krueger
+ *  Added changes from v44a8 to v44a9
+ *
+ *  Revision 1.6.2.1  1998/10/06 14:21:02  krueger
+ *  first cleanup, is now compiling and running under linux
+ *
  *  Revision 1.6  1986/01/14 14:09:45  galvin
  *  Let's not be lazy and use MMDF's smtpdate and makedate to parse the
  *  date of message into something nice (if we can).  Since the new
@@ -401,7 +407,7 @@ type1(msgvec, doign, page)
 				nlines += message[*ip - 1].m_lines;
 		}
 		if (page || nlines > atoi(cp)) {
-			obuf = popen(MORE, "w");
+			obuf = mypopen(MORE, "w");
 			if (obuf == NULL) {
 				perror(MORE);
 				obuf = stdout;

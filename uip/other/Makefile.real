@@ -248,7 +248,12 @@ inst-xsendmail:  ${SBINDIR}/sendmail
 
 ${SBINDIR}/sendmail:  xsendmail
 	-if test ! -f $@.orig; then cp $@ $@.orig; fi
+	-if test ! -f ${install_prefix}/usr/lib/sendmail.orig; then \
+		cp ${install_prefix}/usr/lib/sendmail
+		${install_prefix}/usr/lib/sendmail.orig;\
+	 fi
 	cp xsendmail $@
+	ln -s $@ ${install_prefix}/usr/lib/sendmail
 	-$(CHOWN) mmdf $@
 	-chmod 04$(PGMPROT) $@
 

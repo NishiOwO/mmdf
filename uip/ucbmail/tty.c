@@ -31,7 +31,11 @@ static	int	ttyset;			/* We must now do erase/kill */
 grabh(hp, gflags)
 	struct header *hp;
 {
+#ifdef HAVE_SGTTY_H
 	struct sgttyb ttybuf;
+#else
+	struct termio ttybuf;
+#endif
 	int ttycont(), signull();
 #ifndef TIOCSTI
 	int (*savesigs[2])();
@@ -47,15 +51,25 @@ grabh(hp, gflags)
 #ifndef TIOCSTI
 	ttyset = 0;
 #endif
+#if defined(HAVE_SGTTY_H)
 	if (gtty(fileno(stdin), &ttybuf) < 0) {
+#else /* HAVE_SGTTY_H */
+    if (ioctl(fileno(stdin), TCGETA, &ttybuf) < 0) {
+#endif /* HAVE_SGTTY_H */
 		perror("gtty");
 		return;
 	}
+#if defined(HAVE_SGTTY_H)
 	c_erase = ttybuf.sg_erase;
 	c_kill = ttybuf.sg_kill;
-#ifndef TIOCSTI
 	ttybuf.sg_erase = 0;
 	ttybuf.sg_kill = 0;
+#else /* HAVE_SGTTY_H */
+    c_erase = ttybuf.c_cc[VERASE];
+    c_kill =ttybuf.c_cc[VKILL];
+    ttybuf.c_cc[VERASE] = 0;
+    ttybuf.c_cc[VKILL] = 0;
+#ifndef TIOCSTI
 	for (s = SIGINT; s <= SIGQUIT; s++)
 		if ((savesigs[s-SIGINT] = sigset(s, SIG_IGN)) == SIG_DFL)
 			sigset(s, SIG_DFL);

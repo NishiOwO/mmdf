@@ -8,9 +8,15 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.3 $
+ *  $Revision: 1.4 $
  *
  *  $Log: local.h,v $
+ *  Revision 1.4  1998/10/07 13:13:44  krueger
+ *  Added changes from v44a8 to v44a9
+ *
+ *  Revision 1.3.2.1  1998/10/06 14:21:08  krueger
+ *  first cleanup, is now compiling and running under linux
+ *
  *  Revision 1.3  1985/11/16 15:54:31  galvin
  *  Added include of v7.local.h if 4_2BSD is defined.
  *
@@ -31,9 +37,7 @@
  *	@(#)local.h	5.1 (Berkeley) 6/6/85
  */
 
-#ifdef V4_2BSD
 #include "./v7.local.h"
-#endif
 
 #ifdef V4_1BSD
 #include "./v7.local.h"

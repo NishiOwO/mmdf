@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.30 1998/09/18 11:16:43 krueger Exp $
+ * $Id: config.h.in,v 1.31 1998/10/07 13:13:28 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -78,6 +78,12 @@
 /* Define if your system has the define SIGSYS */
 #undef HAVE_DEF_SIGSYS
 #undef HAVE_SIGSETMASK
+
+/* Define if you have the sigchild function.  */
+#undef HAVE_SIGCHILD
+
+/* Define if you have the sigset function.  */
+#undef HAVE_SIGSET
 
 /* Define if you have the ANSI C header files.  */
 #undef STDC_HEADERS
@@ -506,6 +512,7 @@ extern char * malloc(), *calloc();
 /* for compatability, until erverything is working with configure on         *
  *      ALL plaforms, include the old defines here                           *
  */
+#include <defs.h>
 #include <config.old.h>
 #include <funcs.h>
 

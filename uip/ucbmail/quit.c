@@ -8,9 +8,15 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.3 $
+ *  $Revision: 1.4 $
  *
  *  $Log: quit.c,v $
+ *  Revision 1.4  1998/10/07 13:13:47  krueger
+ *  Added changes from v44a8 to v44a9
+ *
+ *  Revision 1.3.2.1  1998/10/06 14:21:11  krueger
+ *  first cleanup, is now compiling and running under linux
+ *
  *  Revision 1.3  1985/12/18 13:25:49  galvin
  *  Add another argument to send to indicate whether or not this
  *  message should be delimited by MMDF message delimiters.
@@ -110,7 +116,7 @@ quit()
 		fclose(rbuf);
 		if ((rbuf = fopen(tempResid, "r")) == NULL)
 			goto newmail;
-		remove(tempResid);
+		myremove(tempResid);
 	}
 
 	/*
@@ -190,12 +196,12 @@ quit()
 		}
 		if ((ibuf = fopen(tempQuit, "r")) == NULL) {
 			perror(tempQuit);
-			remove(tempQuit);
+			myremove(tempQuit);
 			fclose(obuf);
 			lk_fclose(fbuf, mailname, (char *) 0, (char *) 0);
 			return;
 		}
-		remove(tempQuit);
+		myremove(tempQuit);
 		if ((abuf = fopen(mbox, "r")) != NULL) {
 			while ((c = getc(abuf)) != EOF)
 				putc(c, obuf);

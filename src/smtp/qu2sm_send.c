@@ -167,6 +167,7 @@ qu2sm_send ()             /* overall mngmt for batch of msgs    */
 		ap_sqdelete( sendtree, (AP_ptr) 0 );
 		ap_free( sendtree );
 	}
+    printx("Sender: %s\n", sender);
 
 	if (rp_isbad (result = qu2sm_each ()))
 	    break;
@@ -416,6 +417,7 @@ RP_Buf *rp;
 
     bytecount = bytecount +  len;
 
+    /* hier die Auswertung */
     if (rp_isbad (result) || rp_gval (result) != RP_DONE) {
 	blt ((char *)&rp_bdrem, (char *) rp, sizeof rp_bdrem);
 	return;

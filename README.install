@@ -32,11 +32,24 @@ may be changed by: --sbindir=
 	${libexecdir}	= ${exec_prefix}/lib/mh
 may be changed by: --libexecdir=
 
-	${sharedstatedir}= ${prefix}/spool/mmdf/home
-may be changed by: --sharedstatedir=
+	${varprefix}     = ${prefix}/var
+may be changed by: --varprefix=
 
-	${localstatedir} = ${prefix}/spool/mmdf/log
-may be changed by: --localstatedir=
+	${mmdfspooldir}  = ${varprefix}/mmdf/home
+	(old) ${sharedstatedir}= ${prefix}/spool/mmdf/home
+may be changed by: --mmdf-spooldir=
+		   --sharedstatedir=
+
+	${mmdflogdir}    = ${varprefix}/mmdf/log
+	(old) ${localstatedir} = ${prefix}/spool/mmdf/log
+may be changed by: --mmdf-logdir=
+		   --localstatedir=
+
+	${mmdfphasedir} = ${varprefix}/mmdf/log/phase
+may be changed by: --mmdf-phasedir=
+
+	${mmdfdiallog}  = ${logdir}/dial_log
+may be changed by: --mmdf-diallog=
 
 	${sysconfdir}	= ${mmdf_prefix}
 may be changed by: --sysconfdir=
@@ -129,10 +142,10 @@ ${rcvdir}/rcvprint
 ${rcvdir}/rcvtrip
 
 config: ${sysconfdir}/mmdftailor
-dir   : ${localstatedir}
-	${localstatedir}/phase
+dir   : ${mmdflogdir}
+	${mmdfphasedir}
 	${tbldir}
-	${sharedstatedir}
+	${mmdfspooldir}
 	/tmp/mmdf
 	
 Compiledin pathnames of conf.c, conf_dial.c, msgtailor.c are set
@@ -140,15 +153,15 @@ in h/pathnames.h as follows:
 
 	char *mmtailor	= "${sysconfdir}/mmdftailor"
 	char *cmddfldir	= "${mmdflibdir}"
-	char *logdfldir	= "${localstatedir}"
-	char *phsdfldir	= "${localstatedir}/phase"
+	char *logdfldir	= "${mmdflogdir}"
+	char *phsdfldir	= "${mmdfsphasedir}"
 	char *tbldfldir	= "${tbldir}"
 	char *tbldbm	= "${tbldir}/mmdfdbm"
-	char *quedfldir	= "${sharedstatedir}"
+	char *quedfldir	= "${mmdfspooldir}"
 	char *chndfldir	= "${chandir}"
 	char *lckdfldir	= "/tmp/mmdf"
 	char *authfile	= "${sysconfdir}/warning"
-	char *d_calllog	= "${localstatedir}/dial_log"
+	char *d_calllog	= "${mmdfdiallog}"
 	char *resendprog= "|${bindir}/resend"
 	char *sndname	= "${bindir}/send"
 

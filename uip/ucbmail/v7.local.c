@@ -8,9 +8,15 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.4 $
+ *  $Revision: 1.5 $
  *
  *  $Log: v7.local.c,v $
+ *  Revision 1.5  1998/10/07 13:13:48  krueger
+ *  Added changes from v44a8 to v44a9
+ *
+ *  Revision 1.4.2.1  1998/10/06 14:21:13  krueger
+ *  first cleanup, is now compiling and running under linux
+ *
  *  Revision 1.4  1985/12/18 01:54:04  galvin
  *  Create maildrop using MMDF default protection modes.
  *
@@ -73,7 +79,7 @@ demail()
 	if (value("keep") != NOSTR)
 		close(creat(mailname, sentprotect));
 	else {
-		if (remove(mailname) < 0)
+		if (myremove(mailname) < 0)
 			close(creat(mailname, sentprotect));
 	}
 }

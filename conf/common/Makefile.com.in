@@ -14,21 +14,22 @@ SYSTEM		= 4.2
 SERVER_SYSTEM		= 4.3
 MMPREF		=
 
+install_prefix	= 
 prefix          = @prefix@
 exec_prefix     = @exec_prefix@
 mmdf_prefix     = @mmdf_prefix@
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
-LIBDIR          = @mmdflibdir@
-CHANDIR         = @chandir@
-TBLDIR          = @tbldir@
+LIBDIR          = ${install_prefix}@mmdflibdir@
+CHANDIR         = ${install_prefix}@chandir@
+TBLDIR          = ${install_prefix}@tbldir@
 
-BINDIR          = @bindir@
-SBINDIR		= @sbindir@
-RCVDIR          = @rcvdir@
-LIBEXECDIR	= @libexecdir@
-DATADIR		= @datadir@
-LOCALSTATEDIR	= @localstatedir@
+BINDIR          = ${install_prefix}@bindir@
+SBINDIR		= ${install_prefix}@sbindir@
+RCVDIR          = ${install_prefix}@rcvdir@
+LIBEXECDIR	= ${install_prefix}@libexecdir@
+DATADIR		= ${install_prefix}@datadir@
+LOCALSTATEDIR	= ${install_prefix}@localstatedir@
 
 #
 #  Defines used during installation
@@ -40,6 +41,7 @@ AR		= @AR@
 MMDFLOGIN       = @MMDFLOGIN@
 ROOTLOGIN       = @ROOTLOGIN@
 PGMPROT         = @PGMPROT@
+XSTR            = @XSTR@
 
 #
 #  Configuration Defines

@@ -9,6 +9,7 @@ SHELL           = /bin/sh
 BUILD_SUBDIRS	= @CONFIG_SUBDIRS@
 SUBDIR		= @SUBDIRS@
 
+install_prefix	=
 prefix		= @prefix@
 exec_prefix	= @exec_prefix@
 libdir		= @libdir@
@@ -19,11 +20,17 @@ rcvdir		= @rcvdir@
 datadir		= @datadir@
 sharedstatedir	= @sharedstatedir@
 localstatedir	= @localstatedir@
-mmdf_prefix	= @mmdf_prefix@
+mmdfprefix	= @mmdfprefix@
 mmdflibdir	= @mmdflibdir@
 chandir		= @chandir@
 tbldir		= @tbldir@
 sysconfdir	= @sysconfdir@
+srcdir          = @srcdir@
+varprefix       = @varprefix@
+mmdflogdir      = @mmdflogdir@
+mmdfphasedir    = @mmdfphasedir@
+mmdfspooldir    = @mmdfspooldir@
+mmdfdiallog	= @mmdfdiallog@
 PATHNAMES	= h/pathnames.h
 
 HOST		= @HOST@
@@ -105,44 +112,50 @@ ${PATHNAMES}: Makefile
 	-@echo "#define BINDIR      \"${bindir}\"" >> ${PATHNAMES}
 	-@echo "#define SBINDIR     \"${sbindir}\"" >> ${PATHNAMES}
 	-@echo "#define LIBEXECDIR  \"${libexecdir}\"" >> ${PATHNAMES}
-	-@echo "#define MMDFPSOOLDIR \"${sharedstatedir}\"" >> ${PATHNAMES}
-	-@echo "#define MMDFLOGDIR   \"${localstatedir}\"" >> ${PATHNAMES}
-	-@echo "#define MMDFPREFIX   \"${mmdf_prefix}\"" >> ${PATHNAMES}
+	-@echo >> ${PATHNAMES}
+	-@echo "#define MMDFPREFIX   \"${mmdfprefix}\"" >> ${PATHNAMES}
 	-@echo "#define MMDFLIBDIR   \"${mmdflibdir}\"" >> ${PATHNAMES}
 	-@echo "#define MMDFCHANDIR  \"${chandir}\"" >> ${PATHNAMES}
 	-@echo "#define MMDFTABLEDIR \"${tbldir}\"" >> ${PATHNAMES}
 	-@echo "#define MMDFCFGDIR   \"${sysconfdir}\"" >> ${PATHNAMES}
 	-@echo >> ${PATHNAMES}
+	-@echo "#define MMDFPSOOLDIR \"${mmdfspooldir}\"" >> ${PATHNAMES}
+	-@echo "#define MMDFLOGDIR   \"${mmdflogdir}\"" >> ${PATHNAMES}
+	-@echo "#define MM_PHASEDIR  \"${mmdfphasedir}\"" >> ${PATHNAMES}
+	-@echo >> ${PATHNAMES}
 	-@echo "#define MM_MMDFTAILOR \"${sysconfdir}/mmdftailor\"" >> ${PATHNAMES}
-	-@echo "#define MM_PHASEDIR  \"${localstatedir}/phase\"" >> ${PATHNAMES}
 	-@echo "#define MM_TBLDBM    \"${tbldir}/mmdfdbm\"" >> ${PATHNAMES}
 	-@echo "#define MM_AUTHFILE  \"${sysconfdir}/warning\"" >> ${PATHNAMES}
-	-@echo "#define MM_DIALLOG   \"${localstatedir}/dial_log\"" >> ${PATHNAMES}
+	-@echo "#define MM_DIALLOG   \"${mmdfdiallog}\"" >> ${PATHNAMES}
 	-@echo "#define RESENDPROG   \"|${bindir}/resend \"" >> ${PATHNAMES}
 	-@echo "#define SENDPROG     \"${bindir}/send\"" >> ${PATHNAMES}
 
 ########################
 #
 dirs:
-	-if test ! -x ${prefix}; then \
-		mkdir -p ${prefix}; \
-		chmod 755 ${prefix}; \
+	-if test ! -x ${install_prefix}${prefix}; then \
+		mkdir -p ${install_prefix}${prefix}; \
+		chmod 755 ${install_prefix}${prefix}; \
 	fi
-	-if test ! -x ${bindir}; then mkdir -p ${bindir}; fi
-	-if test ! -x ${sbindir}; then mkdir -p ${sbindir}; fi
-	-if test ! -x ${libexecdir}; then mkdir -p ${libexecdir}; fi
-	-if test ! -x ${sharedstatedir}; then mkdir -p ${sharedstatedir}; fi
-	-if test ! -x ${localstatedir}; then mkdir -p ${localstatedir}; fi
-	-if test ! -x ${mmdf_prefix}; then mkdir -p ${mmdf_prefix}; fi
-	-if test ! -x ${mmdflibdir}; then mkdir -p ${mmdflibdir}; fi
-	-if test ! -x ${chandir}; then mkdir -p ${chandir}; fi
-	-if test ! -x ${tbldir}; then mkdir -p ${tbldir}; fi
-	-if test ! -x ${sysconfdir}; then mkdir -p ${sysconfdir}; fi
+	-if test ! -x ${install_prefix}${bindir}; then mkdir -p ${bindir}; fi
+	-if test ! -x ${install_prefix}${sbindir}; then mkdir -p ${sbindir}; fi
+	-if test ! -x ${install_prefix}${libexecdir}; then mkdir -p ${libexecdir}; fi
+	-if test ! -x ${install_prefix}${mmdfspooldir}; then mkdir -p ${mmdfspooldir}; fi
+	-if test ! -x ${install_prefix}${mmdflogdir}; then mkdir -p ${mmdflogdir}; fi
+	-if test ! -x ${install_prefix}${mmdfphasedir}; then mkdir -p ${mmdfphasedir}; fi
+#	-if test ! -x ${sharedstatedir}; then mkdir -p ${sharedstatedir}; fi
+#	-if test ! -x ${localstatedir}; then mkdir -p ${localstatedir}; fi
+	-if test ! -x ${install_prefix}${mmdfprefix}; then mkdir -p ${mmdfprefix}; fi
+	-if test ! -x ${install_prefix}${mmdflibdir}; then mkdir -p ${mmdflibdir}; fi
+	-if test ! -x ${install_prefix}${chandir}; then mkdir -p ${chandir}; fi
+	-if test ! -x ${install_prefix}${tbldir}; then mkdir -p ${tbldir}; fi
+	-if test ! -x ${install_prefix}${sysconfdir}; then mkdir -p ${sysconfdir}; fi
+	-if test ! -x ${install_prefix}${rcvdir}; then mkdir -p ${rcvdir}; fi
 
 ########################
 #
 ${srcdir}/configure:    configure.in
-	cd ${srcdir} && autoconf
+	cd ${srcdir} && autoconf -m ${srcdir}/autoconf
 
 # autoheader might not change config.h.in, so touch a stamp file.
 ${srcdir}/config.h.in:  stamp-h.in

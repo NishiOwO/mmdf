@@ -11,10 +11,11 @@
 #include <signal.h>
 #include <stdio.h>
 #ifdef HAVE_SGTTY_H
-#include <sgtty.h>
+#  include <sgtty.h>
+#else
+#  include <termio.h>
 #endif  /*  HAVE_SGTTY_H  */
 #include "./local.h"
-
 /*
  * Mail -- a mail program
  *
@@ -243,19 +244,23 @@ struct ignore {
  * don't have it, fork(2) will do . . .
  */
 
-#ifndef VMUNIX
+/*
+  #ifndef VMUNIX
 #define	vfork()	fork()
 #endif
-#ifndef	SIGRETRO
-#define	sigchild()
+*/
+
+#ifndef HAVE_SIGCHILD
+#  define	sigchild()
 #endif
 
 /*
  * 4.2bsd signal interface help...
  */
-#ifdef V4_2BSD
-#define	sigset(s, a)	signal(s, a)
-#define	sigsys(s, a)	signal(s, a)
+
+#ifndef HAVE_SIGSET
+#  define	sigset(s, a)	signal(s, a)
+#  define	sigsys(s, a)	signal(s, a)
 #endif
 
 /*
@@ -267,7 +272,7 @@ FILE	*collect();
 FILE	*infix();
 FILE	*mesedit();
 FILE	*mespipe();
-FILE	*popen();
+FILE	*mypopen();
 FILE	*setinput();
 char	*addto();
 char	*arpafix();
@@ -300,9 +305,11 @@ char    *strncpy();
 char	*value();
 char	*vcopy();
 off_t	fsize();
-#ifndef V4_2BSD
+/*
+  #ifndef V4_2BSD
 int	(*sigset())();
 #endif
+*/
 struct	cmd	*lex();
 struct	grouphead	*findgroup();
 struct	name	*cat();

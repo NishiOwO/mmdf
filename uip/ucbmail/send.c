@@ -8,9 +8,15 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.5 $
+ *  $Revision: 1.6 $
  *
  *  $Log: send.c,v $
+ *  Revision 1.6  1998/10/07 13:13:47  krueger
+ *  Added changes from v44a8 to v44a9
+ *
+ *  Revision 1.5.2.1  1998/10/06 14:21:12  krueger
+ *  first cleanup, is now compiling and running under linux
+ *
  *  Revision 1.5  1998/05/25 20:11:34  krueger
  *  *** empty log message ***
  *
@@ -335,7 +341,7 @@ topdog:
 			return;
 		}
 		if (fsize(mtf) != 0) {
-			remove(deadlettername);
+			myremove(deadlettername);
 			exwrite(deadlettername, mtf, 1);
 		}
 		goto out;
@@ -462,7 +468,7 @@ infix(hp, fi)
 		fclose(nfo);
 		return(fi);
 	}
-	remove(tempMail);
+	myremove(tempMail);
 	puthead(hp, nfo, GTO|GSUBJECT|GCC|GNL);
 	c = getc(fi);
 	while (c != EOF) {

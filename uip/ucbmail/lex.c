@@ -8,9 +8,15 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.6 $
+ *  $Revision: 1.7 $
  *
  *  $Log: lex.c,v $
+ *  Revision 1.7  1998/10/07 13:13:43  krueger
+ *  Added changes from v44a8 to v44a9
+ *
+ *  Revision 1.6.2.1  1998/10/06 14:21:07  krueger
+ *  first cleanup, is now compiling and running under linux
+ *
  *  Revision 1.6  1998/05/25 20:11:33  krueger
  *  *** empty log message ***
  *
@@ -58,6 +64,7 @@ static char *sccsid = "@(#)lex.c	5.4 (Berkeley) 11/2/85";
  */
 
 char	*prompt = "& ";
+extern char *version;
 
 /*
  * Set up editing on the given file name.
@@ -131,7 +138,7 @@ setfile(name, isedit)
 		lk_fclose(ibuf, name, (char *) 0, (char *) 0);
 		exit(1);
 	}
-	remove(tempMesg);
+	myremove(tempMesg);
 	setptr(ibuf);
 	setmsize(msgCount);
 	lk_fclose(ibuf, name, (char *)0, (char *)0);
@@ -546,7 +553,7 @@ isprefix(as1, as2)
 
 int	inithdr;			/* am printing startup headers */
 
-#ifdef _NFILE
+#ifdef HAVE_NFILE
 static
 _fwalk(function)
 	register int (*function)();
@@ -554,9 +561,9 @@ _fwalk(function)
 	register FILE *iop;
 
 	for (iop = _iob; iop < _iob + _NFILE; iop++)
-		(*function)(iop);
+      (*function)(iop);
 }
-#endif
+#endif /* HAVE_NFILE */
 
 static
 xclose(iop)
@@ -601,7 +608,9 @@ stop()
 	/*
 	 * Walk through all the open FILEs, applying xclose() to them
 	 */
+#ifdef HAVE__FILE
 	_fwalk(xclose);
+#endif
 
 	if (image >= 0) {
 		close(image);

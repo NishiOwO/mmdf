@@ -420,3 +420,18 @@ ispref(s1, s2)
 		;
 	return(*s1 == '\0');
 }
+
+
+#define   NOVAR   ((struct var *) 0)      /* The nil pointer to variables */
+/*
+ * Get the value of a variable and return it.
+ * Look in the environment if its not available locally.
+ */
+
+char *
+value(name)
+	char name[];
+{
+    return(getenv(name));
+}
+

@@ -8,9 +8,15 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.3 $
+ *  $Revision: 1.4 $
  *
  *  $Log: popen.c,v $
+ *  Revision 1.4  1998/10/07 13:13:46  krueger
+ *  Added changes from v44a8 to v44a9
+ *
+ *  Revision 1.3.2.1  1998/10/06 14:21:10  krueger
+ *  first cleanup, is now compiling and running under linux
+ *
  *  Revision 1.3  1985/11/16 15:19:15  galvin
  *  Added define for sigmask for backward compatibility from 4.3bsd to 4.2bsd.
  *
@@ -50,7 +56,7 @@ static	int	popen_pid[20];
 #endif
 
 FILE *
-popen(cmd,mode)
+mypopen(cmd,mode)
 char	*cmd;
 char	*mode;
 {

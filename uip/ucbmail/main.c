@@ -8,9 +8,15 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.3 $
+ *  $Revision: 1.4 $
  *
  *  $Log: main.c,v $
+ *  Revision 1.4  1998/10/07 13:13:45  krueger
+ *  Added changes from v44a8 to v44a9
+ *
+ *  Revision 1.3.2.1  1998/10/06 14:21:10  krueger
+ *  first cleanup, is now compiling and running under linux
+ *
  *  Revision 1.3  1985/11/20 12:23:08  galvin
  *  Added call to mmdf_init.
  *
@@ -66,8 +72,11 @@ main(argc, argv)
 	register char *ef;
 	register int i, argp;
 	int mustsend, hdrstop(), (*prevint)(), f;
+#ifdef HAVE_SGTTYH
 	struct sgttyb tbuf;
-
+#else
+	struct termio tbuf;
+#endif
 	/*
 	 * Set up the MMDF environment.
 	 */
@@ -93,8 +102,13 @@ main(argc, argv)
 	intty = isatty(0);
 	outtty = isatty(1);
 	if (outtty) {
+#if defined(HAVE_SGTTY_H)
 		gtty(1, &tbuf);
 		baud = tbuf.sg_ospeed;
+#else /* HAVE_SGTTY_H */
+        ioctl(1, TCGETA, &tbuf);
+        baud = (tbuf.c_cflag & CBAUD);
+#endif  /* HAVE_SGTTY_H */
 	}
 	else
 		baud = B9600;

@@ -8,7 +8,7 @@
 # Berkeley Mail
 #
 
-XSTR=	/usr/ucb/xstr
+#XSTR=	/usr/ucb/xstr
 DESTDIR=
 CTAGS=	/usr/ucb/ctags -w
 VPRINT=	/usr/ucb/print

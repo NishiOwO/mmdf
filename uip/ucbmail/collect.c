@@ -7,9 +7,15 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.5 $
+ *  $Revision: 1.6 $
  *
  *  $Log: collect.c,v $
+ *  Revision 1.6  1998/10/07 13:13:39  krueger
+ *  Added changes from v44a8 to v44a9
+ *
+ *  Revision 1.5.2.1  1998/10/06 14:21:03  krueger
+ *  first cleanup, is now compiling and running under linux
+ *
  *  Revision 1.5  1986/01/14 14:22:45  galvin
  *  Add extract() and detract() calls to parse the lines entered by the
  *  user when attempting to add to the To, Cc and Bcc address lists.
@@ -135,7 +141,7 @@ collect(hp)
 		goto err;
 	}
 	newi = ibuf;
-	remove(tempMail);
+	myremove(tempMail);
 
 	/*
 	 * If we are going to prompt for a subject,
@@ -600,7 +606,7 @@ mesedit(ibuf, obuf, c)
 	fflush(fbuf);
 	if (ferror(fbuf)) {
 		perror(tempEdit);
-		remove(tempEdit);
+		myremove(tempEdit);
 		goto fix;
 	}
 	fclose(fbuf);
@@ -617,14 +623,14 @@ mesedit(ibuf, obuf, c)
 	}
 	if (pid == -1) {
 		perror("fork");
-		remove(tempEdit);
+		myremove(tempEdit);
 		goto out;
 	}
 	while (wait(&s) != pid)
 		;
 	if ((s & 0377) != 0) {
 		printf("Fatal error in \"%s\"\n", ed);
-		remove(tempEdit);
+		myremove(tempEdit);
 		goto out;
 	}
 
@@ -634,16 +640,16 @@ mesedit(ibuf, obuf, c)
 
 	if ((fbuf = fopen(tempEdit, "a")) == NULL) {
 		perror(tempEdit);
-		remove(tempEdit);
+		myremove(tempEdit);
 		goto out;
 	}
 	if ((ibuf = fopen(tempEdit, "r")) == NULL) {
 		perror(tempEdit);
 		fclose(fbuf);
-		remove(tempEdit);
+		myremove(tempEdit);
 		goto out;
 	}
-	remove(tempEdit);
+	myremove(tempEdit);
 	fclose(obuf);
 	fclose(newi);
 	obuf = fbuf;
@@ -675,6 +681,7 @@ mespipe(ibuf, obuf, cmd)
 	int pid, s;
 	int (*savsig)();
 	char *Shell;
+	extern char tempEdit[];
 
 	newi = ibuf;
 	if ((no = fopen(tempEdit, "w")) == NULL) {
@@ -684,10 +691,10 @@ mespipe(ibuf, obuf, cmd)
 	if ((ni = fopen(tempEdit, "r")) == NULL) {
 		perror(tempEdit);
 		fclose(no);
-		remove(tempEdit);
+		myremove(tempEdit);
 		return(obuf);
 	}
-	remove(tempEdit);
+	myremove(tempEdit);
 	savsig = sigset(SIGINT, SIG_IGN);
 	fflush(obuf);
 	rewind(ibuf);
