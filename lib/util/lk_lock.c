@@ -491,7 +491,9 @@ int	maxtime;		/* maybe break lock after it is this old */
 		break;
 
 	default:
+#ifdef DEBUG
 		ll_err(logptr, LLOGFAT, "lk_fopen(): bad mode '%s'\n", access);
+#endif
 		return(NULL);
 	}
 
@@ -664,7 +666,9 @@ int	maxtime;		/* maybe break lock after it is this old */
 		break;
 
 	default:
+#ifdef DEBUG
 		ll_err (logptr, LLOGFAT, "lk_fopen(): bad mode '%s'\n", access);
+#endif
 		return(NULL);
 	}
 
@@ -698,9 +702,7 @@ char	*lockfile;		/* --Ignored-- */
 		lockdir ? lockdir : NIL, lockfile ? lockfile : NIL);
 #endif
 
-	switch (fp) {
-	case EOF:
-	case NULL:
+	if (fp==EOF || fp==NULL) {
 		return (OK);
 	}
 	retval = fclose (fp);
