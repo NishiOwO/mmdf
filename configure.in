@@ -48,6 +48,9 @@ dnl MMDF_MAJOR_VERSION=2
 dnl MMDF_MINOR_VERSION=44
 dnl MMDF_PATCH_LEVEL=9
 dnl VERSION_DATE="September 1998"
+if test "${with_mmdfprefix+set}" = set; then
+  mmdfprefix=${with_mmdfprefix}
+fi
 if test "${with_mmdflogin+set}" != set; then
   AC_DEFINE_UNQUOTED(MMDFLOGIN, "mmdf")
   mmdflogin=mmdf
@@ -230,6 +233,9 @@ dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 dnl
 dnl CHECK --without arguments
 dnl
+AC_ARG_WITH(
+  mmdfprefix,
+  [  --with-mmdfprefix=MMDFPREFIX  (default is $mmdfprefix)])
 AC_ARG_WITH(
   mmdflogin,
   [  --with-mmdflogin=MMDFLOGIN   (default is mmdf)])
