@@ -1,4 +1,4 @@
-static char Id[] = "$Id: smtpsrvr.c,v 1.34 2001/01/19 13:22:02 mmdf Exp $";
+static char Id[] = "$Id: smtpsrvr.c,v 1.35 2001/03/09 17:59:23 krueger Exp $";
 /*
  *                      S M T P S R V R . C
  *
@@ -65,6 +65,7 @@ extern int  dsn;
 #if defined(HAVE_RBL)
 char reject_on_rbl = 0;
 #endif /* HAVE_RBL */
+extern char *valid_channels; /* list of known channel for smtpsrvr */
 
 smtp_protocol smtp_proto = PRK_UNKNOWN;
 int input_source = 0;
@@ -242,9 +243,10 @@ char **argv;
         request_init(&request, RQ_DAEMON, argv[0], RQ_FILE, STDIN_FILENO, 0);
         fromhost(&request);
 #endif /* HAVE_LIBWRAP */
-	mmdf_init( progname );
+	mmdf_init( progname);
 
-	if (argc != 4){
+    if( (valid_channels == NULL && argc != 4) ||
+        (valid_channels != NULL && argc != 3 && argc != 4)) {
 		ll_log( logptr, LLOGFAT, "wrong number of args!" );
 		exit(NOTOK);
 	}
@@ -321,7 +323,9 @@ char **argv;
 	 * the channel arg is now a comma seperated list of channels
 	 * useful for multiple sources ( As on UCL's ether )
 	 */
-    strncpy (tmp_buf, argv[3], sizeof(tmp_buf));
+    if(argc==4) strncpy (tmp_buf, argv[3], sizeof(tmp_buf));
+    else strncpy (tmp_buf, valid_channels, sizeof(tmp_buf));
+    
 	Agc = str2arg (tmp_buf, NUMCHANS, Ags, (char *)0);
 	channel = Ags[Agc-1];
 	for(chanptr = (Chan *)0, n = 0 ; n < Agc ; n++){

@@ -247,3 +247,6 @@ char *authfile = AUTHFILE;
 long mbox_quota_soft = -1;
 long mbox_quota_hard = -1;
 
+/******************* SMTP CHANNEL TAILORING  *************************/
+char *valid_channels = (char *)0;
+/* list of known channel for smtpsrvr */

@@ -138,6 +138,9 @@ extern char
 		*authrequest,   /* Authorisation request		*/
 		*Uuxstr,	/* uux command string			*/
 		*Uuname;	/* uucp node name			*/
+extern char
+        *valid_channels; /* list of known channel for smtpsrvr */
+
 /**/
 
 #define MMLOCHOST        1
@@ -199,6 +202,7 @@ extern char
 #endif
 #define MMGROUP         56
 #define MMAXMBSZ        57
+#define MMVALIDCHN      58
 #define MMNOOP         100
   
 /**/
@@ -270,6 +274,7 @@ Cmd cmdtab[] =
     {"mtempt",      MMTEMPT,    1},
     {"mtmpt",       MMTEMPT,    1},
     {"mv6mail",     MMV6MAIL,   1},
+    {"mvalidchn",   MMVALIDCHN, 1},
     {"mwarntime",   MMWARNTIME, 1},
     {"niquedir",    NIQUEDIR,   1},
     {"uuname",      UUname,     1},
@@ -280,6 +285,13 @@ Cmd cmdtab[] =
 #define CMDTABENT ((sizeof(cmdtab)/sizeof(Cmd))-1)
 
 /**/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * we don't need to copy and reallocate memory. We are just moving
+ * pointers within in tai_init() allready allocate memory space. 
+ * mm_tai(), ... are just moving pointer within tai_data.
+ * if we free tai_data we will run into serious problems !
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
 int mm_tai (argc, argv)     /* process mmdf tailor info     */
     int argc;
@@ -510,6 +522,10 @@ int mm_tai (argc, argv)     /* process mmdf tailor info     */
       al_tai (argc, &argv[1]);
       break;
 
+        case MMVALIDCHN:
+          valid_channels = argv[1];
+          break;
+        
 #ifdef HAVE_ESMTP
         case MMSGSIZELIMIT:
           message_size_limit = atol(argv[1]);
