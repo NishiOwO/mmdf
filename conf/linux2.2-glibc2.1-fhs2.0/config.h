@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.1 1999/08/16 11:32:04 krueger Exp $
+ * $Id: config.h,v 1.2 1999/08/16 12:15:43 krueger Exp $
  *
  * most of the define-switches can be set by running configure.
  * some old defines are still in use
@@ -58,6 +58,7 @@
  */
 /* #undef CITATION=n */
 
+/* #define HAVE_LIBGDBM  / * new */
 #define HAVE_LIBGDBM  /* new */
 #define HAVE_MMAP
 #define HAVE_LONG_FILE_NAMES
