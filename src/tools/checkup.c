@@ -690,9 +690,18 @@ register char *title;
 	que (LEVEL6, subhdrfmt, title, "(via nameserver)");
     	return;
     } else {
+#ifdef HAVE_NIS
+      if ((tb -> tb_flags&TB_SRC) == TB_NIS) {
+	cknistable(tb, title);
+	return;
+      } else {
+#endif /* HAVE_NIS */
 	que (LEVEL6, subhdrfmt, title, tb -> tb_file);
 	if (stat (tb -> tb_file, &statbuf) < OK)
 	    que (LEVEL1, probfmt, "cannot stat", xerrstr());
+#ifdef HAVE_NIS
+      }
+#endif /* HAVE_NIS */
     }
     qflush (LEVEL6);
 }
@@ -1139,3 +1148,41 @@ endit (type)
     (void) fflush (stdout);
     exit (type);
 }
+#ifdef HAVE_NIS
+cknistable(tb, title)
+register Table *tb;
+register char *title;
+{
+  char *domain;
+  int r, order;
+  char *master;
+  char *inmap;
+
+  domain = NULL;
+  if (domain == NULL) /* get NIS-domain first */
+    if ((r = yp_get_default_domain(&domain)) != 0) {
+      que (LEVEL1, probfmt, "no nis-domainname", 
+	   yperr_string(r));
+	return (NOTOK);	  /* cannot get domainname              */
+    }
+
+  r = yp_order(domain, tb->tb_file, &order);
+  if(r) {
+    que(LEVEL1, probfmt, "no such map", tb->tb_file);
+    return(NOTOK); /* cannot get map */
+  }
+  r = yp_master(domain, tb->tb_file, &master);
+  if(r) {
+    que(LEVEL4, subhdrfmt, "      NIS domain", domain);
+    que(LEVEL1, probfmt, "", "no master-server");
+    return(NOTOK); /* cannot get master-server */
+  }
+  que(LEVEL4, subhdrfmt, "      NIS domain", domain);
+  que(LEVEL4, subhdrfmt, "      master Server", master);
+  que(LEVEL4, "    %-20s: %s has order %d, %s", "", tb->tb_file, order,
+      ctime((time_t *)&order));
+  qflush (LEVEL4);
+
+  return(OK);
+}
+#endif /* HAVE_NIS */

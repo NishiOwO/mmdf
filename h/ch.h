@@ -16,6 +16,9 @@ struct tb_struct
 #define	TB_FILE		000000		/* Read from file */
 #define	TB_DBM		000000		/* Read from DBM database */
 #define	TB_NS		000001		/* Read from Nameserver */
+#ifdef HAVE_NIS
+#  define TB_NIS        000002          /* Read from NIS-server */
+#endif /* HAVE_NIS */
 
 #define TB_TYPE		000030		/* what type of question to ask NS */
 #define TB_DOMAIN	000010		/* ask the nameserver for a domain */

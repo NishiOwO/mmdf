@@ -313,9 +313,14 @@ char   *buf;                      /* put value int this buffer          */
 LOCVAR DBMValues dbm;
 LOCVAR struct DBvalues *dp = (struct DBvalues *) 0;
     register char *cp;
-#ifdef  NAMESERVER
+#if defined(NAMESERVER) || defined(HAVE_NIS)
     int retval;
 #endif
+#ifdef HAVE_NIS
+    char *domain;
+    int  len;
+    char *value = NULL;
+#endif /* HAVE_NIS */
     
 
 #ifdef DEBUG
@@ -334,6 +339,42 @@ LOCVAR struct DBvalues *dp = (struct DBvalues *) 0;
 	return (NOTOK);
     }
 #endif /* NAMESERVER */
+
+#ifdef HAVE_NIS
+    if ((table->tb_flags&TB_SRC) == TB_NIS) {
+      domain = NULL;
+
+      if (domain == NULL) /* get NIS-domain first */
+	if ((retval = yp_get_default_domain(&domain)) != 0)
+	  {
+#ifdef DEBUG
+	    ll_log (logptr, LLOGFTR,
+		    "tb_k2val: Can't get default domainname. Reason: %s.\n",
+		    yperr_string(retval));
+#endif
+	    (void) strcpy (buf, "(ERROR)");
+	    return (NOTOK);	  /* cannot get domainname              */
+	  }
+
+      retval = yp_match(domain, table->tb_file, name, strlen(name),
+			&value, &len);
+      if(!retval) {
+#ifdef DEBUG
+	ll_log (logptr, LLOGFTR,"tb_k2val: NIS entry found: %s, %d", 
+		value, retval);
+#endif
+	value[len]='\0';
+	strcpy(buf, value);
+	compress (buf, buf);  /* get rid of extra white space       */
+	return (OK);
+      }
+#ifdef DEBUG
+       ll_log (logptr, LLOGFTR, "tb_k2val failed");
+#endif
+       (void) strcpy (buf, "(ERROR)");
+       return (NOTOK);
+    }
+#endif /* HAVE_NIS */
 
     if (!first)
 	dp++;

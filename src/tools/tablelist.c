@@ -88,6 +88,9 @@ Table *tblptr;
     if ((tblptr -> tb_flags & TB_SRC) == TB_NS)
 	return;
 #endif /* NAMESERVER */
+#ifdef HAVE_NIS
+    if ((tblptr -> tb_flags & TB_SRC) == TB_NIS) return;
+#endif /* HAVE_NIS */
     if (tblptr -> tb_fp == (FILE *)EOF)
 	return;		     /* Already done */
     printf("%s\n", tblptr -> tb_file);

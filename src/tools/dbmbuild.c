@@ -419,6 +419,13 @@ process (tblptr)
 	return;
     }
 #endif /* NAMESERVER */
+#ifdef HAVE_NIS
+    if ((tblptr -> tb_flags & TB_SRC) == TB_NIS) {
+      if (Debug || Verbose)
+          fprintf (stderr, "   (NIS table)\n");
+      return;
+    }
+#endif /* HAVE_NIS */
     if (!tb_open (tblptr, TRUE)) /* gain access to a channel table */
     {
 	fprintf (stderr, "could not open table \"%s\" (%s, file = '%s'):\n\t",
@@ -545,6 +552,10 @@ Table *tblptr;
     if ((tblptr -> tb_flags & TB_SRC) == TB_NS)
 	return(0);
 #endif /* NAMESERVER */
+#ifdef HAVE_NIS
+    if ((tblptr -> tb_flags & TB_SRC) == TB_NIS)
+      return(0);
+#endif /* HAVE_NIS */
     if (tblptr -> tb_fp == (FILE *)EOF)
 	return(1);		/* We already know its bad */
     if (!tb_open (tblptr, TRUE)) /* gain access to a channel table */
