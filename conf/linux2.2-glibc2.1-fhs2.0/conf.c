@@ -21,7 +21,8 @@ char
     /*	*sitesignature = "MMDF",*//*new one*/
     	*sitesignature = "Mail System (MMDF)",
 				/* in signature field of return-mail  */
-	*mmdflogin   = "mmdf",	/* login name for mmdf         */
+	*mmdflogin   = MMDFLOGIN,	/* login name for mmdf         */
+	*mmdfgroup = MMDFGROUP,	/* group name for mmdf         */
 	*supportaddr = "POSTMASTER@YOUR.MAIL.SITE";
 				/* where to send bug reports, etc. */
 /* *****************  DEFAULT BASE DIRECTORIES  *********************** */

@@ -20,7 +20,8 @@ char
 	*locdomain   = "mathematik.uni-kl.de",	/* Name of domain that is local to us */
 	*sitesignature = "MMDF",
 				/* in signature field of return-mail  */
-	*mmdflogin   = "mmdf",	/* login name for mmdf         */
+	*mmdflogin   = MMDFLOGIN,	/* login name for mmdf         */
+	*mmdfgroup = MMDFGROUP,	/* group name for mmdf         */
 	*supportaddr = "Postmaster@mathematik.uni-kl.de";
 				/* where to send bug reports, etc. */
 /* *****************  DEFAULT BASE DIRECTORIES  *********************** */
