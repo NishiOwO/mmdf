@@ -510,7 +510,7 @@ char *from, *date;
 			 */
 			if ((rest = grabheader(s, name)) == NULL) {
 			    if(debug)printf("/* Not a header therefore all headers done */\n");
-				break;
+			    break;
 			}
 
 			haveheader = 1;
@@ -559,10 +559,11 @@ char *from, *date;
 				hadr_munge(rest);
 				fputs(finalstr, rm_msgf);
 			}
-			else
+			else {
 			    if(debug)printf("do not munge.\n");
 				fprintf(rm_msgf, "%s\n", s);
-		}
+            }
+        }
 	}
 
 	/*
