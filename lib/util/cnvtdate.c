@@ -25,12 +25,13 @@ char *datbuf;
 {
 	register	struct	tm	*i;
 			time_t		tsec;
-	int tz_num = timezone/36;
-
-    if (tz_num < 0) tz_num = -tz_num;
+    int tz_num = timezone/3600;
 
     time(&tsec);
 	i = localtime(&tsec);
+
+    tz_num += i->tm_isdst;
+    if (tz_num < 0) tz_num = -tz_num;
 
 	switch (flag) {
 	case TIMCOM:
@@ -50,7 +51,7 @@ char *datbuf;
 		sprintf(datbuf, "%s, %d %s %04d %02d:%02d:%02d %c%04d (%s)",
 			day[i->tm_wday], i->tm_mday, month[i->tm_mon],
 			i->tm_year+1900, i->tm_hour, i->tm_min, i->tm_sec,
-                (timezone>0) ?  '-' : '+', tz_num,
+                (timezone>0) ?  '-' : '+', tz_num*100,
 #ifdef HAVE_TZNAME
 			tzname[i->tm_isdst]
 #else /* HAVE_TZNAME */
@@ -63,7 +64,7 @@ char *datbuf;
 		sprintf(datbuf, "%d %s %04d %02d:%02d %c%04d",
 			i->tm_mday, month[i->tm_mon], i->tm_year+1900,
 			i->tm_hour, i->tm_min,
-                (timezone>0) ?  '-' : '+', tz_num);
+			(timezone>0) ?  '-' : '+', tz_num*100);
 		break;
 	}
 	return(datbuf);
