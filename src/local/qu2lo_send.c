@@ -248,8 +248,14 @@ lo_master()
     
         /* we want to run with lo_pw user-id and mmdf's group id */
 #ifdef HAVE_INITGROUPS
-        if (initgroups (lo_pw->pw_name, grp->gr_gid) == NOTOK
+#if 0 /* doesnot seem to work. need some time to check where it's
+         getting wrong. => use old settings */
+            if (initgroups (lo_pw->pw_name, grp->gr_gid) == NOTOK
             || setgid (grp->gr_gid) == NOTOK
+#else
+		if (initgroups (lo_pw->pw_name, lo_pw->pw_gid) == NOTOK
+		  || setgid (lo_pw->pw_gid) == NOTOK
+#endif
 #else /* HAVE_INITGROUPS */
         if (setgid (grp->gr_gid) == NOTOK
 #endif /* HAVE_INITGROUPS */
