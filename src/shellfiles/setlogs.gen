@@ -1,0 +1,30 @@
+#!/bin/bash
+
+MMDFTAILOR=`/usr/lib/mmdf/lib/getvar mmdftailor`
+LOGDIR=`/usr/lib/mmdf/lib/getvar mlogdir`
+
+cd $LOGDIR
+
+dummy=`grep log= $MMDFTAILOR`
+
+for i in $dummy; do
+    case $i in
+	log=* )
+	    LOG=`echo $i | sed 's/log=//g' | sed 's/,//g'`
+	    if [ ! -e $LOG-done ]; then
+		mv $LOG o$LOG
+		cp /dev/null $LOG
+		chmod 622 $LOG
+		touch $LOG-done
+#		echo ====== $LOG
+	    fi
+	    ;;
+    esac
+done
+rm -f *-done
+
+for i in chan msg; do
+    mv $i.log o$i.log
+    cp /dev/null $i.log
+    chmod 622 $i.log
+done
