@@ -29,10 +29,12 @@
  */
 
 #include <stdio.h>
-#ifdef V4_2BSD
+#ifdef HAVE_SYS_WAIT_H
 #include <sys/wait.h>
+#endif /* HAVE_SYS_WAIT_H */
+#ifdef HAVE_SYS_FILE_H
 #include <sys/file.h>
-#endif /* V4_2BSD */
+#endif /* HAVE_SYS_FILE_H */
 #include <signal.h>
 #include "util.h"
 #include "mmdf.h"

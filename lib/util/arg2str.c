@@ -6,7 +6,7 @@
  */
 
 /*VARARGS*/
-#if defined(HAVE_VARARGS_H) || defined(sparc)
+#if defined(HAVE_VARARGS_H)
 #  include <varargs.h>
 #  define MAXARGS 20
 arg2lstr (va_alist)

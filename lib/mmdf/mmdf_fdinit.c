@@ -10,7 +10,7 @@ mmdf_fdinit()
 {
 	register	int	i;
 
-#ifdef V4_2BSD
+#ifdef HAVE_GETDTABLESIZE
 	numfds = getdtablesize();
 #else
 #ifdef _NFILE

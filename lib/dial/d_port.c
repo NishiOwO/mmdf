@@ -384,14 +384,14 @@ register int    length;
 d_brkport()
 {
   extern  FILE * d_prtfp;
-#if defined(HAVE_IOCTL_TIOCSBRK) /* V4_2BSD */
+#if defined(HAVE_IOCTL_TIOCSBRK)
 #include <sys/ioctl.h>
 	ioctl (fileno (d_prtfp), TIOCSBRK, 0);
 	sleep ((unsigned) 1);
 	ioctl (fileno (d_prtfp), TIOCCBRK, 0);
 #else
 
-#if defined(HAVE_SGTTY_H) && !defined(SYS5)
+#if defined(HAVE_SGTTY_H)
 #include <sgtty.h>
 	struct sgttyb ttybuf;
 	int spdsave;
@@ -407,5 +407,5 @@ d_brkport()
 #include <termio.h>
 	ioctl (fileno(d_prtfp), TCSBRK, 0);
 #endif HAVE_SGTTY_H
-#endif V4_2BSD
+#endif HAVE_IOCTL_TIOCSBRK
 }

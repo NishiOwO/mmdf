@@ -1,8 +1,8 @@
 #include "util.h"
 #include "sys/stat.h"
-#ifdef V4_2BSD
+#ifdef HAVE_SYS_FILE_H
 #include <sys/file.h>
-#endif /* V4_2BSD */
+#endif /* HAVE_SYS_FILE_H */
 #include "d_lock.h"
 #include "d_returns.h"
 
@@ -104,13 +104,13 @@ register char *lockfile;
 		return(D_FATAL);
 	}
 
-#ifdef V4_2BSD
+#ifdef HAVE_FLOCK
 	if (flock(d_lckfd, LOCK_EX|LOCK_NB) < 0) {
 		(void) close(d_lckfd);
 		d_lckfd = -1;
 		return(D_NO);
 	}
-#endif /* V4_2BSD */
+#endif /* HAVE_FLOCK */
 #endif /* UUCPLOCK */
 	return(D_OK);
 }
@@ -178,9 +178,9 @@ d_unlock(lockfile)
 		char	lockername[1024];
 
 	if (d_lckfd >= 0) {
-#ifdef V4_2BSD
+#ifdef HAVE_FLOCK
 		flock(d_lckfd, LOCK_UN);
-#endif /* V4_2BSD */
+#endif /* HAVE_FLOCK */
 		(void) close(d_lckfd);
 		d_lckfd = -1;
 	}

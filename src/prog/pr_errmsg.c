@@ -26,10 +26,10 @@
 #include <stdio.h>
 #include "util.h"
 #include "mmdf.h"
-#if defined(HAVE_FCNTL_H) || defined(SYS5r3)
+#if defined(HAVE_FCNTL_H)
 #  include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
-#if defined(HAVE_SYS_FILE_H) || defined(V4_2BSD)
+#if defined(HAVE_SYS_FILE_H)
 #  include <sys/file.h>
 #else /* HAVE_SYS_FILE_H */
 #  include <fcntl.h>

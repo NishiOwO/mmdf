@@ -79,7 +79,7 @@ char tty_num[];
  * Oh, for #elif's in /lib/cpp.
  * -- David Herron <david@ms.uky.csnet>, 18-Mar-87
  */
-#if !defined(HAVE_SECURETTY) && !defined(V4_3BSD)
+#if !defined(HAVE_SECURETTY)
     if (stat (tty_num, &statbuf) < OK)
 	return (NOTOK);
 
@@ -88,7 +88,7 @@ char tty_num[];
 #ifdef HAVE_SECURETTY
     if (access (tty_num, 01) != 0)
 #endif /* HAVE_SECURETTY */
-#if defined(V4_3BSD) && !defined(HAVE_SECURETTY)
+#if !defined(HAVE_SECURETTY)
     if (stat (tty_num, &statbuf) < OK)
 	return (NOTOK);
 

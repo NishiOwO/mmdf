@@ -35,12 +35,12 @@
 #include <signal.h>
 #include <sys/stat.h>
 #include "./msg.h"
-#ifdef V4_2BSD
+#ifdef HAVE_SYS_FILE_H
 #include <sys/file.h>
 #include <strings.h>
-#else V4_2BSD
+#else /* HAVE_SYS_FILE_H */
 #include <string.h>
-#endif V4_2BSD
+#endif /* HAVE_SYS_FILE_H */
 
 #ifndef V4_2BSD
 RETSIGTYPE	(*oldhup)();

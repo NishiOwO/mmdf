@@ -52,16 +52,16 @@ creatdir (dirptr, mode, owner, group)
 		*nptr = '\0';
 		if (stat (partpath, &statbuf) < 0)
 		{               /* should we try to creat it?           */
-#ifndef V4_2BSD
-		    system (shcmd);
-				/* don't check if it succeeded          */
-#else /* V4_2BSD */
-#if defined(MKDIR_HAVE_SECOND_ARG) || defined(LINUX)
+#ifdef HAVE_MKDIR
+#if defined(MKDIR_HAVE_SECOND_ARG)
 		    mkdir (partpath, 777);
 #else /* MKDIR_HAVE_SECOND_ARG */
 		    mkdir (partpath);
 #endif /* MKDIR_HAVE_SECOND_ARG */
-#endif /* V4_2BSD */
+#else /* HAVE_MKDIR */
+		    system (shcmd);
+				/* don't check if it succeeded          */
+#endif /* HAVE_MKDIR */
 		    if (owner != 0)
 			chown (partpath, owner, group);
 

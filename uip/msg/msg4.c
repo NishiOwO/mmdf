@@ -45,7 +45,7 @@
 #include <pwd.h>
 #include <signal.h>
 #include <sys/stat.h>
-#if defined(HAVE_SGTTY_H) && !defined(SYS5)
+#if defined(HAVE_SGTTY_H)
 #  include <sgtty.h>
 #  include <strings.h>
 #  ifdef HAVE_SYS_STRTIO_H
@@ -409,7 +409,7 @@ ttychar()
 }
 /*--------------------------------------------------------------------*/
 
-#if !defined(HAVE_SGTTY_H) || defined(SYS5)
+#if !defined(HAVE_SGTTY_H)
 static struct termio orig_ioctl;
 static struct termio raw_ioctl;
 #define	TIOCSETN TCSETAW		/* Crafty... (be careful!) */
@@ -423,7 +423,7 @@ static struct sgttyb   raw_ioctl;
  */
 tt_init()
 {
-#if !defined(HAVE_SGTTY_H) || defined(SYS5)
+#if !defined(HAVE_SGTTY_H)
 	if( ioctl( fileno( stdin), TCGETA, &orig_ioctl) == -1) {
 #else HAVE_SGTTY_H
 	if( ioctl( fileno( stdin), TIOCGETP, &orig_ioctl) == -1) {
@@ -433,7 +433,7 @@ tt_init()
 	}
 	else {
 		raw_ioctl = orig_ioctl;
-#if !defined(HAVE_SGTTY_H) || defined(SYS5)
+#if !defined(HAVE_SGTTY_H)
 		ch_erase = orig_ioctl.c_cc[VERASE];
 		raw_ioctl.c_iflag &= ~(ISTRIP | INLCR | IGNCR | ICRNL);
 		raw_ioctl.c_oflag &= ~OPOST;

@@ -21,7 +21,7 @@ extern	char	*zap_env[];
 LOCFUN tryfork();
 
 /* VARARGS4 */
-#if defined(HAVE_VARARGS_H) || defined(sparc)
+#if defined(HAVE_VARARGS_H)
 #include <varargs.h>
 #define MAXARGS 20
 nexecl(va_alist)

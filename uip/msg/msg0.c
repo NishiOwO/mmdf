@@ -6,9 +6,9 @@
 #ifdef HAVE_SGTTY_H
 #  include <sgtty.h>
 #endif /* HAVE_SGTTY_H */
-#ifdef V4_2BSD
+#ifdef HAVE_SYS_IOCTL_H
 #include <sys/ioctl.h>
-#endif V4_2BSD
+#endif /* HAVE_SYS_IOCTL_H */
 #include "./msg.h"
 
 struct status status;

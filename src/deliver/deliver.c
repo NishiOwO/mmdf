@@ -250,9 +250,9 @@ char   *argv[];
     else
     {                             /* go through the whole queue         */
 	if (pgm_bakgrnd) {        /* background daemon                  */
-#ifdef SYS5
+#ifdef HAVE_SETPGRP
 	    setpgrp();		  /* detach from terminal */
-#endif
+#endif /* HAVE_SETPGRP */
 	    FOREVER
 	    {
 		ovr_cstep (ovr_dolin, 0);
@@ -496,9 +496,9 @@ prm_end ()                        /* cleanup vals after user settings   */
 	    freopen ("/dev/null", "w", stdout);
 	freopen ("/dev/null", "w", stderr);
 				  /*  stderr null always                */
-#ifdef SYS5
+#ifdef HAVE_SETPGRP
 	setpgrp();                /* detach from terminal               */
-#else
+#else /* HAVE_SETPGRP */
 #ifdef TIOCNOTTY
 	fd = open ("/dev/tty", 2);
 	if (fd >= 0) {
@@ -506,7 +506,7 @@ prm_end ()                        /* cleanup vals after user settings   */
 	    close(fd);
 	}
 #endif TIOCNOTTY
-#endif SYS5
+#endif /* HAVE_SETPGRP */
     }
     if (!ovr_pickup && !domsg)
 	(void) signal (SIGHUP, SIG_IGN); /* Ignore hangups               */

@@ -5,7 +5,7 @@
 # include  "d_proto.h"
 # include  "d_returns.h"
 # include  "d_structs.h"
-#if defined(HAVE_SGTTY_H) && !defined(SYS5)
+#if defined(HAVE_SGTTY_H)
 #  include  <sgtty.h>
 #  ifdef HAVE_SYS_STRTIO_H
 #    include <sys/strtio.h>
@@ -15,7 +15,7 @@
 # include <fcntl.h>
 #endif HAVE_SGTTY_H
 # include  <sys/stat.h>
-#if defined(HAVE_SYS_FILE_H) || defined(V4_2BSD)
+#if defined(HAVE_SYS_FILE_H)
 # include  <sys/file.h>
 #endif HAVE_SYS_FILE_H
 
@@ -639,7 +639,7 @@ char   *number;
 {
     int len;
     char linebuf[100];
-#if defined(HAVE_SGTTY_H) && !defined(SYS5)
+#if defined(HAVE_SGTTY_H)
     struct sgttyb acubuf;
 #else HAVE_SGTTY_H
     struct termio acubuf;    

@@ -1155,9 +1155,9 @@ LOCFUN setupenv()
               ll_log (logptr, LLOGGEN, "TIOCNOTTY not available");
       }
 #endif /* TIOCNOTTY */
-#ifdef V4_2BSD
+#ifdef HAVE_SETPGRP
       setpgrp (0, getpid());
-#endif
+#endif /* HAVE_SETPGRP */
       sprintf (homestr, "HOME=%s", ba_pw->pw_dir);
       sprintf (shellstr, "SHELL=%s",
                       isstr(ba_pw->pw_shell) ? ba_pw->pw_shell : "/bin/sh");

@@ -1,5 +1,5 @@
 # include  "util.h"
-#if defined(HAVE_SGTTY_H) && !defined(SYS5)
+#if defined(HAVE_SGTTY_H)
 #  include  <sgtty.h>
 #else HAVE_SGTTY_H
 #  include <termio.h>

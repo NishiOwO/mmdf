@@ -33,7 +33,6 @@ LOCFUN char *ns_skiphdr();
 /* T_UNSPEC was defined only in more recent versions of BIND */
 
 #ifdef T_UNSPEC
-#define BSD4_3
 #define	getshort _getshort
 #endif T_UNSPEC
 
@@ -687,7 +686,7 @@ ns_settimeo(ns_time)
 int     ns_time;
 {
     static int called = 0;
-#if defined(HAVE_RES_STATE) || defined(LINUX)
+#if defined(HAVE_RES_STATE)
     static struct __res_state oldres;
 #else /* HAVE_RES_STATE */
     static struct state oldres;
