@@ -499,15 +499,19 @@ AC_CHECK_LIB(nsl, inet_ntoa)
 
 if test "$ac_cv_enable_code_dbm" != "no"; then
    AC_CHECK_FUNC(dbminit,ac_cv_lib_dbm="yes",[
-      AC_CHECK_LIB(gdbm, gdbm_open)
-      if test "$ac_cv_lib_gdbm_gdbm_open" = "no"; then
-         AC_CHECK_LIB(ndbm, dbm_open)
-         if test "$ac_cv_lib_ndbm_gdbm_open" = "no"; then
-            AC_CHECK_LIB(dbm, dbminit)
+      AC_CHECK_LIB(dbm, dbminit)
+      if test "$ac_cv_lib_dbm_dbminit" = "no"; then
+	 AC_CHECK_LIB(gdbm, gdbm_open)
+         if test "$ac_cv_lib_gdbm_gdbm_open" = "no"; then
+            AC_CHECK_LIB(ndbm, dbm_open)
+            if test "$ac_cv_lib_ndbm_gdbm_open" = "no"; then
+               AC_CHECK_LIB(dbm, dbminit)
+            fi
          fi
       fi
       if test "$ac_cv_lib_gdbm_gdbm_open" = "yes" || 
 	   test "$ac_cv_lib_ndbm_dbm_open" = "yes" ||
+	   test "$ac_cv_lib_dbm_dbminit" = "yes" ||
 	   test "$ac_cv_lib_dbm_dbm_open" = "yes"; then
          ac_cv_lib_dbm="yes"
       else
