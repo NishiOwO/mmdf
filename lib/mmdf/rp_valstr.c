@@ -151,6 +151,9 @@ char   *
 	case RP_BCHN:
 	    return ("BCHN");
 
+	case RP_DATA:
+	    return ("DATA");
+
 	default:                  /* print illegal octal value          */
 	    noval[15] = rp_gbbit (val) + '0';
 	    noval[16] = rp_gcbit (val) + '0';
