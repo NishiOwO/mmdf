@@ -91,7 +91,7 @@ extern char *mgt_parm();
 extern char *dupfpath();
 extern char *multcat();
 extern char *getmailid();
-extern ap_flget();
+extern int  ap_flget();
 
 extern char *namdeliver;      /* name of mailer process             */
 extern char *pathdeliver;     /* file path to mailer proc.          */
@@ -104,7 +104,20 @@ extern  char    *sys_errlist[];
 
 char *prm_dupval();
 
-LOCFUN prm_parse(), hdr_isacmpt();
+void mn_init (argc, argv);
+LOCFUN void prm_parse();
+void prm_init ();
+void prm_end ();
+LOCFUN int  hdr_isacmpt();
+void mn_usinit ();
+void mn_dirinit ();
+int  alst_proc ();
+void tx_stormsg ();
+void dlv_invoke ();
+void err_abrt ();
+void err_msg ();
+void err_gen ();
+void ut_suckup ();
 
 /* *** constants  and temporaries *** */
 char	nltrm[] = "\n\377",		/* for gcread() */
@@ -116,6 +129,10 @@ short   pro_doing = TRUE,         /* protocol-mode interaction vs. one- */
 				  /*    message "batch" submission?     */
 	pro_vfadr;                /* in protocol mode, indicate         */
 				  /*    acceptance of each address      */
+short	pro_piadr;     /* give processing infortmation (channel), only */
+                       /* in protocol mode, indicate acceptance of each address      */
+char    *pro_channel;  /* processing channel, only if pro_piadr ist set */
+
 char    pro_buf[BUFSIZ];	  /* buffer pro_ output                 */
 
 /**/
@@ -171,7 +188,7 @@ LOCVAR	char *mn_aptr;          /* current position on buffer   */
 LOCVAR	char mn_abuf[LINESIZE]; /* address buffer               */
 
 LOCFUN
-	mn_adrin ()            /* main   input given to alst_proc    */
+int	mn_adrin ()            /* main   input given to alst_proc    */
 {
     if (mn_aptr == (char *)1) {
 #ifdef DEBUG
@@ -205,12 +222,12 @@ LOCFUN
  *  input function because the other side is expecting exactly one
  *  reply per line sent.  alst_proc might parse two addresses in one line.
  */
-mn_arset()
+void mn_arset()
 {
 	mn_aptr = (char *)1;
 }
 
-mn_aread ()
+void mn_aread ()
 {
     mn_aptr = (char *)1;      /* flag as needing a new line */
     mgt_inalias = FALSE;      /* reading addresses from input          */
@@ -222,7 +239,7 @@ mn_aread ()
 
 /**/
 
-main (argc, argv)                 /*   MAIN MAIN MAIN MAIN MAIN MAIN    */
+int main (argc, argv)                 /*   MAIN MAIN MAIN MAIN MAIN MAIN    */
 int       argc;
 char   *argv[];
 {
@@ -285,7 +302,7 @@ char   *argv[];
 }
 /**/
 
-mn_init (argc, argv)              /* basic process initialization       */
+void mn_init (argc, argv)              /* basic process initialization       */
 int       argc;
 char   *argv[];
 {
@@ -308,10 +325,10 @@ char   *argv[];
 }
 /**/
 
-mn_usinit ()                      /* get info on who is running me      */
+void mn_usinit ()                      /* get info on who is running me      */
 {
-    register char *midp;
-    register struct passwd *pw;
+    register char *midp = NULL;
+    register struct passwd *pw = NULL;
 
     getwho (&userid, &effecid);   /* who is running me?                 */
 #ifdef DEBUG
@@ -336,7 +353,7 @@ mn_usinit ()                      /* get info on who is running me      */
 #endif
 }
 
-mn_dirinit ()                     /* current loc? chdir to home; setuid */
+void mn_dirinit ()                     /* current loc? chdir to home; setuid */
 {
     if (chdir (quedfldir) == NOTOK) /* change wdir into mail queues       */
 	err_abrt (RP_LIO, "Unable to change directory.");
@@ -351,7 +368,7 @@ mn_dirinit ()                     /* current loc? chdir to home; setuid */
 }
 /*******************  (prm_) USER PARAMETER HANDLING  *************** */
 
-prm_init ()                       /* set default user-settable vals     */
+void prm_init ()                       /* set default user-settable vals     */
 {
 
     mgt_minit ();                /* initialize management settings     */
@@ -367,7 +384,9 @@ prm_init ()                       /* set default user-settable vals     */
 	pro_vfadr =
 	dlv_watch =
 	earlyret =  FALSE;
-
+    pro_piadr = FALSE;
+    pro_channel = NULL;
+    
 	adr_fulldmn = locfullname;
 	if (locfullmachine && isstr (locfullmachine))
 	    adr_fmc = locfullmachine;
@@ -375,7 +394,7 @@ prm_init ()                       /* set default user-settable vals     */
 	    adr_fmc = locfullname;
 }
 
-prm_end ()                        /* evaluate final settings            */
+void prm_end ()                        /* evaluate final settings            */
 {
     if (!pro_doing)               /* no protocol => a unix "command"    */
 	domsg = TRUE;
@@ -388,7 +407,7 @@ prm_end ()                        /* evaluate final settings            */
 /**/
 
 LOCFUN
-	prm_parse (parmstrt)      /* parse spec & set switches          */
+void prm_parse (parmstrt)      /* parse spec & set switches          */
     char *parmstrt;               /* note beginning of parm             */
 {
     register char  *parmptr;      /* pointer to text of specification   */
@@ -537,6 +556,10 @@ LOCFUN
 	    pro_vfadr = TRUE;     /*    as received                     */
 	    break;
 
+    case 'P':                 /* Processing information, needs protoocol mode; */
+        pro_piadr = TRUE;     /* VERIFY each address as received               */
+	    break;
+
 	case 'w':                 /* user wants to WATCH a delivery try */
 	    dlv_watch = TRUE;
 	    break;
@@ -635,7 +658,7 @@ char  **into;                     /* where to put dup'd str             */
 }
 /**************  (pro_)  PROTOCOL WITH CALLER  **************** */
 
-pro_init ()                       /* read switches in protocol mode     */
+int pro_init ()                       /* read switches in protocol mode     */
 {
     char linebuf[LINESIZE];
 
@@ -658,7 +681,7 @@ pro_init ()                       /* read switches in protocol mode     */
 /**/
 
 /* VARARGS2 */
-pro_reply (code, fmt, b, c, d) /* inform user of a status            */
+void pro_reply (code, fmt, b, c, d) /* inform user of a status            */
 short     code;                     /* value from mmdfrply.h              */
 char   *fmt,
        *b,
@@ -708,7 +731,7 @@ char   *fmt,
 }
 /*****************  (alst_)  PROCESS AN ADDRESS LIST  *************** */
 
-alst_proc (inproc, errabrt, resync, badptr)  /* process text stream of addrs */
+int alst_proc (inproc, errabrt, resync, badptr)  /* process text stream of addrs */
 int     (*inproc) ();           /* the function which gets address     */
 				/*    chars; decides when finished    */
 int     errabrt;                /* abort on error?                    */
@@ -864,9 +887,12 @@ char    **badptr;               /* place to stuff list of bad addresses */
 		    if(rp_gval(retval) == RP_DOK)
 			pro_reply (RP_DOK, "Possibly a nice address \"%s\"",
 								     addrp);
-		    else
-			pro_reply (RP_AOK, "Nice address \"%s\"", addrp);
-
+		    else {
+              if(pro_piadr)
+                pro_reply (RP_AOK, "Nice address \"%s\" '%s' ", addrp, pro_channel);
+              else
+                pro_reply (RP_AOK, "Nice address \"%s\"", addrp);
+            }
 		}
 		else
 		    printf ("%s: OK\n", addrp);
@@ -907,7 +933,7 @@ bugout1:
 }
 /*******************  ADDRESS FILE INPUT  *************************** */
 
-alst_gfil (file)                 /* read file address list             */
+int alst_gfil (file)                 /* read file address list             */
     char    file[];               /* basic name of file                 */
 {
     struct stat statbuf;
@@ -985,11 +1011,11 @@ alst_gfil (file)                 /* read file address list             */
 }
 /****************  (tx_)  TRANSFER MESSAGE TEXT  ******************** */
 
-tx_stormsg ()                     /* store message text into queue      */
+void tx_stormsg ()                     /* store message text into queue      */
 {                                 /* perform required processing        */
     struct stat statbuf;
-    short len,
-	retval;
+    short len;
+	short retval = 0;
     char linebuf[LINESIZE],       /* input line                         */
 	 thename[LINESIZE];       /* name of the component              */
     register char   lastchar;     /* to make sure message end with \n   */
@@ -1039,7 +1065,7 @@ tx_stormsg ()                     /* store message text into queue      */
 LOCVAR char *hdr_atxt;             /* hdr_in() passes to alst()      */
 
 LOCFUN
-	hdr_in ()               /* adrs extracted from component text */
+int	hdr_in ()               /* adrs extracted from component text */
 {
     if (hdr_atxt == (char *) 0)  /* nothing to give it                 */
 	return (EOF);
@@ -1055,7 +1081,7 @@ LOCFUN
 }
 /**/
 
-hdr_proc (theline, name)          /* process one header line            */
+int hdr_proc (theline, name)          /* process one header line            */
     char theline[],               /* the text                           */
 	 *name;                   /* old or new name of header          */
 {
@@ -1093,7 +1119,7 @@ hdr_proc (theline, name)          /* process one header line            */
 }
 
 LOCFUN
-	hdr_isacmpt (name)        /* a component on extraction list?    */
+int	hdr_isacmpt (name)        /* a component on extraction list?    */
 register char   name[];           /* name of the test component         */
 {
     register short    entry;
@@ -1108,7 +1134,7 @@ register char   name[];           /* name of the test component         */
 }
 /******************  (dlv_)  INVOKE DELIVER PROCESS  *************** */
 
-dlv_invoke ()                     /* maybe try immediate transmission   */
+void dlv_invoke ()                     /* maybe try immediate transmission   */
 {
     Chan    **chanptr;
     char    temppath[LINESIZE];
@@ -1190,7 +1216,7 @@ dlv_invoke ()                     /* maybe try immediate transmission   */
 /*****************  (err_)  GENERAL ERROR-HANDLING  ***************** */
 
 /* VARARGS2 */
-err_abrt (code, fmt, b, c, d)  /* terminate the process              */
+void err_abrt (code, fmt, b, c, d)  /* terminate the process              */
 short     code;                     /* a mmdfrply.h termination code      */
 char   *fmt,
        *b,
@@ -1205,7 +1231,7 @@ char   *fmt,
 
 
 /* VARARGS2 */
-err_msg (code, fmt, b, c, d)   /* end processing for current message */
+void err_msg (code, fmt, b, c, d)   /* end processing for current message */
 short     code;                     /* see err_abrt explanation           */
 char   *fmt,
        *b,
@@ -1228,7 +1254,7 @@ char   *fmt,
 }
 
 /* VARARGS2 */
-err_gen (code, fmt, b, c, d)   /* standard error processing          */
+void err_gen (code, fmt, b, c, d)   /* standard error processing          */
 short     code;                /* see err_abrt, for explanation      */
 char   *fmt,
        *b,
@@ -1262,7 +1288,7 @@ char   *fmt,
 }
 /*******************  (ut_)  UTILITY ROUTINES  ********************** */
 
-ut_stdin (buffer, buflen, brkset, longok) /* read from primary input    */
+int ut_stdin (buffer, buflen, brkset, longok) /* read from primary input    */
 register char  *buffer;           /* where to put null-ended input      */
 int	buflen;			  /* length of buffer */
 char    *brkset;                  /* what characters to end on          */
@@ -1320,7 +1346,7 @@ int     longok;                   /* long lines are allowed if == OK    */
 }
 /**/
 
-ut_suckup ()                      /* skip rest of message input stream  */
+void ut_suckup ()                      /* skip rest of message input stream  */
 {                                 /*    to null (not eof)               */
     register int c;
 

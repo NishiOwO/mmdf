@@ -37,7 +37,7 @@ extern struct ll_struct *logptr;
 
 /* basic processing of incoming header lines */
 
-hdr_parse (src, name, contents)   /* parse one header line              */
+int hdr_parse (src, name, contents)   /* parse one header line              */
     register char *src;           /* a line of header text              */
     char *name,                   /* where to put field's name          */
 	 *contents;               /* where to put field's contents      */
@@ -62,7 +62,7 @@ hdr_parse (src, name, contents)   /* parse one header line              */
     else
     {                             /* copy the name                      */
 	linetype = HDR_NEW;
-	for (dest = name; *dest = *src++; dest++)
+	for (dest = name; (*dest = *src++); dest++)
 	{
 	    if (*dest == ':')
 		break;            /* end of the name                    */

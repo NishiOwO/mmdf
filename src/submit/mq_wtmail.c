@@ -65,7 +65,7 @@ LOCVAR char *mq_tunique,          /* unique-part of tquedir file name   */
 LOCVAR FILE *mq_tffp;            /* buffer to temporary address file   */
 /**/
 
-mq_winit ()                       /* initialize to write queued msgs    */
+void mq_winit ()                       /* initialize to write queued msgs    */
 {                                 /* set-up for queue file names        */
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "mq_init ()");
@@ -79,7 +79,7 @@ mq_winit ()                       /* initialize to write queued msgs    */
 }
 /**/
 
-mq_creat ()                      /* initialize for new message         */
+void mq_creat ()                      /* initialize for new message         */
 {
     static char template[128];
     int fd;
@@ -130,7 +130,7 @@ mq_creat ()                      /* initialize for new message         */
 }
 
 /* initialize adddress queue          */
-mq_adinit (dowarn, msgflgs, retadr)
+void mq_adinit (dowarn, msgflgs, retadr)
     int dowarn;                  /* permit warning message?            */
     int msgflgs;                 /* misc. bits                         */
     char *retadr;                /* return address (NULL or char pointer */
@@ -165,7 +165,7 @@ mq_adinit (dowarn, msgflgs, retadr)
 		msgflgs, supportaddr);
 }
 
-mq_adwrite (achan, ahost, ambox)  /* put an address in the queue */
+void mq_adwrite (achan, ahost, ambox)  /* put an address in the queue */
     register Chan *achan;
     register char *ahost;
     char    *ambox;
@@ -186,12 +186,12 @@ mq_adwrite (achan, ahost, ambox)  /* put an address in the queue */
     achan -> ch_access |= MQ_INQ; /* message goes into this sub-queue   */
 }
 
-mq_txinit ()                      /* get ready to write message text    */
+void mq_txinit ()                      /* get ready to write message text    */
 {                                 /* text file already opened           */
 }
 /**/
 
-mq_eomsg ()                       /* done submitting message            */
+void mq_eomsg ()                       /* done submitting message            */
 {
     Chan **chanptr;
     char subname[LINESIZE];
@@ -244,7 +244,7 @@ mq_eomsg ()                       /* done submitting message            */
 }
 /**/
 
-mq_clear ()                       /* error termination of queue's files */
+void mq_clear ()                       /* error termination of queue's files */
 {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "mq_clear ()");

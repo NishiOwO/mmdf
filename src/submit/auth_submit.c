@@ -46,7 +46,10 @@ extern char *multcat();
 
 char *get_route();
 
-LOCFUN auth_warn(), auth_ok(), auth_fetch(), auth_log();
+LOCFUN void auth_warn();
+LOCFUN int  auth_ok();
+LOCFUN void auth_fetch();
+LOCFUN void auth_log();
 
 
 /*
@@ -95,12 +98,14 @@ char *cn_in, *cn_out;           /* storage for channel names            */
 				/* needed for bad auth logging          */
 int domsg=1;
 
-#define printx if(domsg>1) printf
+#ifndef printx
+#  define printx if(domsg>1) printf
+#endif
 /**/
 				/* Authorization initialisation policy  */
 				/* Store data on sender                 */
 
-auth_init (sender, trust)
+void auth_init (sender, trust)
 char *sender;                   /* Message sender (normalized)          */
 int trust;                      /* can we trust this? (NRMFROM)         */
 {
@@ -147,7 +152,7 @@ int trust;                      /* can we trust this? (NRMFROM)         */
 			/* initialise user check, as user may be */
 			/*  checked in the context of a number of */
 			/* channels                               */
-auth_uinit (adr)
+void auth_uinit (adr)
 char *adr;               /* address being authorized             */
 {
     char        *p,
@@ -203,11 +208,11 @@ char *adr;               /* address being authorized             */
 }
 
 				/* clean up user structures             */
-auth_uend ()
+void auth_uend ()
 {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "auth_uend (), %d", authtable);
-    printx("==>auth_uend (), %d\n", authtable);
+    printx("==>auth_uend (), %p\n", authtable);
 #endif
     free (auth_rcvr.a_addr);
     if (authtable != (Table *) NOTOK)
@@ -227,7 +232,7 @@ LOCVAR char *h_fmt = "i='%s' o='%s' a='%s' r='%s' hi='%s' ho='%s'";
 
 #define AOKNUM 50
 
-auth_user (h_in, h_out, chan_in, chan_out)
+int auth_user (h_in, h_out, chan_in, chan_out)
 char *h_in;                     /* host (not domain) directly from      */
 char *h_out;                    /* host (not domain) being connected to */
 Chan *chan_in;                  /* incoming channel                     */
@@ -514,7 +519,7 @@ douser:
     if (auth_rcvr.a_type == AUTH_LIST)
     {
 	if (!gotinbound)
-	    if (gotinbound = auth_ok (chan_in, &auth_rcvr, AUTH_RECV))
+	    if ((gotinbound = auth_ok (chan_in, &auth_rcvr, AUTH_RECV)))
 	    {
 		in_auth_str = "IL";
 		if (gotoutbound)
@@ -525,7 +530,7 @@ douser:
 		}
 	    }
 	if (!gotoutbound)
-	    if (gotoutbound = auth_ok (chan_out, &auth_rcvr, AUTH_RECV))
+	    if ((gotoutbound = auth_ok (chan_out, &auth_rcvr, AUTH_RECV)))
 	    {
 		out_auth_str ="OL";
 		if (gotinbound)
@@ -537,9 +542,9 @@ douser:
 	    }
     }
 			/* Now  check sender                            */
-    if (!gotinbound)
-	if (gotinbound = auth_ok (chan_in, &auth_sender, AUTH_SEND))
-	{
+    if (!gotinbound) {
+      if ((gotinbound = auth_ok (chan_in, &auth_sender, AUTH_SEND)))
+      {
 	    in_auth_str = "IS";
 	    if (gotoutbound)
 	    {
@@ -547,29 +552,32 @@ douser:
 		    auth_rcvr.a_addr, in_auth_str, out_auth_str);
 		return (TRUE);
 	    }
-	}
-	else if (auth_rcvr.a_type == AUTH_LIST)
-	    switch (ch_in_auth)
+      }
+      else if (auth_rcvr.a_type == AUTH_LIST) {
+        switch (ch_in_auth)
 	    {
-		case  CH_IN_BLOCK:
-		    return (FALSE);
-		case  CH_IN_WARN:
-		    auth_warn ();
-		default:
-		    in_auth_str = "*I";
-		    if (gotoutbound)
-		    {
-			auth_log (a_fmt, chan_in -> ch_name,
+            case  CH_IN_BLOCK:
+              return (FALSE);
+            case  CH_IN_WARN:
+              auth_warn ();
+            default:
+              in_auth_str = "*I";
+              if (gotoutbound)
+              {
+                auth_log (a_fmt, chan_in -> ch_name,
 			    chan_out -> ch_name,
 			    auth_rcvr.a_addr, in_auth_str, out_auth_str);
 			return (TRUE);
 		    }
 		    gotinbound = TRUE;
 	    }
+      }
+    }
+    
 
-    if (!gotoutbound)
-	if (gotoutbound = auth_ok (chan_out, &auth_sender, AUTH_SEND))
-	{
+    if (!gotoutbound) {
+      if ((gotoutbound = auth_ok (chan_out, &auth_sender, AUTH_SEND)))
+      {
 	    out_auth_str ="OS";
 	    if (gotinbound)
 	    {
@@ -591,15 +599,16 @@ douser:
 			auth_rcvr.a_addr, in_auth_str, out_auth_str);
 		    return (TRUE);
 	    }
-
+    }
+    
 				/* if not done aready, check receiver   */
     if (auth_rcvr.a_type == AUTH_LIST)
 	 return (FALSE);
 
 
-    if (!gotinbound)
-	if (gotinbound = auth_ok (chan_in, &auth_rcvr, AUTH_RECV))
-	{
+    if (!gotinbound) {
+      if ((gotinbound = auth_ok (chan_in, &auth_rcvr, AUTH_RECV)))
+      {
 	    in_auth_str = "IR";
 	    if (gotoutbound)
 	    {
@@ -626,10 +635,11 @@ douser:
 		    }
 		    gotinbound = TRUE;
 	    }
-
-    if (!gotoutbound)
-	if (gotoutbound = auth_ok (chan_out, &auth_rcvr, AUTH_RECV))
-	{
+    }
+    
+    if (!gotoutbound) {
+      if ((gotoutbound = auth_ok (chan_out, &auth_rcvr, AUTH_RECV)))
+      {
 	    out_auth_str  = "OR";
 	    if (gotinbound)
 	    {
@@ -650,7 +660,8 @@ douser:
 			auth_rcvr.a_addr, in_auth_str, "*O");
 		    return (TRUE);
 	    }
-
+    }
+    
 			/* SEK shouldn't get here - I hope              */
 #ifdef DEBUG
     ll_log (logptr, LLOGTMP,  "Auth_user - did the impossible");
@@ -659,7 +670,7 @@ douser:
     return (FALSE);
 }
 /**/
-LOCFUN auth_warn ()
+LOCFUN void auth_warn ()
 {
     FILE *fp;
     char buf [LINESIZE];
@@ -688,7 +699,7 @@ LOCFUN auth_warn ()
 }
 /**/
 				/* what to do if bad address            */
-auth_bad ()
+void auth_bad ()
 {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "auth_bad()");
@@ -740,7 +751,7 @@ auth_bad ()
 /**/
 				/* Perform any authorization ending policy */
 
-auth_end ()
+void auth_end ()
 {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "auth_end()");
@@ -760,7 +771,7 @@ auth_end ()
 
 				/* check if chan matches auth           */
 LOCFUN
-auth_ok (chan, auth, direction)
+int auth_ok (chan, auth, direction)
 Chan    *chan;
 struct auth_struct *auth;
 int     direction;              /* send or receive                      */
@@ -810,18 +821,18 @@ int     direction;              /* send or receive                      */
 LOCVAR Cmd
 	authmap [] =
 {
-	"both", AUTH_BOTH,      0,
-	"send", AUTH_SEND,      0,
-	"recv", AUTH_RECV,      0,
-	"list", AUTH_LIST,      0,
-	"expire", AUTH_EXPIRE,  0,
-	0,      0,              0,
+	{ "both", AUTH_BOTH,      0 },
+	{ "send", AUTH_SEND,      0 },
+	{ "recv", AUTH_RECV,      0 },
+	{ "list", AUTH_LIST,      0 },
+	{ "expire", AUTH_EXPIRE,  0 },
+	{ 0,      0,              0 },
 };
 
 
 				/* Get user authorization from table        */
 LOCFUN
-auth_fetch (auth)
+void auth_fetch (auth)
 struct auth_struct *auth;       /* where to put the data                    */
 {
     char        buf [LINESIZE];
@@ -905,7 +916,7 @@ extern char *mq_munique;
 				/* Log authorization info                  */
 /*VARARGS1*/
 LOCFUN
-auth_log (format, a1, a2, a3, a4, a5, a6, a7, a8, a9)
+void auth_log (format, a1, a2, a3, a4, a5, a6, a7, a8, a9)
 char *format,
 	*a1, *a2, *a3, *a4, *a5, *a6, *a7, *a8, *a9;
 {

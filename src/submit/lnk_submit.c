@@ -46,7 +46,11 @@ extern char *mgt_return;         /* sender's return address            */
 extern short tracing;
 extern int  lnk_listsize;
 
-LOCFUN lnk_insrt(), lnk_cmpr();
+extern short pro_piadr;
+extern char *pro_channel;
+
+LOCFUN int lnk_insrt();
+LOCFUN int lnk_cmpr();
 
 struct lnk_struct
 {
@@ -92,7 +96,7 @@ char *lnk_getaddr()
   return(buf);
 }
 
-lnk_adinfo (thechan, hostr, mbox) /* given constituents, add to list    */
+int lnk_adinfo (thechan, hostr, mbox) /* given constituents, add to list    */
 Chan *thechan;                 /* internal chan name/code            */
 char *hostr,                   /* official name of host              */
      *mbox;                    /* name of mailbox                    */
@@ -116,11 +120,12 @@ char *hostr,                   /* official name of host              */
 		thechan -> ch_name, thechan -> ch_queue,
 		hostr, mbox);
 #endif
-    	if (tracing) {
-	    printf("queueing for %s: via '%s': '%s'\n",
-		thechan -> ch_name, hostr, mbox);
-	    fflush(stdout);
-	}
+    if (tracing) {
+      printf("queueing for %s: via '%s': '%s'\n",
+             thechan -> ch_name, hostr, mbox);
+      fflush(stdout);
+    }
+    if(pro_piadr) pro_channel = thechan -> ch_name;
 	for (ch_ind = 0; ch_tbsrch[ch_ind] != 0 &&
 		ch_tbsrch[ch_ind] != thechan; ch_ind++);
 			      /* chan's "priority" is its position  */
@@ -134,7 +139,7 @@ char *hostr,                   /* official name of host              */
 /**/
 
 LOCFUN
-        lnk_insrt (newadr)	  /* insert addr into list, sorted      */
+int lnk_insrt (newadr)	  /* insert addr into list, sorted      */
 register struct lnk_struct *newadr;
 {
     register struct lnk_struct *curadr,
@@ -171,7 +176,7 @@ register struct lnk_struct *newadr;
  *	being written out.
  */
 LOCFUN
-        lnk_cmpr (adr1, adr2)     /* determine sort relationship        */
+int lnk_cmpr (adr1, adr2)     /* determine sort relationship        */
 register struct lnk_struct *adr1,
                            *adr2;
 {				  /* sort on chan, host, then mailbox   */
@@ -209,7 +214,7 @@ register struct lnk_struct *adr;
     return (nxtadr);
 }
 
-lnk_freeall ()                    /* step through list and free storage */
+void lnk_freeall ()                    /* step through list and free storage */
 {
     register struct lnk_struct *curadr;
 
@@ -221,7 +226,7 @@ lnk_freeall ()                    /* step through list and free storage */
     lnk_nadrs = 0;
 }
 
-lnk_filall (flags)         /* copy the list out to the file      */
+void lnk_filall (flags)         /* copy the list out to the file      */
 {
     register struct lnk_struct *prev;
     register struct lnk_struct *cur;

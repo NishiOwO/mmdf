@@ -93,7 +93,7 @@ extern char *ap_p2s();
 LOCVAR char adr_gotone;		/* got at least one valid address     */
 LOCVAR char adr_level = 0;	/* Level adr_check/adr_local recursion */
 
-adr_check (local, domain, route) /* check & save an address            */
+int adr_check (local, domain, route) /* check & save an address            */
     AP_ptr  local,             /* beginning of local-part */
 	    domain,            /* basic domain reference */
 	    route;             /* beginning of 733 forward routing */
@@ -231,7 +231,7 @@ adr_check (local, domain, route) /* check & save an address            */
 	    case NOTOK:		  /* Not a valid hostname */
 				  /* SEK: first check for explicit       */
 				  /* channel refs (somehow)              */
-		if (cp = strrchr(hptr -> ap_obvalue, '#')) {
+		if ( (cp = strrchr(hptr -> ap_obvalue, '#'))) {
 		    *cp = 0;
 		    if ((thechan = ch_nm2struct (hptr -> ap_obvalue))
 						!= (Chan *) NOTOK) {
@@ -500,7 +500,7 @@ bugout:
 }
 /**/
 
-adr_dsubmit(addr)
+int adr_dsubmit(addr)
 char	*addr;
 {
     Chan    *thechan;
@@ -527,7 +527,7 @@ char	*addr;
     return(RP_DOK);
 }
 
-adr_local (local)                       /* process host-less reference */
+int adr_local (local)                       /* process host-less reference */
     char *local;
 {
     Chan *thechan;
@@ -608,7 +608,7 @@ adr_local (local)                       /* process host-less reference */
     qualstr[0] = '\0';
     adr_gparm (tmpstr, qualstr);
 
-    if (bypass = (local[0] == '~')) {    /* bypass alias search   */
+    if ( (bypass = (local[0]) == '~')) {    /* bypass alias search   */
 	strncpy (tmpstr, &tmpstr[1], sizeof(tmpstr));
 	strcpy (local, &local[1]);      /* need both if qualstr     */
     }
@@ -690,7 +690,7 @@ adr_local (local)                       /* process host-less reference */
 }
 /**/
 
-adr_gparm (buf, to)               /* get local-mailbox parameter        */
+int adr_gparm (buf, to)               /* get local-mailbox parameter        */
     char   *buf;                  /* the buffer holding the text        */
     char   *to;                   /* put parameter into here            */
 {
@@ -727,7 +727,7 @@ struct lc_alstruct               /* previous aposinfo's are stored on  */
 }                  *lc_cralias;
 
 LOCFUN
-lc_afin ()                /* alst_proc input routine for file   */
+int lc_afin ()                /* alst_proc input routine for file   */
 {                         /* parse already-read line            */
     char    c;
 
@@ -744,7 +744,7 @@ lc_afin ()                /* alst_proc input routine for file   */
     return ( c );
 }
 /**/
-lc_search (mbox, qualstr, bypass)
+int lc_search (mbox, qualstr, bypass)
 char	*mbox;
 char	*qualstr;
 int	bypass;
@@ -866,7 +866,7 @@ int	bypass;
     return (RP_AOK);
 }
 
-lc_pwsrch (name)                 /* search login names (password file) */
+int lc_pwsrch (name)                 /* search login names (password file) */
 char  *name;                      /* search key                         */
 {
     extern struct passwd *getpwmid ();
@@ -913,7 +913,6 @@ Chan *adr_check_sender (local, domain, route, retval) /* check & save an address
     official[LINESIZE],
     tmpstr[LINESIZE];
   int    i;
-  int    nextchan;
   AP_ptr ap;
   char   *cp = (char *)0;
   int loopcnt = 0;
@@ -1043,7 +1042,7 @@ Chan *adr_check_sender (local, domain, route, retval) /* check & save an address
 				  /* SEK: first check for explicit       */
 				  /* channel refs (somehow)              */
           
-          if (cp = strrchr(hptr -> ap_obvalue, '#')) {
+          if ((cp = strrchr(hptr -> ap_obvalue, '#'))) {
 		    *cp = 0;
 		    if ((thechan = ch_nm2struct (hptr -> ap_obvalue))
                 != (Chan *) NOTOK) {

@@ -63,8 +63,14 @@ extern Chan *ch_nm2struct();
 extern Domain *dm_v2route();
 
 extern char *lnk_getaddr();
-LOCFUN mgt_forward(), mgt_author(), mgt_messageid(), mst_srcinfo(),
-	mgt_via(), mgt_locvia(), mgt_rcv();
+void mgt_source ();
+LOCFUN void mgt_forward();
+LOCFUN int  mgt_author();
+LOCFUN void mgt_messageid();
+LOCFUN void mgt_fromline();
+LOCFUN void mgt_locvia();
+LOCFUN void	mgt_via();
+LOCFUN int mgt_rcv();
 
 extern long tx_msize;             /* char count of message text         */
 
@@ -137,12 +143,12 @@ smtp_protocol mgt_protocol = PRK_UNKNOWN;
 #endif
 /**/
 
-LOCFUN mgt_fromline();
-LOCFUN mgt_srcinfo();
-LOCFUN mgt_nohelo();
+LOCFUN void mgt_fromline();
+LOCFUN void mgt_srcinfo();
+LOCFUN void mgt_nohelo();
 LOCFUN char *print_via_protocol();
 
-mgt_init ()
+int mgt_init ()
 {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "mgt_init ()");
@@ -154,7 +160,7 @@ mgt_init ()
     return (RP_OK);
 }
 
-mgt_minit ()                      /* initialize for new message         */
+int mgt_minit ()                      /* initialize for new message         */
 {
     register Chan **chanptr;
 
@@ -294,7 +300,7 @@ register char *theparm;
 }
 /**/
 
-mgt_pend ()                       /* end of parameters                  */
+void mgt_pend ()                       /* end of parameters                  */
 {
     AP_ptr rtntree;
     AP_ptr local, domain, route;
@@ -365,7 +371,7 @@ mgt_pend ()                       /* end of parameters                  */
 
 #define AOKNUM 50
 
-mgt_aok (thechan, hostr, mbox, parm) /* is address acceptable for sending  */
+int mgt_aok (thechan, hostr, mbox, parm) /* is address acceptable for sending  */
 Chan *thechan;                    /* internal chan name/code            */
 char *hostr,                      /* official name of host              */
      *mbox,                       /* name of mailbox                    */
@@ -438,10 +444,9 @@ char *hostr,                      /* official name of host              */
 				/* channel access                     */
 }
 
-mgt_aend ()
+int mgt_aend ()
 {                                 /* record some stats                  */
     char sizstr[11];
-    char p[6];
     
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "mgt_aend ()");
@@ -455,7 +460,7 @@ mgt_aend ()
     if (mgt_vchan.mgt_achan == 0) /* local submission                   */
 	ll_log (logptr, LLOGBST, "lin %s (%d, %s) %s %s %s",
 		mq_munique, lnk_nadrs, sizstr, mgt_chdfl->ch_queue, mailid,
-            print_via_protocol(p, sizeof(p)));
+            print_via_protocol());
     else
     {                             /* claiming to be a relay             */
 	if (!mgt_s2return &&       /* hack past possible bad parsing     */
@@ -472,7 +477,7 @@ mgt_aend ()
 	ll_log (logptr, LLOGBST, "rin %s (%d, %s) %s %s %s %s",
 		mq_munique, lnk_nadrs, sizstr,
 		mgt_vchan.mgt_achan -> ch_queue, mgt_vchan.mgt_ahost,
-		mgt_return, print_via_protocol(p, sizeof(p)));
+		mgt_return, print_via_protocol());
 
     }
     auth_end ();
@@ -481,7 +486,7 @@ mgt_aend ()
 
 /**/
 
-mgt_source ()                     /* ready to process headers */
+void mgt_source ()                     /* ready to process headers */
 {
     char linebuf[LINESIZE];
 
@@ -513,7 +518,7 @@ mgt_source ()                     /* ready to process headers */
     }
 }
 
-mgt_hinit ()                     /* ready to process headers */
+void mgt_hinit ()                     /* ready to process headers */
 {
     if (mgt_vchan.mgt_achan != 0)
       mgt_via();
@@ -528,7 +533,7 @@ mgt_hinit ()                     /* ready to process headers */
  *  that a message might be resent several times, each time gaining
  *  a new set of Resent- headers.  The last set wins.   (DPK, 17 July 84)
  */
-mgt_hdr (name, contents, hdr_state)
+int mgt_hdr (name, contents, hdr_state)
     char *name,
 	contents[];
     int hdr_state;
@@ -707,7 +712,7 @@ dorplyto:
 }
 /**/
 
-mgt_hend ()
+int mgt_hend ()
 {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "mgt_hend ()");
@@ -749,7 +754,7 @@ mgt_hend ()
 /**/
 
 LOCFUN
-	mgt_forward (channame)    /* certify source as relay site       */
+void mgt_forward (channame)    /* certify source as relay site       */
     char channame[];
 {                                 /* map username to "host" on chan     */
     register Chan *thechan;       /* chan claiming to come from         */
@@ -767,7 +772,7 @@ LOCFUN
 /**/
 
 LOCFUN
-	mgt_author (contents)     /* does component contain only the    */
+int mgt_author (contents)     /* does component contain only the    */
     char contents[];
 {                                 /* address of the actual sender?      */
     struct passwd *pwdptr;
@@ -843,7 +848,7 @@ cleanup:
 /**/
 
 LOCFUN
-	mgt_messageid ()            /* add Message-ID: */
+void mgt_messageid ()            /* add Message-ID: */
 {
     char buf[32];
 #ifdef DEBUG
@@ -859,7 +864,7 @@ LOCFUN
 }
 
 LOCFUN
-mgt_fromline()
+void mgt_fromline()
 {
 #ifdef DEBUG
   ll_log (logptr, LLOGBTR, "mgt_fromline ()");
@@ -873,7 +878,7 @@ mgt_fromline()
 }
 
 LOCFUN
-	mgt_srcinfo ()            /* add Source-Info field, maybe       */
+void mgt_srcinfo ()            /* add Source-Info field, maybe       */
 {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "mgt_srcinfo ()");
@@ -895,7 +900,7 @@ LOCFUN
 }
 
 LOCFUN
-	mgt_nohelo ()            /* add X-Authentication-Warning        */
+void mgt_nohelo ()            /* add X-Authentication-Warning        */
 {
 #ifdef DEBUG
     ll_log (logptr, LLOGBTR, "mgt_nohelo ()");
@@ -914,7 +919,7 @@ LOCFUN
 /**/
 
 LOCFUN
-	mgt_locvia ()                /* note fact of relaying              */
+void mgt_locvia ()                /* note fact of relaying              */
 {
     extern char *cnvtdate ();
     char    thedate[LINESIZE];
@@ -950,7 +955,7 @@ LOCFUN
 /**/
 
 LOCFUN
-	mgt_via ()                /* note fact of relaying              */
+void mgt_via ()                /* note fact of relaying              */
 {
     extern char *cnvtdate ();
     char    thedate[LINESIZE];
@@ -1039,6 +1044,7 @@ LOCFUN
     switch(mgt_protocol) {
         case PRK_SMTP: len = mgt_rcv (len, "with SMTP"); break;
         case PRK_ESMTP: len = mgt_rcv (len, "with ESMTP"); break;
+        default: break;
     }
 #endif
     if (adr_orgspec != (char *) 0)
@@ -1069,7 +1075,7 @@ LOCFUN
 /* VARARGS2 */
 
 LOCVAR
-mgt_rcv (curlen, fmt, val1, val2, val3)
+int mgt_rcv (curlen, fmt, val1, val2, val3)
     int curlen;
     char *fmt, *val1, *val2, *val3;
 {
@@ -1101,17 +1107,14 @@ mgt_dstgen()
 			"&", mgt_vchan.mgt_ahost, (char *)0));
 }
 
-LOCFUN char *print_via_protocol(p, len)
-char *p;
-int len;
+LOCFUN char *print_via_protocol()
 {
-  memset(p, 0, len);
-  
 #ifdef HAVE_ESMTP
   switch(mgt_protocol) {
-      case PRK_SMTP:  strncpy(p, "SMTP", len); break;
-      case PRK_ESMTP: strncpy(p, "ESMTP", len); break;
+      case PRK_SMTP:  return "SMTP";
+      case PRK_ESMTP: return "ESMTP";
+      default: break;
   }
 #endif
-  return p;
+  return "";
 }
