@@ -61,6 +61,7 @@ extern char lo_replyto[];	/* the reply address		*/
 extern char lo_size[];
 extern char *lo_parm;		/* parameter portion of address */
 extern struct passwd *lo_pw;	/* passwd struct for recipient  */
+
 extern long mbox_quota_soft;  /* mailbox quota limit               */
 extern long mbox_quota_hard;  /* mailbox quota limit               */
 
@@ -1228,55 +1229,63 @@ LOCFUN int check_mboxquota(mboxname)
 char *mboxname;
 {
   struct stat	mbxstat;
-  char buf[LINESIZE];
+  char buf[LINESIZE], soft_limit[LINESIZE], hard_limit[LINESIZE];
   Table *tblptr = tb_nm2struct("mboxquota");
   long sizelimit;
   
-  ll_log (logptr, LLOGTMP, "check_mboxquota(%s) %p %d", mboxname,
-          tblptr, mbox_quota);
+  ll_log (logptr, LLOGTMP, "check_mboxquota(%s) %p %d %d", mboxname,
+          tblptr, mbox_quota_soft, mbox_quota_hard);
 
-  /* no Mailbox-Quota table defined and mbox_quota<0,  so return OK */
-  if(tblptr==NOTOK && mbox_quota<0) return RP_BOK;
+  /* no Mailbox-Quota table defined and mbox_quota_soft<0,  so return OK */
+  if(tblptr==NOTOK && mbox_quota_soft<0 && mbox_quota_hard<0) return RP_BOK;
 
   /* some quota limits are set, now check it */
   if(stat(mboxname, &mbxstat)<0) return RP_BOK;
 
   /* if quota-table is defined, check if we find user there */
-  if(tblptr!=NOTOK && tb_k2val(tblptr, TRUE, lo_adr, buf)!=NOTOK) {
-    sscanf(buf, "%d", &sizelimit);
-    if(sizelimit<=0) return RP_BOK;
-    switch(buf[strlen(buf)-1]) {
-        case 'k':
-        case 'K': sizelimit*=1000;  break;
+  if(tblptr!=NOTOK) {
+    if(tb_k2val(tblptr, TRUE, lo_adr, buf)!=NOTOK) {
+      sscanf(buf, "%s %s", soft_limit, hard_limit);
+      cnvtbytestr(soft_limit, &sizelimit);
+      
+      printx("\n>>>%s soft=%d<<<\n", buf, sizelimit);
+      if(sizelimit>=0) {
+        ll_log (logptr, LLOGFST,
+                "quota limit check for '%s' user soft val: %ld<%ld =%d",
+                lo_adr, st_gsize(&mbxstat), sizelimit,
+                st_gsize(&mbxstat)<sizelimit);
+        if(st_gsize(&mbxstat)>sizelimit) return RP_QUOT;
+      }
 
-        case 'm':
-        case 'M': sizelimit*=1000000;  break;
-
-        case 'g':
-        case 'G': sizelimit*=1000000000;  break;
-
-        default:
-          break;
+      cnvtbytestr(hard_limit, &sizelimit);
+      if(sizelimit>=0) {
+        ll_log (logptr, LLOGFST,
+                "quota limit check for '%s' user hard val: %ld<%ld =%d",
+                lo_adr, st_gsize(&mbxstat)+qu_msglen, sizelimit,
+                st_gsize(&mbxstat)+qu_msglen<sizelimit);
+        if(st_gsize(&mbxstat)+qu_msglen>sizelimit) return RP_QUOT;
+      }
+  
+      return RP_BOK;
     }
-    ll_log (logptr, LLOGFST, "quota limit check for '%s' val: %ld<%ld =%d",
-           lo_adr, st_gsize(&mbxstat), sizelimit,
-           st_gsize(&mbxstat)<sizelimit);
-    printx("quota size for '%s' is %ld<%ld =%d\n",
-           lo_adr, st_gsize(&mbxstat), sizelimit,
-           st_gsize(&mbxstat)<sizelimit);
-    if(st_gsize(&mbxstat)>sizelimit) return RP_QUOT;
-  } else {
-    /* user not found, so check against system-wide limit */
-    if(mbox_quota>=0) {
-      ll_log (logptr, LLOGFST,
-              "quota limit check for '%s' sval: %ld<%ld =%d",
-              lo_adr, st_gsize(&mbxstat), mbox_quota,
-              st_gsize(&mbxstat)<mbox_quota);
-      printx("quota size for '%s' is %ld<%ld =%d\n",
-             lo_adr, st_gsize(&mbxstat), mbox_quota,
-             st_gsize(&mbxstat)<mbox_quota);
-      if(st_gsize(&mbxstat)>mbox_quota) return RP_QUOT;
-    }
+  }
+  
+  /* user not found, so check against system-wide soft limit */
+  if(mbox_quota_soft>=0) {
+    ll_log (logptr, LLOGFST,
+            "quota limit check for '%s' sys soft val: %ld<%ld =%d",
+            lo_adr, st_gsize(&mbxstat), mbox_quota_soft,
+            st_gsize(&mbxstat)<mbox_quota_soft);
+    if(st_gsize(&mbxstat)>mbox_quota_soft) return RP_QUOT;
+  }
+    
+  /* user not found, so check against system-wide hard limit */
+  if(mbox_quota_hard>=0) {
+    ll_log (logptr, LLOGFST,
+            "quota limit check for '%s' sys hard val: %ld<%ld =%d",
+            lo_adr, st_gsize(&mbxstat)+qu_msglen, mbox_quota_hard,
+            st_gsize(&mbxstat)+qu_msglen<mbox_quota_hard);
+    if(st_gsize(&mbxstat)+qu_msglen>mbox_quota_hard) return RP_QUOT;
   }
   
   
