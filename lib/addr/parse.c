@@ -1,7 +1,7 @@
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/parse.c,v 1.2 1983/11/18 17:09:41 reilly Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/lib/addr/parse.c,v 1.3 1985/01/17 23:07:11 dpk Exp $ */
 /* $Log: parse.c,v $
-/* Revision 1.2  1983/11/18 17:09:41  reilly
-/*
+/* Revision 1.3  1985/01/17 23:07:11  dpk
+/* Reworked, it now works
 /*
  * Revision 1.3  85/01/17  23:07:11  dpk
  * Reworked, it now works
