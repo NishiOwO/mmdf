@@ -13,6 +13,7 @@
  */
 
 #include "util.h"
+#include "conf.h"
 #include <signal.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -22,9 +23,6 @@
 #include <sys/stat.h>
 
 #include "ns.h"
-/*#ifndef LINESIZE
-#  define LINESIZE 1024
-#endif*/
 
 extern	int	errno;
 

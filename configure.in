@@ -534,13 +534,16 @@ fi
 if test "$includedir" = '${prefix}/include'; then
   if test "x$prefix" = xNONE; then
     CPPFLAGS="-I${ac_default_prefix}/include ${CPPFLAGS}"
+    CFLAGS="-I${ac_default_prefix}/include ${CPPFLAGS}"
     ac_configure_args="$ac_configure_args --includedir=${ac_default_prefix}/include"
   else
     CPPFLAGS="-I${prefix}/include ${CPPFLAGS}"
+    CFLAGS="-I${prefix}/include ${CPPFLAGS}"
     ac_configure_args="$ac_configure_args --includedir=${prefix}/include"
   fi
 else
   CPPFLAGS="-I${includedir} ${CPPFLAGS}"
+  CFLAGS="-I${includedir} ${CPPFLAGS}"
 fi
 
 dnl pass default prefix on to subdirs, if not explicitely given as an option
