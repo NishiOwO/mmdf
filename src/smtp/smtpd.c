@@ -44,6 +44,7 @@ int     started_by_inetd;
 int     effecid,                  /* system number of pgm/file's owner  */
 	callerid;                 /* who invoked me?                    */
 
+extern char *inet_ntoa();
 LOCFUN mn_mmdf();
 RETSIGTYPE sig17();
 
