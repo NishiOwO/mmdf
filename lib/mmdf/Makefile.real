@@ -37,6 +37,9 @@ real-default: ../mmdf-made
 	-touch ../mmdf-made
 	-@echo "mmdf routines built normally"
 
+msg_test: msg_test.o $(MMDFLIBS)
+	cc $(LDFLAGS) -o msg_test msg_test.o $(MMDFLIBS) $(SYSLIBS)
+
 lint:
 	$(LINT) -Cmmdf $(LFLAGS) $(COBJECTS)
 
