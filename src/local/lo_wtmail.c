@@ -238,20 +238,44 @@ char	*mboxname;
 		printx (", failed\r\n");
 		return (retval);
 	}
-      if (lo_sender && *lo_sender) {
-          char buffer[BUFSIZ];
-          int len;
+    if (lo_adr && *lo_adr) {
+      char buffer[BUFSIZ];
+      int len;
 
-          (void) sprintf (buffer, "Return-Path: <%s>\n", lo_sender);
-          len = strlen(buffer);
-          if (write (mbx_fd, buffer, len) != len) {
-              ll_err (logptr, LLOGTMP, "error writing out return-path");
-              retval = RP_LIO;
-              goto closeit;
-          }
+      (void) sprintf (buffer, "X-Envelope-To: <%s>\n", lo_adr);
+      len = strlen(buffer);
+      if (write (mbx_fd, buffer, len) != len) {
+        ll_err (logptr, LLOGTMP, "error writing out X-Envelope-To");
+        retval = RP_LIO;
+        goto closeit;
       }
+    }
+    if (lo_sender && *lo_sender) {
+      char buffer[BUFSIZ];
+      int len;
+
+      (void) sprintf (buffer, "Return-Path: <%s>\n", lo_sender);
+      len = strlen(buffer);
+      if (write (mbx_fd, buffer, len) != len) {
+        ll_err (logptr, LLOGTMP, "error writing out return-path");
+        retval = RP_LIO;
+        goto closeit;
+      }
+    }
+    if (lo_size && *lo_size) {
+      char buffer[BUFSIZ];
+      int len;
+
+      (void) sprintf (buffer, "X-Envelope-Size: %s\n", lo_size);
+      len = strlen(buffer);
+      if (write (mbx_fd, buffer, len) != len) {
+        ll_err (logptr, LLOGTMP, "error writing out X-Envelope-Size");
+        retval = RP_LIO;
+        goto closeit;
+      }
+    }
 	retval = qu2lo_txtcpy (mbx_fd, TRUE);
-	closeit:
+  closeit:
 	mbx_close (mboxname);
 	printx (rp_isgood (retval) ? ", succeeded\r\n" : ", failed\r\n");
 	return (retval);
@@ -1133,7 +1157,7 @@ LOCFUN setupenv()
 		ll_log (logptr, LLOGGEN, "TIOCNOTTY not available");
 	}
 #endif /* TIOCNOTTY */
-#ifdef V4_2BSD
+#ifdef HAVE_SETPGRP
 	setpgrp (0, getpid());
 #endif
 	sprintf (homestr, "HOME=%s", lo_pw->pw_dir);
