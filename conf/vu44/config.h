@@ -1,5 +1,5 @@
 /*
- * $Id: config.h,v 1.7 1997/12/31 19:40:31 krueger Exp $
+ * $Id: config.h,v 1.8 1998/01/01 13:43:30 krueger Exp $
  *
  * please set every configuration-switch here
  *
@@ -118,7 +118,6 @@
  *             dup2() system call or subroutine.
  *    renamed to HAVE_DUP2
  *    set by configure in config.h.in
- *         (work in progress)
  */
 #define NODUP2
 
@@ -127,7 +126,6 @@
  *             F_DUPFD) system call either.
  *    renamed to HAVE_FCNTL_F_DUPFD
  *    set by configure in config.h.in
- *         (work in progress)
  */
 /* #undef NOFCNTL */
 

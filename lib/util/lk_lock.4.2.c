@@ -1,7 +1,8 @@
 #include "util.h"
 #include <sys/file.h>
-#include <fcntl.h>
-
+#ifdef	HAVE_FCNTL_H
+#  include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
 /*
  *	Standardized file-locking package  (4.2BSD)
  *

@@ -288,7 +288,7 @@ fi
 
 AC_CHECK_FUNCS(dup2 fcntl flock ftime getcwd getdtablesize gethostname)
 AC_CHECK_FUNCS(gettimeofday getwd index memcpy mkdir res_mkquery)
-AC_CHECK_FUNCS(socket strchr strdup)
+AC_CHECK_FUNCS(setpgrp socket strchr strdup)
 
 AC_FUNC_UTIME_NULL
 AC_FUNC_VFORK
@@ -410,9 +410,30 @@ if test "$ac_cv_func_mkdir" = "yes"; then
   rmdir dummy
 fi
 
+dnl check whether fcntl(2, F_DUPFD, fd); works
+if test "$ac_cv_header_fcntl_h" = "yes"; then
+  AC_MSG_CHECKING(whether fcntl(2, F_DUPFD, fd) works)
+  AC_CACHE_VAL(ac_cv_have_FCNTL_F_DUPFD, AC_TRY_RUN( 
+   [ #include <fcntl.h>
+     main() { 
+	int fd, fd2;
+  	fd2 = fcntl(2, F_DUPFD, fd);
+	if(fd2>0) exit(0); else exit(1);
+   }],
+     ac_cv_have_FCNTL_F_DUPFD=yes,
+     ac_cv_have_FCNTL_F_DUPFD=no,
+     ac_cv_have_FCNTL_F_DUPFD=no))
+  if test "$ac_cv_have_FCNTL_F_DUPFD" = yes; then
+    AC_MSG_RESULT(yes)
+    AC_DEFINE(HAVE_FCNTL_F_DUPFD)
+  else
+    AC_MSG_RESULT(no)
+  fi
+fi
+
 dnl check arguments of ioctl(1, TIOCSBRK, 0)
 if test "$ac_cv_header_sys_ioctl_h" = "yes"; then
-  AC_MSG_CHECKING(if ioctl(1, TIOCSBRK, 0) works)
+  AC_MSG_CHECKING(whether ioctl(1, TIOCSBRK, 0) works)
   AC_CACHE_VAL(ac_cv_have_TIOCSBRK, AC_TRY_RUN( 
    [ #include <sys/ioctl.h>
      main() { 

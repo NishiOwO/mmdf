@@ -20,9 +20,9 @@
 #include <signal.h>
 #include <sys/stat.h>
 #include <pwd.h>
-#ifndef NOFCNTL
-#include <fcntl.h>
-#endif
+#ifdef HAVE_FCNTL_H
+#  include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
 #ifdef HAVE_LIBWRAP
 #  include <tcpd.h>
 #  include <syslog.h>
@@ -1139,19 +1139,19 @@ vrfy()
 
 		    case 0:
 			/* child */
-#ifndef NODUP2
+#ifdef HAVE_DUP2
 			dup2(vrfy_p2c[0],0);
 			dup2(vrfy_c2p[1],1);
-#else
+#else /* HAVE_DUP2 */
 			(void) close(0);
 			(void) close(1);
-#ifndef NOFCNTL
+#ifdef HAVE_FCNTL_F_DUPFD
 			fcntl(vrfy_p2c[0], F_DUPFD, 0);
 			fcntl(vrfy_c2p[1], F_DUPFD, 1);
-#else
+#else /* HAVE_FCNTL_F_DUPFD */
 			/* something else */
-#endif
-#endif
+#endif /* HAVE_FCNTL_F_DUPFD */
+#endif /* HAVE_DUP2 */
 			for (fd = 2; fd < numfds; fd++)
 				(void)close(fd);
 

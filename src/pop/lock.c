@@ -156,8 +156,7 @@ register int     dev,
 
 /*  */
 
-#ifdef	BSD42
-
+#if defined(HAVE_SYS_FILE_H) && defined(HAVE_FCNTL_H) || defined(BSD42)
 #include <sys/file.h>
 #include <fcntl.h>
 

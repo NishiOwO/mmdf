@@ -12,9 +12,9 @@
 # include <fcntl.h>
 #endif HAVE_SGTTY_H
 # include  <sys/stat.h>
-#ifdef V4_2BSD
+#if defined(HAVE_SYS_FILE_H) || defined(V4_2BSD)
 # include  <sys/file.h>
-#endif V4_2BSD
+#endif HAVE_SYS_FILE_H
 
 /*  Jun 81  Dave Crocker    fixed some text, referring to errno
  *  Aug 81  Dave Crocker    added sleep before kill & alarm around

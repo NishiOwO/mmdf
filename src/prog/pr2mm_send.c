@@ -154,15 +154,15 @@ main (argc, argv)
     }
     
     if (child_pid == 0) {
-#ifndef NODUP2
+#ifdef HAVE_DUP2
 	dup2 (pp[1], 1);
 	dup2 (pp[1], 2);
-#else
+#else /* HAVE_DUP2 */
 	close(1);
 	dup (pp[1]);
 	close(2);
 	dup (pp[1]);
-#endif NODUP2
+#endif /* HAVE_DUP2 */
 	close (pp[0]);
 	child (argc, argv);
     } else {

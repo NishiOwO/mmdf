@@ -1,7 +1,7 @@
 #include "util.h"
 #include "nexec.h"
 #include <signal.h>
-#ifndef NOFCNTL
+#ifdef HAVE_FCNTL_H
 #include <fcntl.h>
 #endif
 
@@ -120,13 +120,13 @@ char	*pgm,
 		/* first do the re-positions */
 		for (fd = 0; fd < numfds; fd++) {
 			if (fdarray[fd] != CLOSEFD && fdarray[fd] != fd) {
-#ifndef NODUP2
+#ifdef HAVE_DUP2
 				(void)dup2(fdarray[fd], fd);
-#else /* NODUP2 */
+#else /* HAVE_DUP2 */
 				(void)close(fd);
-#ifndef NOFCNTL
+#ifdef HAVE_FCNTL_F_DUPFD
 				fcntl(fdarray[fd], F_DUPFD, fd);
-#else /* NOFCNTL */
+#else /* HAVE_FCNTL_F_DUPFD */
 				{
 					int	dupfd;
 
@@ -134,8 +134,8 @@ char	*pgm,
 						;
 					/* did we get right fd? */
 				}
-#endif /* NOFCNTL */
-#endif /* NODUP2 */
+#endif /* HAVE_FCNTL_F_DUPFD */
+#endif /* HAVE_DUP2 */
 			}
 		}
 		for (fd = 0; fd < numfds; fd++)

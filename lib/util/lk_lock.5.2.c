@@ -1,5 +1,7 @@
 #include "util.h"
-#include <fcntl.h>
+#ifdef HAVE_FCNTL_H
+#  include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
 
 /*
  *	Standardized file-locking package (System 5 Rel 2)
