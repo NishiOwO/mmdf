@@ -3,7 +3,9 @@
 #include <pwd.h>
 #include <signal.h>
 #include <sys/stat.h>
+#ifndef LINUX
 #include <sgtty.h>
+#endif
 #ifdef V4_2BSD
 #include <sys/ioctl.h>
 #endif V4_2BSD

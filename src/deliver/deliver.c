@@ -56,8 +56,9 @@
 #include <signal.h>
 #include <sys/stat.h>
 #include <pwd.h>
+#ifndef LINUX
 #include <sgtty.h>
-
+#endif /* Not LINUX */
 /* ***        RUN SETUID TO ROOT, so it can setuid to MMDF          *** */
 /* ***                                                              *** */
 /* ***  This is so that BOTH real and effective id's show as MMDF   *** */

@@ -47,7 +47,9 @@
 #include <pwd.h>
 #include <sys/stat.h>
 #include <signal.h>
+#ifndef LINUX
 #include <sgtty.h>
+#endif  /*  Not LINUX  */
 #include "adr_queue.h"
 
 char    lo_info[2 * LINESIZE],

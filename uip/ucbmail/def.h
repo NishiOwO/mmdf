@@ -6,10 +6,13 @@
  *	@(#)def.h	5.2 (Berkeley) 11/2/85
  */
 
+#include "config.h"
 #include <sys/param.h>		/* includes <sys/types.h> */
 #include <signal.h>
 #include <stdio.h>
+#ifndef LINUX
 #include <sgtty.h>
+#endif  /*  LINUX  */
 #include "./local.h"
 
 /*
