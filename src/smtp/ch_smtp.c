@@ -52,7 +52,7 @@ char   *argv[];
 {
     short retval;
 
-    mmdf_init (argv[0]);
+    mmdf_init (argv[0], 0);
     setbuf( stdout, obuf );
 
 #ifdef RUNALON

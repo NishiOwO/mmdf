@@ -85,7 +85,7 @@ int     argc;
 char   *argv[];
 {
     setbuf (stdout, ttyobuf);
-    mmdf_init (argv[0]);
+    mmdf_init (argv[0], 0);
     pgminit ();
 
     if (initstr ("snd", argv[0], 3)

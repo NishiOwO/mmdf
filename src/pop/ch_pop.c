@@ -103,7 +103,7 @@ char  **argv;
     char    *dupfpath ();
     short   retval;
 
-    mmdf_init (argv[0]);
+    mmdf_init (argv[0], 0);
 
 #ifdef RUNALON
     logptr -> ll_fd = 1;

@@ -20,7 +20,7 @@ main(argc, argv)
     extern int d_debug;
     extern int d_master, d_snseq, d_rcvseq;
 
-    mmdf_init();
+    mmdf_init("DIAL", 0);
     siginit();
 
     if (argc > 1)

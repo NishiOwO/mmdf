@@ -38,7 +38,7 @@ main (argc, argv)
     char *argv[];
 {
     infp = stdin;
-    mmdf_init (argv[0]);
+    mmdf_init (argv[0], 0);
     arg_init (argc, argv);
 
     doit ();

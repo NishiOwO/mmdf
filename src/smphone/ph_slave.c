@@ -79,7 +79,7 @@ char   *argv[];
     umask(0);
 
     setbuf (stdout, ttyobuf);
-    mmdf_init (argv[0]);
+    mmdf_init (argv[0], 0);
 
     siginit ();
     if (argv[0][0] == '-')

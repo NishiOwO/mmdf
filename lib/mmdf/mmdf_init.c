@@ -46,8 +46,9 @@ void unsetenv (name)
 #endif
 #endif
  
-void mmdf_init (pgmname)            /* initialize an mmdf process           */
+void mmdf_init (pgmname, virtual_name)  /* initialize an mmdf process */
 char *pgmname;
+char *virtual_name;
 {
     extern char *dupfpath ();
     char *argv[MAXARG];
@@ -78,6 +79,11 @@ char *pgmname;
 
     if (logdfldir != (char *) 0)
 	logptr -> ll_file = dupfpath (logptr -> ll_file, logdfldir);
+
+#ifdef HAVE_VIRTUAL_DOMAINS
+    /* we need to find the right mmtailor file for our virtual domain */
+    mmdf_init_mmtailor(virtual_name);
+#endif /* HAVE_VIRTUAL_DOMAINS */
 
     if (tai_init (mmtailor) != OK)
 	err_abrt (RP_FIO, "Can't access tailoring file '%s'", mmtailor);
@@ -121,7 +127,7 @@ char *pgmname;
     if (argc == NOTOK)
 	err_abrt (RP_MECH, "Error processing tailoring file '%s'", mmtailor);
 
-    tai_end ();
+    tai_end (0); /* we really don't want to clear and free the memory ! */
 
     /*
      * These are provided pre-flipped for backwards walkers as

@@ -51,7 +51,7 @@ char **argv;
     char real_user[128];
     char buf[256];	/* flags for submit */
 
-	mmdf_init(argv[0]);
+	mmdf_init(argv[0], 0);
 
 	if ((pwdptr = getpwuid (getuid())) == (struct passwd *) NULL)
 		syserr("Unable to locate user's name");

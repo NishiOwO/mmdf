@@ -55,7 +55,7 @@ char **argv;
 	}
     }
 
-    mmdf_init(prog);
+    mmdf_init(prog, 0);
 
     /*
      *  Check for existence first

@@ -67,7 +67,7 @@ char   *argv[];
 {
     short retval;
 
-    mmdf_init (argv[0]);
+    mmdf_init (argv[0], 0);
     siginit ();
     signal (SIGINT, SIG_IGN);          /* always ignore interrupts           */
 

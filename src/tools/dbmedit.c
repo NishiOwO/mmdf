@@ -75,7 +75,7 @@ struct  db      {
 main(ac, av)
 char **av;
 {
-	mmdf_init(av[0]);
+	mmdf_init(av[0], 0);
 
 	dblock = multcat (dupfpath (tbldbm, tbldfldir), ".lck", (char *)0);
 	(void) close( creat( dblock, 0444 ));

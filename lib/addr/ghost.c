@@ -39,7 +39,7 @@ main ()
 	char tstline[1000];
 	char newloc[1000];
 
-	mmdf_init ("GHOST");
+	mmdf_init ("GHOST", 0);
 
 	logptr -> ll_level = LLOGFTR ;
 

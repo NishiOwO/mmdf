@@ -21,7 +21,7 @@ char	**argv;
 	register char *mailid;
 	char *getmailid();
 
-	mmdf_init(argv[0]);
+	mmdf_init(argv[0], 0);
 	if (argc < 2) {
 		register struct passwd *pw;
 

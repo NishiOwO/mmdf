@@ -67,7 +67,7 @@ char *argv[];
 	if (allmsgs)
 		setuid(realuid); /* Let unix protection do the hard work */
 
-	mmdf_init(argv[0]);
+	mmdf_init(argv[0], 0);
 	mn_dirinit();		/* get right working directory */
 
 	ovr_queue();		/* do the entire mail queue */

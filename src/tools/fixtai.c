@@ -56,7 +56,7 @@ main (argc, argv)
     ch_numchans = 0;            /* zero the pre-compiled channel array */
     ch_tbsrch[0] = (Chan *) 0;
 
-    mmdf_init(argv[0]);
+    mmdf_init(argv[0], 0);
     dump_it();
     exit (0);
 }

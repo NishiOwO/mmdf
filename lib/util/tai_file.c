@@ -2,6 +2,12 @@
 #include <sys/stat.h>
 
 /* Perform process start-up tailoring */
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * beaware that tai_data must not be freed at tai_end()
+ * mm_tai(), ... are just moving pointer within tai_data.
+ * if we free tai_data we will run into serious problems !
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
 extern int errno;
 
@@ -9,12 +15,12 @@ char *tai_eptr;         /* point to error text, if any  */
 
 LOCVAR char *tai_data;	/* pointer to incore copy of tai file */
 LOCVAR char *tai_ptr;   /* pointer to "next" tai record */
+LOCVAR unsigned long taisize; /* number of bytes in the tai file */
 
 tai_init (filename)	/* prepare to get tailoring information */
 	char filename[]; /* location of the info */
 {
 	struct stat statbuf;
-	unsigned taisize; /* number of bytes in the tai file */
 	int fd;
 
 	if (stat (filename, &statbuf) < OK)
@@ -22,6 +28,8 @@ tai_init (filename)	/* prepare to get tailoring information */
 	taisize = (unsigned) st_gsize (&statbuf);
 	if ((tai_data = malloc (taisize + 1)) == 0)
 		return (NOTOK);
+
+    memset(tai_data, 0, taisize+1);
 	if ((fd = open (filename, 0)) < 0)
 		return (NOTOK);
 	if (read (fd, tai_data, taisize) != taisize)
@@ -37,10 +45,16 @@ tai_init (filename)	/* prepare to get tailoring information */
 }
 
 
-tai_end ()
+int tai_end (do_clear)
+int do_clear;
 {
-	tai_data = 0;
-	return (OK);
+  if(do_clear) {
+    memset(tai_data, 0, taisize);
+    free(tai_data);
+  }
+  tai_data = 0;
+  taisize = 0;
+  return (OK);
 }
 /**/
 

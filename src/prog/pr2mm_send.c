@@ -142,7 +142,7 @@ main (argc, argv)
     int child_pid, pp[2];
     char **argv_old = argv;
 
-    mmdf_init (*argv);
+    mmdf_init (*argv, 0);
     
     if (pipe (pp) != 0 || (child_pid = fork ()) == -1) {
 	mopen (supportaddr, "Problems with `recvprog' program");
@@ -280,7 +280,7 @@ MAIN (argc, argv)
     prog_mode = '\0';
 
 #ifndef SAFEFORK
-    mmdf_init (*argv);
+    mmdf_init (*argv, 0);
 #endif /* SAFEFORK */
 
     TRY (mm_init (), "initialize MMDF");

@@ -1,4 +1,4 @@
-/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.16 1999/08/16 10:21:34 krueger Exp $ */
+/* $Header: /tmp/cvsroot_mmdf/mmdf/devsrc/src/tools/cleanque.c,v 1.17 2001/04/26 22:02:16 krueger Exp $ */
 /*
  *     MULTI-CHANNEL MEMO DISTRIBUTION FACILITY  (MMDF)
  *     
@@ -109,7 +109,7 @@ char   *argv[];
     extern char *dupfpath ();
     extern time_t time ();
 
-    mmdf_init (argv[0]);
+    mmdf_init (argv[0], 0);
     nice (-5);                 /* try to run faster, if root           */
 
     getwho (&callerid, &effecid); /* who am I and who is running me?    */

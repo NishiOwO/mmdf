@@ -158,7 +158,7 @@ char *argv[];
 
 	program = argv[0];
 
-	mmdf_init(argv[0]);
+	mmdf_init(argv[0], 0);
 	setbuf(stdout, bufout);
 	if (ch_numchans > NUMCHANS)
 	{

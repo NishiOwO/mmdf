@@ -1,5 +1,5 @@
 /*
- * $Id: getvar.c,v 1.1 1999/10/07 13:41:10 krueger Exp $
+ * $Id: getvar.c,v 1.2 2001/04/26 22:02:16 krueger Exp $
  */
 
 #include "util.h"
@@ -13,7 +13,7 @@ int argc;char *argv[];
   void *value;
   int type = VARTYPE_NIL;
   
-  mmdf_init(argv[0]);
+  mmdf_init(argv[0], 0);
   read_variable(argv[1], &value, &type);
   
   switch(type)

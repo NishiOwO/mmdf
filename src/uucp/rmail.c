@@ -169,7 +169,7 @@ char **argv;
 	int		fd;
 
 	*fromwhom='\0', *sys='\0';
-	mmdf_init(argv[0]);
+	mmdf_init(argv[0], 0);
 
 #if 0  /* Used to find the environment variable that has the remote uucp host
           in it.  In the case of GNU's uucp-1.06.1, UU_MACHINE has it. -u@q.net */

@@ -24,7 +24,7 @@ char   *argv[];
 {
     char  *thefile;
 
-    mmdf_init (argv[0]);
+    mmdf_init (argv[0], 0);
     for (argc--; filnum++ < argc; )
     {                             /* process a message file/folder        */
 	printf ("%s: ", thefile = argv[filnum]);

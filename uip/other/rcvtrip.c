@@ -207,7 +207,7 @@ char  **argv;
 	if( argc > 1 )  /* we have a command line sender address */
 		parse_addr(*argv, &sndr_adr);
 
-	mmdf_init ("TRIP");
+	mmdf_init ("TRIP", 0);
 
 
   getwho (&realid, &effecid);

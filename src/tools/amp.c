@@ -47,7 +47,7 @@ char *argv[];
 			long	offset;
 			int	ofd;
 
-	mmdf_init(argv[0]);
+	mmdf_init(argv[0], 0);
 
 	if (argc < 2 || (chanptr = ch_nm2struct(argv[1])) == (Chan *)NOTOK) {
 		chanptr = (Chan *)NULL;

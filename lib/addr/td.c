@@ -18,7 +18,7 @@ main ()
     Domain *dmn = &dbuf;
     Chan *tchan;
 
-    mmdf_init ("TEST-DM");
+    mmdf_init ("TEST-DM", 0);
     siginit ();
     logptr -> ll_level = LLOGFTR;
 

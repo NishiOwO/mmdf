@@ -38,7 +38,7 @@ char *argv[];
 	char *sender;
 
 
-	mmdf_init (argv[0]);
+	mmdf_init (argv[0], 0);
 	siginit ();
 
 	if (lexequ (argv[1], "-f"))

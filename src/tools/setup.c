@@ -100,7 +100,7 @@ main (argc, argv)
 	effecid;
     register int i;
 
-    mmdf_init (argv[0]);
+    mmdf_init (argv[0], 0);
 #ifdef JNTMAIL
     if ((mmdfpwd = getpwnam (daemonname)) == (struct passwd *) NULL)
     {

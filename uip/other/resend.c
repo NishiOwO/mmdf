@@ -31,7 +31,7 @@ main (argc, argv)
 int     argc;
 char   *argv[];
 {
-	mmdf_init (argv[0]);
+	mmdf_init (argv[0], 0);
 
 	pgminit ();
 

@@ -1,4 +1,4 @@
-/*
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
  *			S M T P D . C
  *
  * Server SMTP daemon, for 4.1a/4.2 BSD by DPK at BRL, 1 Jan 82 (Sigh...)
@@ -10,7 +10,25 @@
  *	03/18/83  DPK   Modified for 4.1c.
  *
  *	??		Modified for 4.2
- */
+ *
+ *
+ * $Id: smtpd.c,v 1.12 2001/04/26 22:02:15 krueger Exp $
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+#ifndef lint
+  static char rcsid[]="@(#) $Revision: 1.12 $ $Date: 2001/04/26 22:02:15 $";
+#endif /* lint */
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * HISTORY
+ * $Log: smtpd.c,v $
+ * Revision 1.12  2001/04/26 22:02:15  krueger
+ * Added support for virtual hosts
+ *
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+#define VIRTUALENVNAME "MMDFVIRTUALNAME"
+
 
 #include "util.h"
 #include "conf.h"
@@ -22,20 +40,33 @@
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 
+#include <stdarg.h>
+
 #include "ns.h"
 
+int netreply(char *fmt, ...);
+
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * External variables
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 extern	int	errno;
 #if !HAVE_SYS_ERRLIST_DECL
 extern  char    *sys_errlist[];
 #endif /* HAVE_SYS_ERRLIST_DECL */
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * Local variables
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 struct	sockaddr_in	addr;
 
 char	*Smtpserver = 0;	/* Actual smtp server process, full path */
 char	*Channel = 0;		/* Logical channel mail will arrive on */
-int	Maxconnections = 4;	/* Maximum simultaneous connections */
-int	numconnections = 0;	/* Number of currently active connections */
-int	debug = 0;		/* If nonzero, give verbose output on stderr */
+int	 Maxconnections = 4;	/* Maximum simultaneous connections */
+int	 numconnections = 0;	/* Number of currently active connections */
+int	 debug = 0;		/* If nonzero, give verbose output on stderr */
 #define	logx	if (debug) log
 char	errbuf[BUFSIZ];		/* Logging will be line buffered */
 char	programid[40];		/* identification string for log entries */
@@ -45,10 +76,25 @@ int     started_by_inetd;
 int     effecid,                  /* system number of pgm/file's owner  */
 	callerid;                 /* who invoked me?                    */
 
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * External functions
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 extern char *inet_ntoa();
-LOCFUN mn_mmdf();
 RETSIGTYPE sig17();
 
+LOCFUN void handle_connection_from_inetd();
+LOCFUN void handle_client();
+LOCFUN void arginit();
+LOCFUN void bomb_or_log();
+LOCFUN void log();
+LOCFUN void bomb();
+LOCFUN mn_mmdf();
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * M A I N
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 main (argc, argv)
 int argc;
 char **argv;
@@ -65,7 +111,7 @@ char **argv;
 	setbuf(stderr, errbuf);
 	snprintf(programid, sizeof(programid), "smtpd(%5.5d): ", getpid());
 	getwho (&callerid, &effecid); /* who am I and who is running me?    */
-	mmdf_init (argv[0]);
+	mmdf_init (argv[0], 0);
 	gethostname(thishost, sizeof(thishost)-1);	/* current hostname */
 	if ((sp = getservbyname("smtp", "tcp")) == NULL) {
 		fprintf(stderr, "Cannot find service smtp/tcp\n");
@@ -77,6 +123,9 @@ char **argv;
       exit(154);
     }
 #endif /* HAVE_NAMESERVER */
+#ifdef HAVE_VIRTUAL_DOMAINS
+    unsetenv(VIRTUALENVNAME);
+#endif /* HAVE_VIRTUAL_DOMAINS */
 
 	/*
 	 * try to get full name for thishost
@@ -88,27 +137,7 @@ char **argv;
 	arginit(argc, argv);
 
 	if(started_by_inetd) {
-	  char *rmthost;
-	  struct sockaddr_in rmtaddr;
-	  int     len_rmtaddr = sizeof rmtaddr;
-	  int     on = 1;
-	
-	  mn_mmdf();           /* set up effective and group id's properly */
-	  if (getpeername (0, (struct sockaddr *)&rmtaddr, &len_rmtaddr) < 0)
-	    bomb( "getpeername failed (errno [%d] %s)",errno, sys_errlist[errno]);
-
-	  (void) setsockopt (0, SOL_SOCKET, SO_KEEPALIVE, &on, sizeof on);
-	  hp = gethostbyaddr ( (char *)&rmtaddr.sin_addr,
-			       sizeof(rmtaddr.sin_addr), AF_INET );
-	  if ((hp == NULL) || !isstr(hp->h_name)) {
-	    strncpy(workarea, (char *)inet_ntoa(rmtaddr.sin_addr),sizeof(workarea)-1);
-	    rmthost = workarea;
-	  } else
-	    rmthost = hp->h_name;
-	  
-	  execl (Smtpserver, stricked ? "rsmtpsrvr" : "smtpsrvr",
-		 rmthost, thishost, Channel, (char *)0);
-	  bomb( "server exec error ([%d] %s)", errno, sys_errlist[errno]);
+      handle_connection_from_inetd(thishost);
 	}
 	/* now smtpd is running standalone */
 
@@ -186,20 +215,17 @@ char **argv;
 					sizeof(rmtaddr.sin_addr), AF_INET);
 			if ((hp == NULL) || !isstr(hp->h_name)) {
 				strncpy(workarea, inet_ntoa(rmtaddr.sin_addr),sizeof(workarea)-1);
-				rmt = workarea;
 			}
 			else
-				rmt = hp->h_name;
+              strncpy(workarea, hp->h_name,sizeof(workarea)-1);
+            rmt = workarea;
 
 			logx("(%d) %s started", numconnections, rmt);
 			dup2(tmpskt, 0);
 			dup2(tmpskt, 1);
 			if (tmpskt > 1)
 				close(tmpskt);
-			execl(Smtpserver, stricked? "rsmtpsrvr" : "smtpsrvr",
-					rmt, thishost, Channel, (char *)0);
-			logx("server exec error ([%d] %s)", errno, sys_errlist[errno]);
-			exit(99);
+            handle_client(thishost, rmt);
 		}
 
 		/*
@@ -224,7 +250,78 @@ char **argv;
 	}
 }
 
-arginit(argc, argv)
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * handle_connection_from_inetd()
+ * smtpd was called from inetd.
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+LOCFUN void handle_connection_from_inetd(thishost)
+char *thishost;
+{
+  static char		workarea[512];
+  char   *rmthost;
+  struct sockaddr_in rmtaddr;
+  struct	hostent	*hp = (struct hostent *)0;
+  int     len_rmtaddr = sizeof rmtaddr;
+  int     on = 1;
+	
+  memset(workarea, 0, sizeof(workarea));
+  mn_mmdf();           /* set up effective and group id's properly */
+  if (getpeername (0, (struct sockaddr *)&rmtaddr, &len_rmtaddr) < 0)
+    bomb( "getpeername failed (errno [%d] %s)",errno, sys_errlist[errno]);
+
+  (void) setsockopt (0, SOL_SOCKET, SO_KEEPALIVE, &on, sizeof on);
+  hp = gethostbyaddr ( (char *)&rmtaddr.sin_addr,
+                       sizeof(rmtaddr.sin_addr), AF_INET );
+  if ((hp == NULL) || !isstr(hp->h_name)) {
+    strncpy(workarea, (char *)inet_ntoa(rmtaddr.sin_addr),sizeof(workarea)-1);
+  } else
+    strncpy(workarea, hp->h_name,sizeof(workarea)-1);
+  rmthost = workarea;
+
+  handle_client(thishost, rmthost);
+}
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * handle_client()
+ * smtpd was called from inetd.
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+LOCFUN void handle_client(thishost, rmthost)
+char *thishost;
+char *rmthost;
+{
+  struct hostent	*hp = (struct hostent *)0;
+#ifdef HAVE_VIRTUAL_DOMAINS
+  struct sockaddr_in locaddr;
+  int    len_locaddr = sizeof locaddr;
+#endif /* HAVE_VIRTUAL_DOMAINS */
+
+#ifdef HAVE_VIRTUAL_DOMAINS
+  /* get name of interface, maybe not the same as hostname */
+  if (getsockname (0, (struct sockaddr *)&locaddr, &len_locaddr) < 0)
+    bomb_or_log("getsockname failed (errno [%d] %s)",errno, sys_errlist[errno]);
+  hp = gethostbyaddr ( (char *)&locaddr.sin_addr,
+                       sizeof(locaddr.sin_addr), AF_INET );
+  if ((hp != NULL) && isstr(hp->h_name)) {
+    if(!setupenv(hp->h_name, inet_ntoa(locaddr.sin_addr)))
+      thishost = hp->h_name;
+  } else setupenv(thishost, "127.0.0.1");
+#endif /* HAVE_VIRTUAL_DOMAINS */
+
+  if(Channel != NULL)
+    execl(Smtpserver, stricked? "rsmtpsrvr" : "smtpsrvr",
+          rmthost, thishost, Channel, (char *)0);
+  else
+    execl(Smtpserver, stricked? "rsmtpsrvr" : "smtpsrvr",
+          rmthost, thishost, (char *)0);
+  bomb_or_log("server exec error ([%d] %s)", errno, sys_errlist[errno]);
+  exit(99);
+}
+
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * arginit()
+ * evaluate commandline arguments
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+LOCFUN void arginit(argc, argv)
 int argc;
 char **argv;
 {
@@ -233,32 +330,32 @@ char **argv;
 	extern		int	optind;
 
 	while ((ch = getopt(argc, argv, "difn:")) != EOF) {
-		switch (ch) {
-		case 'd':
+      switch (ch) {
+          case 'd':
 			debug++;
 			break;
 
-		case 'i':	/* force correctness of addresses */
+          case 'i':	/* don't daemonize, we are started by inetd */
 			started_by_inetd++;
 			break;
 
-		case 'f':	/* force correctness of addresses */
+          case 'f':	/* force correctness of addresses */
 			stricked++;
 			break;
 
-		case 'n':
+          case 'n': /* maximum number of allowed connections */
 			Maxconnections = atoi(optarg);
 			if (Maxconnections <= 0) {
-				logx("Bad number of connections '%s'", optarg);
-				exit(99);
+              logx("Bad number of connections '%s'", optarg);
+              exit(99);
 			}
 			logx("Maxconnection now %d", Maxconnections);
 			break;
 
-		default:
+          default:
 			log("Usage: %s [-dif] [-n #connections] smtpserver channels", argv[0]);
 			exit(1);
-		}
+      }
 	}
 
 	if (optind == argc) {
@@ -282,13 +379,19 @@ char **argv;
 	if (++optind < argc) {
 		Channel = argv[optind];
 		logx("channel is '%s'", Channel);
-	} else {
+	}
+#ifndef HAVE_VIRTUAL_DOMAINS
+    else {
 		logx("Channel not specified!");
 		exit(99);
 	}
+#endif /* HAVE_VIRTUAL_DOMAINS */
 }
 
-/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * 
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 RETSIGTYPE sig17()
 {
   int	status, pid;
@@ -303,9 +406,23 @@ RETSIGTYPE sig17()
   if(pid>0) numconnections--;
 }
 
-/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * 
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+LOCFUN void bomb_or_log(fmt, a, b, c, d)
+char *fmt;
+int a, b, c, d;
+{
+  if(started_by_inetd) bomb(fmt, a, b, c, d);
+  else logx(fmt, a, b, c, d);
+}
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * 
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 /* VARARGS */
-log(fmt, a, b, c, d)
+LOCFUN void log(fmt, a, b, c, d)
 char *fmt;
 int a, b, c, d;
 {
@@ -315,8 +432,11 @@ int a, b, c, d;
 	fflush(stderr);
 }
 
-/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
-bomb( fmt, a, b, c, d )
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * 
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+LOCFUN void bomb( fmt, a, b, c, d )
 char *fmt;
 {
         fputs( "451 ", stdout );
@@ -326,7 +446,10 @@ char *fmt;
         exit (99);
 }
 
-/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * 
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 LOCFUN
         mn_mmdf ()		  /* setuid to mmdf: bypass being root  */
 {				  /* get sys id for mmdf; setuid to it  */
@@ -369,4 +492,38 @@ LOCFUN
 	effecid = statbuf.st_uid; /* mostly needed for return mail      */
     }
 }
+
+#ifdef HAVE_VIRTUAL_DOMAINS
+/*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ * 
+ *
+ *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+int setupenv(thishost, thisip)
+char *thishost;
+char *thisip;
+{
+  char buf[LINESIZE];
+  char *p = (char *)vt_hst2vtn(thishost, thisip, &stricked);
+
+  if(p==NULL) return 1;
+  memset(buf, 0, sizeof(buf));
+  snprintf(buf, sizeof(buf), "%s=%s", VIRTUALENVNAME, p);
+  putenv(buf);
+  return 0;
+}
+#endif /* HAVE_VIRTUAL_DOMAINS */
+
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
+netreply(char *fmt, ...)
+{
+  va_list args;
+  char buf[1024];
+
+  memset(buf, 0, sizeof(buf));
+
+  va_start(args, fmt);
+  vsnprintf(buf, sizeof(buf), fmt, args);
+  va_end(args);
+
+  write(1,buf, strlen(buf));
+}

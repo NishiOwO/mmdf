@@ -9,7 +9,7 @@ MODULES =   phs_note aliasfetch \
 	    interrupt fnput \
 	    mmdf_init mmdf_fdinit mm_tai uip_tai post_tai \
 	    err_abrt rp_valstr logptr cache \
-	    ch_llinit conf chan alias
+	    ch_llinit conf chan alias mmdf_vtinit
 
 OBJECTS =   phs_note.o aliasfetch.o \
 	    ml_send.o qu_rdmail.o qu_io.o qu_fakrply.o \
@@ -19,7 +19,7 @@ OBJECTS =   phs_note.o aliasfetch.o \
 	    interrupt.o fnput.o \
 	    mmdf_init.o mmdf_fdinit.o mm_tai.o uip_tai.o post_tai.o \
 	    err_abrt.o rp_valstr.o logptr.o cache.o \
-	    ch_llinit.o conf.o chan.o alias.o
+	    ch_llinit.o conf.o chan.o alias.o mmdf_vtinit.o
 
 COBJECTS =  phs_note.c aliasfetch.c \
 	    ml_send.c qu_rdmail.c qu_io.c qu_fakrply.c \
@@ -29,7 +29,7 @@ COBJECTS =  phs_note.c aliasfetch.c \
 	    interrupt.c fnput.c \
 	    mmdf_init.c mmdf_fdinit.c mm_tai.c uip_tai.c post_tai.c \
 	    err_abrt.c rp_valstr.c logptr.c cache.c \
-	    ch_llinit.c conf.c chan.c alias.c
+	    ch_llinit.c conf.c chan.c alias.c mmdf_vtinit.c
 
 real-default: ../mmdf-made
 ../mmdf-made:	$(OBJECTS)

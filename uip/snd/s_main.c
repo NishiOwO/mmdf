@@ -112,7 +112,7 @@ char   *argv[];
     extern RETSIGTYPE  onint2 ();
     int     retval;
 
-    mmdf_init( argv[0] );
+    mmdf_init( argv[0], 0);
 
     setbuf (stdout, stdobuffer);
 

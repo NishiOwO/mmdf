@@ -33,6 +33,8 @@ STDSRCS =	tty_io.c ll_err.c ll_log.c tai_packages.c cmdsrch.c \
 		mydbm.c getllog.c snprintf.c fs.c rbl_match.c \
 		quota.c cnvtbytestr.c
 
+TAIOBJS	=	tai_test.o tai_file.o str2arg.o
+
 v7objs =	gwdir.o
 v7srcs =	gwdir.c
 
@@ -93,6 +95,9 @@ v7-lint:
 
 4.3-lint:
 	$(LINT) -Cutilb $(LFLAGS) $(4.3srcs)
+
+tai_test: $(TAIOBJS)
+	$(CC) $(TAIOBJS) -o $@
 
 clean:
 	-rm -f *.o x.c makedep eddep make.out errs core llib-lutil*

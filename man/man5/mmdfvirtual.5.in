@@ -1,0 +1,17 @@
+.ds M \fBMMDFII\fR
+.TH MMDFVIRTUAL 5 "26 April 2001"
+.SH NAME
+mmdfvirtual \- MMDF runtime tailoring 
+.SH SYNOPSIS
+MMDF tailoring file
+.SH DESCRIPTION
+
+.bp
+.NH
+.B mmdfvirtual
+
+
+.SH "SEE ALSO"
+mmdftailor(5)
+.PP
+\fIRuntime Tailoring the MMDF II system\fR

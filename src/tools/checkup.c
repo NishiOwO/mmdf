@@ -165,7 +165,7 @@ main (argc, argv)
 
     chktai ();  /* is the tailoring file there ? */
 
-    mmdf_init (argv[0]);
+    mmdf_init (argv[0], 0);
     if (errflg)
 	endit (NOTOK);
     ll_hdinit (&msglog, argv[0]);

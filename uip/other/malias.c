@@ -14,7 +14,7 @@ char *argv[];
 	register int     i;
 	register char	*key;
 
-	mmdf_init (argv[0]);
+	mmdf_init (argv[0], 0);
 	for (i=1; i < argc; i++) {
 		key = multcat (argv[i], "-outbound", (char *)0);
 		if (do_arg(key) == 0)

@@ -31,7 +31,7 @@ char *argv[];
     char *dflhost = (char *) 0;
 
 
-    mmdf_init ("NORM");
+    mmdf_init ("NORM", 0);
     logptr -> ll_level = LLOGFTR;
     siginit ();
 

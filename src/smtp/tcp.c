@@ -23,7 +23,10 @@ Pip *fds;
 {
 	register int skt;
 	struct sockaddr_in haddr;
-	short	smtpport = 0;
+#ifdef HAVE_VIRTUAL_DOMAINS
+	struct sockaddr_in addr_out;
+#endif /* HAVE_VIRTUAL_DOMAINS */
+short	smtpport = 0;
 #ifdef notdef
 	int	on = 1;
 #endif
@@ -45,6 +48,21 @@ Pip *fds;
 		ll_log( logptr, LLOGFST, "Can't get socket (%d)", errno);
 		return( RP_LIO );
 	}
+
+#ifdef HAVE_VIRTUAL_DOMAINS
+    /* bind our site to an other address */
+    memset(&addr_out, 0, sizeof(struct sockaddr_in));
+    addr_out.sin_family = AF_INET;
+	if(!vt_localip(&addr_out)) {
+      if (bind (skt, &addr_out, sizeof addr_out) < 0) {
+        ll_log( logptr, LLOGFST, "can't bind socket (errno [%d] %s )",
+                errno, sys_errlist[errno]);
+        close (skt);
+        return( RP_LIO );
+      }
+      printx(" via [%s] ...\n", inet_ntoa(addr_out.sin_addr));
+    }
+#endif /* HAVE_VIRTUAL_DOMAINS */
 
 #ifdef notdef
 	if (setsockopt (skt, SOL_SOCKET, SO_DONTLINGER, &on, sizeof on)) {

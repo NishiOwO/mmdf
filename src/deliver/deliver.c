@@ -251,7 +251,7 @@ int       argc;
 char   *argv[];
 {
 
-    mmdf_init (argv[0]);
+    mmdf_init (argv[0], 0);
     setbuf( stdout, obuf );
     siginit ();                   /* standard interrupt initialization  */
 				  /* distinguish different delivers     */

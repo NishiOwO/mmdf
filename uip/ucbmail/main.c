@@ -8,9 +8,12 @@
  *
  *  REVISION HISTORY:
  *
- *  $Revision: 1.4 $
+ *  $Revision: 1.5 $
  *
  *  $Log: main.c,v $
+ *  Revision 1.5  2001/04/26 22:02:18  krueger
+ *  Added support for virtual hosts
+ *
  *  Revision 1.4  1998/10/07 13:13:45  krueger
  *  Added changes from v44a8 to v44a9
  *
@@ -81,7 +84,7 @@ main(argc, argv)
 	 * Set up the MMDF environment.
 	 */
 	
-	mmdf_init(argv[0]);
+	mmdf_init(argv[0], 0);
 
 #ifdef signal
 	Siginit();

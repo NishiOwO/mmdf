@@ -20,7 +20,7 @@ char	**argv;
 	int	i;
 	char	*subargs = "vm";
 
-	mmdf_init( argv[0] );
+	mmdf_init( argv[0], 0);
 
 	if (argc > 1 && strcmp (argv[1], "-w") == 0) {
 		subargs = "vmW";

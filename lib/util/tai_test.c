@@ -10,7 +10,7 @@ main ()
 	if (tai_init (initfile) < OK)
 	{
 		perror ("init");
-		exit ();
+		exit (0);
 	}
 	while ((nargs = tai_get (100, taiargs)) > 0)
 	{
@@ -20,5 +20,5 @@ main ()
 	}
 	if (nargs < 0)
 		perror ("tai_get");
-	tai_end ();
+	tai_end (1);
 }

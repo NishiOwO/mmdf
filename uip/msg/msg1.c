@@ -181,7 +181,7 @@ char   *argv[];
 	printf( "MSG (%s)  Type ? for help.\r\n", verdate);
 	fflush( stdout);
 
-	mmdf_init("msg");		/* Should be mmdf_init() ??? */
+	mmdf_init("msg", 0);		/* Should be mmdf_init() ??? */
 
 	homedir = getenv("HOME");
 	tmpname = getlogin();

@@ -1,4 +1,4 @@
-static char Id[] = "$Id: smtpsrvr.c,v 1.35 2001/03/09 17:59:23 krueger Exp $";
+static char Id[] = "$Id: smtpsrvr.c,v 1.36 2001/04/26 22:02:15 krueger Exp $";
 /*
  *                      S M T P S R V R . C
  *
@@ -243,7 +243,7 @@ char **argv;
         request_init(&request, RQ_DAEMON, argv[0], RQ_FILE, STDIN_FILENO, 0);
         fromhost(&request);
 #endif /* HAVE_LIBWRAP */
-	mmdf_init( progname);
+	mmdf_init( progname, 0);
 
     if( (valid_channels == NULL && argc != 4) ||
         (valid_channels != NULL && argc != 3 && argc != 4)) {

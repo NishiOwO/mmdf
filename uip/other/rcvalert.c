@@ -82,7 +82,7 @@ char **argv;
     else
 	scanl.msglen = -1;
 
-    mmdf_init ("ALERT");
+    mmdf_init ("ALERT", 0);
     siginit ();
 
     setbuf (stdin, inbuf);

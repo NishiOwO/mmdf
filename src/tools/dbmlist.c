@@ -45,7 +45,7 @@ char **argv;
     char tmp[100];
     char *path;
 
-    mmdf_init (argv[0]);
+    mmdf_init (argv[0], 0);
     for (path = 0, argv++; argc-- > 1; argv++) 
     {
 	if (argv[0][0] == '-')

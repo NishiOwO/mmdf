@@ -227,7 +227,7 @@ int       argc;
 char   *argv[];
 {
     umask(0);
-    mmdf_init (argv[0]);
+    mmdf_init (argv[0], 0);
 #ifdef HAVE_NAMESERVER
     if(ns_settimeo(NS_UIPTIME)) {	/* set an initial timeout */
       exit(154);

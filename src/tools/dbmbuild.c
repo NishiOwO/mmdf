@@ -133,7 +133,7 @@ char **argv;
 	}
     }
 
-    mmdf_init(prog);
+    mmdf_init(prog, 0);
 
     if (outfile == 0)           /* use default database */
     {

@@ -1,5 +1,5 @@
 /*
- * $Id: table_test.c,v 1.2 2001/01/09 20:19:02 krueger Exp $
+ * $Id: table_test.c,v 1.3 2001/04/26 22:02:13 krueger Exp $
  *
  *  This program ist used to check 
  */
@@ -89,7 +89,7 @@ char *argv[];
     return 1;
   }
   strcpy(key, argv[1]);
-  mmdf_init(argv[0]);
+  mmdf_init(argv[0], 0);
 
   aliasfetch(TRUE, key, buf, &flags);
   printf("%-10sRES='%s'\n", key, buf);

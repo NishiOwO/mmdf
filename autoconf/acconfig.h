@@ -15,7 +15,7 @@
 
 
 /*
- * $Id: acconfig.h,v 1.11 2001/01/09 20:21:58 krueger Exp $
+ * $Id: acconfig.h,v 1.12 2001/04/26 22:02:12 krueger Exp $
  *
  */
 
@@ -443,6 +443,14 @@
 /*
  */
 #undef HAVE_NN
+
+/*              Support for virtual domains/hosts
+ *              Idea is to run multiple mailhosts on the same machine
+ *              without having to install the binaries compiled with
+ *              different paths to mmdftailor files.
+ *
+ */
+#undef HAVE_VIRTUAL_DOMAINS
 
 /*             Enable code to disable source-routing of addresses
  *             Should not be done according to RFC 1123, but needed for 

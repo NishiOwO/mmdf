@@ -61,7 +61,7 @@ char	**argv;
     register int i;
     FILE *output;
 
-    mmdf_init (argv[0]);
+    mmdf_init (argv[0], 0);
     setbuf (stdin, inbuf);
 
     for (i = 1; i < argc; i++) {
