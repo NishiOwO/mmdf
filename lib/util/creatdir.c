@@ -56,11 +56,11 @@ creatdir (dirptr, mode, owner, group)
 		    system (shcmd);
 				/* don't check if it succeeded          */
 #else /* V4_2BSD */
-#ifdef LINUX
+#if defined(MKDIR_HAVE_SECOND_ARG) || defined(LINUX)
 		    mkdir (partpath, 777);
-#else /* LINUX */
+#else /* MKDIR_HAVE_SECOND_ARG */
 		    mkdir (partpath);
-#endif /* LINUX */
+#endif /* MKDIR_HAVE_SECOND_ARG */
 #endif /* V4_2BSD */
 		    if (owner != 0)
 			chown (partpath, owner, group);
