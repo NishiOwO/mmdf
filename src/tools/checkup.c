@@ -44,10 +44,10 @@
 #include <pwd.h>
 #include <sys/stat.h>
 #include "ch.h"
-#ifndef NODIAL
-#include "d_proto.h"
-#include "d_structs.h"
-#endif /* NODIAL */
+#ifdef HAVE_DIAL
+#  include "d_proto.h"
+#  include "d_structs.h"
+#endif /* HAVE_DIAL */
 #include "gettys.h"
 #include "dm.h"
 
@@ -134,11 +134,11 @@ extern int queprot;             /* protection on quedfldir[] parent */
 extern struct ll_struct	msglog,
 			chanlog;
 
-#ifndef NODIAL
+#ifdef HAVE_DIAL
 extern struct ll_struct	ph_log;
 extern struct dialports *d_prts;
 extern struct directlines *d_lines;
-#endif /* NODIAL */
+#endif /* HAVE_DIAL */
 extern struct passwd *getpwuid ();
 extern struct passwd *getpwnam ();
 
@@ -362,7 +362,7 @@ main (argc, argv)
     }
     qflush (LEVEL0);
 
-#ifndef NODIAL
+#ifdef HAVE_DIAL
     que (LEVEL4, hdrfmt, "Dial out ports", "");
     chk_dprts ();               /*  check the dial out ports  */
     qflush (LEVEL0);
@@ -370,7 +370,7 @@ main (argc, argv)
     que (LEVEL4, hdrfmt, "Direct-connect lines", "");
     chk_dirlin ();              /*  check the direct lines  */
     qflush (LEVEL0);
-#endif /* NODIAL */
+#endif /* HAVE_DIAL */
 
     endit (OK);
 }
@@ -410,7 +410,7 @@ char *argv[];
 }
 /**/
 
-#ifndef NODIAL
+#ifdef HAVE_DIAL
 chk_dprts ()
 {
     struct ttys data;
@@ -495,7 +495,7 @@ chk_dirlin()
 	qflush (LEVEL5);
     }
 }
-#endif /* NODIAL */
+#endif /* HAVE_DIAL */
 /**/
 
 chklog ()
@@ -518,11 +518,11 @@ chklog ()
     chkfile (chanlog.ll_file, 0622, 0666, mmdfuid, mmdfgid, mmdflogin);
     qflush (LEVEL6);
 
-#ifndef NODIAL
+#ifdef HAVE_DIAL
     que (LEVEL6, subhdrfmt, "phone (link) log", ph_log.ll_file);
     chkfile (ph_log.ll_file, 0622, 0666, mmdfuid, mmdfgid, mmdflogin);
     qflush (LEVEL6);
-#endif /* NODIAL */
+#endif /* HAVE_DIAL */
 }
 /**/
 

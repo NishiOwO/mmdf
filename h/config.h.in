@@ -1,5 +1,5 @@
 /*
- * $Id: config.h.in,v 1.3 1997/12/30 16:03:00 krueger Exp $
+ * $Id: config.h.in,v 1.4 1997/12/30 16:12:16 krueger Exp $
  *
  * config.h.in.  Generated automatically from configure.in by autoheader.
  * please set every configuration-switch here
@@ -243,8 +243,7 @@
  *             or  pobox  channels.   (You will also need to
  *             take `dial' out of Makefile.lib, see  below.)
  */
-#undef HAVE_DIAL /* new */
-#define NODIAL   /* old */
+#undef HAVE_DIAL
 
 /*             Enables  code  that does Bell System V tricks
  *             (probably also useful for System III  instal-

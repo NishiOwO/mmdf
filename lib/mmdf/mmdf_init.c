@@ -78,14 +78,14 @@ char *pgmname;
 		continue;
 	}
 
-#ifndef NODIAL
+#ifdef HAVE_DIAL
 	switch (d_tai (argc, argv))
 	{                       /* dialing package info? */
 	    case YES:
 	    case NOTOK:
 		continue;
 	}
-#endif /* NODIAL */
+#endif /* HAVE_DIAL */
 
 	post_tai (argc, argv);
     }

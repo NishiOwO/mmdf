@@ -878,11 +878,10 @@ They will have to compile this manually for now (or copy it to smtpd.4.2.c).
 .IP V4_3BSD 15
 Enables code specific for 4.3BSD.  
 Right now this is limited to the NAMESERVER support.
-.IP NODIAL 15
-Prevents the dial package (PhoneNet protocol) from being compiled.
-This saves a fair amount of space and compile time.
-Define NODIAL if you do not intend
-to use the phone or pobox channels.
+.IP HAVE_DIAL 15
+Unset HAVE_DIAL to prevent the dial package (PhoneNet protocol) from
+being compiled. This saves a fair amount of space and compile time.
+Define HAVE_DIAL if you do intend to use the phone or pobox channels.
 (You will also need to take `dial' out of Makefile.lib, see below.)
 .IP SYS5 15
 Enables code that does Bell System V tricks (probably also useful for System
