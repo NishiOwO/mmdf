@@ -206,7 +206,7 @@ $(MCMDDIR)/$(PREF)newssend: xnewssend
 	cp xnewssend $@
 	-$(CHOWN) mmdf $@
 	-chmod 04$(PGMPROT) $@
-	echo "(MCMDDIR)/$(PREF)newssend" >> ${filelist}
+	echo "$(MCMDDIR)/$(PREF)newssend" >> ${filelist}
 
 xnewssend:	newssend.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ newssend.o $(MMDFLIBS) $(SYSLIBS)
