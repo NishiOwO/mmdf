@@ -340,7 +340,7 @@ $(MCMDDIR)/$(MMPREF)process-uucp  :   xprocess-uucp
 process-uucp:   xprocess-uucp
 	-@echo
 xprocess-uucp:  process-uucp.o
-	    $(CC) $(LDFLAGS) -o $@ process-uucp.o
+	    $(CC) $(LDFLAGS) -o $@ process-uucp.o $(MMDFLIBS) $(SYSLIBS)
 
 l-process-uucp:
 	$(LINT) $(LFLAGS) process-uucp.c $(LLIBS)

@@ -611,6 +611,7 @@ Table *tblptr;
       return(0);
 #endif /* HAVE_NIS */
       default:
+        break;
   }
   
     if (tblptr -> tb_fp == (FILE *)EOF)
