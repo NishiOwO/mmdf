@@ -1,7 +1,10 @@
 /*
- * $Id: fs.c,v 1.2 1999/08/24 14:28:02 krueger Exp $
+ * $Id: fs.c,v 1.3 1999/08/25 09:39:00 krueger Exp $
  *
  * $Log: fs.c,v $
+ * Revision 1.3  1999/08/25 09:39:00  krueger
+ * Added check for free disc space to local-channel and appropriated returnvalue
+ *
  * Revision 1.2  1999/08/24 14:28:02  krueger
  * Bug fixes
  *
@@ -15,7 +18,8 @@
 #  define HAVE_STATFS 1
 #else /* __MAIN__ */
 #  include "util.h"
-#  include "ll_log.h"
+#  include "mmdf.h"
+extern LLog *logptr;
 #endif /* __MAIN__ */
 
 #include <sys/types.h>
@@ -77,34 +81,32 @@ int msg_size;
 char *spool_directory;
 #endif
 {
-  int rc=1;
+  int rc=RP_BOK;
+  char buf[LINESIZE];
 
 #ifdef HAVE_STATFS
   struct STATVFS statbuf;
 
   if(spool_directory==NULL) {
 #ifdef DEBUG
-    ll_log (logptr, LLOGBTR, "check_disc_space(%d,(null))",
+    ll_log (logptr, LLOGBTR, "check_disc_space(%d,(null))\n",
             msg_size);
 #endif
-    return 0;
+    return RP_PARM;
   }
   
   memset(&statbuf, 0, sizeof(statbuf));
   if( (STATVFS(spool_directory, &statbuf) != 0) ||
       ( statbuf.F_BAVAIL  < (msg_size + min_spool_free) / statbuf.F_FRSIZE) ||
-      ( statbuf.F_FAVAIL < min_inode_free ) ) rc = 0;
+      ( statbuf.F_FAVAIL < min_inode_free ) ) rc = RP_FSPC;
 #ifdef DEBUG
-    ll_log (logptr, LLOGBTR,
-            "check_disc_space(%d,%s), space = %d blocks, inodes = %d",
+  snprintf(buf, LINESIZE, 
+           "check_disc_space(%d,%s), space = %ld blocks, inodes = %ld",
             msg_size, spool_directory,
             statbuf.F_BAVAIL, statbuf.F_FAVAIL);
+  ll_log (logptr, LLOGBTR, buf);
+
 #endif
-#if 0  
-  printf("# f_bavail= %ld\n", statbuf.F_BAVAIL * statbuf.F_FRSIZE);
-  printf("# f_favail  = %ld\n", statbuf.F_FAVAIL);
-#endif
-  
 #endif /* HAVE_STATFS */
   return rc;
 }

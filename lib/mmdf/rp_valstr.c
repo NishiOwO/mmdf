@@ -106,6 +106,9 @@ char   *
 	case RP_FCRT:
 	    return ("FCRT");
 
+	case RP_FSPC:
+	    return ("FSPC");
+
 	case RP_PROT:
 	    return ("PROT");
 

@@ -237,6 +237,15 @@ char	*mboxname;
 #endif /* DEBUG */
 	printx ("\tdelivering to file '%s'", mboxname);
 
+    /* check for enough disc-space */
+    retval = check_disc_space(
+      qu_msglen, (mldfldir == 0 || isnull(mldfldir[0])) ? "." : mldfldir );
+    
+    if (rp_isbad(retval)) {
+		printx (", failed\r\n");
+        return (retval);
+    }
+
 	if (rp_gval(retval = mbx_open (mboxname)) == RP_LOCK) {
 		printx (", locked out\r\n");
 		return (RP_LOCK);

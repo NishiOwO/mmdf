@@ -127,6 +127,8 @@ typedef enum { PRK_UNKNOWN, PRK_SMTP, PRK_ESMTP } smtp_protocol;
 				  /* unable to create file              */
 #define RP_FOPN (RP_BTNO | RP_CFIL | '\002')
 				  /* unable to open file                */
+#define RP_FSPC (RP_BTNO | RP_CFIL | '\003')
+				  /* not enough disc space              */
 #define RP_LIO  (RP_BTNO | RP_CLIO | '\000')
 				  /* general local i/o problem          */
 #define RP_LOCK (RP_BTNO | RP_CLIO | '\001')

@@ -1641,6 +1641,12 @@ adr_rrply (therply, chan, themsg, theadr) /* tell channel of address   */
 	    retval = RP_NO;
 	    break;
 
+	case RP_FSPC:             /* mailbox locked                       */
+	    adr_more = TRUE;
+	    printx ("not enough space, ");
+	    retval = RP_NO;
+	    break;
+
 	case RP_AGN:              /* Temporary failure                    */
 	    adr_more = TRUE;
 	    printx ("not deliverable now, ");
