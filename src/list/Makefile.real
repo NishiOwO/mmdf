@@ -19,6 +19,7 @@ $(MCHNDIR)/list  :   xlist
 #	    -chmod 0$(PGMPROT) $(MCHNDIR)/list
 	    -@ls -ls $(MCHNDIR)/list
 	    -@echo "list channel installed normally"; echo ""
+	@echo "$(MCHNDIR)/$(MMPREF)list" >> ${filelist}
 
 list:	xlist
 xlist:	$(OBJECTS) $(MMDFLIBS)

@@ -27,6 +27,7 @@ $(MCMDDIR)/$(MMPREF)submit:	xsubmit
 #	-chmod 04$(PGMPROT) $(MCMDDIR)/$(MMPREF)submit
 	-@ls -ls $(MCMDDIR)/$(MMPREF)submit
 	-@echo "submit installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)submit" >> ${filelist}
 
 lint:
 	$(LINT) $(LFLAGS) $(SOURCES) $(LLIBS)

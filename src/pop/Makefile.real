@@ -27,6 +27,7 @@ $(MCHNDIR)/$(MMPREF)pop:	xpop
 #	-chmod 04$(PGMPROT) $(MCHNDIR)/$(MMPREF)pop
 	-@ls -ls $(MCHNDIR)/$(MMPREF)pop
 	-@echo "POP installed normally"; echo ""
+	@echo "$(MCHNDIR)/$(MMPREF)pop" >> ${filelist}
 
 pop:	xpop
 xpop:	$(OBJECTS) $(MMDFLIBS) $(ZOTLIBS)

@@ -19,6 +19,7 @@ $(MCHNDIR)/delay  :   xdelay
 #	-chmod 0$(PGMPROT) $(MCHNDIR)/delay
 	-@ls -ls $(MCHNDIR)/delay
 	-@echo "delay channel installed normally"; echo ""
+	@echo "$(MCHNDIR)/$(MMPREF)delay" >> ${filelist}
 
 delay:	xdelay
 	-@echo

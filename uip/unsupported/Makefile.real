@@ -29,11 +29,13 @@ $(MCMDDIR)/autores: xautores
 	-mkdir $(MCMDDIR)/distribution
 	-$(CHOWN) $(MMDFLOGIN) $(MCMDDIR)/distribution
 	-chmod $(PGMPROT) $(MCMDDIR)/distribution
+	echo "$(MCMDDIR)/autores" >> ${filelist}
 
 $(BINDIR)/cvmbox: xcvmbox
 	cp xcvmbox $(BINDIR)/cvmbox
 	-$(CHOWN) $(MMDFLOGIN) $(BINDIR)/cvmbox
 	-chmod $(PGMPROT) $(BINDIR)/cvmbox
+	echo "$(BINDIR)/cvmbox" >> ${filelist}
 
 lint:
 	$(LINT) $(LFLAGS) $(SOURCES) $(LLIBS)

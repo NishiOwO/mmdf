@@ -20,6 +20,7 @@ $(BINDIR)/msg: xmsg
 	-mv $(BINDIR)/msg $(BINDIR)/msg.bak
 	cp xmsg $(BINDIR)/msg
 	-chmod $(PGMPROT) $(BINDIR)/msg
+	echo "$(BINDIR)/msg" >> ${filelist}
 
 version.c:
 	./mkversion

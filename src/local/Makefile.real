@@ -18,6 +18,7 @@ $(MCHNDIR)/$(MMPREF)local:	xlocal
 #	-chmod 04$(PGMPROT) $(MCHNDIR)/$(MMPREF)local
 	-@ls -ls $(MCHNDIR)/$(MMPREF)local
 	-@echo "local installed normally"; echo ""
+	@echo "$(MCHNDIR)/$(MMPREF)local" >> ${filelist}
 
 local:	xlocal
 xlocal:	$(OBJECTS) $(MMDFLIBS)

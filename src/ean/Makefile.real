@@ -33,6 +33,7 @@ $(MCMDDIR)/$(MMPREF)ean2mmdf:      xean2mmdf
 #	-chmod 04$(PGMPROT) $(MCMDDIR)/$(MMPREF)ean2mmdf
 	-@ls -ls $(MCMDDIR)/$(MMPREF)ean2mmdf
 	-@echo "ean2mmdf installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)ean2mmdf" >> ${filelist}
 
 ean2mmdf:  xean2mmdf
 	-@echo
@@ -47,6 +48,7 @@ $(CHANDIR)/$(MMPREF)ean:      xean
 #	-chmod 04$(PGMPROT) $(CHANDIR)/$(MMPREF)ean
 	-@ls -ls $(CHANDIR)/$(MMPREF)ean
 	-@echo "ean installed normally"; echo ""
+	@echo "$(MCHNDIR)/$(MMPREF)ean" >> ${filelist}
 
 ean:  xean
 	-@echo

@@ -31,6 +31,7 @@ $(MCMDDIR)/$(MMPREF)amp  :  xamp
 #	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)amp
 	-@ls -ls $(MCMDDIR)/$(MMPREF)amp
 	-@echo "amp installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)amp" >> ${filelist}
 
 amp:	xamp
 	-@echo
@@ -53,6 +54,7 @@ $(MCMDDIR)/$(MMPREF)checkup  :   xcheckup
 #	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)checkup
 	-@ls -ls $(MCMDDIR)/$(MMPREF)checkup
 	-@echo "checkup installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)checkup" >> ${filelist}
 
 checkup:	xcheckup
 	-@echo
@@ -75,6 +77,7 @@ $(MCMDDIR)/$(MMPREF)checkque:	xcheckque
 #	-chmod 04$(PGMPROT) $(MCMDDIR)/$(MMPREF)checkque
 	-@ls -ls $(MCMDDIR)/$(MMPREF)checkque
 	-@echo "checkque installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)checkque" >> ${filelist}
 
 checkque:	xcheckque
 	-@echo
@@ -97,6 +100,7 @@ $(MCMDDIR)/$(MMPREF)dbmbuild  :   xdbmbuild
 #	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)dbmbuild
 	-@ls -ls $(MCMDDIR)/$(MMPREF)dbmbuild
 	-@echo "dbmbuild installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)dbmbuild" >> ${filelist}
 
 dbmbuild:	xdbmbuild
 	-@echo
@@ -119,6 +123,7 @@ $(MCMDDIR)/$(MMPREF)dbmedit  :   xdbmedit
 #	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)dbmedit
 	-@ls -ls $(MCMDDIR)/$(MMPREF)dbmedit
 	-@echo "dbmedit installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)dbmedit" >> ${filelist}
 
 dbmedit:	xdbmedit
 	-@echo
@@ -141,6 +146,7 @@ $(MCMDDIR)/$(MMPREF)dbmlist:	xdbmlist
 #	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)dbmlist
 	-@ls -ls $(MCMDDIR)/$(MMPREF)dbmlist
 	-@echo "dbmlist installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)dbmlist" >> ${filelist}
 
 dbmlist:	xdbmlist
 	-@echo
@@ -163,6 +169,7 @@ $(MCMDDIR)/$(MMPREF)nictable  :   xnictable
 #	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)nictable
 	-@ls -ls $(MCMDDIR)/$(MMPREF)nictable
 	-@echo "nictable installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)nictable" >> ${filelist}
 
 nictable:	xnictable
 	-@echo
@@ -185,6 +192,7 @@ $(MCMDDIR)/$(MMPREF)checkaddr  :   xcheckaddr
 #	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)checkaddr
 	-@ls -ls $(MCMDDIR)/$(MMPREF)checkaddr
 	-@echo "checkaddr installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)checkaddr" >> ${filelist}
 
 checkaddr:	xcheckaddr
 	-@echo
@@ -207,6 +215,7 @@ $(MCMDDIR)/$(MMPREF)mailid  :   xmailid
 #	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)mailid
 	-@ls -ls $(MCMDDIR)/$(MMPREF)mailid
 	-@echo "mailid installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)mailid" >> ${filelist}
 
 mailid:	xmailid
 	-@echo
@@ -230,6 +239,7 @@ $(MCMDDIR)/$(MMPREF)cleanque  :   xcleanque
 	-@echo "***  make sure /etc/rc & overnight cron run this program"
 	-@ls -ls $(MCMDDIR)/$(MMPREF)cleanque
 	-@echo "cleanque installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)cleanque" >> ${filelist}
 
 cleanque:	xcleanque
 	-@echo
@@ -253,6 +263,7 @@ $(MCMDDIR)/$(MMPREF)fixtai  :   xfixtai
 #	    -chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)fixtai
 	    -@ls -ls $(MCMDDIR)/$(MMPREF)fixtai
 	    -@echo "fixtai installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)fixtai" >> ${filelist}
 
 fixtai:   xfixtai
 	-@echo
@@ -276,6 +287,7 @@ $(MCMDDIR)/$(MMPREF)rem_chans  :   xrem_chans
 #	    -chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)rem_chans
 	    -@ls -ls $(MCMDDIR)/$(MMPREF)rem_chans
 	    -@echo "rem_chans installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)rem_chans" >> ${filelist}
 
 rem_chans:   xrem_chans
 	-@echo
@@ -298,6 +310,7 @@ $(MCMDDIR)/$(MMPREF)setup  :   xsetup
 #	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)setup
 	-@ls -ls $(MCMDDIR)/$(MMPREF)setup
 	-@echo "setup installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)setup" >> ${filelist}
 
 setup:	xsetup
 	-@echo
@@ -322,6 +335,7 @@ $(MCMDDIR)/$(MMPREF)process-uucp  :   xprocess-uucp
 #	    -chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)process-uucp
 	    -@ls -ls $(MCMDDIR)/$(MMPREF)process-uucp
 	    -@echo "process-uucp installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)process-uucp" >> ${filelist}
 
 process-uucp:   xprocess-uucp
 	-@echo
@@ -344,6 +358,7 @@ $(MCMDDIR)/$(MMPREF)tablelist  :   xtablelist
 #	-chmod 0$(PGMPROT) $(MCMDDIR)/$(MMPREF)tablelist
 	-@ls -ls $(MCMDDIR)/$(MMPREF)tablelist
 	-@echo "tablelist installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)tablelist" >> ${filelist}
 
 tablelist:	 xtablelist
 	-@echo

@@ -23,6 +23,7 @@ $(MCMDDIR)/$(MMPREF)deliver:	xdeliver
 #	-chmod 04$(PGMPROT) $(MCMDDIR)/$(MMPREF)deliver
 	-@ls -ls $(MCMDDIR)/$(MMPREF)deliver
 	-@echo "deliver installed normally"; echo ""
+	@echo "$(MCHNDIR)/$(MMPREF)deliver" >> ${filelist}
 
 
 lint:

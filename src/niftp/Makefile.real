@@ -22,6 +22,7 @@ $(MCHNDIR)/$(MMPREF)niftp:      xniftp
 #	-chmod 04$(PGMPROT) $(MCHNDIR)/$(MMPREF)niftp
 	-@ls -ls $(MCHNDIR)/$(MMPREF)niftp
 	-@echo "niftp installed normally"; echo ""
+	@echo "$(MCHNDIR)/$(MMPREF)niftp" >> ${filelist}
 
 niftp:  xniftp
 	-@echo
@@ -38,6 +39,7 @@ $(MCMDDIR)/$(MMPREF)ni_niftp:      xni_niftp
 #	-chmod 04$(PGMPROT) $(MCMDDIR)/$(MMPREF)ni_niftp
 	-@ls -ls $(MCMDDIR)/$(MMPREF)ni_niftp
 	-@echo "ni_niftp installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)ni_niftp" >> ${filelist}
 
 ni_niftp:  xni_niftp
 	-@echo

@@ -22,6 +22,7 @@ $(BINDIR)/snd:	xsnd
 	cp xsnd $(BINDIR)/snd
 	-$(CHOWN) $(MMDFLOGIN) $(BINDIR)/snd
 	-chmod $(PGMPROT) $(BINDIR)/snd
+	echo "$(BINDIR)/snd" >> ${filelist}
 
 version.c:
 	./mkversion

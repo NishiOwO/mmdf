@@ -19,6 +19,7 @@ $(MCHNDIR)/smtp:	xsmtp
 #	-chmod 0$(PGMPROT) $(MCHNDIR)/smtp
 	-@ls -ls $(MCHNDIR)/smtp
 	-@echo "smtp channel installed normally"; echo ""
+	@echo "$(MCHNDIR)/$(MMPREF)smtp" >> ${filelist}
 
 # On some systems the tcp.xxx.c file you use will need to be different
 # than the tcp.${SYSTEM}.c file.  For instance, on one version of
@@ -45,6 +46,7 @@ $(MCHNDIR)/smtpsrvr:  xsmtpsrvr
 #	-chmod 0$(PGMPROT) $(MCHNDIR)/smtpsrvr
 	-@ls -ls $(MCHNDIR)/smtpsrvr
 	-@echo "smtp server installed normally"; echo " "
+	@echo "$(MCHNDIR)/$(MMPREF)smtpsrvr" >> ${filelist}
 
 
 smtpsrvr : xsmtpsrvr
@@ -66,7 +68,8 @@ $(MCHNDIR)/smtpd:  xsmtpd
 #	-chmod 6$(PGMPROT) $(MCHNDIR)/smtpd
 	-@ls -ls $(MCHNDIR)/smtpd
 	-@echo "smtp daemon installed normally"; echo " "
-		
+	@echo "$(MCHNDIR)/$(MMPREF)smtpd" >> ${filelist}
+
 smtpd: xsmtpd
 	-@echo
 xsmtpd: smtpd.o $(MMDFLIBS)

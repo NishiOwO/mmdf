@@ -20,6 +20,7 @@ $(MCHNDIR)/blockaddr  :   xblockaddr
 #	-chmod 0$(PGMPROT) $(MCHNDIR)/blockaddr
 	-@ls -ls $(MCHNDIR)/blockaddr
 	-@echo "blockaddr channel installed normally"; echo ""
+	@echo "$(MCHNDIR)/$(MMPREF)blockaddr" >> ${filelist}
 
 blockaddr:   xblockaddr
 	-@echo

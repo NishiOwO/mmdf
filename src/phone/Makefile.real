@@ -28,6 +28,7 @@ $(MCHNDIR)/phone  :   xphone
 #	-chmod 04$(PGMPROT) $(MCHNDIR)/phone
 	-@ls -ls $(MCHNDIR)/phone
 	-@echo "PhoneNet outbound channel installed normally"; echo ""
+	@echo "$(MCHNDIR)/$(MMPREF)phone" >> ${filelist}
 
 phone:	xphone
 xphone:	$(POBJECTS) $(MMDFLIBS)
@@ -40,6 +41,7 @@ $(MCMDDIR)/slave  :   xslave
 #	-chmod 0$(PGMPROT) $(MCMDDIR)/slave
 	-@ls -ls $(MCMDDIR)/slave
 	-@echo "PhoneNet slave installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)slave" >> ${filelist}
 
 slave:	xslave
 xslave:	$(SOBJECTS) $(MMDFLIBS)

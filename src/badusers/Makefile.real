@@ -16,6 +16,7 @@ $(MCHNDIR)/$(MMPREF)badusers: xbadusers
 		$(MCHNDIR)/$(MMPREF)badusers
 	-@ls -ls $(MCHNDIR)/$(MMPREF)badusers
 	-@echo "badusers installed normally"; echo ""
+	@echo "$(MCHNDIR)/$(MMPREF)badusers" >> ${filelist}
 
 badusers:     xbadusers
 	-echo

@@ -29,6 +29,7 @@ $(MCHNDIR)/sendprog:	xsendprog
 #	-chmod $(PGMPROT) $(MCHNDIR)/sendprog
 	-@ls -ls $(MCHNDIR)/sendprog
 	-@echo "sendprog installed normally"; echo ""
+	@echo "$(MCHNDIR)/$(MMPREF)sendprog" >> ${filelist}
 
 recvprog:	xrecvprog
 	-@echo
@@ -48,6 +49,7 @@ $(MCHNDIR)/recvprog:	xrecvprog
 #	-chmod $(PGMPROT) $(MCHNDIR)/recvprog
 	-@ls -ls $(MCHNDIR)/recvprog
 	-@echo "recvprog installed normally"; echo ""
+	@echo "$(MCHNDIR)/$(MMPREF)recvprog" >> ${filelist}
 
 clean:
 	-rm -f xsendprog xrecvprog *.o x.c core makedep eddep make.log 

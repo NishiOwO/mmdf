@@ -21,7 +21,7 @@ sbindir		= @sbindir@
 mmdfprefix      = @mmdfprefix@
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
-
+filelist	= ${top_srcdir}/files.list
 
 MCMDDIR         = ${install_prefix}@mcmddir@
 MCHNDIR         = ${install_prefix}@mchndir@

@@ -22,6 +22,7 @@ $(BINDIR)/send:	xsend
 	cp xsend $(BINDIR)/send
 	-$(CHOWN) $(MMDFLOGIN) $(BINDIR)/send
 	-chmod $(PGMPROT) $(BINDIR)/send
+	echo "$(BINDIR)/send" >> ${filelist}
 
 version.c:
 	./mkversion

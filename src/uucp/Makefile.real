@@ -21,6 +21,7 @@ $(MCHNDIR)/$(MMPREF)uucp:	xuucp
 #	-chmod 04$(PGMPROT) $(MCHNDIR)/$(MMPREF)uucp
 	-@ls -ls $(MCHNDIR)/$(MMPREF)uucp
 	-@echo "uucp installed normally"; echo ""
+	@echo "$(MCHNDIR)/$(MMPREF)uucp" >> ${filelist}
 
 uucp:	xuucp
 	-@echo
@@ -38,6 +39,7 @@ ${install_prefix}/bin/rmail: xrmail
 		xrmail ${install_prefix}/bin/rmail
 	-@ls -ls ${install_prefix}/bin/rmail
 	-@echo "rmail installed normally"; echo ""
+	@echo "${install_prefix}/bin/rmail" >> ${filelist}
 
 # inst-rmail:	/usr/bin/rmail
 # /usr/bin/rmail:	xrmail

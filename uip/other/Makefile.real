@@ -39,6 +39,7 @@ $(BINDIR)/checkmail:  xcheckmail
 	cp xcheckmail $@
 	-$(CHOWN) mmdf $@
 	-chmod 04$(PGMPROT) $@
+	echo "$(BINDIR)/checkmail" >> ${filelist}
 
 xcheckmail :   checkmail.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ checkmail.o $(MMDFLIBS) $(SYSLIBS)
@@ -56,6 +57,7 @@ $(BINDIR)/emactovi:  xemactovi
 	cp xemactovi $@
 	-$(CHOWN) mmdf $@
 	-chmod 0$(PGMPROT) $@
+	echo "$(BINDIR)/emactovi" >> ${filelist}
 
 xemactovi :   emactovi.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ emactovi.o $(MMDFLIBS) $(SYSLIBS)
@@ -72,6 +74,7 @@ inst-xmalias: $(MCMDDIR)/$(PREF)malias
 $(MCMDDIR)/$(PREF)malias: xmalias
 	cp xmalias $@
 	-chmod $(PGMPROT) $@
+	echo "$(MCMDDIR)/$(PREF)malias" >> ${filelist}
 
 xmalias:	malias.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ malias.o $(MMDFLIBS) $(SYSLIBS) $(DBM)
@@ -89,6 +92,7 @@ $(BINDIR)/$(PREF)mlist: xmlist
 	cp xmlist $@
 	-$(CHOWN) mmdf $@
 	-chmod 04$(PGMPROT) $@
+	echo "$(BINDIR)/$(PREF)mlist" >> ${filelist}
 
 xmlist:	mlist.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ mlist.o $(MMDFLIBS) $(SYSLIBS) $(DBM)
@@ -106,6 +110,7 @@ $(BINDIR)/$(PREF)newmail: xnewmail
 	cp xnewmail $@
 	-$(CHOWN) mmdf $@
 	-chmod 0$(PGMPROT) $@
+	echo "$(BINDIR)/$(PREF)newmail" >> ${filelist}
 
 xnewmail:	newmail.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ newmail.o $(MMDFLIBS) $(SYSLIBS) $(DBM)
@@ -124,6 +129,7 @@ $(BINDIR)/$(PREF)v6mail:  xv6mail
 	cp xv6mail $@
 	-$(CHOWN) mmdf $@
 	-chmod $(PGMPROT) $@
+	echo "$(BINDIR)/$(PREF)v6mail" >> ${filelist}
 
 xv6mail:	v6mail.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ v6mail.o $(MMDFLIBS) $(SYSLIBS)
@@ -142,6 +148,7 @@ $(RCVDIR)/$(PREF)rcvalert:  xrcvalert
 	cp xrcvalert $@
 	-$(CHOWN) mmdf $@
 	-chmod $(PGMPROT) $@
+	echo "$(RCVDIR)/$(PREF)rcvalert" >> ${filelist}
 
 xrcvalert:	rcvalert.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ rcvalert.o $(MMDFLIBS) $(SYSLIBS)
@@ -160,6 +167,7 @@ $(RCVDIR)/$(PREF)rcvfile: xrcvfile
 	cp xrcvfile $@
 	-$(CHOWN) mmdf $@
 	-chmod $(PGMPROT) $@
+	echo "$(RCVDIR)/$(PREF)rcvfile" >> ${filelist}
 
 xrcvfile:	rcvfile.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ rcvfile.o $(MMDFLIBS) $(SYSLIBS)
@@ -178,6 +186,7 @@ $(BINDIR)/$(PREF)resend: xresend
 	cp xresend $@
 	-$(CHOWN) mmdf $@
 	-chmod $(PGMPROT) $@
+	echo "$(BINDIR)/$(PREF)resend" >> ${filelist}
 
 xresend:	resend.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ resend.o $(MMDFLIBS) $(SYSLIBS)
@@ -197,6 +206,7 @@ $(MCMDDIR)/$(PREF)newssend: xnewssend
 	cp xnewssend $@
 	-$(CHOWN) mmdf $@
 	-chmod 04$(PGMPROT) $@
+	echo "(MCMDDIR)/$(PREF)newssend" >> ${filelist}
 
 xnewssend:	newssend.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ newssend.o $(MMDFLIBS) $(SYSLIBS)
@@ -215,6 +225,7 @@ $(RCVDIR)/$(PREF)rcvprint: xrcvprint
 	cp xrcvprint $@
 	-$(CHOWN) mmdf $@
 	-chmod $(PGMPROT) $@
+	echo "$(RCVDIR)/$(PREF)rcvprint" >> ${filelist}
 
 xrcvprint:	rcvprint.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ rcvprint.o $(MMDFLIBS) $(SYSLIBS)
@@ -233,6 +244,7 @@ $(RCVDIR)/$(PREF)rcvtrip: xrcvtrip
 	cp xrcvtrip $@
 	-$(CHOWN) mmdf $@
 	-chmod $(PGMPROT) $@
+	echo "$(RCVDIR)/$(PREF)rcvtrip" >> ${filelist}
 
 xrcvtrip:	rcvtrip.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ rcvtrip.o $(MMDFLIBS) $(SYSLIBS)
@@ -252,22 +264,27 @@ ${SBINDIR}/sendmail:  xsendmail
 	cp xsendmail $@
 	$(CHOWN) mmdf $@
 	chmod 04$(PGMPROT) $@
-	if test -f /usr/lib/sendmail; then cp /usr/lib/sendmail /usr/lib/sendmail.orig; fi
-	rm -f /usr/lib/sendmail
-	ln -s ${sbindir}/sendmail /usr/lib/sendmail
-	#-if test ! -f ${sbindir}/sendmail.orig; then \
-	#	mv ${sbindir}/sendmail \
-	#		 ${sbindir}/sendmail.orig;\
-	#else \
-	#	mv ${sbindir}/sendmail \
-	#		 ${sbindir}/sendmail.orig$$;\
-	#fi
-	###-if test ! -f ${sbindir}/sendmail; then \
-	###     -@echo "***** Please install sendmail by hand in /usr/lib. e.g."
-	###     -@echo "ln -s ${sbindir}/sendmail /usr/sbin/sendmail"
-	###else
-	###     ln -s ${sbindir}/sendmail ${sbindir}/sendmail
-	###fi
+	if test -f ${install_prefix}/usr/lib/sendmail; then \
+		cp ${install_prefix}/usr/lib/sendmail \
+			${install_prefix}/usr/lib/sendmail.orig; \
+	fi
+	rm -f ${install_prefix}/usr/lib/sendmail
+	ln -s ${sbindir}/sendmail ${install_prefix}/usr/lib/sendmail
+	echo "${install_prefix}/usr/lib/sendmail" >> ${filelist}
+	echo "${SBINDIR}/sendmail" >> ${filelist}
+	@#-if test ! -f ${sbindir}/sendmail.orig; then \
+	@#	mv ${sbindir}/sendmail \
+	@#		 ${sbindir}/sendmail.orig;\
+	@#else \
+	@#	mv ${sbindir}/sendmail \
+	@#		 ${sbindir}/sendmail.orig$$;\
+	@#fi
+	@###-if test ! -f ${sbindir}/sendmail; then \
+	@###     -@echo "***** Please install sendmail by hand in /usr/lib. e.g."
+	@###     -@echo "ln -s ${sbindir}/sendmail /usr/sbin/sendmail"
+	@###else
+	@###     ln -s ${sbindir}/sendmail ${sbindir}/sendmail
+	@###fi
 
 xsendmail :   sendmail.o $(MMDFLIBS)
 	$(CC) $(LDFLAGS) -o $@ sendmail.o $(MMDFLIBS) $(SYSLIBS)

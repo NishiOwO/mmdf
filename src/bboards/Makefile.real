@@ -27,6 +27,7 @@ $(MCHNDIR)/$(MMPREF)bboards:	xbboards
 #	-chmod 04$(PGMPROT) $(MCHNDIR)/$(MMPREF)bboards
 	-@ls -ls $(MCHNDIR)/$(MMPREF)bboards
 	-@echo "BBoards installed normally"; echo ""
+	@echo "$(MCHNDIR)/$(MMPREF)bboards" >> ${filelist}
 
 bboards:	xbboards
 	-@echo

@@ -19,6 +19,7 @@ $(MCHNDIR)/pobox  :   xpobox
 #	-chmod 0$(PGMPROT) $(MCHNDIR)/pobox
 	-@ls -ls $(MCHNDIR)/pobox
 	-@echo "pobox channel installed normally"; echo ""
+	@echo "$(MCHNDIR)/$(MMPREF)pobox" >> ${filelist}
 
 pobox:	xpobox
 	-@echo

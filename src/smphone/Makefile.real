@@ -29,6 +29,7 @@ $(MCHNDIR)/smphone  :   xsmphone
 #	-chmod 04$(PGMPROT) $(MCHNDIR)/smphone
 	-@ls -ls $(MCHNDIR)/smphone
 	-@echo "SMTP over PhoneNet outbound channel installed normally"; echo ""
+	@echo "$(MCHNDIR)/$(MMPREF)smphone" >> ${filelist}
 
 smphone:  xsmphone
 	-@echo
@@ -43,6 +44,7 @@ $(MCMDDIR)/smslave  :   xsmslave
 #	-chmod 0$(PGMPROT) $(MCMDDIR)/smslave
 	-@ls -ls $(MCMDDIR)/smslave
 	-@echo "SMTP over PhoneNet slave installed normally"; echo ""
+	@echo "$(MCMDDIR)/$(MMPREF)smslave" >> ${filelist}
 
 smslave:  xsmslave
 	-@echo
