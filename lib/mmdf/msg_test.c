@@ -14,7 +14,10 @@ extern char *quedfldir;
 extern char *tquedir;
 extern char	*aquedir;
 
-main()
+main(
+  int argc,
+  char *argv[]
+  )
 {
   Msg  themsg;
   struct adr_struct theadr;
@@ -27,8 +30,12 @@ main()
   }
 
   printf("aquedir=%s\n", aquedir);
+  if(argc==1) {
+    printf("usage %s %s/<file>\n", argv[0], aquedir);
+    return 0;
+  }
   
-  (void) strncpy (themsg.mg_mname, "msg.aa05152", sizeof(themsg.mg_mname));
+  (void) strncpy (themsg.mg_mname, argv[1], sizeof(themsg.mg_mname));
   if (mq_rinit ((Chan *) 0, &themsg, retadr) != OK) {
     printf("Cannot read '%s'\n", themsg.mg_mname);
     return 1;
@@ -51,8 +58,12 @@ main()
     printf("adr_que    : %s\n", theadr.adr_que);
     printf("adr_host   : %s\n", theadr.adr_host);
     printf("adr_local  : %s\n", theadr.adr_local);
+#ifdef HAVE_ESMTP_DSN
+    printf("adr_notify : %c\n", theadr.adr_notify);
+    printf("adr_orcpt  : %s\n", theadr.adr_orcpt);
+#endif /* HAVE_ESMTP_DSN */
     printf("adr_buf    : %s\n", theadr.adr_buf);
-    printf("adr_pos    : %ld\n", theadr.adr_pos);
+    printf("adr_pos    : %ld\n\n", theadr.adr_pos);
   }
   mq_rkill (OK);
 }
