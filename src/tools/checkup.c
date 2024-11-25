@@ -59,8 +59,10 @@
 extern int verbose_tai;
 extern char *dupfpath();
 #if !HAVE_SYS_ERRLIST_DECL
-/*extern int  sys_nerr;
-extern  char    *sys_errlist[];*/
+#if __GLIBC__
+extern int  sys_nerr;
+extern  const char    *sys_errlist[];
+#endif
 #endif /* HAVE_SYS_ERRLIST_DECL */
 extern int  errno;
 
