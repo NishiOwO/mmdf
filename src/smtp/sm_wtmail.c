@@ -520,7 +520,10 @@ int     time;                   /* Max time for sending and getting reply */
 {
     short     retval;
 #if !HAVE_SYS_ERRLIST_DECL
-    /*extern char *sys_errlist[];*/
+#if __GLIBC__
+extern	int		sys_nerr;
+extern	const char	*sys_errlist[];
+#endif
 #endif /* HAVE_SYS_ERRLIST_DECL */
     extern int errno;
 
