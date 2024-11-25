@@ -777,6 +777,9 @@ dnl Checks for library functions.
 AC_PROG_GCC_TRADITIONAL
 AC_C_CONST
 
+AC_CHECK_LIB(resolv, _getshort)
+AC_CHECK_LIB(resolv, getshort)
+
 AC_MSG_CHECKING(whether using nameservercode)
 if test "$enable_nameserver" != no; then
   if test "$ac_cv_func_res_mkquery" = "yes"; then
