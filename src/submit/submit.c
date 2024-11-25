@@ -59,6 +59,11 @@
 #include "ap.h"
 #include "ns.h"
 
+#if __GLIBC__
+extern	int		sys_nerr;
+extern	const char	*sys_errlist[];
+#endif
+
 #if !defined(__STDC__) || defined(DECLARE_GETPWUID)
 extern struct passwd *getpwuid ();
 #endif /* DECLARE_GETPWUID */
