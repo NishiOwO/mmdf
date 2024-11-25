@@ -101,7 +101,7 @@ if test "${CFLAGS+set}" != set; then
   CFLAGS="-O"
   ac_cflags_set=no
 fi
-CFLAGS="${CFLAGS} -fcommon"
+CFLAGS="${CFLAGS} -fcommon -D_DEFAULT_SOURCE"
 AC_PROG_CC
 AC_PROG_CPP
 dnl AC_AIX
