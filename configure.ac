@@ -665,6 +665,8 @@ if test "$ac_cv_enable_code_wrap" != "no"; then
    fi
 fi
 
+AC_CHECK_LIB(resolv, _getshort)
+
 AC_HEADER_STDC
 AC_CHECK_HEADER(fcntl.h,[
 ac_cv_header_fcntl_h="yes"
