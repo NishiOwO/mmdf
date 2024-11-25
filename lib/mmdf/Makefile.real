@@ -52,7 +52,6 @@ clean:
 phs_note.o: phs_note.c
 phs_note.o: ../../h/util.h
 phs_note.o: ../../h/mmdf.h
-phs_note.o: /usr/include/sys/stat.h
 phs_note.o: ../../h/ch.h
 phs_note.o: ../../h/phs.h
 aliasfetch.o: aliasfetch.c
@@ -63,8 +62,6 @@ ml_send.o: ml_send.c
 ml_send.o: ../../h/util.h
 ml_send.o: ../../h/mmdf.h
 ml_send.o: ../../h/cnvtdate.h
-ml_send.o: /usr/include/pwd.h
-ml_send.o: /usr/include/signal.h
 qu_rdmail.o: qu_rdmail.c
 qu_rdmail.o: ../../h/util.h
 qu_rdmail.o: ../../h/mmdf.h
@@ -72,7 +69,6 @@ qu_rdmail.o: ../../h/adr_queue.h
 qu_io.o: qu_io.c
 qu_io.o: ../../h/util.h
 qu_io.o: ../../h/mmdf.h
-qu_io.o: /usr/include/sys/stat.h
 qu_io.o: ../../h/adr_queue.h
 qu_io.o: ../../h/ch.h
 qu_io.o: ../../h/phs.h
@@ -99,8 +95,6 @@ rtn_proc.o: ../../h/adr_queue.h
 mq_rdmail.o: mq_rdmail.c
 mq_rdmail.o: ../../h/util.h
 mq_rdmail.o: ../../h/mmdf.h
-mq_rdmail.o: /usr/include/signal.h
-mq_rdmail.o: /usr/include/sys/stat.h
 mq_rdmail.o: ../../h/ch.h
 mq_rdmail.o: ../../h/msg.h
 mq_rdmail.o: ../../h/adr_queue.h
@@ -122,16 +116,13 @@ getmailid.o: getmailid.c
 getmailid.o: ../../h/util.h
 getmailid.o: ../../h/mmdf.h
 getmailid.o: ../../h/ch.h
-getmailid.o: /usr/include/pwd.h
 getpwmid.o: getpwmid.c
 getpwmid.o: ../../h/util.h
 getpwmid.o: ../../h/mmdf.h
 getpwmid.o: ../../h/ch.h
-getpwmid.o: /usr/include/pwd.h
 interrupt.o: interrupt.c
 interrupt.o: ../../h/util.h
 interrupt.o: ../../h/mmdf.h
-interrupt.o: /usr/include/signal.h
 fnput.o: fnput.c
 fnput.o: ../../h/util.h
 fnput.o: ../../h/mmdf.h
@@ -182,7 +173,6 @@ chan.o: ../../h/mmdf.h
 chan.o: ../../h/ch.h
 chan.o: ../../h/dm.h
 alias.o: alias.c
-alias.o: /usr/include/stdio.h
 alias.o: ../../h/util.h
 alias.o: ../../h/mmdf.h
 # DEPENDENCIES MUST END AT END OF FILE
