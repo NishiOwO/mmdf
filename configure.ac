@@ -665,8 +665,6 @@ if test "$ac_cv_enable_code_wrap" != "no"; then
    fi
 fi
 
-AC_CHECK_LIB(resolv, _getshort)
-
 AC_HEADER_STDC
 AC_CHECK_HEADER(fcntl.h,[
 ac_cv_header_fcntl_h="yes"
@@ -784,7 +782,8 @@ if test "$enable_nameserver" != no; then
   if test "$ac_cv_func_res_mkquery" = "yes"; then
     AC_MSG_RESULT(yes)
   else
-    AC_CHECK_LIB(resolv, dn_expand)
+    AC_CHECK_LIB(resolv, _getshort)
+    AC_CHECK_LIB(resolv, getshort)
   fi
   AC_CHECK_FUNC(_getshort,AC_DEFINE_UNQUOTED(HAVE__GETSHORT),[
   AC_CHECK_FUNC(getshort,AC_DEFINE_UNQUOTED(HAVE_GETSHORT),
