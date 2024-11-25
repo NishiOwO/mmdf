@@ -12,8 +12,8 @@
 
 #if !HAVE_SYS_ERRLIST_DECL
 #if __GLIBC__
-extern	int		sys_nerr;
-extern	const char	*sys_errlist[];
+int		sys_nerr = 0;
+const char	*sys_errlist[] = {};
 #endif
 #endif /* HAVE_SYS_ERRLIST_DECL */
 
