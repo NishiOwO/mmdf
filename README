@@ -1,3 +1,8 @@
+Patched MMDF so it works on:
+ - NetBSD/amd64 10.0
+ - Debian GNU/Linux 12
+
+--- original README ---
 
 README -- MMDFII, Patch Level 44+ (alpha), March 2001
 
