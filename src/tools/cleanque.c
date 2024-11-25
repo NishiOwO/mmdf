@@ -110,6 +110,7 @@
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 DIR *quep;                     /* for reading directory entries      */
 
+
 struct stat    testnode;
 
 time_t  curtime;              /* Current time in hours              */

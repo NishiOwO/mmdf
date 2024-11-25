@@ -1,20 +1,19 @@
 #include "util.h"
 #ifdef HAVE_VARARGS_H
-#include <varargs.h>
+#include <stdarg.h>
 
 /*                                                                      */
 /*              Concatenate a series of arrays                          */
 
 /*VARARGS0*/
-char *multcat (va_alist)
-va_dcl
+char *multcat (char* str, ...)
 {
-	register va_list ap;
+	va_list ap;
 	register char  *oldstr, *ptr;
 	char    *newstr;
 	unsigned  newlen;
 
-	va_start(ap);
+	va_start(ap, str);
 	for (newlen = 1; oldstr = va_arg(ap, char *);)
 		newlen += strlen (oldstr);
 	va_end(ap);
@@ -22,7 +21,7 @@ va_dcl
 	if ((ptr = newstr = malloc (newlen+1)) == 0)
 	    return((char *)0);
 
-	va_start(ap);
+	va_start(ap, str);
 	for (; oldstr = va_arg(ap, char *); ptr--)
 		while(*ptr++ = *oldstr++);
 	va_end(ap);

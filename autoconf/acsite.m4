@@ -39,22 +39,22 @@ dnl lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll
 AC_DEFUN(AC_MMDFARGS_HELP,
 [
     cat << EOF
-  --mmdf-debug=[0,1,2]    enable more logging information      [default: $mmdfdebug]
-  --mmdf-dlog             enable debug-option of dial packages [default: $mmdfdlog]
-  --mmdf-dbglog           enable more debug-option of dial packages [default: $mmdfdbglog]
-  --mmdf-nodomlit         toggle define NODOMLIT [default: $mmdfnodomlit]
-  --mmdf-leftdots         toggle define LEFTDOTS [default: $mmdfleftdots]
-  --mmdf-statsort         toggle define STATSORT [default: $mmdfstatsort]
-  --mmdf-citation         toggle define CITATION [default: $mmdfcitation]
+  --mmdf-debug=(0,1,2)    enable more logging information      (default: $mmdfdebug)
+  --mmdf-dlog             enable debug-option of dial packages (default: $mmdfdlog)
+  --mmdf-dbglog           enable more debug-option of dial packages (default: $mmdfdbglog)
+  --mmdf-nodomlit         toggle define NODOMLIT (default: $mmdfnodomlit)
+  --mmdf-leftdots         toggle define LEFTDOTS (default: $mmdfleftdots)
+  --mmdf-statsort         toggle define STATSORT (default: $mmdfstatsort)
+  --mmdf-citation         toggle define CITATION (default: $mmdfcitation)
 
-  --mmdf-prefix=DIR       default home of mmdf in DIR [PREFIX/mmdf]
+  --mmdf-prefix=DIR       default home of mmdf in DIR (PREFIX/mmdf)
 
-  --mmdf-mlogdir=DIR      x in DIR [VARPREFIX/mmdf/log]
-  --mmdf-mphsdir=DIR      x in DIR [VARPREFIX/mmdf/log/phase]
-  --mmdf-mcmddir=DIR      x in DIR [MMDFPREFIX/lib]
-  --mmdf-mchndir=DIR      x in DIR [MMDFPREFIX/chans]
-  --mmdf-mtbldir=DIR      x in DIR [MMDFPREFIX/table]
-  --mmdf-d_calllog=FILE   x in FILE [MLOGDIR/dial_log]
+  --mmdf-mlogdir=DIR      x in DIR (VARPREFIX/mmdf/log)
+  --mmdf-mphsdir=DIR      x in DIR (VARPREFIX/mmdf/log/phase)
+  --mmdf-mcmddir=DIR      x in DIR (MMDFPREFIX/lib)
+  --mmdf-mchndir=DIR      x in DIR (MMDFPREFIX/chans)
+  --mmdf-mtbldir=DIR      x in DIR (MMDFPREFIX/table)
+  --mmdf-d_calllog=FILE   x in FILE (MLOGDIR/dial_log)
 
   --mmdf-spooldir=DIR     obselete --mmdf-mquedir
   --mmdf-logdir=DIR       obselete --mmdf-mlogdir

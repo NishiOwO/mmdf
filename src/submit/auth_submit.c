@@ -96,7 +96,7 @@ char *route_out;
 LOCVAR
 char *cn_in, *cn_out;           /* storage for channel names            */
 				/* needed for bad auth logging          */
-int domsg=1;
+extern int domsg;
 
 #ifndef printx
 #  define printx if(domsg>1) printf

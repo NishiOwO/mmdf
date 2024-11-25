@@ -44,6 +44,7 @@ LOCFUN void ScanUucpFrom(char *new, char *adr);
 LOCFUN void ScanUucpFrom();
 #endif /* __STDC__ */
 
+	static char    *MakeUucpFrom();
 
 int pbroke;             /* Set if SIGPIPE occurs (in qu2uu_each) */
 
@@ -275,7 +276,6 @@ char *sender;
 	AP_ptr  local,
 		domain,
 		route;
-	static char    *MakeUucpFrom();
 
 /* SEK have axed looking at top of file.  */
 /* This may not be wise - but very much neater */

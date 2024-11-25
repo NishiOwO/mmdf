@@ -11,8 +11,10 @@
 #include <sys/stat.h>
 
 #if !HAVE_SYS_ERRLIST_DECL
+#if 0
 extern	int	sys_nerr;
 extern	char	*sys_errlist[];
+#endif
 #endif /* HAVE_SYS_ERRLIST_DECL */
 
 /*  maximum number of output lines to be queued at once  */

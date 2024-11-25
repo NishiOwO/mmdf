@@ -22,10 +22,9 @@ LOCFUN tryfork();
 
 /* VARARGS4 */
 #if defined(HAVE_VARARGS_H)
-#include <varargs.h>
+#include <stdarg.h>
 #define MAXARGS 20
-nexecl(va_alist)
-va_dcl
+nexecl(int arg, ...)
 {
 	register	int	i;
 			va_list	ap;
@@ -34,7 +33,7 @@ va_dcl
 			char	*pgm;
 			char	*pgmparm[MAXARGS];
 
-	va_start(ap);
+	va_start(ap, arg);
 	proctyp = va_arg(ap, int);
 	pgmflags = va_arg(ap, int);
 	fdarray = va_arg(ap, int *);

@@ -11,6 +11,7 @@
 **
 */
 
+#define DEFINE_STUFFS
 #include "./s.h"
 #include "./s_externs.h"
 

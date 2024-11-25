@@ -11,7 +11,7 @@
 
 #define		ETCTTYS		"/etc/ttys"
 
-static int getline(), process();
+static int mmdf_getline(), process();
 
 /*  the channel to read the data from  */
 static FILE *input = NULL;
@@ -30,7 +30,7 @@ getttyent(userdata)
 	    return(BADDATA);
 
     /*  read the next line from the input  */
-    if (getline(buff) == EOF)
+    if (mmdf_getline(buff) == EOF)
 	{
 	rewind(input);
 	linenum = 0;
@@ -70,7 +70,7 @@ openinput(file)
 
 
 
-static int getline(buff)
+static int mmdf_getline(buff)
   char *buff;
     {
     register int c;

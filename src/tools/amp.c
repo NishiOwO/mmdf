@@ -35,6 +35,7 @@ extern	Chan	*ch_nm2struct();
 extern	long	amp_hdr();
 extern	int	ap_outtype;
 
+
 /**/
 
 main(argc, argv)

@@ -8,10 +8,10 @@
 
 /*VARARGS*/
 #if defined(HAVE_VARARGS_H)
-#  include <varargs.h>
+/*#  include <varargs.h>*/
+#include <stdarg.h>
 #  define MAXARGS 20
-arg2lstr (va_alist)
-va_dcl
+arg2lstr (int code, ...)
 {
   va_list ap;
   int linelen, maxlen;
@@ -19,7 +19,7 @@ va_dcl
   char *argv[MAXARGS];
   register int i;
 
-  va_start(ap);
+  va_start(ap, code);
   linelen = va_arg(ap, int);
   maxlen = va_arg(ap, int);
   buf = va_arg(ap, char *);

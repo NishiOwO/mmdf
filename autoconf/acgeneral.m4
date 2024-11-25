@@ -87,6 +87,8 @@ define(AC_DIVERSION_SED, 8)dnl		variable substitutions in config.status
 define(AC_DIVERSION_CMDS, 9)dnl		extra shell commands in config.status
 define(AC_DIVERSION_ICMDS, 10)dnl	extra initialization in config.status
 
+AC_DEFUN(_AC_FINALIZE, [])
+
 dnl Change the diversion stream to STREAM, while stacking old values.
 dnl AC_DIVERT_PUSH(STREAM)
 define(AC_DIVERT_PUSH,

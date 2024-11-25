@@ -4,8 +4,10 @@
 /* Augment ll_io routines to print system call errno value */
 
 #if !HAVE_SYS_ERRLIST_DECL
+#if 0
 extern	int	sys_nerr;
 extern	char	*sys_errlist[];
+#endif
 #endif /* HAVE_SYS_ERRLIST_DECL */
 extern	int	errno;
 

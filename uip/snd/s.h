@@ -72,6 +72,7 @@ struct header {
 #define	NARGS	20	/* Maximum number of args to set and in .sendrc lines */
 #define M_BSIZE 256
 
+#ifdef DEFINE_STUFFS
 /* Everything below was previously situated in s_main.c   */
 /* Moved here when sprintf was changed to snprintf        */
 /* and strcpy to strncpy                                  */
@@ -90,4 +91,6 @@ char editor[128];
 char checker[128];
 char copyfile[128];
 char subargs[128];
-
+#else
+#include "./s_externs.h"
+#endif

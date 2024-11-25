@@ -16,6 +16,7 @@ extern char *blt();
 extern char *tbldfldir;
 extern char *tbldbm;
 
+
 #ifndef HAVE_LIBGDBM
 typedef struct
 {

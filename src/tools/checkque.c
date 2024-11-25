@@ -86,6 +86,7 @@
 
 extern time_t time();
 
+
 time_t	curtime;		/* Current time secconds		*/
 time_t	toolate;		/* Time to wait before panicing		*/
 

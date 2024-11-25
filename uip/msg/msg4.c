@@ -55,6 +55,7 @@
 #  include <termio.h>
 #  include <string.h>
 #endif /* HAVE_SGTTY_H */
+#  include <termios.h>
 #include "./msg.h"
 
 char	*keywds[MAXKEYS] = {

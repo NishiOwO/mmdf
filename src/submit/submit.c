@@ -98,8 +98,10 @@ extern char *pathdeliver;     /* file path to mailer proc.          */
 extern int  *regfdary;
 extern int  errno;
 #if !HAVE_SYS_ERRLIST_DECL
+/*
 extern int  sys_nerr;
 extern  char    *sys_errlist[];
+*/
 #endif /* HAVE_SYS_ERRLIST_DECL */
 
 char *prm_dupval();

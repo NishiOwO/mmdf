@@ -4,7 +4,6 @@ dnl
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(h/ap.h)
 AC_CONFIG_HEADER(h/config.h)
-AC_CONFIG_MACRO_DIR([autoconf])
 
 dnl AC_INIT_VAR(mmdfdebug,1)
 dnl AC_INIT_VAR(mmdfdlog,1)
@@ -102,6 +101,7 @@ if test "${CFLAGS+set}" != set; then
   CFLAGS="-O"
   ac_cflags_set=no
 fi
+CFLAGS="${CFLAGS} -fcommon"
 AC_PROG_CC
 AC_PROG_CPP
 dnl AC_AIX

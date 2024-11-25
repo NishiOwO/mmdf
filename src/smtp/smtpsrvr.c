@@ -46,7 +46,7 @@ extern int errno;               /* Has Unix error codes */
 extern int numfds;
 extern char *quedfldir;
 
-extern char *getline();
+extern char *mmdf_getline();
 extern struct passwd *getpwmid();
 extern char *multcat();
 extern Chan *ch_h2chan();
@@ -88,7 +88,7 @@ int     expn_count;             /* number of expn expansions */
 int     netcount = 0;           /* number of valid characters in netbuf */
 char    *netptr  = netbuf;      /* next character to come out of netbuf */
 char    *arg;                   /* zero if no argument - pts to comm param */
-int     dont_mung;              /* used by getline() to limit munging */
+int     dont_mung;              /* used by mmdf_getline() to limit munging */
 int     numrecipients = 0;      /* number of valid recipients accepted */
 int     stricked;               /* force rejection of non validated hosts */
 #ifdef NODOMLIT
@@ -390,7 +390,7 @@ char **argv;
 	netreply (replybuf);
 
 nextcomm:
-	while (i = getline())
+	while (i = mmdf_getline())
 	{
 		if (i == (char *)NOTOK)         /* handle error ??? */
 			byebye( 1 );
@@ -446,7 +446,7 @@ char *what;
 #endif /* HAVE_LIBWRAP */
 
 /*name:
-	getline
+	mmdf_getline
 
 function:
 	get commands from the standard input terminated by <cr><lf>.
@@ -486,7 +486,7 @@ globals:
 */
 
 char *
-getline()
+mmdf_getline()
 {
 	register char *inp;     /* input pointer in netbuf */
 	register char *outp;    /* output pointer in buf */
@@ -1244,12 +1244,12 @@ int cmdnr;
 
 	netreply ("354 Enter Mail, end by a line with only '.'\r\n");
 
-	dont_mung = 1;      /* tell getline only to drop cr */
+	dont_mung = 1;      /* tell mmdf_getline only to drop cr */
 #ifdef DEBUG
 	ll_log( logptr, LLOGFTR, "... body of message ..." );
 #endif
 	while (1) {             /* forever */
-		if ((p = getline()) == 0) {
+		if ((p = mmdf_getline()) == 0) {
 			p = "\n***Sender closed connection***\n";
 			mm_wtxt( p , strlen(p) );
 			errflg++;
@@ -1274,7 +1274,7 @@ int cmdnr;
 			bufptr = &buf[0];
 
 		prevbyte = lastbyte;		/* lastbyte is terminating byte
-						   of previous getline() */
+						   of previous mmdf_getline() */
 
 		/* If write error occurs, stop writing but keep reading. */
 		if (!werrflg) {
@@ -1291,7 +1291,7 @@ int cmdnr;
 			s_alarm (0);
 		}
 	}
-	dont_mung = 0;  /* set getline to normal operation */
+	dont_mung = 0;  /* set mmdf_getline to normal operation */
 #ifdef DEBUG
 	ll_log( logptr, LLOGBTR, "Finished receiving text." );
 #endif

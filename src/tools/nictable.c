@@ -19,6 +19,7 @@
 #include "util.h"
 #include "mmdf.h"
 
+
 char    *domain,                /* domain to add                        */
 	*transport,             /* transport service to look for        */
 	*service;               /* name of service to look for          */

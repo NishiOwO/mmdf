@@ -51,7 +51,7 @@
 #  define printx if (domsg>1) printf
 #endif
 
-extern   int     domsg;
+int     domsg;
 
 extern LLog *logptr;
 extern int ap_outtype;

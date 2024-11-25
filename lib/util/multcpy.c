@@ -1,20 +1,18 @@
 #include "util.h"
 #ifdef HAVE_VARARGS_H
-#include <varargs.h>
+#include <stdarg.h>
 
 /*                                                                      */
 /*      Copy the list of strings to the given location.                 */
 /*                                                                      */
 
 char *
-multcpy (to, va_alist)
-register char   *to;
-va_dcl
+multcpy (register char* to, ...)
 {
-	register va_list ap;
+	va_list ap;
 	register char   *from;
 
-	va_start(ap);
+	va_start(ap, to);
 
 	while(from = va_arg(ap, char *)){
 		while(*to++ = *from++);

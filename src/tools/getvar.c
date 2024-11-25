@@ -7,6 +7,7 @@
 
 void *read_variable();
 
+
 main(argc, argv)
 int argc;char *argv[];
 {

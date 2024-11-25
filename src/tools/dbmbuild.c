@@ -30,6 +30,7 @@ extern Table **tb_list;  /* order tables searched         */
 extern Domain **dm_list; /* ordr domain tables searched  */
 extern Chan  **ch_tbsrch;  /* order chans searched         */
 
+
 extern char *blt();
 extern char *multcat();
 extern char *tbldfldir;

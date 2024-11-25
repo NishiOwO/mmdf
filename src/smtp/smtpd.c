@@ -53,7 +53,7 @@ int netreply(char *fmt, ...);
  *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*/
 extern	int	errno;
 #if !HAVE_SYS_ERRLIST_DECL
-extern  char    *sys_errlist[];
+/*extern  char    *sys_errlist[];*/
 #endif /* HAVE_SYS_ERRLIST_DECL */
 
 /*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*

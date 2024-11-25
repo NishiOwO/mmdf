@@ -59,8 +59,8 @@
 extern int verbose_tai;
 extern char *dupfpath();
 #if !HAVE_SYS_ERRLIST_DECL
-extern int  sys_nerr;
-extern  char    *sys_errlist[];
+/*extern int  sys_nerr;
+extern  char    *sys_errlist[];*/
 #endif /* HAVE_SYS_ERRLIST_DECL */
 extern int  errno;
 
@@ -128,7 +128,8 @@ extern struct passwd *getpwuid ();
 extern struct passwd *getpwnam ();
 #endif /* DECLARE_GETPWNAM */
 
-struct stat statbuf;
+
+extern struct stat statbuf;
 
 int mmdfuid,
     mmdfgid;

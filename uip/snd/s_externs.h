@@ -11,6 +11,7 @@
 **
 */
 
+
 extern int sentprotect;
 extern char hdrfmt[], toname[], BCtoname[], ccname[], BCccname[];
 extern char subjname[], fromname[], datename[], bccname[], shrtfmt[];
@@ -21,18 +22,18 @@ extern int drffd, tmpfd, nsent, badflg;
 
 extern char *adrptr;
 
-extern char bigbuf[], signature[], host[], from[], to[], bcc[], cc[];
-extern char subject[], stdobuffer[], inclfile[], drffile[], sentfile[], tmpdrffile[];
+extern char bigbuf[BBSIZE], signature[S_BSIZE], host[], from[S_BSIZE], to[], bcc[], cc[];
+extern char subject[], stdobuffer[], inclfile[], drffile[S_BSIZE], sentfile[], tmpdrffile[S_BSIZE];
 
 extern char body, lastsend, aborted, inrdwr, toflag, ccflag, subjflag;
 extern char *verdate;
 extern int cflag, wflag;
 extern int rflag;
 extern int qflag, pflag;
-extern char copyfile[], editor[], checker[];
-extern char subargs[];
+extern char copyfile[128], editor[128], checker[128];
+extern char subargs[128];
 extern char replyto[];
-extern char aliasfilename[];
+extern char aliasfilename[128];
 extern struct header *headers;
 
 extern char	sign_cmd[];		/* MJM */

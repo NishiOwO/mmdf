@@ -38,6 +38,7 @@ extern Chan **ch_tbsrch;
 extern char *mmtailor;
 extern Alias *al_list;
 
+
 /**/
 main (argc, argv)
     char * argv[];

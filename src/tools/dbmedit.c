@@ -25,6 +25,7 @@ typedef struct  {
 } datum;
 #endif HAVE_LIBGDBM
 
+
 extern  datum   myfetch();
 datum   dcons();
 
